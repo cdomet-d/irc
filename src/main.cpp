@@ -3,14 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/18 15:26:46 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/02/18 17:59:48 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/epoll.h>
 #include <arpa/inet.h>
 #include <csignal>
 #include <fcntl.h>
@@ -18,6 +17,7 @@
 #include <netinet/in.h>
 #include <poll.h>
 #include <stdbool.h>
+#include <sys/epoll.h>
 #include <sys/socket.h>
 #include <vector>
 
@@ -32,39 +32,39 @@ void SIgnalHandler(int signum)
 
 void AcceptClient(int servSocketFd, int epollfd)
 {
-    struct sockaddr_in cliadd;
-    socklen_t len = sizeof(cliadd);
+	struct sockaddr_in cliadd;
+	socklen_t len = sizeof(cliadd);
 
-    int incofd = accept(servSocketFd, (sockaddr *)&(cliadd), &len);
-    if (incofd == -1) {
-        std::cerr << "accept() failed" << std::endl;
-        return;
-    }
+	int incofd = accept(servSocketFd, (sockaddr *)&(cliadd), &len);
+	if (incofd == -1) {
+		std::cerr << "accept() failed" << std::endl;
+		return;
+	}
 
-    if (fcntl(incofd, F_SETFL, O_NONBLOCK) == -1) {
-        std::cerr << "fcntl() failed" << std::endl;
-        close(incofd);
-        return;
-    }
+	if (fcntl(incofd, F_SETFL, O_NONBLOCK) == -1) {
+		std::cerr << "fcntl() failed" << std::endl;
+		close(incofd);
+		return;
+	}
 
-    struct epoll_event ev;
-    ev.events = EPOLLIN;
-    ev.data.fd = incofd;
-    if (epoll_ctl(epollfd, EPOLL_CTL_ADD, incofd, &ev) == -1) {
-        std::cerr << "epoll_ctl() failed" << std::endl;
-        close(incofd);
-        return;
-    }
+	struct epoll_event ev;
+	ev.events = EPOLLIN;
+	ev.data.fd = incofd;
+	if (epoll_ctl(epollfd, EPOLL_CTL_ADD, incofd, &ev) == -1) {
+		std::cerr << "epoll_ctl() failed" << std::endl;
+		close(incofd);
+		return;
+	}
 
-    std::string IPadd = inet_ntoa(cliadd.sin_addr);
-    std::cout << "Client <" << incofd << "> Connected from " << IPadd << std::endl;
+	std::string IPadd = inet_ntoa(cliadd.sin_addr);
+	std::cout << "Client <" << incofd << "> Connected from " << IPadd
+			  << std::endl;
 }
-
 
 int servInit()
 {
-	int port = 4444;				  //port of th server
-	int servSocketFd;				  //fds of the server
+	int port = 4444;  //port of th server
+	int servSocketFd; //fds of the server
 	struct sockaddr_in address;
 	struct epoll_event newPoll;
 	struct epoll_event events[MAX_EVENTS];
@@ -132,20 +132,20 @@ int servInit()
 
 	std::cout << "Server listening on port " << port << std::endl;
 	while (sign == false) {
-			int nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
-			if (nfds == -1 && sign == false)
-				return 0;
-			for (int i = 0; i < nfds; i++) {
-				if (events[i].data.fd == servSocketFd)
-					AcceptClient(servSocketFd, epollfd);
+		int nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
+		if (nfds == -1 && sign == false)
+			return 0;
+		for (int i = 0; i < nfds; i++) {
+			if (events[i].data.fd == servSocketFd)
+				AcceptClient(servSocketFd, epollfd);
+		}
+		return (0);
 	}
-	return (0);
-}
 
-int main()
-{
-	signal(SIGINT, SIgnalHandler);
-	signal(SIGQUIT, SIgnalHandler);
-	servInit();
-	return (0);
-}
+	int main()
+	{
+		signal(SIGINT, SIgnalHandler);
+		signal(SIGQUIT, SIgnalHandler);
+		servInit();
+		return (0);
+	}
