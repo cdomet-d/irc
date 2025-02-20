@@ -1,7 +1,7 @@
 /*
 
 //requirement
-registration succeded
+registration succeeded
 
 //parsing
 just 2 params : <user> <password>
