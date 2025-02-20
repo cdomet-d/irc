@@ -1,4 +1,4 @@
-NAME:= irc
+NAME:= ircserv
 BDIR:=.bdir/
 SRC_DIR:= src/
 H:= headers/

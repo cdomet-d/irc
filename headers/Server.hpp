@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/19 17:03:35 by cdomet-d         ###   ########lyon.fr   */
+/*   Updated: 2025/02/20 18:46:53 by cdomet-d         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 #define SERVER_HPP
 
 #define MAX_EVENTS 100
-
+extern int sign;
 #include "Client.hpp"
+#include <arpa/inet.h>
 #include <iostream>
 #include <map>
 #include <netinet/in.h>
-#include <stdbool.h>
+#include <poll.h>
 #include <string>
-#include <sys/epoll.h>
 
 class Client;
 
@@ -33,25 +33,29 @@ class Server {
 
   public:
 	/*                               ORTHODOX CLASS                           */
-	Server(void);
-	Server(const Server &rhs);
+	static Server *GetInstanceServer(int port, std::string password);
 	~Server(void);
-	Server &operator=(const Server &rhs);
 
 	/*                               METHODS                                  */
 	bool servInit();
 	bool servRun();
-	bool acceptClient();
+	void acceptClient();
 
   private:
-	const std::string _password;
-	std::map< int, Client & > _client;
-	std::map< int, Channel & > _channel;
+	static Server *_server;
+	Server(int port, std::string password);
+
 	const int _port;
-	int _epollfd;
+	const std::string _password;
+	std::map< int, Client *> _client;
+	// std::map< int, Channel & > _channel;
+	int _epollFd;
 	int _servFd;
 	struct epoll_event _servPoll;
 	struct sockaddr_in _servAddress;
+	struct epoll_event _events[MAX_EVENTS];
+
+	Server(void);
 };
 
 #endif //SERVER_HPP
