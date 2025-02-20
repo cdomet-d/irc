@@ -2,5 +2,5 @@ notes.txt
 .vscode/
 .obj/
 .bdir/
-irc
+ircserv
 *.mk

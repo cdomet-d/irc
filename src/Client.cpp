@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/18 16:28:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/02/19 14:48:35 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ Client::~Client(void) {}
 
 Client &Client::operator=(const Client &rhs)
 {
+	(void)rhs;
 	// rhs instructions
 	return *this;
 }

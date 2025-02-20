@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/18 17:14:04 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/02/20 10:40:11 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,19 @@
 #define SERVER_HPP
 
 #define MAX_EVENTS 100
-
+extern int sign;
 #include "Client.hpp"
+#include <arpa/inet.h>
+#include <fcntl.h>
 #include <iostream>
 #include <map>
 #include <netinet/in.h>
+#include <poll.h>
 #include <stdbool.h>
 #include <string>
 #include <sys/epoll.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 class Client;
 
@@ -33,10 +38,8 @@ class Server {
 
   public:
 	/*                               ORTHODOX CLASS                           */
-	Server(void);
-	Server(const Server &rhs);
+	static Server *GetInstanceServer(int port, std::string password);
 	~Server(void);
-	Server &operator=(const Server &rhs);
 
 	/*                               METHODS                                  */
 	bool servInit();
@@ -44,13 +47,19 @@ class Server {
 	bool acceptClient();
 
   private:
+	static Server *_server;
+	Server(int port, std::string password);
+
+	const int _port;
 	const std::string _password;
 	std::map< int, Client & > _client;
-	const int _port;
-	int _epollfd;
+	int _epollFd;
 	int _servFd;
 	struct epoll_event _servPoll;
 	struct sockaddr_in _servAddress;
+	struct epoll_event _events[MAX_EVENTS];
+
+	Server(void);
 };
 
 #endif //SERVER_HPP
