@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/21 14:14:53 by cdomet-d         ###   ########lyon.fr   */
+/*   Updated: 2025/02/21 15:39:48 by cdomet-d         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@ extern int sign;
 
 #include "Client.hpp"
 #include <arpa/inet.h>
+#include <cstring>
 #include <iostream>
 #include <map>
 #include <netinet/in.h>
 #include <poll.h>
 #include <string>
-#include <cstring>
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -39,20 +39,23 @@ class Server {
 
   public:
 	/*                               ORTHODOX CLASS                           */
-	static Server *GetInstanceServer(int port, std::string password);
+	static Server &GetInstanceServer(int port, std::string password);
 	~Server(void);
 
 	/*                               METHODS                                  */
+	bool handleData(int fd);
 	bool servInit();
 	bool servRun();
 	void acceptClient();
-	bool handleData(int fd);
 
   private:
-	static Server *_server;
+	/*                               METHODS                                  */
+	bool disconnectClient(int fd);
+	// constructor
 	Server(int port, std::string password);
 
-	// std::map< int, Channel & > _channel;
+	// attributes
+	// std::map< int, Channel * > _channel;
 	const int _port;
 	const std::string _password;
 	int _epollFd;
@@ -63,6 +66,7 @@ class Server {
 	struct epoll_event _servPoll;
 	struct sockaddr_in _servAddress;
 
+	// private constructor
 	Server(void);
 };
 
