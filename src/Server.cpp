@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/20 18:46:46 by cdomet-d         ###   ########lyon.fr   */
+/*   Updated: 2025/02/21 14:00:37 by cdomet-d         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,16 @@ Server::Server(int port, std::string password)
 	: _port(port), _password(password)
 {
 }
-
+// I think we can forbid server instantiation without parameters by putting the default constructor in private
 Server::Server(void) : _port(0), _password("") {}
 
-Server::~Server(void) {}
+Server::~Server(void)
+{
+	for (std::map< int, Client * >::iterator it = _client.begin();
+		 it != _client.end(); ++it) {
+		delete it->second;
+	}
+}
 
 /* ************************************************************************** */
 /*                               METHODS                                      */
@@ -66,7 +72,9 @@ bool Server::servRun()
 {
 	int nbFds;
 
-	std::cout << "Server listening on port " << _port << std::endl;
+	std::cout << "Server listening on port " << _port
+			  << " | IP adress: " << inet_ntoa(_servAddress.sin_addr)
+			  << std::endl;
 	while (sign == false) {
 		nbFds = epoll_wait(_epollFd, _events, MAX_EVENTS, -1);
 		if (nbFds == -1 && sign == false)
@@ -79,13 +87,12 @@ bool Server::servRun()
 	return (true);
 }
 
-//TODO : need to declare sockaddr_in struct, int incomingFd and epoll_event struct for each incoming clients
-//so needs to be in the client class
 void Server::acceptClient()
 {
 	try {
-		Client newCli(_servFd, _epollFd);
-		_client.insert(std::pair<int, Client *>(newCli.getFd(), &newCli));
+		Client *newCli = new Client(_servFd, _epollFd);
+		_client.insert(std::pair< int, Client * >(newCli->getFd(), newCli));
+		_usedNicks.push_back(newCli->getNick());
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
 	}

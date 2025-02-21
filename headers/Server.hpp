@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/20 18:46:53 by cdomet-d         ###   ########lyon.fr   */
+/*   Updated: 2025/02/21 13:56:18 by cdomet-d         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #define MAX_EVENTS 100
 extern int sign;
+
 #include "Client.hpp"
 #include <arpa/inet.h>
 #include <iostream>
@@ -45,15 +46,16 @@ class Server {
 	static Server *_server;
 	Server(int port, std::string password);
 
+	// std::map< int, Channel & > _channel;
 	const int _port;
 	const std::string _password;
-	std::map< int, Client *> _client;
-	// std::map< int, Channel & > _channel;
 	int _epollFd;
 	int _servFd;
+	std::map< int, Client * > _client;
+	std::vector< std::string > _usedNicks;
+	struct epoll_event _events[MAX_EVENTS];
 	struct epoll_event _servPoll;
 	struct sockaddr_in _servAddress;
-	struct epoll_event _events[MAX_EVENTS];
 
 	Server(void);
 };

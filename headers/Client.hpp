@@ -6,21 +6,21 @@
 /*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/20 18:44:50 by cdomet-d         ###   ########lyon.fr   */
+/*   Updated: 2025/02/21 13:55:16 by cdomet-d         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
-#include <string>
-#include <vector>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <sys/epoll.h>
 #include <fcntl.h>
 #include <iostream>
+#include <netinet/in.h>
+#include <string>
+#include <sys/epoll.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <vector>
 
 class Client {
   public:
@@ -29,51 +29,50 @@ class Client {
 	~Client(void);
 	/*                               EXCEPTIONS                                */
 	class InitFailed : public std::exception {
-		public:
-			InitFailed(const char *err);
-			const char *what() const throw();
-		private:
-			const char *errMessage;
+	  public:
+		InitFailed(const char *err);
+		const char *what() const throw();
+
+	  private:
+		const char *errMessage;
 	};
 	/*                               METHODS                                  */
 
 	/*                               GETTERS                                  */
+	bool getOpStatus() const;
 	int getFd() const;
 	std::string getName() const;
 	std::string getNick() const;
 	std::string getRealName() const;
-	std::string getOpStatus() const;
-	
+
 	/*                               SETTERS                                  */
 	void setOpStatus(bool isOp);
-	void changeNick(const std::string &newNick);
+	void setNick(const std::string &newNick);
 
   private:
 	// user info
+	bool _isOp;
 	std::string _name;
-	std::string _realName;
 	std::string _nick;
 	std::string _pass;
-	bool isOp;
+	std::string _realName;
 
 	// socket infos
-	struct sockaddr_in cliAddr;
 	struct epoll_event cliEpoll;
 	int cliFd;
-	socklen_t len;
-	std::string addrIP;
 
 	// channels
 	std::vector< int > joinedChans;
 
 	/*                               METHODS                                  */
 	// parsing
-	bool isValidNick(const std::string &nick);
-	
+	bool isValidNick(const std::string &nick,
+					 const std::vector< std::string > &nicks);
+
 	// private constructors
-	// Client(const Client &rhs) {}
-	// Client(void) {}
-	// Client &operator=(const Client &rhs) {}
+	Client(const Client &rhs);
+	Client(void);
+	Client &operator=(const Client &rhs);
 };
 
 #endif

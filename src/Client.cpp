@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/20 18:40:57 by cdomet-d         ###   ########lyon.fr   */
+/*   Updated: 2025/02/21 13:41:11 by cdomet-d         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,10 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-
-//TODO: Client-specific exceptions ?
+// WARN: still not sure wether we need the client IP adress or not
 Client::Client(int servFd, int epollFd)
-	: len(sizeof(cliAddr)), addrIP(inet_ntoa(cliAddr.sin_addr))
 {
-	cliFd = accept(servFd, (sockaddr *)&cliAddr, &len);
+	cliFd = accept(servFd, NULL, 0);
 	if (cliFd == -1)
 		throw Client::InitFailed(const_cast< const char * >(strerror(errno)));
 	if (fcntl(cliFd, F_SETFL, O_NONBLOCK) == -1) {
@@ -36,9 +34,19 @@ Client::Client(int servFd, int epollFd)
 		close(cliFd);
 		throw Client::InitFailed(const_cast< const char * >(strerror(errno)));
 	}
-	
-	std::cout << "Client [" << cliFd << " ] connected from " << addrIP
-			  << std::endl;
+	std::cout << "Client [" << cliFd << " ] connected " << std::endl;
+}
+
+Client::~Client() {}
+Client::Client(const Client &rhs)
+{
+	static_cast< void >(rhs);
+}
+Client::Client(void) {}
+Client &Client::operator=(const Client &rhs)
+{
+	static_cast< void >(rhs);
+	return *this;
 }
 
 /* ************************************************************************** */
@@ -48,6 +56,27 @@ Client::Client(int servFd, int epollFd)
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
+int Client::getFd() const
+{
+	return cliFd;
+}
+
+std::string Client::getName() const
+{
+	return _name;
+}
+std::string Client::getNick() const
+{
+	return _nick;
+}
+std::string Client::getRealName() const
+{
+	return _realName;
+}
+bool Client::getOpStatus() const
+{
+	return _isOp;
+}
 
 /* ************************************************************************** */
 /*                               SETTERS                                      */
