@@ -6,13 +6,14 @@
 /*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/21 14:15:31 by cdomet-d         ###   ########lyon.fr   */
+/*   Updated: 2025/02/21 15:46:08 by cdomet-d         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include <algorithm>
 
-Server *Server::_server = NULL;
+// Server *Server::_server = NULL;
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
@@ -27,10 +28,14 @@ Server::Server(void) : _port(0), _password("") {}
 
 Server::~Server(void)
 {
+	std::cout << "Calling destructor" << std::endl;
 	for (std::map< int, Client * >::iterator it = _client.begin();
 		 it != _client.end(); ++it) {
+		close(it->first);
 		delete it->second;
 	}
+	close(_epollFd);
+	close(_servFd);
 }
 
 /* ************************************************************************** */
@@ -82,8 +87,8 @@ bool Server::servRun()
 		for (int i = 0; i < nbFds; i++) {
 			if (_events[i].data.fd == _servFd)
 				acceptClient();
-			else
-				handleData(_events[i].data.fd);
+			else if (handleData(_events[i].data.fd) == false)
+				return true;
 		}
 	}
 	return (true);
@@ -102,21 +107,24 @@ void Server::acceptClient()
 
 bool Server::handleData(int fd)
 {
+	// TODO: Limit message size
+	// Most IRC servers limit messages to 512 bytes in length,
+	//including the trailing CR-LF characters. Implementations which include
+	//message tags need to allow additional bytes for the tags section of a
+	//message; clients must allow 8191 additional bytes and servers must allow
+	// 4096 additional bytes
 	char buffer[1024];
 	memset(buffer, 0, sizeof(buffer));
 	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
-	if (bytes <= 0) {
-		std::cout << "Client <" << fd << "> Disconnected" << std::endl;
-		//TODO : erase client
-		close(fd);
-		return (false);
-	} else {
+	if (bytes <= 0)
+		return (disconnectClient(fd));
+	else {
+		std::cout << buffer << std::endl;
 		if (bytes >= 2 && buffer[bytes - 2] == '\r' &&
 			buffer[bytes - 1] == '\n') {
 			buffer[bytes - 2] = '\0';
 			bytes -= 2;
 		}
-
 		for (ssize_t i = 0; i < bytes; ++i) {
 			buffer[i] = toupper(buffer[i]);
 		}
@@ -125,13 +133,29 @@ bool Server::handleData(int fd)
 			std::cout << "Client <" << fd << "> joined " << (buffer + 6)
 					  << std::endl;
 		}
+		if (strncmp(buffer, "QUIT", 4) == 0) {
+			std::cout << "Exit server" << std::endl;
+			return false;
+		}
 		return (true);
 	}
 }
 
-Server *Server::GetInstanceServer(int port, std::string password)
+Server &Server::GetInstanceServer(int port, std::string password)
 {
-	if (_server == NULL)
-		_server = new Server(port, password);
-	return (_server);
+	static Server instance(port, password);
+	return (instance);
+}
+
+bool Server::disconnectClient(int fd)
+{
+	std::map< int, Client * >::iterator it = _client.find(fd);
+	if (it != _client.end()) {
+		std::cout << "Client [" << fd << "] disconnected" << std::endl;
+		delete it->second;
+		_client.erase(fd);
+		close(fd);
+		return true;
+	}
+	return false;
 }
