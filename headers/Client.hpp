@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/21 13:55:16 by cdomet-d         ###   ########lyon.fr   */
+/*   Updated: 2025/02/21 14:31:14 by cdomet-d         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,6 @@ class Client {
 	std::vector< int > joinedChans;
 
 	/*                               METHODS                                  */
-	// parsing
-	bool isValidNick(const std::string &nick,
-					 const std::vector< std::string > &nicks);
-
 	// private constructors
 	Client(const Client &rhs);
 	Client(void);
