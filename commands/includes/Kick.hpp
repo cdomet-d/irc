@@ -24,8 +24,11 @@ onChan() -> checks if the client belongs to the channel \
 hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
 					if not display ERR_CHANOPRIVSNEEDED
 
+validKick() -> checks if target user is in the channel \
+				if not display ERR_USERNOTINCHANNEL
+
 -- executors --
-kickUser() -> remove from client from channel \
+kickUser() -> remove target user from channel \
 				send KICK message to channel with <source> being the client who sent the kick, \
 				the channel and the comment (if given otherwise a default message)
 
