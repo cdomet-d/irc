@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/21 13:56:18 by cdomet-d         ###   ########lyon.fr   */
+/*   Updated: 2025/02/21 14:14:53 by cdomet-d         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ class Server {
 	/*                               METHODS                                  */
 	bool servInit();
 	bool servRun();
-	bool acceptClient();
+	void acceptClient();
 	bool handleData(int fd);
 
   private:
