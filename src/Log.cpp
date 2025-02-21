@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   Log.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:56:23 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/21 13:20:37 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/02/21 14:35:37 by cdomet-d         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string>
-#include <iostream>
-#include <ctime>
 #include "Colors.hpp"
+#include <ctime>
+#include <iostream>
+#include <string>
 
-enum logLevel {INFO, ERROR, DEBUG};
+enum logLevel { INFO, ERROR, DEBUG };
 
 std::string timeStamp()
 {
@@ -25,16 +25,20 @@ std::string timeStamp()
 	return (time_buf);
 }
 
-void log(logLevel level, std::string message) {
+void log(logLevel level, std::string message)
+{
 	switch (level) {
-		case (INFO):
-			std::cout << "[" << timeStamp() << ']' << " INFO:\t" << BLUE << message << RESET << std::endl;
-			break ;
-		case(ERROR):
-			std::cout << "[" << timeStamp() << ']' << " ERROR:\t" << RED << message << RESET << std::endl;
-			break ;
-		case(DEBUG):
-			std::cout << "[" << timeStamp() << ']' << " DEBUG:\t" << YELLOW << message << RESET << std::endl;
-			break ;
+	case (INFO):
+		std::cout << "[" << timeStamp() << ']' << " INFO:\t" << BLUE << message
+				  << RESET << std::endl;
+		break;
+	case (ERROR):
+		std::cout << "[" << timeStamp() << ']' << " ERROR:\t" << RED << message
+				  << RESET << std::endl;
+		break;
+	case (DEBUG):
+		std::cout << "[" << timeStamp() << ']' << " DEBUG:\t" << YELLOW
+				  << message << RESET << std::endl;
+		break;
 	}
 }
