@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/21 14:00:37 by cdomet-d         ###   ########lyon.fr   */
+/*   Updated: 2025/02/21 14:12:52 by cdomet-d         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ bool Server::servRun()
 		for (int i = 0; i < nbFds; i++) {
 			if (_events[i].data.fd == _servFd)
 				acceptClient();
+			else
+				handleData(_events[i].data.fd);
 		}
 	}
 	return (true);
@@ -95,6 +97,33 @@ void Server::acceptClient()
 		_usedNicks.push_back(newCli->getNick());
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
+	return (true);
+}
+
+bool Server::handleData(int fd)
+{
+	char buffer[1024];
+	memset(buffer, 0, sizeof(buffer));
+	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
+	if (bytes <= 0) {
+		std::cout << "Client <" << fd << "> Disconnected" << std::endl;
+		//TODO : erase client
+		close (fd);
+		return (false);
+	} else {
+  		if (bytes >= 2 && buffer[bytes-2] == '\r' && buffer[bytes-1] == '\n') {
+            buffer[bytes-2] = '\0';
+            bytes -= 2;
+        }
+
+        for (ssize_t i = 0; i < bytes; ++i) {
+            buffer[i] = toupper(buffer[i]);
+        } 
+
+        if (strncmp(buffer, "JOIN #", 5) == 0) {
+            std::cout << "Client <" << fd << "> joined " << (buffer + 6) << std::endl;
+		}
+	return (true);
 	}
 }
 
