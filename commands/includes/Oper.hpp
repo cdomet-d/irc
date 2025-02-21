@@ -20,7 +20,7 @@ pwMatch() -> checks to see if the given password is correct \
 enoughParam() -> checks if there are the right nb of params \
 				in case of failure display ERR_NEEDMOREPARAMS
 
--- setters --
+-- executors --
 setOper() -> changes client status \
 				send concerned client RPL_YOUROPER message \
 				and a MODE message indicating his new user modes \

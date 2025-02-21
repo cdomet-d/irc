@@ -18,7 +18,7 @@ validUser() -> checks if param characters are valid or not \
 enoughParam() -> checks if there are the right nb of params \
 				in case of failure display ERR_NEEDMOREPARAMS
 
--- setters --
+-- executors --
 setUser() -> sets client's username, realname, (hostname, servername) \
 				if already set display ERR_ALREADYREGISTERED
 

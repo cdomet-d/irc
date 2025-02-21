@@ -26,12 +26,13 @@ joinChanRequest() -> checks :
 						- if client was invited (if channel is invite-only mode) if not display ERR_INVITEONLYCHAN \
 						- ERR_BADCHANMASK (not sure of the purpose of this one)
 						
--- setters --
+-- executors --
 addToChan() -> adds client to channel \
-				send the 3 following messages in this order : \
+				send the 3 following messages to the client in this order : \
 					- client as the source and the joined channel as first param \
-					- channel's topic (if it has one) \
-					- a list of users in that channel \
+					- channel's topic (if it has one) with RPL_TOPIC\
+					- a list of users in that channel with RPL_NAMREPLY and RPL_ENDOFNAMES \
+							(seems to be the job of the command NAME so not sure we'll do it) \
 				send message about all commands which affect channel \
 				MODE, KICK, PART, QUIT, PRIVMSG (not sure when to send this message)
 				

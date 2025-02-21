@@ -17,7 +17,7 @@ validNick() -> checks if nickname characters are valid or not \
 				if invalid characters display ERR_ERRONEUSNICKNAME \
 				if nickname is already in use display ERR_NICKNAMEINUSE
 
--- setters --
+-- executors --
 setNick() -> sets client nickname to given string \
 				send "<old nickname> [ ["!" user] "@"host ]" message \
 				to the concerned client	and if in a channel send to all the channel's clients
