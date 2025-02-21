@@ -15,8 +15,9 @@ command name : JOIN
 enoughParam() -> checks if there are the right nb of params \
 				in case of failure display ERR_NEEDMOREPARAMS
 
+validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL 
+
 joinChanRequest() -> checks : 
-						- if channel exists if not display ERR_NOSUCHCHANNEL \
 						- the nbr of channels the client is in, if > limit display ERR_TOOMANYCHANNELS \
 						- if the key to access the channel (if it has one) is supplied and valid \
 							if not display ERR_BADCHANNELKEY \
