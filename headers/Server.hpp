@@ -22,9 +22,14 @@ extern int sign;
 #include <netinet/in.h>
 #include <poll.h>
 #include <string>
+#include <cstring>
+#include <sys/epoll.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 class Client;
 
+//TODO : Create log function
 //TODO : see if we create map for channels
 //TODO : add queue in case maxevent is returned, for handling too many events at once
 //TODO : Encryption password ?
@@ -39,7 +44,8 @@ class Server {
 	/*                               METHODS                                  */
 	bool servInit();
 	bool servRun();
-	void acceptClient();
+	bool acceptClient();
+	bool handleData(int fd);
 
   private:
 	static Server *_server;

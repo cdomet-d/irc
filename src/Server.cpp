@@ -74,6 +74,8 @@ bool Server::servRun()
 		for (int i = 0; i < nbFds; i++) {
 			if (_events[i].data.fd == _servFd)
 				acceptClient();
+			else
+				handleData(_events[i].data.fd);
 		}
 	}
 	return (true);
@@ -83,11 +85,58 @@ bool Server::servRun()
 //so needs to be in the client class
 void Server::acceptClient()
 {
-	try {
+	}
+	struct sockaddr_in cliAddr;
+	struct epoll_event cliEpoll;
+	int cliFd;
+	socklen_t len;
+	std::string addrIP;
+
+	len = sizeof(cliAddr);
+	cliFd = accept(_servFd, (sockaddr *)&cliAddr, &len);
+	if (cliFd == -1)
+		return (false);
+	if (fcntl(cliFd, F_SETFL, O_NONBLOCK) == -1)
+		return (close(cliFd), false);
+	cliEpoll.events = EPOLLIN;
+	cliEpoll.data.fd = cliFd;
+	if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, cliFd, &cliEpoll) == -1)
+		return (close(cliFd), false);
+	addrIP = inet_ntoa(cliAddr.sin_addr);
+	std::cout << "Client <" << cliFd << "> connected from " << addrIP
+			  << std::endl;
+ 	try {
 		Client newCli(_servFd, _epollFd);
 		_client.insert(std::pair<int, Client *>(newCli.getFd(), &newCli));
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
+	return (true);
+}
+
+bool Server::handleData(int fd)
+{
+	char buffer[1024];
+	memset(buffer, 0, sizeof(buffer));
+	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
+	if (bytes <= 0) {
+		std::cout << "Client <" << fd << "> Disconnected" << std::endl;
+		//TODO : erase client
+		close (fd);
+		return (false);
+	} else {
+  		if (bytes >= 2 && buffer[bytes-2] == '\r' && buffer[bytes-1] == '\n') {
+            buffer[bytes-2] = '\0';
+            bytes -= 2;
+        }
+
+        for (ssize_t i = 0; i < bytes; ++i) {
+            buffer[i] = toupper(buffer[i]);
+        } 
+
+        if (strncmp(buffer, "JOIN #", 5) == 0) {
+            std::cout << "Client <" << fd << "> joined " << (buffer + 6) << std::endl;
+		}
+	return (true);
 	}
 }
 
