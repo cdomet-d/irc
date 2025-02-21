@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/20 10:40:08 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/02/21 13:52:16 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ bool Server::servRun()
 		for (int i = 0; i < nbFds; i++) {
 			if (_events[i].data.fd == _servFd)
 				acceptClient();
+			else
+				handleData(_events[i].data.fd);
 		}
 	}
 	return (true);
@@ -101,7 +103,35 @@ bool Server::acceptClient()
 	addrIP = inet_ntoa(cliAddr.sin_addr);
 	std::cout << "Client <" << cliFd << "> connected from " << addrIP
 			  << std::endl;
+ 
 	return (true);
+}
+
+bool Server::handleData(int fd)
+{
+	char buffer[1024];
+	memset(buffer, 0, sizeof(buffer));
+	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
+	if (bytes <= 0) {
+		std::cout << "Client <" << fd << "> Disconnected" << std::endl;
+		//TODO : erase client
+		close (fd);
+		return (false);
+	} else {
+  		if (bytes >= 2 && buffer[bytes-2] == '\r' && buffer[bytes-1] == '\n') {
+            buffer[bytes-2] = '\0';
+            bytes -= 2;
+        }
+
+        for (ssize_t i = 0; i < bytes; ++i) {
+            buffer[i] = toupper(buffer[i]);
+        } 
+
+        if (strncmp(buffer, "JOIN #", 5) == 0) {
+            std::cout << "Client <" << fd << "> joined " << (buffer + 6) << std::endl;
+		}
+	return (true);
+	}
 }
 
 Server *Server::GetInstanceServer(int port, std::string password)

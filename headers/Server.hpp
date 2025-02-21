@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/20 10:40:11 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/02/21 11:37:34 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,14 @@ extern int sign;
 #include <poll.h>
 #include <stdbool.h>
 #include <string>
+#include <cstring>
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
 class Client;
 
+//TODO : Create log function
 //TODO : see if we create map for channels
 //TODO : add queue in case maxevent is returned, for handling too many events at once
 //TODO : Encryption password ?
@@ -45,6 +47,7 @@ class Server {
 	bool servInit();
 	bool servRun();
 	bool acceptClient();
+	bool handleData(int fd);
 
   private:
 	static Server *_server;
