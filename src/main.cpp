@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/21 15:57:36 by cdomet-d         ###   ########lyon.fr   */
+/*   Updated: 2025/02/21 16:47:03 by cdomet-d         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,12 @@
 
 int sign = false;
 
-void SignalHandler(int signum)
-{
+void SignalHandler(int signum) {
 	(void)signum;
 	sign = true;
 }
 
-int main(int ac, char **av)
-{
+int main(int ac, char **av) {
 	(void)av;
 	if (ac != 3)
 		return (std::cout << "Missing arguments (port and password)\n", 0);

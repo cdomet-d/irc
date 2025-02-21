@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/21 14:30:00 by cdomet-d         ###   ########lyon.fr   */
+/*   Updated: 2025/02/21 16:46:47 by cdomet-d         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 // WARN: still not sure wether we need the client IP adress or not
-Client::Client(int servFd, int epollFd)
-{
+Client::Client(int servFd, int epollFd) {
 	cliFd = accept(servFd, NULL, 0);
 	if (cliFd == -1)
 		throw Client::InitFailed(const_cast< const char * >(strerror(errno)));
@@ -38,13 +37,11 @@ Client::Client(int servFd, int epollFd)
 }
 
 Client::~Client() {}
-Client::Client(const Client &rhs)
-{
+Client::Client(const Client &rhs) {
 	static_cast< void >(rhs);
 }
 Client::Client(void) {}
-Client &Client::operator=(const Client &rhs)
-{
+Client &Client::operator=(const Client &rhs) {
 	static_cast< void >(rhs);
 	return *this;
 }
@@ -56,34 +53,38 @@ Client &Client::operator=(const Client &rhs)
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-int Client::getFd() const
-{
+int Client::getFd() const {
 	return cliFd;
 }
 
-std::string Client::getName() const
-{
+std::string Client::getName() const {
 	return _name;
 }
-std::string Client::getNick() const
-{
+std::string Client::getNick() const {
 	return _nick;
 }
-std::string Client::getRealName() const
-{
+std::string Client::getRealName() const {
 	return _realName;
 }
-bool Client::getOpStatus() const
-{
+bool Client::getOpStatus() const {
 	return _isOp;
 }
 
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
+void Client::setOpStatus(bool isOp) {
+	_isOp = isOp;
+}
+void Client::setNick(const std::string &newNick) {
+	_nick = newNick;
+}
 
-const char *Client::InitFailed::what() const throw()
-{
+/* ************************************************************************** */
+/*                               EXCEPTIONS                                   */
+/* ************************************************************************** */
+
+const char *Client::InitFailed::what() const throw() {
 	std::cerr << "irc: ";
 	return errMessage;
 }
