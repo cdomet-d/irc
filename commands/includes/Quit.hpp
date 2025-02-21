@@ -11,8 +11,8 @@ command name : QUIT
 
 //methods
 cutConnexion() -> send ERROR message to client then rm client from struct epoll \
-				if command is sent by a client \
-					send message to clients from same channel as exiting client \
+				send message to clients from same channel as the exiting client : \
+				if command QUIT is sent by a client \
 					<source> (the exiting client) + "Quit: " + <quit message> (if given) \
 				else \
 					send message explaining why this connection broke
