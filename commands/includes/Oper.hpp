@@ -24,6 +24,6 @@ enoughParam() -> checks if there are the right nb of params \
 setOper() -> changes client status \
 				send concerned client RPL_YOUROPER message \
 				and a MODE message indicating his new user modes \
-				also inform channel of this new operator using MODE +o
+				also inform network of this new operator using MODE +o
 
 */

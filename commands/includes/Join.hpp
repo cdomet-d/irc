@@ -6,6 +6,7 @@ registration succeeded
 //parsing
 at least 1 param (we can restrict the nbr of channels)
 params are seperated with a coma ","
+can accept param "0" which acts like a PART command (do we want to do that ?)
 
 //attributes
 command name : JOIN
@@ -28,13 +29,14 @@ joinChanRequest() -> checks :
 						
 -- executors --
 addToChan() -> adds client to channel \
-				send the 3 following messages to the client in this order : \
+				- send the 3 following messages to the client in this order : \
 					- client as the source and the joined channel as first param \
 					- channel's topic (if it has one) with RPL_TOPIC\
 					- a list of users in that channel with RPL_NAMREPLY and RPL_ENDOFNAMES \
 							(seems to be the job of the command NAME so not sure we'll do it) \
-				send message about all commands which affect channel \
-				MODE, KICK, PART, QUIT, PRIVMSG (not sure when to send this message)
+				- send to client message about all commands which affect channel \
+					MODE, KICK, PART, QUIT, PRIVMSG (not sure when to send this message)
+				- send a JOIN message to channel to inform other clients
 				
 
 */

@@ -1,7 +1,8 @@
 /*
 
-//requirement
-nickname is set
+//requirements
+- nickname is set
+- registration not complete, if so display ERR_ALREADYREGISTERED
 
 //parsing
 2 or 4 arguments (to be decided)
@@ -20,6 +21,5 @@ enoughParam() -> checks if there are the right nb of params \
 
 -- executors --
 setUser() -> sets client's username, realname, (hostname, servername) \
-				if already set display ERR_ALREADYREGISTERED
 
 */

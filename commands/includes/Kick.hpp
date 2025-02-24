@@ -6,7 +6,7 @@ registration succeeded
 //parsing
 at least 2 params
 if more, params are seperated with a coma ","
-(we can limit the nbr of target usersper KICK command)
+(we can limit the nbr of target users per KICK command)
 
 //attributes
 command name : KICK
@@ -31,6 +31,5 @@ validKick() -> checks if target user is in the channel \
 kickUser() -> remove target user from channel \
 				send KICK message to channel with <source> being the client who sent the kick, \
 				the channel and the comment (if given otherwise a default message)
-
 
 */

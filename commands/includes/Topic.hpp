@@ -17,13 +17,14 @@ validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 onChan() -> checks if the client belongs to the channel \
 			if not display ERR_NOTONCHANNEL
 
+(if MODE +t is set and client wants to change topic)
 hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
 					if not display ERR_CHANOPRIVSNEEDED
 
 -- executors --
 changeTopic() -> if topic (can be NULL) is given change the channel's topic \
 					use displayTopic() to send message to each client in the channel \
-					including the author, of the change. \
+					including the author of the change. \
 					if the topic is changed to exacly the same as it was \
 					we can choose to notify the users or not
 
