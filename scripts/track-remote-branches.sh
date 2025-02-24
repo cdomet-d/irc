@@ -31,4 +31,6 @@ if [ "$error" == "true" ]; then
 	echo "Please commit your current changes"
 fi
 
-git switch "$current_branch"
+if [ "$(git rev-parse --abbrev-ref HEAD)" != "$current_branch" ]; then
+	git switch "$current_branch"
+fi
