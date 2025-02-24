@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 17:06:23 by csweetin          #+#    #+#             */
-/*   Updated: 2025/02/24 18:18:26 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/02/24 18:20:57 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ steps :
 	-permission
 	-argument
 		-checkers
+	-executor
 	-build
+
+- register ?
 
 - execute with director
 
