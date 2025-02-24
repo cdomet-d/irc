@@ -16,7 +16,7 @@ command name : JOIN
 enoughParam() -> checks if there are the right nb of params \
 				in case of failure display ERR_NEEDMOREPARAMS
 
-validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL 
+validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL (how do we create a new channel )
 
 joinChanRequest() -> checks : 
 						- the nbr of channels the client is in, if > limit display ERR_TOOMANYCHANNELS \
