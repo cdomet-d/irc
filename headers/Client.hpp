@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/21 14:31:14 by cdomet-d         ###   ########lyon.fr   */
+/*   Updated: 2025/02/24 12:29:45 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,9 @@
 class Client {
   public:
 	/*                               ORTHODOX CLASS                           */
-	Client(int servFd, int epollFd);
+	Client(void);
 	~Client(void);
-	/*                               EXCEPTIONS                                */
-	class InitFailed : public std::exception {
-	  public:
-		InitFailed(const char *err);
-		const char *what() const throw();
 
-	  private:
-		const char *errMessage;
-	};
 	/*                               METHODS                                  */
 
 	/*                               GETTERS                                  */
@@ -44,10 +36,13 @@ class Client {
 	std::string getName() const;
 	std::string getNick() const;
 	std::string getRealName() const;
+	struct epoll_event getCliEpoll() const;
 
 	/*                               SETTERS                                  */
 	void setOpStatus(bool isOp);
 	void setNick(const std::string &newNick);
+	void setFd(int fd);
+	void setCliEpoll(struct epoll_event epoll);
 
   private:
 	// user info
@@ -58,8 +53,8 @@ class Client {
 	std::string _realName;
 
 	// socket infos
-	struct epoll_event cliEpoll;
-	int cliFd;
+	struct epoll_event _cliEpoll;
+	int _cliFd;
 
 	// channels
 	std::vector< int > joinedChans;
@@ -67,7 +62,6 @@ class Client {
 	/*                               METHODS                                  */
 	// private constructors
 	Client(const Client &rhs);
-	Client(void);
 	Client &operator=(const Client &rhs);
 };
 

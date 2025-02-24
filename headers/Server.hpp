@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/21 15:39:48 by cdomet-d         ###   ########lyon.fr   */
+/*   Updated: 2025/02/24 13:06:22 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,25 +42,36 @@ class Server {
 	static Server &GetInstanceServer(int port, std::string password);
 	~Server(void);
 
+	std::map< int, Client * > _client;
+
+	/*                               EXCEPTIONS                                */
+	class InitFailed : public std::exception {
+		public:
+		  InitFailed(const char *err);
+		  const char *what() const throw();
+	
+		private:
+		  const char *errMessage;
+	  };
+	
 	/*                               METHODS                                  */
 	bool handleData(int fd);
 	bool servInit();
 	bool servRun();
 	void acceptClient();
-
-  private:
+	
+	private:
 	/*                               METHODS                                  */
 	bool disconnectClient(int fd);
 	// constructor
 	Server(int port, std::string password);
-
+	
 	// attributes
 	// std::map< int, Channel * > _channel;
 	const int _port;
 	const std::string _password;
 	int _epollFd;
 	int _servFd;
-	std::map< int, Client * > _client;
 	std::vector< std::string > _usedNicks;
 	struct epoll_event _events[MAX_EVENTS];
 	struct epoll_event _servPoll;

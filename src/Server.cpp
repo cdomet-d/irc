@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/21 16:47:09 by cdomet-d         ###   ########lyon.fr   */
+/*   Updated: 2025/02/24 13:27:06 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <algorithm>
+#include <cerrno>
 
 // Server *Server::_server = NULL;
 
@@ -82,19 +83,37 @@ bool Server::servRun() {
 		for (int i = 0; i < nbFds; i++) {
 			if (_events[i].data.fd == _servFd)
 				acceptClient();
-			else if (handleData(_events[i].data.fd) == false)
+ 			else if (handleData(_events[i].data.fd) == false)
 				return true;
 		}
 	}
 	return (true);
 }
 
+
 void Server::acceptClient() {
 	try {
-		Client *newCli = new Client(_servFd, _epollFd);
+		Client *newCli = new Client();
+		struct epoll_event cliEpollTemp;
+		newCli->setFd(accept(_servFd, NULL, 0)); 
+		if (newCli->getFd() == -1)
+			throw Server::InitFailed(const_cast< const char * >(strerror(errno)));
+		if (fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK) == -1) {
+			close(newCli->getFd());
+			throw Server::InitFailed(const_cast< const char * >(strerror(errno)));
+		}
+		cliEpollTemp.events = EPOLLIN;
+		cliEpollTemp.data.fd = newCli->getFd();
+		newCli->setCliEpoll(cliEpollTemp);
+		if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, newCli->getFd(), &cliEpollTemp) == -1) {
+			close(newCli->getFd());
+			throw Server::InitFailed(const_cast< const char * >(strerror(errno)));
+		}
 		_client.insert(std::pair< int, Client * >(newCli->getFd(), newCli));
 		_usedNicks.push_back(newCli->getNick());
+		std::cout << "Client [" << newCli->getFd() << "] connected " << std::endl;
 	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
+
 }
 
 bool Server::handleData(int fd) {
@@ -110,15 +129,13 @@ bool Server::handleData(int fd) {
 	if (bytes <= 0)
 		return (disconnectClient(fd));
 	else {
-		std::cout << buffer << std::endl;
 		if (bytes >= 2 && buffer[bytes - 2] == '\r' &&
 			buffer[bytes - 1] == '\n') {
-			buffer[bytes - 2] = '\0';
-			bytes -= 2;
-		}
-		for (ssize_t i = 0; i < bytes; ++i) {
-			buffer[i] = toupper(buffer[i]);
-		}
+				buffer[bytes - 2] = '\0';
+				bytes -= 2;
+			}
+			std::string s = buffer;
+			std::cout << s << std::endl;
 
 		if (strncmp(buffer, "JOIN #", 5) == 0) {
 			std::cout << "Client <" << fd << "> joined " << (buffer + 6)
@@ -148,3 +165,14 @@ bool Server::disconnectClient(int fd) {
 	}
 	return false;
 }
+
+/* ************************************************************************** */
+/*                               EXCEPTIONS                                   */
+/* ************************************************************************** */
+
+const char *Server::InitFailed::what() const throw() {
+	std::cerr << "irc: ";
+	return errMessage;
+}
+
+Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
