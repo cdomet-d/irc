@@ -22,7 +22,8 @@ joinChanRequest() -> checks :
 						- the nbr of channels the client is in, if > limit display ERR_TOOMANYCHANNELS \
 						- if the key to access the channel (if it has one) is supplied and valid \
 							if not display ERR_BADCHANNELKEY \
-						- if client isn't banned from the channel if so display ERR_BANNEDFROMCHAN \
+						- if client isn't banned from the channel \
+								if so display ERR_BANNEDFROMCHAN (we don't have to implement MODE +b so this is optionnal) \
 						- if channel's client limit (if set) hasn't been reached if so display ERR_CHANNELISFULL \
 						- if client was invited (if channel is invite-only mode) if not display ERR_INVITEONLYCHAN \
 						- ERR_BADCHANMASK (not sure of the purpose of this one)
