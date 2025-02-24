@@ -26,7 +26,7 @@ validMess() -> check : \
 sendMess() -> send <text to be sent> to target \
 				if target is a channel, check for a prefixe and \
 				send message only to clients with appropriate status \
-				else if it is a user, if user has been set as away display RPL_AWAY \ (not sure if we have to do this)
+				else if it is a user, if user has been set as away display RPL_AWAY \ (don't need to do it, it's MODE -a)
 				if the target starts with a $, the message is a broadcast (sent to all clients on server)
 
 */
