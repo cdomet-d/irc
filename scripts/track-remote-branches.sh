@@ -2,7 +2,9 @@
 
 git fetch --all --prune
 
-git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -d
+if git branch -vv | grep ': gone]'; then
+	git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -d
+fi
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 
@@ -15,12 +17,16 @@ git branch -r | grep -v '\->' | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | while read re
         echo "Tracking branch already exists: $local_branch"
     fi
     
-    if ! git switch "$local_branch"; then
+    if git switch "$local_branch"; then
 		git pull origin "$local_branch"
-		echo "Pulled latest changes for: $local_branch"
+	else
+		error="true"
+		break
 	fi
 done
 
-# Return to the original branch
+if [ "$error" == "true" ]; then
+	echo "Please commit your current changes"
+fi
+
 git switch "$current_branch"
-echo "Returned to original branch: $current_branch"
