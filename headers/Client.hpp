@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/24 12:29:45 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/02/24 16:08:32 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,22 +35,27 @@ class Client {
 	int getFd() const;
 	std::string getName() const;
 	std::string getNick() const;
+	std::string getUsername() const;
 	std::string getRealName() const;
-	struct epoll_event getCliEpoll() const;
+	struct epoll_event *getCliEpoll();
 
 	/*                               SETTERS                                  */
 	void setOpStatus(bool isOp);
 	void setNick(const std::string &newNick);
+	void setUsername(const std::string &username);
 	void setFd(int fd);
 	void setCliEpoll(struct epoll_event epoll);
+	//void setIP()
 
   private:
 	// user info
 	bool _isOp;
 	std::string _name;
 	std::string _nick;
+	std::string _username;
 	std::string _pass;
 	std::string _realName;
+	//std::string _cliIP;
 
 	// socket infos
 	struct epoll_event _cliEpoll;

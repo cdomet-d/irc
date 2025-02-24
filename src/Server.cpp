@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/24 13:27:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/02/24 16:48:42 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,25 +90,30 @@ bool Server::servRun() {
 	return (true);
 }
 
-
+//TODO : needs to be rework to get the IP address of each client
 void Server::acceptClient() {
 	try {
 		Client *newCli = new Client();
 		struct epoll_event cliEpollTemp;
-		newCli->setFd(accept(_servFd, NULL, 0)); 
+		newCli->setFd(accept(_servFd, NULL, 0));
+		
 		if (newCli->getFd() == -1)
 			throw Server::InitFailed(const_cast< const char * >(strerror(errno)));
+		
 		if (fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK) == -1) {
 			close(newCli->getFd());
 			throw Server::InitFailed(const_cast< const char * >(strerror(errno)));
 		}
+		
 		cliEpollTemp.events = EPOLLIN;
 		cliEpollTemp.data.fd = newCli->getFd();
 		newCli->setCliEpoll(cliEpollTemp);
-		if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, newCli->getFd(), &cliEpollTemp) == -1) {
+		
+		if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, newCli->getFd(), newCli->getCliEpoll()) == -1) {
 			close(newCli->getFd());
 			throw Server::InitFailed(const_cast< const char * >(strerror(errno)));
 		}
+		
 		_client.insert(std::pair< int, Client * >(newCli->getFd(), newCli));
 		_usedNicks.push_back(newCli->getNick());
 		std::cout << "Client [" << newCli->getFd() << "] connected " << std::endl;
@@ -123,25 +128,44 @@ bool Server::handleData(int fd) {
 	//message tags need to allow additional bytes for the tags section of a
 	//message; clients must allow 8191 additional bytes and servers must allow
 	// 4096 additional bytes
-	char buffer[1024];
-	memset(buffer, 0, sizeof(buffer));
-	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
+	char bufTemp[1024];
+	memset(bufTemp, 0, sizeof(bufTemp));
+	ssize_t bytes = recv(fd, bufTemp, sizeof(bufTemp) - 1, 0);
+	std::string buffer = bufTemp;
+
 	if (bytes <= 0)
 		return (disconnectClient(fd));
 	else {
-		if (bytes >= 2 && buffer[bytes - 2] == '\r' &&
-			buffer[bytes - 1] == '\n') {
-				buffer[bytes - 2] = '\0';
-				bytes -= 2;
-			}
-			std::string s = buffer;
-			std::cout << s << std::endl;
 
-		if (strncmp(buffer, "JOIN #", 5) == 0) {
-			std::cout << "Client <" << fd << "> joined " << (buffer + 6)
-					  << std::endl;
+		if (strncmp(buffer.c_str(), "NICK", 4) == 0) {
+			std::string nick;
+			buffer.erase(0, 5);
+			for (int i = 0; buffer.c_str()[i] != '\n'; i++)
+				nick.push_back(buffer.c_str()[i]);
+			std::map<int, Client *>::iterator it = _client.find(fd);
+			it->second->setNick(nick);
 		}
-		if (strncmp(buffer, "QUIT", 4) == 0) {
+		if (buffer.find("USER") != buffer.npos) {
+			size_t n = buffer.find("USER");
+			buffer.erase(n, n + 4);
+			std::string user;
+			for (int i = 0; buffer.c_str()[i] != '\n'; i++)
+				user.push_back(buffer.c_str()[i]);
+			std::map<int, Client *>::iterator it = _client.find(fd);
+			it->second->setUsername(user);
+		}
+		//TODO : the server sends the client this formatted message to let him know he joined a channel 
+		//:Alice!alice@example.com JOIN #example
+		if (strncmp(bufTemp, "JOIN #", 5) == 0) {
+			std::map<int, Client *>::iterator it = _client.find(fd);
+			std::string message = ":" + it->second->getNick() + "!" +it->second->getUsername() + "@" + "0.0.0.0.com JOIN #test";
+		
+			send(fd, message.c_str(), strlen(message.c_str()), 0);
+			
+			std::cout << "Client <" << fd << "> joined " << (bufTemp + 6) << std::endl;
+		}
+
+		if (strncmp(bufTemp, "QUIT", 4) == 0) {
 			std::cout << "Exit server" << std::endl;
 			return false;
 		}

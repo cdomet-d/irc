@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/24 13:10:17 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/02/24 15:50:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,17 @@ std::string Client::getName() const {
 std::string Client::getNick() const {
 	return _nick;
 }
+std::string Client::getUsername() const {
+	return _username;
+};
 std::string Client::getRealName() const {
 	return _realName;
 }
 bool Client::getOpStatus() const {
 	return _isOp;
 }
-struct epoll_event Client::getCliEpoll() const {
-	return (_cliEpoll);
+struct epoll_event *Client::getCliEpoll() {
+	return (&_cliEpoll);
 }
 
 /* ************************************************************************** */
@@ -62,6 +65,9 @@ void Client::setOpStatus(bool isOp) {
 }
 void Client::setNick(const std::string &newNick) {
 	_nick = newNick;
+}
+void Client::setUsername(const std::string &username) {
+	_username = username;
 }
 void Client::setFd(int fd) {
 	_cliFd = fd;
