@@ -17,11 +17,13 @@ git branch -r | grep -v '\->' | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | while read re
         echo "Tracking branch already exists: $local_branch"
     fi
     
-    if git switch "$local_branch"; then
-		git pull origin "$local_branch"
-	else
-		error="true"
-		break
+	if git branch --vv | grep behind; then
+		if git switch "$local_branch"; then
+			git pull origin "$local_branch"
+		else
+			error="true"
+			break
+		fi
 	fi
 done
 
