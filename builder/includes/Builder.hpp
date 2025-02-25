@@ -13,10 +13,9 @@
 /*
 
 what product ? a command
-what makes up that product ? parameters, 
+what makes up that product ? permission, parameters, executor
 what are the steps to build each part ?
 what are the parameters or options for each steps ?
-
 
 steps :
 - parsing
@@ -33,9 +32,18 @@ steps :
 - execute with director
 
 ------------------------------------------
-buffer = string to parse ex : "/join #channel"
+buffer = string to parse ex : "/join #channel_name"
 
-parsing : check bnf
+parsing : check bnf, rm "/" and "#", put in std::vector<std::string>>
+	res -> tab[0] : join
+			tab[1] : channel_name
+
+if (tab[0] == join)
+-> Join		cm(tab[1]); //cree un objet de la classe Join.hpp
+-> checkers : 	cm.enoughParam()
+			 	cm.validChan()
+			 	cm.joinChanRequest()
+-> executor :  	cm.addToChan()
 
 */
 
