@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builder.hpp                                        :+:      :+:    :+:   */
+/*   Builder.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,14 +12,18 @@
 
 /*
 
-ex input : "/join #channel"
+what product ? a command
+what makes up that product ? parameters, 
+what are the steps to build each part ?
+what are the parameters or options for each steps ?
+
 
 steps :
 - parsing
 
 - building
 	-permission
-	-argument
+	-param
 		-checkers
 	-executor
 	-build
@@ -28,4 +32,28 @@ steps :
 
 - execute with director
 
+------------------------------------------
+buffer = string to parse ex : "/join #channel"
+
+parsing : check bnf
+
 */
+
+
+#ifndef BUILDER_HPP
+# define BUILDER_HPP
+
+class Builder
+{
+public:
+	/*                               ORTHODOX CLASS                           */
+	virtual ~Builder(void);
+
+	/*                               METHODS                                  */
+	
+	/*                               GETTERS                                  */
+	
+	/*                               SETTERS                                  */
+};
+
+#endif
