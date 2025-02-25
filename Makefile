@@ -12,6 +12,9 @@ SRC_PATH+= $(addprefix $(SRC_DIR), $(SRC))
 SRC=	main.cpp \
 		Client.cpp \
 		Server.cpp \
+		Log.cpp \
+		NickUserParsing.cpp \
+		InputClientParsing.cpp
 
 OBJ:=$(addprefix $(BDIR), $(SRC_PATH:%.cpp=%.o))
 DEPS:=$(OBJ:%.o=%.d)
