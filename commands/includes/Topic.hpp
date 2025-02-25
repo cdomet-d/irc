@@ -5,6 +5,8 @@ registration succeeded
 
 //parsing
 at least 1 param, there can be 2 : <channel> [<topic>]
+channel object
+command issuer client object
 
 //methods
 -- checkers --

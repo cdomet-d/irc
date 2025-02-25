@@ -7,10 +7,11 @@ registration succeeded
 at least 2 params
 if more, params are seperated with a coma ","
 (we can limit the nbr of target users per KICK command)
+<channel> <user> *("," <user> ) [<comment>]
 
 //attributes
 command name : KICK
-command issuer client
+command issuer client object
 channel object
 
 //methods

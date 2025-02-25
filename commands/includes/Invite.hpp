@@ -5,6 +5,7 @@ registration succeeded
 
 //parsing
 just 2 params
+<nickname> <channel>
 
 //attributes
 command name : INVITE

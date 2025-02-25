@@ -7,10 +7,11 @@ registration succeeded
 at least 1 param (we can restrict the nbr of channels)
 params are seperated with a coma ","
 can accept param "0" which acts like a PART command (do we want to do that ?)
+<channel>{,channel} [key{,key}]
 
 //attributes
 command name : JOIN
-command issuer client
+command issuer client object
 channel object
 
 //methods

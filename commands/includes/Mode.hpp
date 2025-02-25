@@ -4,10 +4,12 @@
 registration succeeded
 
 //parsing
+<channel> [<modestring> [<mode arguments>...]]
 
 //attributes
 command name : MODE
 channel object
+command issuer client object
 
 //methods
 -- checkers --

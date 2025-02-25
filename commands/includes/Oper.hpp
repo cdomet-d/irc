@@ -8,6 +8,8 @@ just 2 params : <user> <password>
 
 //attributes
 command name : OPER
+command issuer client object
+channel object
 
 //methods
 -- checkers --

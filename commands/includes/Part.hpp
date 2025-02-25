@@ -6,9 +6,12 @@ registration succeeded
 //parsing
 at least 1 param
 params are seperated with a coma ","
+<channel>{,<channel>} [<reason>] 
 
 //attributes
 command name : PART
+command issuer client object
+channel object
 
 //methods
 -- checkers --

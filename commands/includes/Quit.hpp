@@ -4,10 +4,11 @@
 registration succeeded
 
 //parsing
-one optional argument : [<quit message>] can it have spaces ??
+one optional argument : [<quit message>]
 
 //attributes
 command name : QUIT
+command issuer client object
 
 //methods
 cutConnexion() -> send ERROR message to client then rm client from struct epoll \

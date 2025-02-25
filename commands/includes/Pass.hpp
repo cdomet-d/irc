@@ -3,10 +3,12 @@
 //parsing :
 there must be only one param <password>
 can there be spaces in a password ??
+<password>
 
 //attributes
 command name : PASS
 state : done or not (could be used to know if we can execute the command NICK)
+command issuer client object
 
 // methods :
 -- checkers -- :

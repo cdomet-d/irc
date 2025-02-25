@@ -6,9 +6,13 @@ registration succeeded
 //parsing
 at least 2 params
 if more seperated with ","
+<receiver>{,<receiver>} <text to be sent>
 
 //attributes
 command name : PRIVMSG
+list of all clients to find the target and send him the message
+list of all channels to find the target and send it the message
+command issuer client object
 
 //methods
 -- checkers --

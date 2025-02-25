@@ -6,10 +6,12 @@
 
 //parsing
 2 or 4 arguments (to be decided)
+<username> 0 * <realname> 
 
 //attributes
 command name : NICK
 state : done or not
+command issuer client object
 
 //Methods
 -- checkers --

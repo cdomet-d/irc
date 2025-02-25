@@ -5,11 +5,12 @@ password is set
 
 //parsing
 only one param
+<nickname>
 
 //attributes
 command name : NICK
 state : done or not
-command issuer client
+command issuer client object
 channel object
 
 //methods
