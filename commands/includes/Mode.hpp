@@ -7,6 +7,7 @@ registration succeeded
 
 //attributes
 command name : MODE
+channel object
 
 //methods
 -- checkers --

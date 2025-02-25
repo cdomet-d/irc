@@ -9,6 +9,8 @@ only one param
 //attributes
 command name : NICK
 state : done or not
+command issuer client
+channel object
 
 //methods
 -- checkers --

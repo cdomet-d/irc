@@ -10,6 +10,8 @@ if more, params are seperated with a coma ","
 
 //attributes
 command name : KICK
+command issuer client
+channel object
 
 //methods
 -- checkers --

@@ -8,6 +8,8 @@ just 2 params
 
 //attributes
 command name : INVITE
+command issuer clientfd
+list of all clients to find the target and send him the invite
 
 //methods
 -- checkers --

@@ -10,6 +10,8 @@ can accept param "0" which acts like a PART command (do we want to do that ?)
 
 //attributes
 command name : JOIN
+command issuer client
+channel object
 
 //methods
 -- checkers --
