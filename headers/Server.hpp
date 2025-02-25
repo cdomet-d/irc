@@ -6,17 +6,12 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/25 15:26:02 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/02/25 16:51:11 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
-
-enum logLevel { INFO, ERROR, DEBUG };
-
-#define MAX_EVENTS 100
-extern int sign;
 
 #include "Client.hpp"
 #include <arpa/inet.h>
@@ -29,6 +24,13 @@ extern int sign;
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
+
+enum logLevel { INFO, ERROR, DEBUG };
+
+#define MAX_EVENTS 100
+extern int gSign;
+extern int gPort;
+extern std::string gPassword;
 
 class Client;
 
@@ -48,26 +50,26 @@ class Server {
 
 	/*                               EXCEPTIONS                                */
 	class InitFailed : public std::exception {
-		public:
-		  InitFailed(const char *err);
-		  const char *what() const throw();
-	
-		private:
-		  const char *errMessage;
-	  };
-	
+	  public:
+		InitFailed(const char *err);
+		const char *what() const throw();
+
+	  private:
+		const char *errMessage;
+	};
+
 	/*                               METHODS                                  */
 	bool handleData(int fd);
 	bool servInit();
 	bool servRun();
 	void acceptClient();
-	
-	private:
+
+  private:
 	/*                               METHODS                                  */
 	bool disconnectClient(int fd);
 	// constructor
 	Server(int port, std::string password);
-	
+
 	// attributes
 	// std::map< int, Channel * > _channel;
 	const int _port;
@@ -85,8 +87,11 @@ class Server {
 
 void log(logLevel level, std::string message);
 void log(logLevel level, std::string message, std::string additionalInfo);
-std::vector<std::string> VectorSplit(std::string& s, const std::string& delimiter);
-std::string handleNick(std::string &buffer);
-std::string handleUsername(std::string &buffer);
+std::vector< std::string > VectorSplit(std::string &s,
+									   const std::string &delimiter);
+bool handleNick(std::string buffer, int fd);
+std::string findNick(std::string &buffer);
+bool handleUsername(std::string buffer, int fd);
+std::string findUsername(std::string &buffer);
 
 #endif //SERVER_HPP

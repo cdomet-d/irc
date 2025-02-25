@@ -6,17 +6,17 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/25 15:26:30 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/02/25 16:51:27 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <algorithm>
 #include <cerrno>
-#include <vector>
 #include <sstream>
 #include <stdio.h>
 #include <unistd.h>
+#include <vector>
 
 // Server *Server::_server = NULL;
 
@@ -25,11 +25,14 @@
 /* ************************************************************************** */
 
 Server::Server(int port, std::string password)
-	: _port(port), _password(password) {}
+	: _port(port), _password(password)
+{
+}
 // I think we can forbid server instantiation without parameters by putting the default constructor in private
 Server::Server(void) : _port(0), _password("") {}
 
-Server::~Server(void) {
+Server::~Server(void)
+{
 	std::cout << "Calling destructor" << std::endl;
 	for (std::map< int, Client * >::iterator it = _client.begin();
 		 it != _client.end(); ++it) {
@@ -46,7 +49,8 @@ Server::~Server(void) {
 
 //TODO : need to determine is false means the function work or something went wrong
 // coralie: false means something went wrong IMO
-bool Server::servInit() {
+bool Server::servInit()
+{
 	int en = 1;
 
 	_epollFd = epoll_create1(0);
@@ -75,21 +79,22 @@ bool Server::servInit() {
 	return (true);
 }
 
-bool Server::servRun() {
+bool Server::servRun()
+{
 	int nbFds;
 
 	log(INFO, "Loop IRC server started");
 	std::cout << "Server listening on port " << _port
 			  << " | IP adress: " << inet_ntoa(_servAddress.sin_addr)
 			  << std::endl;
-	while (sign == false) {
+	while (gSign == false) {
 		nbFds = epoll_wait(_epollFd, _events, MAX_EVENTS, -1);
-		if (nbFds == -1 && sign == false)
+		if (nbFds == -1 && gSign == false)
 			return (false);
 		for (int i = 0; i < nbFds; i++) {
 			if (_events[i].data.fd == _servFd)
 				acceptClient();
- 			else if (handleData(_events[i].data.fd) == false)
+			else if (handleData(_events[i].data.fd) == false)
 				return true;
 		}
 	}
@@ -97,41 +102,49 @@ bool Server::servRun() {
 }
 
 //TODO : needs to be rework to get the IP address of each client
-void Server::acceptClient() {
+void Server::acceptClient()
+{
 	try {
 		log(INFO, "Accepting new client");
 		Client *newCli = new Client();
 		struct epoll_event cliEpollTemp;
 		newCli->setFd(accept(_servFd, NULL, 0));
-		
+
 		if (newCli->getFd() == -1)
-			throw Server::InitFailed(const_cast< const char * >(strerror(errno)));
-		
+			throw Server::InitFailed(
+				const_cast< const char * >(strerror(errno)));
+
 		if (fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK) == -1) {
 			close(newCli->getFd());
-			throw Server::InitFailed(const_cast< const char * >(strerror(errno)));
+			throw Server::InitFailed(
+				const_cast< const char * >(strerror(errno)));
 		}
-		
+
 		cliEpollTemp.events = EPOLLIN;
 		cliEpollTemp.data.fd = newCli->getFd();
 		newCli->setCliEpoll(cliEpollTemp);
-		
-		if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, newCli->getFd(), newCli->getCliEpoll()) == -1) {
+
+		if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, newCli->getFd(),
+					  newCli->getCliEpoll()) == -1) {
 			close(newCli->getFd());
-			throw Server::InitFailed(const_cast< const char * >(strerror(errno)));
+			throw Server::InitFailed(
+				const_cast< const char * >(strerror(errno)));
 		}
-		
+
 		_client.insert(std::pair< int, Client * >(newCli->getFd(), newCli));
 		_usedNicks.push_back(newCli->getNick());
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected";
 		log(INFO, ss.str());
-	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
+	} catch (std::exception &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 
 //TODO : try to join a channel
 //TODO : get infos on returns values of recv and send because wtf
-bool Server::handleData(int fd) {
+bool Server::handleData(int fd)
+{
 	// TODO: Limit message size
 	// Most IRC servers limit messages to 512 bytes in length,
 	//including the trailing CR-LF characters. Implementations which include
@@ -147,22 +160,8 @@ bool Server::handleData(int fd) {
 	if (bytes <= 0)
 		return (disconnectClient(fd));
 	else {
-		std::vector<std::string> inputCli = VectorSplit(buffer, "\n");
-		for (std::vector<std::string>::iterator it = inputCli.begin(); it != inputCli.end(); ++it) {
-			if (it->find("NICK") != it->npos) {	
-				std::string nick = handleNick(*it);
-				std::map<int, Client *>::iterator whatCli = _client.find(fd);
-				whatCli->second->setNick(nick);
-				log (DEBUG, whatCli->second->getNick());
-			}
-			if (it->find("USER") != it->npos) {	
-				std::string user = handleUsername(*it);
-				std::map<int, Client *>::iterator whatCli = _client.find(fd);
-				whatCli->second->setUsername(user);
-				log (DEBUG, whatCli->second->getUsername());
-			}
-		}
-
+		handleNick(buffer, fd);
+		handleUsername(buffer, fd);
 		if (strncmp(bufTemp, "QUIT", 4) == 0) {
 			std::cout << "Exit server" << std::endl;
 			return false;
@@ -171,12 +170,14 @@ bool Server::handleData(int fd) {
 	}
 }
 
-Server &Server::GetInstanceServer(int port, std::string password) {
+Server &Server::GetInstanceServer(int port, std::string password)
+{
 	static Server instance(port, password);
 	return (instance);
 }
 
-bool Server::disconnectClient(int fd) {
+bool Server::disconnectClient(int fd)
+{
 	std::map< int, Client * >::iterator it = _client.find(fd);
 	if (it != _client.end()) {
 		std::cout << "Client [" << fd << "] disconnected" << std::endl;
@@ -192,7 +193,8 @@ bool Server::disconnectClient(int fd) {
 /*                               EXCEPTIONS                                   */
 /* ************************************************************************** */
 
-const char *Server::InitFailed::what() const throw() {
+const char *Server::InitFailed::what() const throw()
+{
 	std::cerr << "irc: ";
 	return errMessage;
 }
