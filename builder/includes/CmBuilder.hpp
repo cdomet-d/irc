@@ -79,6 +79,7 @@ public:
 		Builder &operator=(const Builder &rhs);
 	
 		/*                               METHODS                                  */
+		//build() returns an object CmBuilder
 		
 		/*                               GETTERS                                  */
 		
@@ -87,7 +88,6 @@ public:
 		//setRequirement()
 		//setParams()
 		//setExecutor()
-		//build() returns an object CmBuilder
 	private:
 		
 	};	

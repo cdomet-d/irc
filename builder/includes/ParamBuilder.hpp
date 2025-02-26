@@ -17,6 +17,26 @@ public:
 	/*                               GETTERS                                  */
 	
 	/*                               SETTERS                                  */
+	class Builder
+	{
+	public:
+		/*                               ORTHODOX CLASS                           */
+		Builder(void);
+		Builder(const Builder &rhs);
+		~Builder(void);
+		Builder &operator=(const Builder &rhs);
+	
+		/*                               METHODS                                  */
+		//build() returns an object ParamBuilder
+		
+		/*                               GETTERS                                  */
+		
+		/*                               SETTERS                                  */
+
+	private:
+		
+	};	
+
 private:
 	
 };
