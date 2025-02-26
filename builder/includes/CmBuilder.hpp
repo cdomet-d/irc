@@ -41,7 +41,7 @@ if (tab[0] == join)
 -> executor :  	cm.addToChan()
 
 //avec builder :
-- crée le moule de la commande (cf.Builder.cpp)
+- crée le moule de la commande (cf. Director.cpp)
 - enregistrer la commande dans un std::map
 - lorsqu'on recoit un buffer on va chercher la commande appropriée dans la map \
 	on lui donne le buffer et on execute la commande
@@ -83,10 +83,11 @@ public:
 		/*                               GETTERS                                  */
 		
 		/*                               SETTERS                                  */
-		//setName() sets CmBuilder name?
+		//setName() sets CmBuilder name or do i need an attribute name in Builder?
 		//setRequirement()
 		//setParams()
 		//setExecutor()
+		//build() returns an object CmBuilder
 	private:
 		
 	};	
