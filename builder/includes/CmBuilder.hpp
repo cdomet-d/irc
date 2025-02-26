@@ -26,63 +26,69 @@ steps :
 - execute with director
 
 ------------------------------------------
-buffer = string to parse ex : "/join #channel_name"
+buffer = "/join #channel_name"
 
 //sans builder :
 parsing : check bnf, rm "/" and "#", put in std::vector<std::string>>
 	res -> tab[0] : join
-			tab[1] : channel_name
+		   tab[1] : channel_name
 
 if (tab[0] == join)
--> Join		cm(tab[1]); //cree un objet de la classe Join.hpp
+-> Join		cm(tab[1], Client, Channel); //cree un objet de la classe Join.hpp
 -> checkers : 	cm.enoughParam()
 			 	cm.validChan()
 			 	cm.joinChanRequest()
 -> executor :  	cm.addToChan()
 
 //avec builder :
-commandSpec	Join = commandSpec::builder()
-						.setName("JOIN")
-						.
-	
-
-
+- crée le moule de la commande (cf.Builder.cpp)
+- enregistrer la commande dans un std::map
+- lorsqu'on recoit un buffer on va chercher la commande appropriée dans la map \
+	on lui donne le buffer et on execute la commande
 
 
 */
 
-/*exemple de simon
-//avec builder pattern :
-commandManager.registerCommand(CommandSpec::Builder()
-	.name("PART")
-	.argument("channels", GenericArguments::list<Channel>(new ChannelCommandElement(false)))
-	.argument("message", GenericArguments::optional(GenericArguments::string()))
-	.middleware(new RegisteredUserMiddleware())
-	.executor(new PartCommand())
-	.build()
-);
 
-//sans builder pattern :
-vector<pair<string, CommandElement *> > partCmdArgs;
-partCmdArgs.push_back(std::pair<std::string, CommandElement *>("channels", new ChannelCommandElement()));
-partCmdArgs.push_back(std::pair<std::string, CommandElement *>("message", GenericArguments::optional(GenericArguments::string())));
-commandManager.registerCommand(new CommandSpec("PART", partCmdArgs, new RegisteredUserMiddleware(), new PartCommand());
-*/
+#ifndef CMBUILDER_HPP
+# define CMBUILDER_HPP
 
-#ifndef BUILDER_HPP
-# define BUILDER_HPP
-
-class Builder
+class CmBuilder
 {
 public:
 	/*                               ORTHODOX CLASS                           */
-	virtual ~Builder(void);
+	CmBuilder(void);
+	CmBuilder(const CmBuilder &rhs);
+	~CmBuilder(void);
+	CmBuilder &operator=(const CmBuilder &rhs);
 
 	/*                               METHODS                                  */
 	
 	/*                               GETTERS                                  */
 	
 	/*                               SETTERS                                  */
+	class Builder
+	{
+	public:
+		/*                               ORTHODOX CLASS                           */
+		Builder(void);
+		Builder(const Builder &rhs);
+		~Builder(void);
+		Builder &operator=(const Builder &rhs);
+	
+		/*                               METHODS                                  */
+		
+		/*                               GETTERS                                  */
+		
+		/*                               SETTERS                                  */
+	private:
+		
+	};	
+
+private:
+	
 };
 
 #endif
+
+
