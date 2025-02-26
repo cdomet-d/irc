@@ -1,15 +1,15 @@
 # Table of content
 
 - [Table of content](#table-of-content)
-  - [Classes](#classes)
-    - [Server](#server)
-    - [Clients](#clients)
-    - [Channel](#channel)
-    - [Parser / builder](#parser--builder)
-      - [IRC messages](#irc-messages)
-      - [IRC rules](#irc-rules)
-  - [Appendix:](#appendix)
-    - [**BNF syntax**](#bnf-syntax)
+	- [Classes](#classes)
+		- [Server](#server)
+		- [Clients](#clients)
+		- [Channel](#channel)
+		- [Parser / builder](#parser--builder)
+			- [IRC messages](#irc-messages)
+			- [IRC rules](#irc-rules)
+	- [Appendix:](#appendix)
+		- [**BNF syntax**](#bnf-syntax)
 
 ## Classes
 
@@ -32,6 +32,8 @@
 
 ### Channel
 
+see [channel-types](https://modern.ircdocs.horse/#channel-types)
+
 - Contains all the parameters related to the channels
 
 ### Parser / builder
@@ -49,14 +51,19 @@ The server may send a client a message (IE to confirm that a command has been ex
 They may consist from three parts, separated by a single ASCII space (0x20 or 32)
 
 - the _prefix_, which is optionnal;
-  - it serves as a way to identify the _origin_ of the message. 
+  - it serves as a way to identify the _origin_ of the message.
   - mostly used in server-to-client connections, where the prefix is the server name
-  - can also be used in client-originated messages that are being relayed by the server.
-  - a prefix defined as follows: `<prefix>   ::= <servername> | <nick> [ '!' <user> ] [ '@' <host> ]`
+  - can also be used in client-originated messages that are being relayed by the server (ie. private messages, to indicate the sender)
+  - it has the following syntax:
+    - `<prefix>   ::= <servername> | <nick> [ '!' <user> ] [ '@' <host> ]`
   - in the context of a command, it is defined by a `:<prefix> <SPACE>`.
 - the command;
-  - a command is
+  - a command is a way to trigger an action in an IRC server. It is transmitted in a message to the server.
+  - it can be represented as a string ('KICK') or a numeric (3 digits, but which ?)
+  - it has the following syntax:
+    - `<command>  ::= <letter> { <letter> } | <number> <number> <number>`
 - the command parameters (up to 15).
+- the message separator, `\r\n` or `0x0D0x0A`
 
 #### IRC rules
 
@@ -74,7 +81,7 @@ They may consist from three parts, separated by a single ASCII space (0x20 or 32
 <crlf>     ::= CR LF
 ```
 
-## Appendix: 
+## Appendix:
 
 ### [**BNF syntax**][def]
 

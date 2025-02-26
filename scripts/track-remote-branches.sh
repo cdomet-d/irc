@@ -34,6 +34,7 @@ git branch -r | grep -v '\->' | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | while read -r
         if git switch "$local_branch"; then
             git pull origin "$local_branch"
         else
+			echo "Couldn't switch branch: commit your changes"
             break
         fi
     fi
