@@ -31,13 +31,13 @@ void	Director::buildCommands()
 
 	CmBuilder	Join = CmBuilder::builder()
 							.setName("join")
-							.requirement("registration")
-							.addParam(channel)
-							.addParam(string of channel, optionnal)
-							.addParam(string of keys, optionnal)
+							.requirement(3)
+							.addParam(CmParam(channel))
+							.addParam(CmParam(string of channel), optionnal)
+							.addParam(CmParam(string of keys), optionnal)
 							.addExecutor(*function)
 							.build()
 
-
+	register(Join);
 	*/
 }

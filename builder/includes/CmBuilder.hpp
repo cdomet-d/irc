@@ -53,6 +53,8 @@ if (tab[0] == join)
 #ifndef CMBUILDER_HPP
 # define CMBUILDER_HPP
 
+# include <iostream>
+
 class CmBuilder
 {
 public:
@@ -86,6 +88,9 @@ public:
 	};	
 
 private:
+	std::string	name;//maybe not necessary
+	int			requirement;//0: PASS, 1: NICK, 2: USER, 3: registration complete
+	//CmParam	parameters;
 	
 };
 
