@@ -1,4 +1,14 @@
-//HEADER
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Director.cpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/26 15:25:38 by csweetin          #+#    #+#             */
+/*   Updated: 2025/02/26 17:24:38 by csweetin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "Director.hpp"
 
@@ -42,5 +52,10 @@ void	Director::buildCommands()
 							.build()
 
 	register(Join);
+
+	CmBuilder	Invite = CmBuilder::builder()
+								.setName("kick")
+								.requirement(3)
+								.
 	*/
 }

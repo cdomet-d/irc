@@ -1,4 +1,16 @@
-//HEADER
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Director.hpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/26 15:25:56 by csweetin          #+#    #+#             */
+/*   Updated: 2025/02/26 15:30:07 by csweetin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 
 #ifndef DIRECTOR_HPP
 # define DIRECTOR_HPP
@@ -20,7 +32,7 @@ public:
 	void	buildCommands();
 
 private:
-	std::map<std::string, CmBuilder>	cmds;
+	std::map<std::string, CmBuilder>	cmds; //stock les moules des commandes
 };
 
 #endif
