@@ -94,7 +94,7 @@ public:
 
 private:
 	std::string	name;//maybe not necessary
-	int			requirement;//0: PASS, 1: NICK, 2: USER, 3: registration complete
+	int			requirement;//1: PASS, 2: NICK, 3: registration complete
 	//CmParam	parameters;
 	//Executor*	function; objet d'une classe abstraite dont herite chaque commande qui aura sa fonction execute ?
 };
