@@ -72,6 +72,7 @@ config:
     layered:
       nodePlacement:
         strategy: INTERACTIVE
+        favorStraightEdges: true
   look: handDrawn
   theme: forest
 ---
@@ -83,43 +84,46 @@ IGN("Ignore message and return")
 LEN-VALID{"evalLen(message)"}
 HAS-TERM{"hasTerm(message)"}
 START --> LEN-VALID
-LEN-VALID -- "len \> 512" --> 417(417 - ERR_INPUTTOOLONG) --> IGN
-LEN-VALID -- "len < 0" --> IGN
-LEN-VALID -- "len > 0 && len <=512" --> HAS-TERM
-HAS-TERM -- "false" --> IGN
-HAS-TERM -- "true" --> HAS-PREFIX
 
+LEN-VALID -- "true" --> HAS-TERM
+LEN-VALID -- "false" --> IGN
+
+HAS-TERM -- "true" --> HAS-PREFIX
+HAS-TERM -- "false" --> IGN
 %% Prefix
 HAS-PREFIX{"hasPrefix(message)"}
 TRIM-PREFIX("trimPrefix(message)")
 
-HAS-PREFIX -- "true" --> TRIM-PREFIX --> HAS-TRAILING
 HAS-PREFIX -- "false" --> HAS-TRAILING
+HAS-PREFIX -- "true" --> TRIM-PREFIX --> HAS-TRAILING
 
 %% COMMAND
 HAS-TRAILING{"hasTrailing(message)"}
 EXTRACT-TRAILING("extractTrailing(message)")
 SPLIT("vectorSplit(message, ' ')")
-IS-COMMAND{"isSupported <br>(message.at(0))"}
-COND{"hasParam()"}
 
 HAS-TRAILING -- "true" --> EXTRACT-TRAILING --> SPLIT
 HAS-TRAILING -- "false" --> SPLIT
-SPLIT --> COND
 
-CHECK-FORBIDDEN{"hasForbidenToken"}
-
-CHECK-FORBIDDEN -- "true" --> IGN
-CHECK-FORBIDDEN -- "false" --> COND
-
-COND -- "true" --> CHECK-FORBIDDEN
-COND -- "false" --> IS-COMMAND
-IS-COMMAND -- "true" --> CALL("Send to <br> command builder")
-
-EXIT-LOOP
-%% IS-COMMAND
+COND{"hasParam()"}
+IS-COMMAND{"isSupported <br>(message.at(0))"}
+SPLIT --> IS-COMMAND
 
 IS-COMMAND -- "false" --> IGN
+IS-COMMAND -- "true" --> Loop
+CALL("Send to command builder")
 
-%% PARAMS
+subgraph Loop
+
+    CHECK-FORBIDDEN{"hasForbiden<br>Token(message)"}
+
+    CHECK-FORBIDDEN -- "true" --> EXIT-LOOP_F("Exit false")
+    CHECK-FORBIDDEN -- "false" --> COND
+
+    COND -- "true" --> CHECK-FORBIDDEN
+    COND -- "false" --> EXIT-LOOP_T("Exit true")
+end
+
+Loop --false --> IGN
+Loop --true --> CALL
 ```
