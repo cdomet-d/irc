@@ -1,5 +1,6 @@
 
 # COMMAND PASS
+
 The PASS command is used to set a 'connection password'.  The optional password can and MUST be set 
 before any attempt to register the connection is made.  
 Currently this requires that user send a PASS command before sending the NICK/USER combination.
@@ -7,6 +8,7 @@ Currently this requires that user send a PASS command before sending the NICK/US
            ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
 
 # COMMAND NICK
+
 NICK command is used to give user a nickname or change the existing one.
 
            ERR_NONICKNAMEGIVEN             ERR_ERRONEUSNICKNAME
@@ -14,9 +16,10 @@ NICK command is used to give user a nickname or change the existing one.
            ERR_UNAVAILRESOURCE             ERR_RESTRICTED (unlisted: we're not implementing user modes)
 
 # COMMAND USER
+
 The USER command is used at the beginning of connection to specify the username, hostname and realname of a new user.
 
-		ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
+        ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
 
 # COMMAND JOIN
 
@@ -32,42 +35,43 @@ RPL_NAMREPLY), which must include the user joining.
 
 RPL_NAMREPLY which is mentionned in the doc but not under numeric replies:
 
-		353     RPL_NAMREPLY "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]" 
+        353     RPL_NAMREPLY "<channel> :[[@|+]<nick> [[@|+]<nick> [...]]]" 
 
 # COMMAND PRIVMSG
 
-			ERR_NORECIPIENT                 ERR_NOTEXTTOSEND
-			ERR_CANNOTSENDTOCHAN            ERR_NOTOPLEVEL
-			ERR_WILDTOPLEVEL                ERR_TOOMANYTARGETS
-			ERR_NOSUCHNICK
-			RPL_AWAY
+            ERR_NORECIPIENT                 ERR_NOTEXTTOSEND
+            ERR_CANNOTSENDTOCHAN            ERR_NOTOPLEVEL
+            ERR_WILDTOPLEVEL                ERR_TOOMANYTARGETS
+            ERR_NOSUCHNICK
+            RPL_AWAY
 
 --
 
-	404     ERR_CANNOTSENDTOCHAN
-			"<channel name> :Cannot send to channel"
+    404     ERR_CANNOTSENDTOCHAN
+            "<channel name> :Cannot send to channel"
 
-	- Sent to a user who is either (a) not on a channel
-		which is mode +n or (b) not a chanop (or mode +v) on
-		a channel which has mode +m set and is trying to send
-		a PRIVMSG message to that channel.
+    - Sent to a user who is either (a) not on a channel
+        which is mode +n or (b) not a chanop (or mode +v) on
+        a channel which has mode +m set and is trying to send
+        a PRIVMSG message to that channel.
 
-	413     ERR_NOTOPLEVEL
-				"<mask> :No toplevel domain specified"
-	414     ERR_WILDTOPLEVEL
-				
-				"<mask> :Wildcard in toplevel domain"
+    413     ERR_NOTOPLEVEL
+                "<mask> :No toplevel domain specified"
+    414     ERR_WILDTOPLEVEL
+                
+                "<mask> :Wildcard in toplevel domain"
 
-		- 412 - 414 are returned by PRIVMSG to indicate that
-			the message wasn't delivered for some reason.
-			ERR_NOTOPLEVEL and ERR_WILDTOPLEVEL are errors that
-			are returned when an invalid use of
-			"PRIVMSG $<server>" or "PRIVMSG #<host>" is attempted.
+        - 412 - 414 are returned by PRIVMSG to indicate that
+            the message wasn't delivered for some reason.
+            ERR_NOTOPLEVEL and ERR_WILDTOPLEVEL are errors that
+            are returned when an invalid use of
+            "PRIVMSG $<server>" or "PRIVMSG #<host>" is attempted.
 
 # COMMAND KICK
-		ERR_NEEDMOREPARAMS              ERR_NOSUCHCHANNEL
-		ERR_BADCHANMASK                 ERR_CHANOPRIVSNEEDED
-		ERR_NOTONCHANNEL
+        ERR_NEEDMOREPARAMS              ERR_NOSUCHCHANNEL
+        ERR_BADCHANMASK                 ERR_CHANOPRIVSNEEDED
+        ERR_NOTONCHANNEL
+
 
 | NUM_VAL | TEXT                 | MESSAGE                                                 |
 |---------|----------------------|---------------------------------------------------------|
