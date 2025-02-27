@@ -25,21 +25,35 @@ CommandManager&	CommandManager::operator=(const CommandManager& obj)
 	return (*this);
 }
 
-
+/*methods*/
 CommandResult&	CommandManager::getCmd(const std::string& cmName)
 {
+	std::map<std::string, CommandResult>::iterator	it;
 
+	this->commandList.find(cmName);
+	// if (it == commandList.end())
+	// 	return (NULL);
+	return (it->second); 
 }
 
 void	CommandManager::execute(CommandResult& cm)
 {
-
+	/*
+		if (not cancelled)
+			cm.getExecutor()
+	*/
 }
 
 void	CommandManager::generateCmds()
 {
 	//join
-	CommandResult	join;
+	CommandSpec	join = CommandSpec()
+							.build();
 
-	this->commandList["JOIN"] = join;
+	log(join); //register command
+}
+
+void	CommandManager::log(CommandSpec& cm)
+{
+	this->commandList[cm.getCmdResult().getName()] = cm.getCmdResult();
 }

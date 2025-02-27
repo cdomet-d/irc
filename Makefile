@@ -22,6 +22,7 @@ CPPFLAGS := $(INCLUDES) -MMD -MP
 SRCS := main.cpp \
 		CommandResult.cpp \
 		CommandManager.cpp \
+		CommandSpec.cpp \
 
 OBJS := $(SRCS:%.cpp=$(BUILD_DIR)%.o)
 DEPS := $(OBJS:%.o=%.d)

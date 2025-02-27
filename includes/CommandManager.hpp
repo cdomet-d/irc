@@ -6,6 +6,7 @@
 # include <iostream>
 # include <map>
 # include "CommandResult.hpp"
+# include "CommandSpec.hpp"
 
 class	CommandManager
 {
@@ -24,6 +25,7 @@ class	CommandManager
 		void			generateCmds();
 		CommandResult&	getCmd(const std::string& cmName);
 		void			execute(CommandResult& cm);
+		void			log(CommandSpec& cm);
 };
 
 #endif

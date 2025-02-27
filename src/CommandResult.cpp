@@ -33,28 +33,7 @@ CommandResult&	CommandResult::process(std::string& buffer)
 	
 }
 
-/* ------------------------------ nested class ---------------------------------------- */
-
-/* constructors & destructor */
-CommandResult::CommandSpec::CommandSpec(void)
+std::string		CommandResult::getName(void)
 {
-	//std::cout << "CommandSpec default constructor called" << std::endl;
+	return (this->name);
 }
-
-CommandResult::CommandSpec::CommandSpec(const CommandSpec& obj)
-{
-	//std::cout << "CommandSpec copy constructor called" << std::endl;
-}
-
-CommandResult::CommandSpec::~CommandSpec(void)
-{
-	//std::cout << "CommandSpec destructor called" << std::endl;
-}
-
-/*operators*/
-CommandResult::CommandSpec&	CommandResult::CommandSpec::operator=(const CommandResult::CommandSpec& obj)
-{
-	//std::cout << "CommandSpec copy assignment operator called" << std::endl;
-	return (*this);
-}
-

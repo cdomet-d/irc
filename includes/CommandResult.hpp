@@ -8,7 +8,7 @@
 class	CommandResult
 {
 	private:
-		//attributes
+		std::string	name;
 	public:
 		//constructors & destructor
 		CommandResult(void);
@@ -20,22 +20,8 @@ class	CommandResult
 		
 		//method
 		CommandResult&	process(std::string& buffer);
-
-		//nested class
-		class	CommandSpec //builds a command
-		{
-			private:
-				//attributes
-			public:
-				//constructors & destructor
-				CommandSpec(void);
-				CommandSpec(const CommandSpec& obj);
-				~CommandSpec(void);
-
-				//operators
-				CommandSpec&	operator=(const CommandSpec& obj);
-
-		};
+		std::string		getName(void);
+		
 };
 
 #endif
