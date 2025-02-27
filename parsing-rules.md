@@ -14,6 +14,7 @@
       - [Validating parameters](#validating-parameters)
     - [Message separator](#message-separator)
   - [Appendix](#appendix)
+    - [**GENERAL PARSING FLOWCHART**](#general-parsing-flowchart)
     - [IRC PSEUDO-BNF](#irc-pseudo-bnf)
     - [**BNF syntax**](#bnf-syntax)
     - [Sources](#sources)
@@ -151,6 +152,8 @@ Trailing parameters:
 Messages MUST be separated by `\r\n` or `0x0D0x0A`.
 
 ## Appendix
+
+### [**GENERAL PARSING FLOWCHART**](structural-message-parsing.md)
 
 ### IRC PSEUDO-BNF
 
