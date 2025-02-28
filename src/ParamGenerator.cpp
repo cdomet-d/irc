@@ -11,6 +11,7 @@ ParamGenerator::ParamGenerator(void)
 ParamGenerator::ParamGenerator(const ParamGenerator& obj)
 {
 	//std::cout << "ParamGenerator copy constructor called" << std::endl;
+	*this = obj;
 }
 
 ParamGenerator::~ParamGenerator(void)
@@ -22,7 +23,18 @@ ParamGenerator::~ParamGenerator(void)
 ParamGenerator&	ParamGenerator::operator=(const ParamGenerator& obj)
 {
 	//std::cout << "ParamGenerator copy assignment operator called" << std::endl;
+	if (this != &obj)
+	{
+		this->params = obj.params;
+		this->paramsOpt = obj.paramsOpt;
+	}
 	return (*this);
+}
+
+CommandParam&	ParamGenerator::operator[](unsigned int i)
+{
+	//security?
+	return (this->params[i]);
 }
 
 /*methods*/
@@ -36,4 +48,14 @@ ParamGenerator&	ParamGenerator::addOptParam(CommandParam& paramOpt)
 {
 	this->paramsOpt.push_back(paramOpt);
 	return (*this);
+}
+
+std::vector<CommandParam>&	ParamGenerator::getParams(void)
+{
+	return (this->params);
+}
+
+std::vector<CommandParam>&	ParamGenerator::getOptParams(void)
+{
+	return (this->paramsOpt);
 }

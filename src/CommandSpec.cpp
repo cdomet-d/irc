@@ -20,7 +20,7 @@ CommandSpec&	CommandSpec::Name(const std::string& name)
 	return (*this);
 }
 
-CommandSpec&	CommandSpec::InputTokenizer(void(*ft)())
+CommandSpec&	CommandSpec::InputTokenizer(void(*ft)(std::string& buffer, CommandParam& param))
 {
 	this->inputTokenizer = ft;
 	return (*this);
@@ -71,8 +71,22 @@ std::string&	CommandSpec::getName(void)
 	return (this->name);
 }
 
-CommandSpec&	CommandSpec::process(std::string& buffer)
+CommandSpec&	CommandSpec::process(std::string& buffer, Client& client)
 {
+	// std::cout << this->name << std::endl;
+	// std::cout << "'" << buffer << "'" << std::endl;
+	// std::cout << params.getParams().size() << std::endl;
+	void(*tokenizer)(std::string& buffer, CommandParam& param)	= this->getInputTokenizer();
 	
+	for (size_t i = 0; i < params.getParams().size(); i++)
+		tokenizer(buffer, params[i]);
+
+	// for (size_t i = 0; i < params.getParams().size(); i++)
+	// {
+	// 	std::cout << "\nparam[" << i << "] : " << std::endl;
+	// 	for (size_t j = 0; j < params[i].getParam().size(); j++)
+	// 		std::cout << params[i].getParam()[j] << std::endl;
+	// }
+
 	return (*this);
 }

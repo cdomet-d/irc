@@ -11,6 +11,7 @@ CommandManager::CommandManager(void)
 CommandManager::CommandManager(const CommandManager& obj)
 {
 	//std::cout << "CommandManager copy constructor called" << std::endl;
+	*this = obj;
 }
 
 CommandManager::~CommandManager(void)
@@ -22,6 +23,10 @@ CommandManager::~CommandManager(void)
 CommandManager&	CommandManager::operator=(const CommandManager& obj)
 {
 	//std::cout << "CommandManager copy assignment operator called" << std::endl;
+	if (this != &obj)
+	{
+		this->commandList = obj.commandList;
+	}
 	return (*this);
 }
 
@@ -30,9 +35,9 @@ CommandSpec&	CommandManager::getCmd(const std::string& cmName)
 {
 	std::map<std::string, CommandSpec>::iterator	it;
 
-	this->commandList.find(cmName);
+	it = this->commandList.find(cmName);
 	// if (it == commandList.end())
-	// 	return (NULL);
+	// 	return ;
 	return (it->second); 
 }
 
@@ -54,12 +59,14 @@ void	CommandManager::generateCmds()
 							.Parameters(ParamGenerator()
 										.addParam(CommandParam()
 													.addChecker(validChan))
-										.addOptParam(CommandParam()
-													.addChecker(validChan))
-										.addOptParam(CommandParam()
+										// .addOptParam(CommandParam()
+										// 			.addChecker(validChan))
+										// .addOptParam(CommandParam()
+										// 			.addChecker(NULL)))
+										.addParam(CommandParam()
 													.addChecker(NULL)))
 							.MinParam(1)
-							.CmExecutor(new Join())
+							.CmExecutor(new Join())//delete
 							.build();
 
 	log(join); //register command

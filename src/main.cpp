@@ -1,8 +1,10 @@
 #include <iostream>
 #include "CommandManager.hpp"
+#include "Client.hpp"
 
 int	main(void)
 {
+	Client			client;
 	std::string		buffer = "JOIN #pizza,#bitch,prout key1,key2 other shit";
 	CommandManager	cmManager;
 	size_t			i = 0;
@@ -15,7 +17,7 @@ int	main(void)
 	i = buffer.find(" ");
 	if (i == std::string::npos)
 		i = buffer.size() - 1;
-	cm.assign(buffer, i);
-	buffer.erase(buffer.begin() + i + 1);
-	cmManager.executeCm(cmManager.getCmd(cm).process(buffer));
+	cm.assign(buffer, 0, i);
+	buffer.erase(0, i + 1);
+	cmManager.executeCm(cmManager.getCmd(cm).process(buffer, client));
 }

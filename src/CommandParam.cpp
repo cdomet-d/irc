@@ -11,6 +11,7 @@ CommandParam::CommandParam(void)
 CommandParam::CommandParam(const CommandParam& obj)
 {
 	//std::cout << "CommandParam copy constructor called" << std::endl;
+	*this = obj;
 }
 
 CommandParam::~CommandParam(void)
@@ -22,6 +23,11 @@ CommandParam::~CommandParam(void)
 CommandParam&	CommandParam::operator=(const CommandParam& obj)
 {
 	//std::cout << "CommandParam copy assignment operator called" << std::endl;
+	if (this != &obj)
+	{
+		this->param = obj.param;
+		this->checkers = obj.checkers;
+	}
 	return (*this);
 }
 

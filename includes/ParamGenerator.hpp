@@ -18,11 +18,16 @@ class	ParamGenerator
 		~ParamGenerator(void);
 
 		//operators
-		ParamGenerator&	operator=(const ParamGenerator& obj);
+		ParamGenerator&		operator=(const ParamGenerator& obj);
+		CommandParam&		operator[](unsigned int i);
 
 		//methods
 		ParamGenerator&	addParam(CommandParam& param);
 		ParamGenerator&	addOptParam(CommandParam& paramOpt);
+
+		//getters
+		std::vector<CommandParam>&	getParams(void);
+		std::vector<CommandParam>&	getOptParams(void);
 };
 
 #endif

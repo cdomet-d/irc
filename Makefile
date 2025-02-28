@@ -16,7 +16,7 @@ SRC_DIR := src/
 INCLUDES := -I includes
 
 CC := c++
-CFLAGS := #-Wall -Wextra #-Werror -std=c++98 -g3
+CFLAGS := -std=c++98 -Wall -Wextra -g3 #-Werror 
 CPPFLAGS := $(INCLUDES) -MMD -MP
 
 SRCS := main.cpp \
@@ -28,6 +28,7 @@ SRCS := main.cpp \
 		Join.cpp \
 		ParamCheckers.cpp \
 		ParamGenerator.cpp \
+		Client.cpp \
 
 OBJS := $(SRCS:%.cpp=$(BUILD_DIR)%.o)
 DEPS := $(OBJS:%.o=%.d)

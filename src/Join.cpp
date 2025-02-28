@@ -11,6 +11,7 @@ Join::Join(void)
 Join::Join(const Join& obj)
 {
 	//std::cout << "Join copy constructor called" << std::endl;
+	*this = obj;
 }
 
 Join::~Join(void)
@@ -22,6 +23,9 @@ Join::~Join(void)
 Join&	Join::operator=(const Join& obj)
 {
 	//std::cout << "Join copy assignment operator called" << std::endl;
+	if (this != &obj)
+	{
+	}
 	return (*this);
 }
 

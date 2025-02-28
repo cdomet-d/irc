@@ -22,6 +22,10 @@ class	CommandParam
 
 		//methods
 		CommandParam&	addChecker(void(*ft)());
+		std::vector<std::string>&	getParam(void)
+		{
+			return (this->param);
+		}
 };
 
 void	validChan();
