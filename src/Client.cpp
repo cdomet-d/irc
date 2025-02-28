@@ -6,13 +6,12 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/25 16:51:13 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/02/28 16:09:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include <arpa/inet.h>
-
 #include <string.h>
 
 /* ************************************************************************** */
@@ -57,22 +56,24 @@ std::string Client::getRealName() const
 {
 	return _realName;
 }
-bool Client::getOpStatus() const
-{
-	return _isOp;
-}
 struct epoll_event *Client::getCliEpoll()
 {
 	return (&_cliEpoll);
+}
+std::string Client::getIP() const
+{
+	return (_cliIP);
+}
+std::string Client::getHostname() const {
+	return (_cliHostname);
+}
+std::string Client::getPrefix() const {
+	return (_prefix);
 }
 
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
-void Client::setOpStatus(bool isOp)
-{
-	_isOp = isOp;
-}
 void Client::setNick(const std::string &newNick)
 {
 	_nick = newNick;
@@ -89,4 +90,16 @@ void Client::setCliEpoll(struct epoll_event epoll)
 {
 	_cliEpoll.events = epoll.events;
 	_cliEpoll.data.fd = epoll.data.fd;
+}
+void Client::setIP(std::string ip) {
+	_cliIP = ip;
+}
+void Client::setHostname(std::string hostname) {
+	if (!hostname.empty())
+		_cliHostname = hostname;
+	else
+		_cliHostname = "NULL";
+}
+void Client::setPrefix() {
+	_prefix = _nick + "!" + _username + "@" + _cliHostname;
 }

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/24 16:08:32 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/02/28 16:08:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <vector>
+#include <netdb.h>
 
 class Client {
   public:
@@ -31,31 +32,36 @@ class Client {
 	/*                               METHODS                                  */
 
 	/*                               GETTERS                                  */
-	bool getOpStatus() const;
 	int getFd() const;
 	std::string getName() const;
 	std::string getNick() const;
 	std::string getUsername() const;
 	std::string getRealName() const;
+	std::string getHostname()const;
 	struct epoll_event *getCliEpoll();
+	std::string getIP() const;
+	std::string getPrefix() const ;
 
 	/*                               SETTERS                                  */
-	void setOpStatus(bool isOp);
 	void setNick(const std::string &newNick);
 	void setUsername(const std::string &username);
 	void setFd(int fd);
 	void setCliEpoll(struct epoll_event epoll);
-	//void setIP()
+	void setIP(std::string ip);
+	void setHostname(std::string hostname);
+	void setPrefix();
+	struct sockaddr_in _cliAddress;
 
   private:
 	// user info
-	bool _isOp;
 	std::string _name;
 	std::string _nick;
 	std::string _username;
 	std::string _pass;
 	std::string _realName;
-	//std::string _cliIP;
+	std::string _cliIP;
+	std::string _cliHostname;
+	std::string _prefix;
 
 	// socket infos
 	struct epoll_event _cliEpoll;

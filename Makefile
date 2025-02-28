@@ -14,7 +14,9 @@ SRC=	main.cpp \
 		Server.cpp \
 		Log.cpp \
 		NickUserParsing.cpp \
-		InputClientParsing.cpp
+		InputClientParsing.cpp \
+		Channel.cpp \
+		reply.cpp
 
 OBJ:=$(addprefix $(BDIR), $(SRC_PATH:%.cpp=%.o))
 DEPS:=$(OBJ:%.o=%.d)

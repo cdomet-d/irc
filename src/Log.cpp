@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:56:23 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/25 16:51:19 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/02/27 11:47:16 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,15 @@ void log(logLevel level, std::string message, std::string additionalInfo)
 	switch (level) {
 	case (INFO):
 		std::cout << "[" << timeStamp() << ']' << " INFO:\t" << BLUE << message
-				  << " (" << additionalInfo << ")" << RESET << std::endl;
+				  << additionalInfo << RESET << std::endl;
 		break;
 	case (ERROR):
 		std::cout << "[" << timeStamp() << ']' << " ERROR:\t" << RED << message
-				  << " (" << additionalInfo << ")" << RESET << std::endl;
+					<< additionalInfo << RESET << std::endl;
 		break;
 	case (DEBUG):
 		std::cout << "[" << timeStamp() << ']' << " DEBUG:\t" << YELLOW
-				  << message << " (" << additionalInfo << ")" << RESET
+				  << message << additionalInfo << RESET
 				  << std::endl;
 		break;
 	}
