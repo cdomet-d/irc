@@ -9,8 +9,8 @@
 class	CommandParam
 {
 	private:
-		std::string				param;
-		std::vector<void(*)()>	checkers;
+		std::vector<std::string>	param;
+		std::vector<void(*)()>		checkers;
 	public:
 		//constructors & destructor
 		CommandParam(void);

@@ -50,6 +50,24 @@ CommandSpec&	CommandSpec::Parameters(ParamGenerator& params)
 	return (*this);
 }
 
+CommandSpec&	CommandSpec::MinParam(int minParam)
+{
+	this->minParam = minParam;
+	return (*this);
+}
+
+CommandSpec&	CommandSpec::IssuerChecks(void(*ft)())
+{
+	this->issuerChecks.push_back(ft);
+	return (*this);
+}
+
+CommandSpec&	CommandSpec::CmExecutor(Executor* cmExecutor)
+{
+	this->cmExecutor = cmExecutor;
+	return (*this);
+}
+
 CommandSpec&	CommandSpec::build()
 {
 	return (*this);

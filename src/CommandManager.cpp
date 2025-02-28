@@ -49,11 +49,17 @@ void	CommandManager::generateCmds()
 	//join
 	CommandSpec	join = CommandSpec()
 							.Name("JOIN")
-							.InputTokenizer(splitOnComa)
 							.Registration(3)
+							.InputTokenizer(splitOnComa)
 							.Parameters(ParamGenerator()
 										.addParam(CommandParam()
-													.addChecker(validChan)))
+													.addChecker(validChan))
+										.addOptParam(CommandParam()
+													.addChecker(validChan))
+										.addOptParam(CommandParam()
+													.addChecker(NULL)))
+							.MinParam(1)
+							.CmExecutor(new Join())
 							.build();
 
 	log(join); //register command
