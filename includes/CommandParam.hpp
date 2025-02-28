@@ -29,5 +29,6 @@ class	CommandParam
 };
 
 void	validChan();
-
+void	validKey();
+void	joinChanRequest();
 #endif

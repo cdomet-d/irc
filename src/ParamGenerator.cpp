@@ -38,7 +38,7 @@ CommandParam&	ParamGenerator::operator[](unsigned int i)
 }
 
 /*methods*/
-ParamGenerator&	ParamGenerator::addParam(CommandParam& param)
+ParamGenerator&	ParamGenerator::addParam(const CommandParam& param)
 {
 	this->params.push_back(param);
 	return (*this);

@@ -22,7 +22,7 @@ class	ParamGenerator
 		CommandParam&		operator[](unsigned int i);
 
 		//methods
-		ParamGenerator&	addParam(CommandParam& param);
+		ParamGenerator&	addParam(const CommandParam& param);
 		ParamGenerator&	addOptParam(CommandParam& paramOpt);
 
 		//getters
