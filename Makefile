@@ -23,6 +23,7 @@ SRCS := main.cpp \
 		CommandResult.cpp \
 		CommandManager.cpp \
 		CommandSpec.cpp \
+		CommandParam.cpp \
 
 OBJS := $(SRCS:%.cpp=$(BUILD_DIR)%.o)
 DEPS := $(OBJS:%.o=%.d)

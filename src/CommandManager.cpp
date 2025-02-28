@@ -48,6 +48,9 @@ void	CommandManager::generateCmds()
 {
 	//join
 	CommandSpec	join = CommandSpec()
+							.Name("JOIN")
+							.InputTokenizer(splitOnComa)
+							.Registration(3)
 							.build();
 
 	log(join); //register command

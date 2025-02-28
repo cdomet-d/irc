@@ -20,8 +20,28 @@ class	CommandResult
 		
 		//method
 		CommandResult&	process(std::string& buffer);
+
+		//getters
 		std::string		getName(void);
 		
+		//setters
+		// std::string		setName(void);
+
+		// //nested class
+		// class	test
+		// {
+		// 	private:
+		// 		//attributes
+		// 		CommandResult&	cm;
+		// 	public:
+		// 		//constructors & destructor
+		// 		test(void);
+		// 		test(const test& obj);
+		// 		~test(void);
+		
+		// 		//operators
+		// 		test&	operator=(const test& obj);
+		// };
 };
 
 #endif
