@@ -19,6 +19,11 @@ class	CommandParam
 
 		//operators
 		CommandParam&	operator=(const CommandParam& obj);
+
+		//methods
+		CommandParam&	addChecker(void(*ft)());
 };
+
+void	validChan();
 
 #endif

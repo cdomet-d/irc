@@ -24,3 +24,10 @@ CommandParam&	CommandParam::operator=(const CommandParam& obj)
 	//std::cout << "CommandParam copy assignment operator called" << std::endl;
 	return (*this);
 }
+
+/*methods*/
+CommandParam&	CommandParam::addChecker(void(*ft)())
+{
+	this->checkers.push_back(ft);
+	return (*this);
+}

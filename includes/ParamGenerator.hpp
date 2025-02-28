@@ -19,6 +19,10 @@ class	ParamGenerator
 
 		//operators
 		ParamGenerator&	operator=(const ParamGenerator& obj);
+
+		//methods
+		ParamGenerator&	addParam(CommandParam& param);
+		ParamGenerator&	addOptParam(CommandParam& paramOpt);
 };
 
 #endif

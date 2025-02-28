@@ -44,6 +44,12 @@ CommandSpec&	CommandSpec::Registration(int stage)
 	return (*this);
 }
 
+CommandSpec&	CommandSpec::Parameters(ParamGenerator& params)
+{
+	this->params = params;
+	return (*this);
+}
+
 CommandSpec&	CommandSpec::build()
 {
 	return (*this);

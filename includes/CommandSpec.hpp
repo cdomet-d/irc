@@ -13,7 +13,8 @@ class	CommandSpec //builds a command
 		CommandResult	cmd;
 		std::string		name;
 		void(*inputTokenizer)();
-		int				registrationStage;	
+		int				registrationStage;
+		ParamGenerator	params;
 	public:
 		//constructors & destructor
 		CommandSpec(void);

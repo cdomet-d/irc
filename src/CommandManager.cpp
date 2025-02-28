@@ -51,6 +51,9 @@ void	CommandManager::generateCmds()
 							.Name("JOIN")
 							.InputTokenizer(splitOnComa)
 							.Registration(3)
+							.Parameters(ParamGenerator()
+										.addParam(CommandParam()
+													.addChecker(validChan)))
 							.build();
 
 	log(join); //register command
