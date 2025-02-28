@@ -12,7 +12,7 @@
 class	CommandSpec //builds a command
 {
 	private:
-		CommandResult			cmd;
+		// CommandResult			cmd;
 		std::string				name;
 		void(*inputTokenizer)();
 		int						registrationStage;
@@ -34,7 +34,11 @@ class	CommandSpec //builds a command
 		CommandSpec&	MinParam(int minParam);
 		CommandSpec&	CmExecutor(Executor* cmExecutor);
 		CommandSpec&	build();
-		CommandResult&	getCmdResult();
+		// CommandResult&	getCmdResult();
+		CommandSpec&	process(std::string& buffer);
+
+		//getters
+		std::string&	getName(void);
 };
 
 void	splitOnComa(void);

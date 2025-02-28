@@ -26,9 +26,9 @@ CommandManager&	CommandManager::operator=(const CommandManager& obj)
 }
 
 /*methods*/
-CommandResult&	CommandManager::getCmd(const std::string& cmName)
+CommandSpec&	CommandManager::getCmd(const std::string& cmName)
 {
-	std::map<std::string, CommandResult>::iterator	it;
+	std::map<std::string, CommandSpec>::iterator	it;
 
 	this->commandList.find(cmName);
 	// if (it == commandList.end())
@@ -36,7 +36,7 @@ CommandResult&	CommandManager::getCmd(const std::string& cmName)
 	return (it->second); 
 }
 
-void	CommandManager::execute(CommandResult& cm)
+void	CommandManager::executeCm(CommandSpec& cm)
 {
 	/*
 		if (not cancelled)
@@ -67,5 +67,5 @@ void	CommandManager::generateCmds()
 
 void	CommandManager::log(CommandSpec& cm)
 {
-	this->commandList[cm.getCmdResult().getName()] = cm.getCmdResult();
+	this->commandList[cm.getName()] = cm;
 }

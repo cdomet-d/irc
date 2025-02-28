@@ -11,7 +11,8 @@
 class	CommandManager
 {
 	private:
-		std::map<std::string, CommandResult>	commandList;
+		// std::map<std::string, CommandResult>	commandList;
+		std::map<std::string, CommandSpec>	commandList;
 	public:
 		//constructors & destructor
 		CommandManager(void);
@@ -23,8 +24,10 @@ class	CommandManager
 
 		//methods
 		void			generateCmds();
-		CommandResult&	getCmd(const std::string& cmName);
-		void			execute(CommandResult& cm);
+		// CommandResult&	getCmd(const std::string& cmName);
+		CommandSpec&	getCmd(const std::string& cmName);
+		// void			executeCm(CommandResult& cm);
+		void			executeCm(CommandSpec& cm);
 		void			log(CommandSpec& cm);
 };
 

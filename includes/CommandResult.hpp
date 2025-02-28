@@ -19,7 +19,7 @@ class	CommandResult
 		CommandResult&	operator=(const CommandResult& obj);
 		
 		//method
-		CommandResult&	process(std::string& buffer);
+		// CommandResult&	process(std::string& buffer);
 
 		//getters
 		std::string		getName(void);

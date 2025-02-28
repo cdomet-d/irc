@@ -24,6 +24,10 @@ SRCS := main.cpp \
 		CommandManager.cpp \
 		CommandSpec.cpp \
 		CommandParam.cpp \
+		InputTokenizer.cpp \
+		Join.cpp \
+		ParamCheckers.cpp \
+		ParamGenerator.cpp \
 
 OBJS := $(SRCS:%.cpp=$(BUILD_DIR)%.o)
 DEPS := $(OBJS:%.o=%.d)

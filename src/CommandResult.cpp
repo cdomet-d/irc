@@ -28,10 +28,10 @@ CommandResult&	CommandResult::operator=(const CommandResult& obj)
 }
 
 /*methods*/
-CommandResult&	CommandResult::process(std::string& buffer)
-{
+// CommandResult&	CommandResult::process(std::string& buffer)
+// {
 	
-}
+// }
 
 std::string		CommandResult::getName(void)
 {
