@@ -45,14 +45,14 @@ CommandSpec&	CommandSpec::process(std::string& buffer, Client& client)
 	// std::cout << params.getParams().size() << std::endl;
 	void(*tokenizer)(std::string& buffer, CommandParam& param)	= this->inputTokenizer;
 	
-	for (size_t i = 0; i < params.getParams().size(); i++)
-		tokenizer(buffer, params[i]);
+	for (size_t i = 0; i < params.size(); i++)
+		tokenizer(buffer, *params[i]);
 
-	for (size_t i = 0; i < params.getParams().size(); i++)
+	for (size_t i = 0; i < params.size(); i++)
 	{
 		std::cout << "\nparam[" << i << "] : " << std::endl;
-		for (size_t j = 0; j < params[i].getParam().size(); j++)
-			std::cout << params[i].getParam()[j] << std::endl;
+		for (size_t j = 0; j < (*params[i]).getSize(); j++)
+			std::cout << (*params[i])[j] << std::endl;
 	}
 
 	return (*this);
@@ -63,7 +63,7 @@ std::string		CommandSpec::getName(void)
 	return (this->name);
 }
 
-/*nested class -----------------------------------*/
+/*----------------------------------- nested class -----------------------------------*/
 /* constructors & destructor */
 CommandSpec::CommandBuilder::CommandBuilder(void)
 {

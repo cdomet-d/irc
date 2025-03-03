@@ -37,6 +37,11 @@ CommandParam&	CommandParam::operator=(const CommandParam& obj)
 	return (*this);
 }
 
+std::string&	CommandParam::operator[](unsigned int i)
+{
+	//add verif of index
+	return (this->param[i]);
+}
 
 //nested class ------------------------------------------------
 

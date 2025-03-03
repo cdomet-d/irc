@@ -15,7 +15,7 @@ class	CommandSpec
 		std::string					name;
 		void(*inputTokenizer)(std::string& buffer, CommandParam& param);
 		int							registrationStage;
-		std::vector<CommandParam>	params;
+		std::vector<CommandParam*>	params;
 		int							minParam;
 		std::vector<void(*)()>		issuerChecks;
 		Executor*					cmExecutor;
@@ -50,7 +50,7 @@ class	CommandSpec
 			public:
 				//constructors & destructor
 				CommandBuilder(void);
-				CommandBuilder(const CommandSpec& obj);
+				CommandBuilder(const CommandBuilder& obj);
 				~CommandBuilder(void);
 
 				//operators

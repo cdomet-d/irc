@@ -20,12 +20,14 @@ class	CommandParam
 
 		//operators
 		CommandParam&	operator=(const CommandParam& obj);
-		// CommandParam&		operator[](unsigned int i);
+		std::string&	operator[](unsigned int i);
 
 		//methods
 		std::vector<std::string>&	getParam(void) {
 			return (this->param);}
-
+		size_t						getSize(void) {
+			return (this->param.size());}
+	
 		//nested class
 		class	ParamBuilder
 		{
