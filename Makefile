@@ -26,7 +26,6 @@ SRCS := main.cpp \
 		InputTokenizer.cpp \
 		Join.cpp \
 		ParamCheckers.cpp \
-		ParamGenerator.cpp \
 		Client.cpp \
 
 OBJS := $(SRCS:%.cpp=$(BUILD_DIR)%.o)

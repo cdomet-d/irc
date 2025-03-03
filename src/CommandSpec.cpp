@@ -9,7 +9,7 @@ CommandSpec::CommandSpec(void)
 }
 
 CommandSpec::CommandSpec(std::string name, void(*inputTokenizer)(std::string& buffer, CommandParam& param), int registrationStage, \
-					ParamGenerator params, int minParam, std::vector<void(*)()>	issuerChecks, Executor* cmExecutor)
+					std::vector<CommandParam*> params, int minParam, std::vector<void(*)()>	issuerChecks, Executor* cmExecutor)
 {
 	this->name = name;
 	this->inputTokenizer = inputTokenizer;
@@ -70,9 +70,21 @@ CommandSpec::CommandBuilder::CommandBuilder(void)
 	//std::cout << "CommandBuilder default constructor called" << std::endl;
 }
 
+CommandSpec::CommandBuilder::CommandBuilder(const CommandBuilder& obj)
+{
+	//std::cout << "CommandBuilder copy constructor called" << std::endl;
+}
+
 CommandSpec::CommandBuilder::~CommandBuilder(void)
 {
 	//std::cout << "CommandBuilder destructor called" << std::endl;
+}
+
+/*operators*/
+CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::operator=(const CommandBuilder& obj)
+{
+	//std::cout << "CommandBuilder copy assignment operator called" << std::endl;
+	return (*this);
 }
 
 /*methods*/
@@ -94,9 +106,9 @@ CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::Registration(int stage
 	return (*this);
 }
 
-CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::Parameters(ParamGenerator& params)
+CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::Parameters(CommandParam* param)
 {
-	this->params = params;
+	this->params.push_back(param);
 	return (*this);
 }
 

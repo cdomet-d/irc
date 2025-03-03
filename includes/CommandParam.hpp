@@ -14,18 +14,38 @@ class	CommandParam
 	public:
 		//constructors & destructor
 		CommandParam(void);
+		CommandParam(std::vector<std::string> param, std::vector<void(*)()> checkers);
 		CommandParam(const CommandParam& obj);
 		~CommandParam(void);
 
 		//operators
 		CommandParam&	operator=(const CommandParam& obj);
+		// CommandParam&		operator[](unsigned int i);
 
 		//methods
-		CommandParam&	addChecker(void(*ft)());
-		std::vector<std::string>&	getParam(void)
+		std::vector<std::string>&	getParam(void) {
+			return (this->param);}
+
+		//nested class
+		class	ParamBuilder
 		{
-			return (this->param);
-		}
+			private:
+				std::vector<std::string>	param;
+				std::vector<void(*)()>		checkers;
+			public:
+				//constructors & destructor
+				ParamBuilder(void);
+				ParamBuilder(const ParamBuilder& obj);
+				~ParamBuilder(void);
+
+				//operators
+				ParamBuilder&		operator=(const ParamBuilder& obj);
+
+				//methods
+				ParamBuilder&	addChecker(void(*ft)());
+				CommandParam*	build();
+
+		};
 };
 
 void	validChan();
