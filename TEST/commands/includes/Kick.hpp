@@ -16,18 +16,18 @@ channel object
 
 //methods
 -- checkers --
-enoughParam() -> checks if there are the right nb of params \
+(1) enoughParam() -> checks if there are the right nb of params \
 				in case of failure display ERR_NEEDMOREPARAMS
 
-validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
+(2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
-onChan() -> checks if the client belongs to the channel \
+(3) onChan() -> checks if the client belongs to the channel \
 			if not display ERR_NOTONCHANNEL 
 
-hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
+(4) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
 					if not display ERR_CHANOPRIVSNEEDED
 
-validKick() -> checks if target user is in the channel \
+(?) validKick() -> checks if target user is in the channel \
 				if not display ERR_USERNOTINCHANNEL
 
 -- executors --

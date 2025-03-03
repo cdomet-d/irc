@@ -16,12 +16,12 @@ channel object
 
 //methods
 -- checkers --
-enoughParam() -> checks if there are the right nb of params \
+(1) enoughParam() -> checks if there are the right nb of params \
 				in case of failure display ERR_NEEDMOREPARAMS
 
-validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL (how do we create a new channel )
+(2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL (how do we create a new channel )
 
-joinChanRequest() -> checks : 
+(3) joinChanRequest() -> checks : 
 						- the nbr of channels the client is in, if > limit display ERR_TOOMANYCHANNELS \
 						- if the key to access the channel (if it has one) is supplied and valid \
 							if not display ERR_BADCHANNELKEY \

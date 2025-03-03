@@ -13,10 +13,12 @@ command issuer client object
 
 //methods
 -- checkers --
-validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
+(1) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
-hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
+(2) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
 					if not display ERR_CHANOPRIVSNEEDED
+
+//other
 
 -- executors --
 changeMode() -> sets or removes given mode \
