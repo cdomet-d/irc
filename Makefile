@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/03 15:33:42 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/03 15:38:49 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -92,7 +92,7 @@ info:
 	@echo $(SRC_PATH)
 	@echo $(SRC)
 
-.PHONY: all clean info fclean re
+.PHONY: all clean info fclean re debug
 
 # Formatting combinations
 PIBOLD= $(BO)$(M)
