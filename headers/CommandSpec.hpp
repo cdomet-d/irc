@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:13:38 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/03 15:31:12 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/03 17:11:20 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class	CommandSpec
 		int							registrationStage;
 		std::vector<CommandParam*>	params;
 		int							minParam;
-		std::vector<void(*)()>		issuerChecks;
+		std::vector<void(*)()>		issuerChecks; //faire un template ??
 		Executor*					cmExecutor;
 		bool						cancelled;
 	public:
@@ -82,6 +82,7 @@ class	CommandSpec
 };
 
 void	splitOnComa(std::string& buffer, CommandParam& param);
+void	splitJoin(std::string& buffer, CommandParam& param);
 
 #endif
 

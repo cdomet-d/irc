@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:13:44 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/03 15:13:46 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/03 17:28:26 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ class	CommandParam
 {
 	private:
 		std::vector<std::string>			param;
-		std::vector<void(*)(std::string&)>	checkers;
+		std::vector<void(*)(std::string&)>	checkers; //faire un template ??
 	public:
 		//constructors & destructor
 		CommandParam(void);
@@ -61,6 +61,6 @@ class	CommandParam
 };
 
 void	validChan(std::string& param);
-void	validKey(std::string& param);
+// void	validKey(std::string& param);
 void	joinChanRequest(std::string& param);
 #endif

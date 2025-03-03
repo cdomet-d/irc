@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:13:50 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/03 15:31:46 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/03 17:35:01 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,13 @@ CommandSpec&	CommandSpec::process(std::string& buffer, Client& client)
 	}
 	for (size_t i = 0; i < params.size(); i++)
 		tokenizer(buffer, *params[i]);
+	//verif le nombre de param
 	for (size_t i = 0; i < params.size(); i++)
 	{
+		//est ce que j'applique un checker a la fois sur chaque param \
+			ou tous les checkers sur chaque param a la fois? \
+			dans quel ordre faire les checkers ? \
+			si y a un checkers qui est pas bon est ce qu'on arrete ou on fait les autres checkers ?
 		for (size_t j = 0; j < params[i]->getCheckerSize(); j++)
 		{
 			void(*checker)(std::string&) = (*params[i]).getChecker(j);
@@ -77,6 +82,8 @@ CommandSpec&	CommandSpec::process(std::string& buffer, Client& client)
 				checker((*params[i])[n]);
 		}
 	}
+	//s'ils ont tous ete supprimes mettre cancelled a true
+
 	// for (size_t i = 0; i < params.size(); i++)
 	// {
 	// 	std::cout << "\nparam[" << i << "] : " << std::endl;

@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:14:35 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/03 15:38:51 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/03 17:16:12 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,11 @@ void	CommandManager::generateCmds()
 									.InputTokenizer(splitOnComa)
 									.Parameters(CommandParam::ParamBuilder()
 												.addChecker(validChan)
-												.addChecker(joinChanRequest)
+												.addChecker(joinChanRequest) 
 												.build())
-									.Parameters(CommandParam::ParamBuilder()
-												.addChecker(validKey)
-												.build())
+									// .Parameters(CommandParam::ParamBuilder()
+									// 			.addChecker(validKey)
+									// 			.build())
 									.MinParam(1)
 									.CmExecutor(new Join())//delete
 									.build();
