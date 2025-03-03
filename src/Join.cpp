@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:14:57 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/03 15:14:59 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/03 15:32:45 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,5 @@ Join&	Join::operator=(const Join& obj)
 
 void	Join::execute()
 {
-
+	std::cout << "yoooooooooooooo\n";
 }

@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:14:35 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/03 15:14:36 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/03 15:38:51 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,9 @@ CommandSpec&	CommandManager::getCmd(const std::string& cmName)
 
 void	CommandManager::executeCm(CommandSpec& cm)
 {
-	/*
-		if (not cancelled)
-			cm.getExecutor()
-	*/
+	if (!cm.getCancelled())
+		cm.getExecutor()->execute();
 }
-
 void	CommandManager::generateCmds()
 {
 	//join

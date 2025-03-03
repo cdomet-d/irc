@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:13:50 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/03 15:13:52 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/03 15:31:46 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ CommandSpec::CommandSpec(std::string name, void(*inputTokenizer)(std::string& bu
 	this->minParam = minParam;
 	this->issuerChecks = issuerChecks;
 	this->cmExecutor = cmExecutor;
+	this->cancelled = false;
 }
 
 CommandSpec::CommandSpec(const CommandSpec& obj)
@@ -60,6 +61,11 @@ CommandSpec&	CommandSpec::process(std::string& buffer, Client& client)
 	// std::cout << params.getParams().size() << std::endl;
 	void(*tokenizer)(std::string& buffer, CommandParam& param)	= this->inputTokenizer;
 	
+	if (client.getRegistration() != this->registrationStage)
+	{
+		this->cancelled = true;
+		return (*this);
+	}
 	for (size_t i = 0; i < params.size(); i++)
 		tokenizer(buffer, *params[i]);
 	for (size_t i = 0; i < params.size(); i++)
@@ -81,9 +87,19 @@ CommandSpec&	CommandSpec::process(std::string& buffer, Client& client)
 	return (*this);
 }
 
-std::string		CommandSpec::getName(void)
+std::string	CommandSpec::getName(void)
 {
 	return (this->name);
+}
+
+bool	CommandSpec::getCancelled(void)
+{
+	return (this->cancelled);
+}
+
+Executor*	CommandSpec::getExecutor(void)
+{
+	return (this->cmExecutor);
 }
 
 /*----------------------------------- nested class -----------------------------------*/

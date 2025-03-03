@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:13:38 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/03 15:13:40 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/03 15:31:12 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class	CommandSpec
 		int							minParam;
 		std::vector<void(*)()>		issuerChecks;
 		Executor*					cmExecutor;
+		bool						cancelled;
 	public:
 		//constructors & destructor
 		CommandSpec(void);
@@ -45,6 +46,8 @@ class	CommandSpec
 
 		//getters
 		std::string		getName(void);
+		bool			getCancelled(void);
+		Executor*		getExecutor(void);
 		
 		// nested class
 		class	CommandBuilder //builds a command

@@ -11,6 +11,8 @@ int	main(int argc, char** argv)
 	size_t			i = 0;
 	std::string		cm;
 
+	client.setRegistration(3);
+	
 	//create the map with all registered commands
 	cmManager.generateCmds();
 

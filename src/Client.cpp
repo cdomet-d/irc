@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:14:26 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/03 15:14:27 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/03 15:34:22 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,15 @@ Client&	Client::operator=(const Client& obj)
 		this->registration = obj.registration;
 	}
 	return (*this);
+}
+
+/*method*/
+int	Client::getRegistration(void)
+{
+	return (this->registration);
+}
+
+void	Client::setRegistration(int stage)
+{
+	this->registration = stage;
 }
