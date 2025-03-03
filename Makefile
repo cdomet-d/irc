@@ -6,25 +6,25 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/03 15:15:54 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/03 15:33:42 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME:= ircserv
+DEBUG_NAME:= d-ircserv
 BDIR:=.bdir/
+DBDIR:=.dbdir/
 SRC_DIR:= src/
 H:= headers/
 
 CC:=c++
-CFLAGS:= -Werror -Wextra -Wall -Wshadow -g3 -std=c++98
+CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow
+DFLAGS:= -std=c++98 -Wshadow -Wextra -Wall -g3
 CXXFLAGS:=-MMD -MP -I $(H)
 MAKEFLAGS:=--no-print-directory
 
 SRC_PATH+= $(addprefix $(SRC_DIR), $(SRC))
 SRC=	Client.cpp \
-		Server.cpp \
-		main.cpp \
-		Client.cpp \
 		CommandManager.cpp \
 		CommandParam.cpp \
 		CommandSpec.cpp \
@@ -32,6 +32,7 @@ SRC=	Client.cpp \
 		Join.cpp \
 		ParamCheckers.cpp \
 		main.cpp \
+
 
 OBJ:=$(addprefix $(BDIR), $(SRC_PATH:%.cpp=%.o))
 DEPS:=$(OBJ:%.o=%.d)
@@ -52,16 +53,36 @@ $(BDIR)%.o: %.cpp
 	@echo "$@"
 	$(CC) $(CFLAGS) $(CXXFLAGS) -o $@ -c $<
 
+debug: $(DEBUG_NAME)
+
+DOBJ:=$(addprefix $(DBDIR), $(SRC_PATH:%.cpp=%.o))
+DDEPS:=$(DOBJ:%.o=%.d)
+
+$(DEBUG_NAME): $(DOBJ)
+	@echo
+	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(DEBUG_NAME)... ----------------------"
+	$(CC) $(DFLAGS) $(DOBJ) -o $(DEBUG_NAME)
+	@echo
+	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- $(DEBUG_NAME) done ! --------------------------"
+
+$(DBDIR)%.o: %.cpp
+	@mkdir -p $(dir $@)
+	@echo "$@"
+	$(CC) $(DFLAGS) $(CXXFLAGS) -o $@ -c $<
+
 -include $(DEPS)
 
 clean:
 	@echo
 	@printf '$(CYBOLD)%.30s\n$(R)' "-- Cleaning... -------------------------------"
 	$(RM) $(BDIR)
+	$(RM) $(DBDIR)
+	$(RM) src.mk
 
 	
 fclean: clean
-	$(RM) $(NAME) 
+	$(RM) $(NAME)
+	$(RM) $(DEBUG_NAME)
 	@echo
 	
 re: fclean all
