@@ -1,3 +1,11 @@
 		Client.cpp \
 		Server.cpp \
 		main.cpp \
+		Client.cpp \
+		CommandManager.cpp \
+		CommandParam.cpp \
+		CommandSpec.cpp \
+		InputTokenizer.cpp \
+		Join.cpp \
+		ParamCheckers.cpp \
+		main.cpp \
