@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/03 15:38:49 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/03 17:25:00 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,8 +30,10 @@ SRC=	Client.cpp \
 		CommandSpec.cpp \
 		InputTokenizer.cpp \
 		Join.cpp \
+		MessageValidator.cpp \
 		ParamCheckers.cpp \
 		main.cpp \
+
 
 
 OBJ:=$(addprefix $(BDIR), $(SRC_PATH:%.cpp=%.o))

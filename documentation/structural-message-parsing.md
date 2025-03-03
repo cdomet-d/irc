@@ -54,7 +54,7 @@ Messages MUST be separated by `\r\n` or `0x0D0x0A`.
 bool hasPrefix(const std::string &message);
 bool hasTermination(const std::string &message);
 bool hasTrailing(const std::string &message);
-int evaluateLen(const std::string &message);
+int lenIsValid(const std::string &message);
 std::string extractTrailing(const std::message &message);
 std::string trimPrefix(const std::string &message);
 std::vector< std::string > vectorSplit(std::string &s, const std::string &delimiter);
