@@ -1,4 +1,15 @@
-//HEADER
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   InputTokenizer.cpp                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/03 15:14:51 by csweetin          #+#    #+#             */
+/*   Updated: 2025/03/03 15:14:53 by csweetin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "CommandParam.hpp"
 
 void	splitOnComa(std::string& buffer, CommandParam& param)
