@@ -20,7 +20,6 @@ CFLAGS := -std=c++98 -Wall -Wextra -g3 #-Werror
 CPPFLAGS := $(INCLUDES) -MMD -MP
 
 SRCS := main.cpp \
-		CommandResult.cpp \
 		CommandManager.cpp \
 		CommandSpec.cpp \
 		CommandParam.cpp \

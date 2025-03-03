@@ -33,12 +33,12 @@ CommandManager&	CommandManager::operator=(const CommandManager& obj)
 /*methods*/
 CommandSpec&	CommandManager::getCmd(const std::string& cmName)
 {
-	std::map<std::string, CommandSpec>::iterator	it;
+	std::map<std::string, CommandSpec*>::iterator	it;
 
 	it = this->commandList.find(cmName);
 	// if (it == commandList.end())
 	// 	return ;
-	return (it->second); 
+	return (*it->second); 
 }
 
 void	CommandManager::executeCm(CommandSpec& cm)
@@ -52,24 +52,24 @@ void	CommandManager::executeCm(CommandSpec& cm)
 void	CommandManager::generateCmds()
 {
 	//join
-	CommandSpec	join = CommandSpec()
-							.Name("JOIN")
-							.Registration(3)
-							.InputTokenizer(splitOnComa)
-							.Parameters(ParamGenerator()
-										.addParam(CommandParam()
-												.addChecker(validChan)
-												.addChecker(joinChanRequest))
-										.addParam(CommandParam()
-												.addChecker(validKey)))
-							.MinParam(1)
-							.CmExecutor(new Join())//delete
-							.build();
+	CommandSpec	*join = CommandSpec::CommandBuilder()
+									.Name("JOIN")
+									.Registration(3)
+									.InputTokenizer(splitOnComa)
+									.Parameters(ParamGenerator()
+												.addParam(CommandParam()
+														.addChecker(validChan)
+														.addChecker(joinChanRequest))
+												.addParam(CommandParam()
+														.addChecker(validKey)))
+									.MinParam(1)
+									.CmExecutor(new Join())//delete
+									.build();
 
 	log(join); //register command
 }
 
-void	CommandManager::log(CommandSpec& cm)
+void	CommandManager::log(CommandSpec* cm)
 {
-	this->commandList[cm.getName()] = cm;
+	this->commandList[cm->getName()] = cm;
 }

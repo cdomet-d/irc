@@ -4,16 +4,14 @@
 # define COMMANDSPEC_HPP
 
 # include <iostream>
-# include "CommandResult.hpp"
 # include "ParamGenerator.hpp"
 # include "Executor.hpp"
 # include "Join.hpp"
 # include "Client.hpp"
 
-class	CommandSpec //builds a command
+class	CommandSpec
 {
 	private:
-		// CommandResult			cmd;
 		std::string				name;
 		void(*inputTokenizer)(std::string& buffer, CommandParam& param);
 		int						registrationStage;
@@ -24,29 +22,51 @@ class	CommandSpec //builds a command
 	public:
 		//constructors & destructor
 		CommandSpec(void);
+		CommandSpec(std::string name, void(*inputTokenizer)(std::string& buffer, CommandParam& param), int registrationStage, \
+					ParamGenerator params, int minParam, std::vector<void(*)()>	issuerChecks, Executor* cmExecutor);
+		CommandSpec(const CommandSpec& obj);
 		~CommandSpec(void);
 
-		//methods
-		CommandSpec&	Name(const std::string& name);
-		CommandSpec&	Registration(int stage);
-		CommandSpec&	IssuerChecks(void(*ft)());
-		CommandSpec&	InputTokenizer(void(*ft)(std::string& buffer, CommandParam& param));
-		CommandSpec&	Parameters(ParamGenerator& params);
-		CommandSpec&	MinParam(int minParam);
-		CommandSpec&	CmExecutor(Executor* cmExecutor);
-		CommandSpec&	build();
-		// CommandResult&	getCmdResult();
+		//operators
+		CommandSpec&	operator=(const CommandSpec& obj);
+		
+		//method
 		CommandSpec&	process(std::string& buffer, Client& client);
 
 		//getters
-		std::string&	getName(void);
-		ParamGenerator&	getParamGenerator(void){
-			return (this->params);}
-		void	(*getInputTokenizer())(std::string& buffer, CommandParam& param){
-			return (this->inputTokenizer);
-		}
+		std::string		getName(void);
+		
+		// nested class
+		class	CommandBuilder //builds a command
+		{
+			private:
+				std::string				name;
+				void(*inputTokenizer)(std::string& buffer, CommandParam& param);
+				int						registrationStage;
+				ParamGenerator			params;
+				int						minParam;
+				std::vector<void(*)()>	issuerChecks;
+				Executor*				cmExecutor;
+			public:
+				//constructors & destructor
+				CommandBuilder(void);
+				~CommandBuilder(void);
+
+				//methods
+				CommandBuilder&	Name(const std::string& name);
+				CommandBuilder&	Registration(int stage);
+				CommandBuilder&	IssuerChecks(void(*ft)());
+				CommandBuilder&	InputTokenizer(void(*ft)(std::string& buffer, CommandParam& param));
+				CommandBuilder&	Parameters(ParamGenerator& params);
+				CommandBuilder&	MinParam(int minParam);
+				CommandBuilder&	CmExecutor(Executor* cmExecutor);
+				CommandSpec*	build();
+		};
 };
 
 void	splitOnComa(std::string& buffer, CommandParam& param);
 
 #endif
+
+
+
