@@ -43,9 +43,29 @@ std::string&	CommandParam::operator[](unsigned int i)
 	return (this->param[i]);
 }
 
-//nested class ------------------------------------------------
+/*methods*/
+std::vector<std::string>&	CommandParam::getParam(void)
+{
+	return (this->param);
+}
+
+size_t	CommandParam::getParamSize(void)
+{
+	return (this->param.size());
+}
+
+void	(*CommandParam::getChecker(unsigned int i))(std::string&)
+{
+	return (checkers[i]);
+}
+
+size_t	CommandParam::getCheckerSize(void)
+{
+	return (this->checkers.size());
+}
 
 
+//------------------------------ nested class ------------------------------------
 /* constructors & destructor */
 CommandParam::ParamBuilder::ParamBuilder(void)
 {

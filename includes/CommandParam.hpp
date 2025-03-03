@@ -23,16 +23,12 @@ class	CommandParam
 		std::string&	operator[](unsigned int i);
 
 		//methods
-		std::vector<std::string>&	getParam(void) {
-			return (this->param);}
-		size_t						getParamSize(void) {
-			return (this->param.size());}
-		void						(*getChecker(unsigned int i))(std::string&) {
-			return (checkers[i]);
-		}
-		size_t						getCheckerSize(void) {
-			return (this->checkers.size());}
-		//nested class
+		std::vector<std::string>&	getParam(void);
+		size_t						getParamSize(void);
+		void						(*getChecker(unsigned int i))(std::string&);
+		size_t						getCheckerSize(void);
+
+		//--------------------nested class----------------------
 		class	ParamBuilder
 		{
 			private:
