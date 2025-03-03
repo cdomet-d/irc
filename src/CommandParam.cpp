@@ -8,7 +8,7 @@ CommandParam::CommandParam(void)
 	//std::cout << "CommandParam default constructor called" << std::endl;
 }
 
-CommandParam::CommandParam(std::vector<std::string> param, std::vector<void(*)()> checkers)
+CommandParam::CommandParam(std::vector<std::string> param, std::vector<void(*)(std::string&)> checkers)
 {
 	this->param = param;
 	this->checkers = checkers;
@@ -55,6 +55,7 @@ CommandParam::ParamBuilder::ParamBuilder(void)
 CommandParam::ParamBuilder::ParamBuilder(const ParamBuilder& obj)
 {
 	//std::cout << "ParamBuilder copy constructor called" << std::endl;
+	*this = obj;
 }
 
 CommandParam::ParamBuilder::~ParamBuilder(void)
@@ -66,11 +67,15 @@ CommandParam::ParamBuilder::~ParamBuilder(void)
 CommandParam::ParamBuilder&	CommandParam::ParamBuilder::operator=(const ParamBuilder& obj)
 {
 	//std::cout << "ParamBuilder copy assignment operator called" << std::endl;
+	if (this != &obj)
+	{
+		//
+	}
 	return (*this);
 }
 
 /*methods*/
-CommandParam::ParamBuilder&	CommandParam::ParamBuilder::addChecker(void(*ft)())
+CommandParam::ParamBuilder&	CommandParam::ParamBuilder::addChecker(void(*ft)(std::string&))
 {
 	this->checkers.push_back(ft);
 	return (*this);

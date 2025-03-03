@@ -2,10 +2,11 @@
 #include "CommandManager.hpp"
 #include "Client.hpp"
 
-int	main(void)
+int	main(int argc, char** argv)
 {
+	(void)argc;
 	Client			client;
-	std::string		buffer = "JOIN #pizza,#bitch,prout key1,key2 other shit";
+	std::string		buffer = "JOIN #pizza,#bitch,prout key1,key2 other shit";//argv[1]
 	CommandManager	cmManager;
 	size_t			i = 0;
 	std::string		cm;

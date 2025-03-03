@@ -23,6 +23,7 @@ CommandSpec::CommandSpec(std::string name, void(*inputTokenizer)(std::string& bu
 CommandSpec::CommandSpec(const CommandSpec& obj)
 {
 	//std::cout << "CommandSpec copy constructor called" << std::endl;
+	*this = obj;
 }
 
 CommandSpec::~CommandSpec(void)
@@ -34,6 +35,10 @@ CommandSpec::~CommandSpec(void)
 CommandSpec&	CommandSpec::operator=(const CommandSpec& obj)
 {
 	//std::cout << "CommandSpec copy assignment operator called" << std::endl;
+	if (this != &obj)
+	{
+		//
+	}
 	return (*this);
 }
 
@@ -41,19 +46,27 @@ CommandSpec&	CommandSpec::operator=(const CommandSpec& obj)
 CommandSpec&	CommandSpec::process(std::string& buffer, Client& client)
 {
 	// std::cout << this->name << std::endl;
-	std::cout << "'" << buffer << "'" << std::endl;
+	// std::cout << "'" << buffer << "'" << std::endl;
 	// std::cout << params.getParams().size() << std::endl;
 	void(*tokenizer)(std::string& buffer, CommandParam& param)	= this->inputTokenizer;
 	
 	for (size_t i = 0; i < params.size(); i++)
 		tokenizer(buffer, *params[i]);
-
 	for (size_t i = 0; i < params.size(); i++)
 	{
-		std::cout << "\nparam[" << i << "] : " << std::endl;
-		for (size_t j = 0; j < (*params[i]).getSize(); j++)
-			std::cout << (*params[i])[j] << std::endl;
+		for (size_t j = 0; j < params[i]->getCheckerSize(); j++)
+		{
+			void(*checker)(std::string&) = (*params[i]).getChecker(j);
+			for (size_t n = 0; n < params[i]->getParamSize(); n++)
+				checker((*params[i])[n]);
+		}
 	}
+	// for (size_t i = 0; i < params.size(); i++)
+	// {
+	// 	std::cout << "\nparam[" << i << "] : " << std::endl;
+	// 	for (size_t j = 0; j < (*params[i]).getParamSize(); j++)
+	// 		std::cout << (*params[i])[j] << std::endl;
+	// }
 
 	return (*this);
 }
@@ -73,6 +86,7 @@ CommandSpec::CommandBuilder::CommandBuilder(void)
 CommandSpec::CommandBuilder::CommandBuilder(const CommandBuilder& obj)
 {
 	//std::cout << "CommandBuilder copy constructor called" << std::endl;
+	*this = obj;
 }
 
 CommandSpec::CommandBuilder::~CommandBuilder(void)
@@ -84,6 +98,10 @@ CommandSpec::CommandBuilder::~CommandBuilder(void)
 CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::operator=(const CommandBuilder& obj)
 {
 	//std::cout << "CommandBuilder copy assignment operator called" << std::endl;
+	if (this != &obj)
+	{
+		//
+	}
 	return (*this);
 }
 
