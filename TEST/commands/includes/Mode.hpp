@@ -18,22 +18,33 @@ command issuer client object
 
 //methods
 -- checkers --
+(0) enoughParam() -> checks if there are the right nb of params \
+				in case of failure display ERR_NEEDMOREPARAMS
+
 (1) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
 (2) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
 					if not display ERR_CHANOPRIVSNEEDED
 
-() verifier que chaque mode a bien les arguments qu'il lui faut
-pour -+o verifier que le target existe, qu'il soit sur le channel
-pour -+i s'il ce mode a deja ete activer et que le client refait un +i, ne rien faire
+(3) verifier que chaque mode a bien les arguments qu'il lui faut
+pour -+o verifier que le target existe et qu'il soit sur le channel
+pour -+i si ce mode a deja ete active et que le client refait un +i, ne rien faire
 pour -+k si aucune key n'est donné ne rien faire que ce soit pour le set ou remove car pour remove il faut donner la clé qui a ete set
-pour -+t si l'operator est le seul dans le channel et qu'il fait +t, ne rien faire ? (a verifier)
-
+pour -+t 
+pour -+l si on met pas le nombre limite ERR_NEEDMOREPARAMS
 
 -- executors --
 changeMode() -> sets or removes given mode \
 					if <modestring> is not given display RPL_CHANNELMODEIS \
-					followed 
+					followed by RPL_CREATIONTIME
 
+*/
+
+/*
+
+MODE #tosti +k key +i
+:chacham!~char@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr MODE #tosti +k key // +i n'a pas fonctionné
+MODE #tosti +i-k key
+:chacham!~char@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr MODE #tosti +i-k *
 
 */

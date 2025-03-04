@@ -18,7 +18,9 @@ command issuer client object
 (1) enoughParam() -> checks if there are the right nb of params \
 				in case of failure display ERR_NEEDMOREPARAMS
 
-(2) validUser() -> checks if param characters are valid or not \
+(2) ERR_ALREADYREGISTERED
+
+(3) validUser() -> checks if param characters are valid or not \
 				and if username has the right length (will be truncated if not)
 
 -- executors --

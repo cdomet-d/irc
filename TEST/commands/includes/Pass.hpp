@@ -7,7 +7,7 @@ can there be spaces in a password ??
 
 //attributes
 command name : PASS
-state : done or not (could be used to know if we can execute the command NICK) //actually not mandatory but must if used must be the first
+state : done or not (could be used to know if we can execute the command NICK) //actually not mandatory but if used must be the first ?
 command issuer client object
 
 // methods :
@@ -15,7 +15,9 @@ command issuer client object
 (1) enoughParam() -> checks if there are the right nb of params \
 				in case of failure display ERR_NEEDMOREPARAMS
 
-(2) pwMatch() -> checks to see if the given password is correct \
+(2) ERR_ALREADYREGISTERED
+
+(3) pwMatch() -> checks to see if the given password is correct \
 			in case of failure display ERR_PASSWDMISMATCH
 
 -- executors -- :

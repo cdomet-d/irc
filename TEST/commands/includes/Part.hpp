@@ -30,3 +30,21 @@ rmFromChan() -> removes client from channel \
 				saying that the client left
 
 */
+
+/*
+
+PART #tosti bye bye (n'a pas pris le message entier car pas les deux points ":" devant)
+:bobyy!~boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr PART #tosti :bye
+#JOIN #tosti key
+:lithium.libera.chat 421 bobyy #JOIN :Unknown command
+JOIN #tosti key
+:bobyy!~boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #tosti
+:lithium.libera.chat 332 bobyy #tosti :pizza
+:lithium.libera.chat 333 bobyy #tosti bobyy!~boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr 1741120314
+:lithium.libera.chat 353 bobyy @ #tosti :bobyy @chacham
+:lithium.libera.chat 366 bobyy #tosti :End of /NAMES list.
+PART #tosti :by ebye bye
+:bobyy!~boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr PART #tosti :by ebye bye
+
+
+*/
