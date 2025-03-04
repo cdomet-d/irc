@@ -17,7 +17,7 @@ list of all clients to find the target and send him the invite
 (0) enoughParam() -> checks if there are the right nb of params \
 				in case of failure display ERR_NEEDMOREPARAMS
 
-() verifier si le target existe sinon ERR_NOSUCHNICK
+(1) verifier si le target existe sinon ERR_NOSUCHNICK
 
 (2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
@@ -27,7 +27,6 @@ list of all clients to find the target and send him the invite
 (4) validInvite() -> checks if the target user is already on the channel \
 					if so display ERR_USERONCHANNEL
 
-(if channel has invite-only mode, only an operator can invite) ???
 (5) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
 					if not display ERR_CHANOPRIVSNEEDED
 

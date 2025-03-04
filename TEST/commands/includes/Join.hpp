@@ -19,7 +19,7 @@ channel object
 (1) enoughParam() -> checks if there are the right nb of params \
 				in case of failure display ERR_NEEDMOREPARAMS
 
-(2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL (how do we create a new channel )
+(2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL (si pas les bons charactere dans le nom ex : cha sans le #)
 
 (3) joinChanRequest() -> checks : 
 						- the nbr of channels the client is in, if > limit display ERR_TOOMANYCHANNELS \

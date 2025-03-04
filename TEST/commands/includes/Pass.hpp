@@ -12,11 +12,11 @@ command issuer client object
 
 // methods :
 -- checkers -- :
-pwMatch() -> checks to see if the given password is correct \
-			in case of failure display ERR_PASSWDMISMATCH
-
-enoughParam() -> checks if there are the right nb of params \
+(1) enoughParam() -> checks if there are the right nb of params \
 				in case of failure display ERR_NEEDMOREPARAMS
+
+(2) pwMatch() -> checks to see if the given password is correct \
+			in case of failure display ERR_PASSWDMISMATCH
 
 -- executors -- :
 setPw() -> sets clients password to given string \
