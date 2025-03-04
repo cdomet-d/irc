@@ -25,3 +25,17 @@ enoughParam() -> checks if there are the right nb of params \
 setUser() -> sets client's username, realname, (hostname, servername) \
 
 */
+
+
+/*
+
+USER
+:mercury.libera.chat 461 hihi USER :Not enough parameters
+USER #yo 0 jaj lo
+:mercury.libera.chat NOTICE hihi :*** Your username is invalid. Please make sure that your username contains only alphanumeric characters.
+ERROR :Closing Link: lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr (Invalid username [~#yo])
+
+USER rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr 0 * etoile de mer
+NICK moijesuis
+:nickname!~rrrrrrrrr@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr NICK :moijesuis //username has been truncated !!!!
+*/

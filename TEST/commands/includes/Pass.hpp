@@ -7,7 +7,7 @@ can there be spaces in a password ??
 
 //attributes
 command name : PASS
-state : done or not (could be used to know if we can execute the command NICK)
+state : done or not (could be used to know if we can execute the command NICK) //actually not mandatory but must if used must be the first
 command issuer client object
 
 // methods :
@@ -22,4 +22,12 @@ enoughParam() -> checks if there are the right nb of params \
 setPw() -> sets clients password to given string \
 			if already set display ERR_ALREADYREGISTERED
 
+*/
+
+/*
+PASS
+:tantalum.libera.chat 461 * PASS :Not enough parameters
+
+PASS
+:copper.libera.chat 462 juliette :You are already connected and cannot handshake again
 */
