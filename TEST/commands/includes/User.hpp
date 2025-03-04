@@ -38,4 +38,5 @@ ERROR :Closing Link: lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr (Invalid username 
 USER rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr 0 * etoile de mer
 NICK moijesuis
 :nickname!~rrrrrrrrr@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr NICK :moijesuis //username has been truncated !!!!
+
 */

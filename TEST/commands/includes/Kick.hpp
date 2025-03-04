@@ -36,3 +36,44 @@ kickUser() -> remove target user from channel \
 				the channel and the comment (if given otherwise a default message)
 
 */
+
+/*
+
+KICK #loli urghghri
+:lithium.libera.chat 442 chacham #loli :You're not on that channel
+
+KICK #loli hudhekjfb
+:lithium.libera.chat 482 chacham #loli :You're not a channel operator
+
+KICK #loli ufhzrubz
+:platinum.libera.chat 401 bobyy ufhzrubz :No such nick/channel
+
+KICK #loli zeufhzoir,chacham
+:platinum.libera.chat 401 bobyy zeufhzoir :No such nick/channel
+KICK #loli chacham,oziefheif
+:bobyy!~cha@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr KICK #loli chacham :chacham
+
+KICK
+:lithium.libera.chat 461 chacham KICK :Not enough parameters
+KICK loli
+:lithium.libera.chat 461 chacham KICK :Not enough parameters
+KICK loli bobyy
+:lithium.libera.chat 403 chacham loli :No such channel
+KICK loli ueirfhozrieh
+:lithium.libera.chat 403 chacham loli :No such channel
+KICK #loli zoiefheoz
+:lithium.libera.chat 442 chacham #loli :You're not on that channel
+JOIN #loli key
+:chacham!~chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #loli
+:lithium.libera.chat 353 chacham @ #loli :chacham @bobyy
+:lithium.libera.chat 366 chacham #loli :End of /NAMES list.
+KICK #loli zefuherb
+:lithium.libera.chat 482 chacham #loli :You're not a channel operator
+KICK #loli rferere
+:platinum.libera.chat 401 bobyy rferere :No such nick/channel
+KICK #loli chacham
+:bobyy!~cha@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr KICK #loli chacham :chacham
+KICK #loli chacham
+:platinum.libera.chat 441 bobyy chacham #loli :They aren't on that channel
+
+*/
