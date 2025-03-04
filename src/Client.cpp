@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/28 16:09:09 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:43:21 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,10 @@ struct epoll_event *Client::getCliEpoll()
 }
 std::string Client::getIP() const
 {
-	return (_cliIP);
+	return (_IP);
 }
 std::string Client::getHostname() const {
-	return (_cliHostname);
+	return (_hostname);
 }
 std::string Client::getPrefix() const {
 	return (_prefix);
@@ -92,14 +92,14 @@ void Client::setCliEpoll(struct epoll_event epoll)
 	_cliEpoll.data.fd = epoll.data.fd;
 }
 void Client::setIP(std::string ip) {
-	_cliIP = ip;
+	_IP = ip;
 }
 void Client::setHostname(std::string hostname) {
 	if (!hostname.empty())
-		_cliHostname = hostname;
+		_hostname = hostname;
 	else
-		_cliHostname = "NULL";
+		_hostname = "NULL";
 }
 void Client::setPrefix() {
-	_prefix = _nick + "!" + _username + "@" + _cliHostname;
+	_prefix = _nick + "!" + _username + "@" + _hostname;
 }

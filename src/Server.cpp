@@ -6,19 +6,17 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/28 17:38:40 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:42:29 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <algorithm>
 #include <cerrno>
-#include <sstream>
 #include <stdio.h>
 #include <unistd.h>
 #include <vector>
-
-// Server *Server::_server = NULL;
+#include <sstream>
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
@@ -28,7 +26,6 @@ Server::Server(int port, std::string password)
 	: _port(port), _password(password)
 {
 }
-// I think we can forbid server instantiation without parameters by putting the default constructor in private
 Server::Server(void) : _port(0), _password("") {}
 
 Server::~Server(void)
@@ -39,6 +36,10 @@ Server::~Server(void)
 		close(it->first);
 		delete it->second;
 	}
+	for (std::map< std::string, Channel * >::iterator it = _channels.begin();
+		it != _channels.end(); ++it)
+		delete it->second;
+
 	close(_epollFd);
 	close(_servFd);
 }
@@ -47,8 +48,6 @@ Server::~Server(void)
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
-//TODO : need to determine is false means the function work or something went wrong
-// coralie: false means something went wrong IMO
 bool Server::servInit()
 {
 	int en = 1;
@@ -101,7 +100,6 @@ bool Server::servRun()
 	return (true);
 }
 
-//TODO : needs to be rework to get the IP address of each client
 void Server::acceptClient()
 {
 	try {
@@ -155,120 +153,12 @@ void Server::acceptClient()
 	}
 }
 
-std::string findChannelName(std::string &buffer)
-{
-	//log(DEBUG, "-----findChannelName-----");
-
-	if (buffer.find("JOIN #") != buffer.npos)
-		buffer.erase(buffer.find("JOIN #"), 6);
-	return (buffer);
-}
-
-Channel *Server::createChannel(const std::string& channelName)
-{
-	//log(DEBUG, "-----createChannel-----");
-	static Server &server = Server::GetInstanceServer(gPort, gPassword);
-
-	std::map<std::string, Channel*>::iterator it = server.getAllCha().find(channelName);
-    if (it != server.getAllCha().end()) {
-        return (it->second); }
-    
-	Channel* newChannel = new Channel(channelName);
-	newChannel->setName(channelName);
-	server.getAllCha().insert(std::pair< std::string, Channel * >(newChannel->getName(), newChannel));
-	log(INFO, "Channel created: ", channelName);
-	return (newChannel);
-}
-
-bool Server::handleJoin(std::vector< std::string > inputCli, int fd)
-{
-	//log(DEBUG, "-----handleJoin-----");
-	for (std::vector< std::string >::iterator it = inputCli.begin(); it != inputCli.end(); ++it) 
-	{
-		if (it->find("JOIN") != it->npos)
-		{
-			Channel *currentChannel = createChannel(findChannelName(*it));		
-			currentChannel->addClientChannel(currentChannel, fd);
-		}
-	}
-	return (false);
-}
-
-Channel* getCurrentChannel(std::string& inputCli)
-{
-    std::string channelName;
-    static Server& server = Server::GetInstanceServer(gPort, gPassword);
-
-    size_t pos = inputCli.find("PRIVMSG");
-    if (pos == std::string::npos)
-		return (NULL);
-
-	inputCli.erase(inputCli.find("PRIVMSG"), 8);
-    size_t endPos = inputCli.find(" ", pos);
-    if (endPos == std::string::npos) {
-        return (NULL); }
-	
-	for (std::string::iterator it = inputCli.begin(); it != inputCli.end() && *it != ' ' && *it != '\n' && *it != '\r'; ++it) {
-		channelName.push_back(*it); }
-	
-	inputCli.erase(inputCli.find(channelName), strlen(channelName.c_str()));
-	for (std::map<std::string, Channel*>::iterator it = server.getAllCha().begin(); 
-         it != server.getAllCha().end(); ++it)
-    {
-        if (!strncmp(channelName.c_str(), it->second->getName().c_str(), strlen(channelName.c_str())))
-            return (it->second);
-    }
-    return (NULL);
-}
-//TODO: fix Hostname, see you on monday :)
-//---------> see this https://chi.cs.uchicago.edu/chirc/irc_examples.html
-bool Server::handlePrivsmg(std::vector<std::string> inputCli, int fd)
-{
-	log(DEBUG, "-----handlePrivsmg-----");
-
-    for (std::vector<std::string>::iterator it = inputCli.begin(); it != inputCli.end(); ++it) 
-    {
-        if (it->find("PRIVMSG") != it->npos)
-        {
-            Channel *currentChannel = getCurrentChannel(*it);
-            if (currentChannel == NULL)
-			{
-				log(DEBUG, "did not found channel");
-                return (false);
-			}
-            std::string message = it->substr(it->find(":") + 1);
-            std::map<int, Client*>::iterator senderIt = currentChannel->getAllCli().find(fd);
-            if (senderIt == currentChannel->getAllCli().end())
-                return (false);
-            Client* sender = senderIt->second;
-            for (std::map<int, Client*>::iterator itCli = currentChannel->getAllCli().begin(); 
-                 itCli != currentChannel->getAllCli().end(); ++itCli)
-            {
-                if (itCli->first != fd)
-                {
-					log(DEBUG, "message", RPL_PRIVMSG(sender->getPrefix(), currentChannel->getName(), message));
-                    sendReply(itCli->second->getFd(), 
-                              RPL_PRIVMSG(sender->getPrefix(), 
-                                          currentChannel->getName(), 
-                                          message));
-                }
-            }
-            return (true);
-        }
-    }
-    return (false);
-}
-
-
 // TODO: Limit message size
 // Most IRC servers limit messages to 512 bytes in length,
 //including the trailing CR-LF characters. Implementations which include
 //message tags need to allow additional bytes for the tags section of a
 //message; clients must allow 8191 additional bytes and servers must allow
 // 4096 additional bytes
-
-//TODO : try to join a channel
-//TODO : get infos on returns values of recv and send because wtf
 bool Server::handleData(int fd)
 {
 	log(INFO, "-----handleData-----");
@@ -276,26 +166,22 @@ bool Server::handleData(int fd)
 	char bufTemp[1024];
 	memset(bufTemp, 0, sizeof(bufTemp));
 	ssize_t bytes = recv(fd, bufTemp, sizeof(bufTemp) - 1, 0);
-	std::string inputCLi = bufTemp;
+	std::string inputCli(bufTemp);
 
-	log(DEBUG, "RAW INPUT : ", inputCLi);
+	log(DEBUG, "RAW INPUT : ", inputCli);
 
 	if (bytes <= 0)
 		return (disconnectClient(fd));
 	else {
-		std::vector< std::string > inputCliVec = VectorSplit(inputCLi, "\n");
-		
-		handleNick(inputCliVec, fd);
-		handleUsername(inputCliVec, fd);
-		handleJoin(inputCliVec, fd);
-		handlePrivsmg(inputCliVec, fd);
-
-		std::vector< std::string >::iterator it = inputCliVec.begin();
-		if (it->find("QUIT") != it->npos) {
+		if (inputCli.find("CAP LS") != std::string::npos || inputCli.find("NICK") != std::string::npos || inputCli.find("USER") != std::string::npos)
+            handleClientRegistration(inputCli, fd); 
+		else
+			inputToken(inputCli, fd);
+			
+		if (!inputCli.find("QUIT")) {
 			std::cout << "Exit server" << std::endl;
 			return (false);
 		}
-
 	}
 	return (true);
 }

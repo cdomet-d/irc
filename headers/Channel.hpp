@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/28 14:40:38 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:42:36 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,22 +37,23 @@ class Channel {
 	bool		getInviteOnly() const;
 	bool		getIsPassword() const;
 	bool		getLimitCli() const;
-	std::map< int, Client * >	&getAllCli();
+	std::map< int, Client * >	&getCliInChannel();
 	std::map< int, Client * >	&getBannedCli();
 	std::map< int, Client * >	&getOpCli();
 	
 	/*                               SETTERS                                  */
 	void setName(std::string name);
 
-	private:
+  private:
 	std::string _name;
 	std::string _topic;
 	
-	int			_maxCli;
-	bool _inviteOnly;
-	bool _isPassword;
-	bool _isLimitCli;
-	std::map< int, Client * > _allCli;
+	int		_maxCli;
+	bool	_inviteOnly;
+	bool	_isPassword;
+	bool	_isLimitCli;
+
+	std::map< int, Client * > _cliInChannel;
 	std::map< int, Client * > _bannedCli;
 	std::map< int, Client * > _opCli;
 };

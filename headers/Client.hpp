@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/28 16:08:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:42:43 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ class Client {
 	std::string _username;
 	std::string _pass;
 	std::string _realName;
-	std::string _cliIP;
-	std::string _cliHostname;
+	std::string _IP;
+	std::string _hostname;
 	std::string _prefix;
 
 	// socket infos
@@ -68,7 +68,7 @@ class Client {
 	int _cliFd;
 
 	// channels
-	std::vector< int > joinedChans;
+	std::vector< int > _joinedChans;
 
 	/*                               METHODS                                  */
 	// private constructors

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/28 15:07:05 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:41:43 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,13 @@ bool Channel::addClientChannel(Channel *currentChannel, int fd)
 	static Server &server = Server::GetInstanceServer(gPort, gPassword);
 
 	std::map< int, Client * >::iterator whatCli = server.getAllCli().find(fd);
-	std::map< int, Client * >& clients = currentChannel->getAllCli();
+	std::map< int, Client * >& clients = currentChannel->getCliInChannel();
 	for (std::map< int, Client * >::iterator it = clients.begin(); it != clients.end(); ++it)
 		if (whatCli->second == it->second)
 			log(INFO, "Client already in channel");
-	if (currentChannel->getAllCli().empty())
+	if (currentChannel->getCliInChannel().empty())
 		currentChannel->getOpCli().insert(std::pair< int, Client * >(fd, whatCli->second));	
-	currentChannel->getAllCli().insert(std::pair< int, Client * >(fd, whatCli->second));
+	currentChannel->getCliInChannel().insert(std::pair< int, Client * >(fd, whatCli->second));
 
 	sendReply(fd, JOINED(whatCli->second->getNick(), currentChannel->getName()));
 	sendReply(fd, RPL_TOPIC(whatCli->second->getNick(), currentChannel->getName(), "topic"));
@@ -72,8 +72,8 @@ bool Channel::getIsPassword() const {
 bool Channel::getLimitCli() const {
 	return (_isLimitCli);
 }
-std::map< int, Client * > &Channel::getAllCli() {
-	return (_allCli);
+std::map< int, Client * > &Channel::getCliInChannel() {
+	return (_cliInChannel);
 }
 std::map< int, Client * > &Channel::getBannedCli() {
 	return (_bannedCli);
