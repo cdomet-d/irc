@@ -25,7 +25,6 @@ validMess() -> check : \
 			    else if target is a user : \
 					- check if nickname exists, if not display ERR_NOSUCHNICK \
 
-
 -- executors --
 sendMess() -> send <text to be sent> to target \
 				if target is a channel, check for a prefixe and \
