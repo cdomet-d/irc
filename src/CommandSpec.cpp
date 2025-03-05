@@ -77,7 +77,7 @@ CommandSpec&	CommandSpec::process(std::string& buffer, Client& client)
 			si y a un checkers qui est pas bon est ce qu'on arrete ou on fait les autres checkers ?
 		for (size_t j = 0; j < params[i]->getCheckerSize(); j++)
 		{
-			void(*checker)(std::string&) = (*params[i]).getChecker(j);
+			int(*checker)(std::string&) = (*params[i]).getChecker(j);
 			for (size_t n = 0; n < params[i]->getParamSize(); n++)
 				checker((*params[i])[n]);
 		}

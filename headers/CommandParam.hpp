@@ -15,16 +15,17 @@
 
 # include <iostream>
 # include <vector>
+# include "Client.hpp"
 
 class	CommandParam
 {
 	private:
 		std::vector<std::string>			param;
-		std::vector<void(*)(std::string&)>	checkers; //faire un template ??
+		std::vector<int(*)(std::string&)>	checkers; //faire un template ??
 	public:
 		//constructors & destructor
 		CommandParam(void);
-		CommandParam(std::vector<std::string> param, std::vector<void(*)(std::string&)> checkers);
+		CommandParam(std::vector<std::string> param, std::vector<int(*)(std::string&)> checkers);
 		CommandParam(const CommandParam& obj);
 		~CommandParam(void);
 
@@ -35,7 +36,7 @@ class	CommandParam
 		//methods
 		std::vector<std::string>&	getParam(void);
 		size_t						getParamSize(void);
-		void						(*getChecker(unsigned int i))(std::string&);
+		int							(*getChecker(unsigned int i))(std::string&);
 		size_t						getCheckerSize(void);
 
 		//--------------------nested class----------------------
@@ -43,7 +44,7 @@ class	CommandParam
 		{
 			private:
 				std::vector<std::string>			param;
-				std::vector<void(*)(std::string&)>	checkers;
+				std::vector<int(*)(std::string&)>	checkers;
 			public:
 				//constructors & destructor
 				ParamBuilder(void);
@@ -54,13 +55,26 @@ class	CommandParam
 				ParamBuilder&		operator=(const ParamBuilder& obj);
 
 				//methods
-				ParamBuilder&	addChecker(void(*ft)(std::string&));
+				ParamBuilder&	addChecker(int(*ft)(std::string&));
 				CommandParam*	build();
 
 		};
 };
 
-void	validChan(std::string& param);
-// void	validKey(std::string& param);
-void	joinChanRequest(std::string& param);
+int	pwMatch(std::string& password);
+int	isRegistered(Client& client);
+int	validNick(std::string& nickname);
+int	validUser(std::string& username);
+int	validChan(std::string& channel);
+// int	validKey(std::string& param);
+int	joinChanRequest(std::string& channel, std::string& key, Client& client);
+int	validTarget(std::string& targetNickname);
+int	validInvite(std::string& channel, std::string& targetNickname);
+int	OnChan(std::string& channel, Client& client);
+int	hasChanPriv(std::string& channel, Client& client);
+int	validKick(std::string& channel, std::string& targetNickname);
+int	validMode(/*??*/);
+int	validMess(CommandParam& param);
+
+
 #endif

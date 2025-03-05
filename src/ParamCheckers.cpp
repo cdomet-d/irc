@@ -12,21 +12,21 @@
 
 #include "CommandParam.hpp"
 
-void	validChan(std::string& param)
+int	validChan(std::string& channel)
 {
-	if (param[0] != '#')
+	if (channel[0] != '#')
 	{
-		std::cerr << param << " :No such channel" << std::endl;
+		std::cerr << channel << " :No such channel" << std::endl;
 		//trouver un moyen de supprimer ce param pour pas qu'il soit la lors de l'execution
 	}
 }
 
-// void	validKey(std::string& param)
+// int	validKey(std::string& param)
 // {
 
 // }
 
-void	joinChanRequest(std::string& param)
+int	joinChanRequest(std::string& param, Client& client)
 {
 	//supprimer chaque channel faux, ainsi que toutes les keys \
 	pour qu'il reste que les channel valide a join pour l'exec

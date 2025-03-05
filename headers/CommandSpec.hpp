@@ -17,7 +17,6 @@
 # include "CommandParam.hpp"
 # include "Executor.hpp"
 # include "Join.hpp"
-# include "Client.hpp"
 
 class	CommandSpec
 {
@@ -83,7 +82,7 @@ class	CommandSpec
 
 void	splitOnComa(std::string& buffer, CommandParam& param);
 // void	splitJoin(std::string& buffer, CommandParam& param);
-void	splitOnSpace(std::string& buffer, CommandParam& param)
+void	splitOnSpace(std::string& buffer, CommandParam& param);
 
 #endif
 

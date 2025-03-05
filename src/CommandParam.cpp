@@ -18,7 +18,7 @@ CommandParam::CommandParam(void)
 	//std::cout << "CommandParam default constructor called" << std::endl;
 }
 
-CommandParam::CommandParam(std::vector<std::string> param, std::vector<void(*)(std::string&)> checkers)
+CommandParam::CommandParam(std::vector<std::string> param, std::vector<int(*)(std::string&)> checkers)
 {
 	this->param = param;
 	this->checkers = checkers;
@@ -64,7 +64,7 @@ size_t	CommandParam::getParamSize(void)
 	return (this->param.size());
 }
 
-void	(*CommandParam::getChecker(unsigned int i))(std::string&)
+int	(*CommandParam::getChecker(unsigned int i))(std::string&)
 {
 	return (checkers[i]);
 }
@@ -105,7 +105,7 @@ CommandParam::ParamBuilder&	CommandParam::ParamBuilder::operator=(const ParamBui
 }
 
 /*methods*/
-CommandParam::ParamBuilder&	CommandParam::ParamBuilder::addChecker(void(*ft)(std::string&))
+CommandParam::ParamBuilder&	CommandParam::ParamBuilder::addChecker(int(*ft)(std::string&))
 {
 	this->checkers.push_back(ft);
 	return (*this);
