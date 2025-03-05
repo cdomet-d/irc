@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/04 18:43:21 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/05 10:22:16 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,9 @@ std::string Client::getHostname() const {
 }
 std::string Client::getPrefix() const {
 	return (_prefix);
+}
+std::vector <std::string> &Client::getJoinedChans() {
+	return (_joinedChans);
 }
 
 /* ************************************************************************** */

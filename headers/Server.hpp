@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/04 16:53:43 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/05 15:00:55 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,14 +97,14 @@ void	handleClientRegistration(const std::string& input, int fd);
 //JOIN
 Channel	*createChannel(const std::string& channelName);
 bool	handleJoin(std::string params, int fd);
-
+//TOPIC
+bool handleTopic(std::string params, int fd);
 //PRIVMSG
 bool handlePrivsmg(std::string params, int fd);
 
 /*                               DEBUG                                  */
 void	log(logLevel level, std::string message);
 void	log(logLevel level, std::string message, std::string additionalInfo);
-std::string findChannelName(std::string &buffer);
 
 
 #endif //SERVER_HPP

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/04 18:42:43 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/05 10:22:25 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@ class Client {
 	std::string getHostname()const;
 	struct epoll_event *getCliEpoll();
 	std::string getIP() const;
-	std::string getPrefix() const ;
+	std::string getPrefix() const;
+	std::vector< std::string > &getJoinedChans();
+
 
 	/*                               SETTERS                                  */
 	void setNick(const std::string &newNick);
@@ -68,7 +70,7 @@ class Client {
 	int _cliFd;
 
 	// channels
-	std::vector< int > _joinedChans;
+	std::vector< std::string > _joinedChans;
 
 	/*                               METHODS                                  */
 	// private constructors

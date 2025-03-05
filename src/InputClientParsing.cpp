@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:23:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/04 18:42:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/05 13:56:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,18 @@ std::vector< std::string > VectorSplit(std::string &s,
 	return (inputCli);
 }
 
+std::string removeNewlines(const std::string& input) {
+    std::string result;
+    for (size_t i = 0; i < input.length(); ++i) {
+        if (input[i] != '\r' && input[i] != '\n') {
+            result += input[i];
+        }
+    }
+    return result;
+}
+
 void inputToken(std::string inputCli, int fd) {
+	inputCli = removeNewlines(inputCli);
 	std::istringstream iss(inputCli);
 
 	std::string command;
@@ -43,8 +54,8 @@ void inputToken(std::string inputCli, int fd) {
 	iss >> command;
 	std::getline(iss, params);
 	
-	log(DEBUG, "Command = ", command);
-	log(DEBUG, "params = ", params);
+	log(DEBUG, "Command =\t", command);
+	log(DEBUG, "params =\t", params);
 	
 	if (command == "JOIN") {
 		handleJoin(params, fd);
@@ -52,6 +63,9 @@ void inputToken(std::string inputCli, int fd) {
 	if (command == "PRIVMSG") {
 		handlePrivsmg(params, fd);
 		return ; }
+	if (command == "TOPIC") {
+		handleTopic(params, fd);
+	}
 
 	//clean the istringstream
 	iss.str("");

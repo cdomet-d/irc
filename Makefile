@@ -16,6 +16,7 @@ SRC=	main.cpp \
 		NickUser.cpp \
 		Join.cpp \
 		Privmsg.cpp \
+		Topic.cpp \
 		InputClientParsing.cpp \
 		Log.cpp \
 		reply.cpp \

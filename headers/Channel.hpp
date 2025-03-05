@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/04 18:42:36 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/05 16:40:45 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ class Channel {
 	
 	/*                               SETTERS                                  */
 	void setName(std::string name);
+	void setTopic(std::string topic);
 
   private:
 	std::string _name;

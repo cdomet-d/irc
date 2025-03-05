@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/04 18:42:29 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/05 13:12:39 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ Server::~Server(void)
 	std::cout << "Calling destructor" << std::endl;
 	for (std::map< int, Client * >::iterator it = _client.begin();
 		 it != _client.end(); ++it) {
+		it->second->getNick().clear();
+		it->second->getUsername().clear();
 		close(it->first);
 		delete it->second;
 	}
