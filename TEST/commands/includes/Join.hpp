@@ -23,15 +23,15 @@ channel object
 					different pour les autres commandes, qui elles regardent juste si le channel existe alors que pour join il regarde s'il est correcte
 
 (3) joinChanRequest() -> checks : 
-						- the nbr of channels the client is in, if > limit display ERR_TOOMANYCHANNELS \
+							- the nbr of channels the client is in, if > limit display ERR_TOOMANYCHANNELS \
 						(1) - if the key to access the channel (if it has one) is supplied and valid \
 							if not display ERR_BADCHANNELKEY \
-						- if client isn't banned from the channel \
+							- if client isn't banned from the channel \
 								if so display ERR_BANNEDFROMCHAN (we don't have to implement MODE +b so this is optionnal) \
-						- if channel's client limit (if set) hasn't been reached if so display ERR_CHANNELISFULL \
-						(2) - if client was invited (if channel is invite-only mode) if not display ERR_INVITEONLYCHAN \
-						- ERR_BADCHANMASK (not sure of the purpose of this one) Indicates the supplied channel name is not a valid. \
-							 is similar to, but stronger than, ERR_NOSUCHCHANNEL (403), which indicates that the channel does not exist, but that it may be a valid name.
+						(2) - if channel's client limit (if set) hasn't been reached if so display ERR_CHANNELISFULL \
+						(3) - if client was invited (if channel is invite-only mode) if not display ERR_INVITEONLYCHAN \
+							- ERR_BADCHANMASK (not sure of the purpose of this one) Indicates the supplied channel name is not a valid. \
+								 is similar to, but stronger than, ERR_NOSUCHCHANNEL (403), which indicates that the channel does not exist, but that it may be a valid name.
 						
 -- executors --
 addToChan() -> adds client to channel \

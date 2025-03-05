@@ -27,10 +27,11 @@ channel object
 (4) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
 					if not display ERR_CHANOPRIVSNEEDED
 
-(5) validKick() -> checks if target user is in the channel \
+(5) validTarget() -> verifier si le target existe sinon ERR_NOSUCHNICK
+
+(6) validKick() -> checks if target user is in the channel \
 				if not display ERR_USERNOTINCHANNEL
 
-() verifier si le target existe sinon ERR_NOSUCHNICK
 
 -- executors --
 kickUser() -> remove target user from channel \

@@ -17,7 +17,7 @@ list of all clients to find the target and send him the invite
 (0) enoughParam() -> checks if there are the right nb of params \
 				in case of failure display ERR_NEEDMOREPARAMS
 
-(1) verifier si le target existe sinon ERR_NOSUCHNICK
+(1) validTarget() -> verifier si le target existe sinon ERR_NOSUCHNICK
 
 (2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
