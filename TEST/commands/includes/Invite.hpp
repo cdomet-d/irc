@@ -14,20 +14,20 @@ list of all clients to find the target and send him the invite
 
 //methods
 -- checkers --
-(0) enoughParam() -> checks if there are the right nb of params \
+(1) enoughParam() -> checks if there are the right nb of params \
 				in case of failure display ERR_NEEDMOREPARAMS
 
-(1) validTarget() -> verifier si le target existe sinon ERR_NOSUCHNICK
+(2) validTarget() -> verifier si le target existe sinon ERR_NOSUCHNICK
 
-(2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
+(3) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
-(3) onChan() -> checks if the client belongs to the channel \
+(4) onChan() -> checks if the client belongs to the channel \
 			if not display ERR_NOTONCHANNEL 
 
-(4) validInvite() -> checks if the target user is already on the channel \
+(5) validInvite() -> checks if the target user is already on the channel \
 					if so display ERR_USERONCHANNEL
 
-(5) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
+(6) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
 					if not display ERR_CHANOPRIVSNEEDED
 
 

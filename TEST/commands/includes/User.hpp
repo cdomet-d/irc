@@ -5,7 +5,7 @@
 - registration not complete, if so display ERR_ALREADYREGISTERED
 
 //parsing
-2 or 4 arguments (to be decided)
+4 arguments
 <username> 0 * <realname> 
 
 //attributes

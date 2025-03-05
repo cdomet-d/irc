@@ -21,8 +21,7 @@ command issuer client object
 			in case of failure display ERR_PASSWDMISMATCH
 
 -- executors -- :
-setPw() -> sets clients password to given string \
-			if already set display ERR_ALREADYREGISTERED
+setPw() -> sets clients password to given string
 
 */
 

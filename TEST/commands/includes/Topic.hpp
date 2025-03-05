@@ -15,7 +15,6 @@ command issuer client object
 
 (2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
-(if the client wants to view the topic of a channel but is not on it we can prohibit it. it's up to us)
 (3) onChan() -> checks if the client belongs to the channel \
 			if not display ERR_NOTONCHANNEL
 

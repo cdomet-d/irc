@@ -18,15 +18,15 @@ command issuer client object
 
 //methods
 -- checkers --
-(0) enoughParam() -> checks if there are the right nb of params \
+(1) enoughParam() -> checks if there are the right nb of params \
 				in case of failure display ERR_NEEDMOREPARAMS
 
-(1) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
+(2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
-(2) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
+(3) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
 					if not display ERR_CHANOPRIVSNEEDED
 
-(3) verifier que chaque mode a bien les arguments qu'il lui faut
+(4) verifier que chaque mode a bien les arguments qu'il lui faut
 pour -+o verifier que le target existe et qu'il soit sur le channel
 pour -+i si ce mode a deja ete active et que le client refait un +i, ne rien faire
 pour -+k si aucune key n'est donné ne rien faire que ce soit pour le set ou remove car pour remove il faut donner la clé qui a ete set

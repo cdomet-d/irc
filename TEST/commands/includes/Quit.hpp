@@ -1,7 +1,7 @@
 /*
 
 //requirements
-registration succeeded
+registration 0
 
 //parsing
 one optional argument : [<quit message>]

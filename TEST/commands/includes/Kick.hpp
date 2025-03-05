@@ -52,7 +52,7 @@ KICK #loli ufhzrubz
 :platinum.libera.chat 401 bobyy ufhzrubz :No such nick/channel
 
 KICK #loli zeufhzoir,chacham
-:platinum.libera.chat 401 bobyy zeufhzoir :No such nick/channel
+:platinum.libera.chat 401 bobyy zeufhzoir :No such nick/channel (s'arrete au premier mauvais user)
 KICK #loli chacham,oziefheif
 :bobyy!~cha@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr KICK #loli chacham :chacham
 
