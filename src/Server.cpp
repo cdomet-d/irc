@@ -6,17 +6,17 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 16:28:26 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:46:17 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <algorithm>
 #include <cerrno>
+#include <sstream>
 #include <stdio.h>
 #include <unistd.h>
 #include <vector>
-#include <sstream>
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
@@ -39,7 +39,7 @@ Server::~Server(void)
 		delete it->second;
 	}
 	for (std::map< std::string, Channel * >::iterator it = _channels.begin();
-		it != _channels.end(); ++it)
+		 it != _channels.end(); ++it)
 		delete it->second;
 
 	close(_epollFd);
@@ -65,7 +65,7 @@ bool Server::servInit()
 
 	if (setsockopt(_servFd, SOL_SOCKET, SO_REUSEADDR, &en, sizeof(en)) == -1)
 		return (false);
-	if (fcntl(_servFd, F_SETFL,O_NONBLOCK) == -1)	
+	if (fcntl(_servFd, F_SETFL, O_NONBLOCK) == -1)
 		return (false);
 	if (bind(_servFd, (struct sockaddr *)&_servAddress, sizeof(_servAddress)) ==
 		-1)
@@ -170,9 +170,9 @@ bool Server::handleData(int fd)
 	ssize_t bytes = recv(fd, bufTemp, sizeof(bufTemp) - 1, 0);
 	std::string inputCli;
 	inputCli.append(bufTemp);
-	
+
 	log(DEBUG, "RAW INPUT : ", inputCli);
-	
+
 	Client *currentCli = _client.find(fd)->second;
 	if (bytes <= 0)
 		return (disconnectClient(fd));
@@ -183,22 +183,27 @@ bool Server::handleData(int fd)
 	return (true);
 }
 
-void Server::processBuffer(Client *currentCli) {
+void Server::processBuffer(Client *currentCli)
+{
 	size_t pos;
 	while ((pos = currentCli->getBuffer().find('\n')) != std::string::npos) {
-		if (!currentCli->getBuffer().find("QUIT")) { 
+		if (!currentCli->getBuffer().find("QUIT")) {
 			std::cout << "Exit server" << std::endl;
 			currentCli->setBuffer("");
-			return ; }
+			return;
+		}
 
-		if (currentCli->getBuffer().find("CAP LS") != std::string::npos || currentCli->getBuffer().find("NICK") != std::string::npos || currentCli->getBuffer().find("USER") != std::string::npos) {
-            handleClientRegistration(currentCli->getBuffer(), currentCli);
+		if (currentCli->getBuffer().find("CAP LS") != std::string::npos ||
+			currentCli->getBuffer().find("NICK") != std::string::npos ||
+			currentCli->getBuffer().find("USER") != std::string::npos) {
+			handleClientRegistration(currentCli->getBuffer(), currentCli);
 			currentCli->setBuffer("");
-			return ; }
-		else {
+			return;
+		} else {
 			inputToken(currentCli->getBuffer(), currentCli);
 			currentCli->setBuffer("");
-			return ; }			 
+			return;
+		}
 	}
 }
 

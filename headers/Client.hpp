@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 15:00:14 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:46:25 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 
 #include <fcntl.h>
 #include <iostream>
+#include <netdb.h>
 #include <netinet/in.h>
 #include <string>
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <vector>
-#include <netdb.h>
 
 class Client {
   public:
@@ -37,13 +37,12 @@ class Client {
 	std::string getNick() const;
 	std::string getUsername() const;
 	std::string getRealName() const;
-	std::string getHostname()const;
+	std::string getHostname() const;
 	struct epoll_event *getCliEpoll();
 	std::string getIP() const;
 	std::string getPrefix() const;
 	std::string getBuffer() const;
 	std::vector< std::string > &getJoinedChans();
-
 
 	/*                               SETTERS                                  */
 	void setNick(const std::string &newNick);
@@ -54,7 +53,7 @@ class Client {
 	void setHostname(std::string hostname);
 	void setPrefix();
 	void setBuffer(std::string buffer);
-	
+
 	struct sockaddr_in _cliAddress;
 
   private:

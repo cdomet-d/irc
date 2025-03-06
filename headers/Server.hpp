@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 16:11:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:46:39 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ class Server {
 	void acceptClient();
 	void processBuffer(Client *currentCli);
 
-	
 	/*                               GETTERS                                  */
 	std::map< int, Client * > &getAllCli();
 	std::map< std::string, Channel * > &getAllCha();
@@ -79,9 +78,9 @@ class Server {
 	struct epoll_event _servPoll;
 	struct sockaddr_in _servAddress;
 
-	std::map< int, Client * >			_client;
-	std::map< std::string, Channel * >	_channels;
-	std::vector< std::string >			_usedNicks;
+	std::map< int, Client * > _client;
+	std::map< std::string, Channel * > _channels;
+	std::vector< std::string > _usedNicks;
 
 	// private constructor
 	Server(void);
@@ -90,23 +89,22 @@ class Server {
 
 /*                               PARSING                                  */
 std::vector< std::string > VectorSplit(std::string &s,
-	const std::string &delimiter);
-void	inputToken(std::string inputCli, Client *currentCli);
+									   const std::string &delimiter);
+void inputToken(std::string inputCli, Client *currentCli);
 
 /*                               COMMAND                                  */
 //NICK--USER
-void	handleClientRegistration(const std::string& input, Client *currentCli);
+void handleClientRegistration(const std::string &input, Client *currentCli);
 //JOIN
-Channel	*createChannel(const std::string& channelName);
-bool	handleJoin(std::string params, Client *currentCli);
+Channel *createChannel(const std::string &channelName);
+bool handleJoin(std::string params, Client *currentCli);
 //TOPIC
 bool handleTopic(std::string params, Client *currentCli);
 //PRIVMSG
 bool handlePrivsmg(std::string params, Client *currentCli);
 
 /*                               DEBUG                                  */
-void	log(logLevel level, std::string message);
-void	log(logLevel level, std::string message, std::string additionalInfo);
-
+void log(logLevel level, std::string message);
+void log(logLevel level, std::string message, std::string additionalInfo);
 
 #endif //SERVER_HPP

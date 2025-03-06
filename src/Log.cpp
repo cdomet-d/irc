@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:56:23 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/27 11:47:16 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:46:03 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,11 @@ void log(logLevel level, std::string message, std::string additionalInfo)
 		break;
 	case (ERROR):
 		std::cout << "[" << timeStamp() << ']' << " ERROR:\t" << RED << message
-					<< additionalInfo << RESET << std::endl;
+				  << additionalInfo << RESET << std::endl;
 		break;
 	case (DEBUG):
 		std::cout << "[" << timeStamp() << ']' << " DEBUG:\t" << YELLOW
-				  << message << additionalInfo << RESET
-				  << std::endl;
+				  << message << additionalInfo << RESET << std::endl;
 		break;
 	}
 }
