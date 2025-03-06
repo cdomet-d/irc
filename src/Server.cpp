@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/05 13:12:39 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/06 16:28:26 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ bool Server::servInit()
 
 	if (setsockopt(_servFd, SOL_SOCKET, SO_REUSEADDR, &en, sizeof(en)) == -1)
 		return (false);
-	if (fcntl(_servFd, F_SETFL) == -1)	
+	if (fcntl(_servFd, F_SETFL,O_NONBLOCK) == -1)	
 		return (false);
 	if (bind(_servFd, (struct sockaddr *)&_servAddress, sizeof(_servAddress)) ==
 		-1)
@@ -168,24 +168,38 @@ bool Server::handleData(int fd)
 	char bufTemp[1024];
 	memset(bufTemp, 0, sizeof(bufTemp));
 	ssize_t bytes = recv(fd, bufTemp, sizeof(bufTemp) - 1, 0);
-	std::string inputCli(bufTemp);
-
+	std::string inputCli;
+	inputCli.append(bufTemp);
+	
 	log(DEBUG, "RAW INPUT : ", inputCli);
-
+	
+	Client *currentCli = _client.find(fd)->second;
 	if (bytes <= 0)
 		return (disconnectClient(fd));
 	else {
-		if (inputCli.find("CAP LS") != std::string::npos || inputCli.find("NICK") != std::string::npos || inputCli.find("USER") != std::string::npos)
-            handleClientRegistration(inputCli, fd); 
-		else
-			inputToken(inputCli, fd);
-			
-		if (!inputCli.find("QUIT")) {
-			std::cout << "Exit server" << std::endl;
-			return (false);
-		}
+		currentCli->setBuffer(currentCli->getBuffer().append(bufTemp, bytes));
+		processBuffer(currentCli);
 	}
 	return (true);
+}
+
+void Server::processBuffer(Client *currentCli) {
+	size_t pos;
+	while ((pos = currentCli->getBuffer().find('\n')) != std::string::npos) {
+		if (!currentCli->getBuffer().find("QUIT")) { 
+			std::cout << "Exit server" << std::endl;
+			currentCli->setBuffer("");
+			return ; }
+
+		if (currentCli->getBuffer().find("CAP LS") != std::string::npos || currentCli->getBuffer().find("NICK") != std::string::npos || currentCli->getBuffer().find("USER") != std::string::npos) {
+            handleClientRegistration(currentCli->getBuffer(), currentCli);
+			currentCli->setBuffer("");
+			return ; }
+		else {
+			inputToken(currentCli->getBuffer(), currentCli);
+			currentCli->setBuffer("");
+			return ; }			 
+	}
 }
 
 Server &Server::GetInstanceServer(int port, std::string password)

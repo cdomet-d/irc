@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 11:58:20 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:42:11 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,42 +14,33 @@
 #include "Client.hpp"
 #include <sstream>
 
-void checkTopic(Channel *currentChannel, Client *whatCli, int fdClient) {
+void checkTopic(Channel *currentChannel, Client *currentCli) {
 	if (currentChannel->getTopic().empty() == true) {
-		log(DEBUG, "No topic found : ", RPL_NOTOPIC(whatCli->getNick(), currentChannel->getName()));
-		sendReply(fdClient, RPL_NOTOPIC(whatCli->getNick(), currentChannel->getName()));
+		sendReply(currentCli->getFd(), RPL_NOTOPIC(currentCli->getNick(), currentChannel->getName()));
 		return ;
 	}
-	log(DEBUG, "Topic found : ", RPL_TOPIC(whatCli->getNick(), currentChannel->getName(), currentChannel->getTopic()));
-	sendReply(fdClient, RPL_TOPIC(whatCli->getNick(), currentChannel->getName(), currentChannel->getTopic()));
+	sendReply(currentCli->getFd(), RPL_TOPIC(currentCli->getNick(), currentChannel->getName(), currentChannel->getTopic()));
 	return ;
 }
 
-void clearTopic(Channel *currentChannel, Client *whatCli) {
-	log(DEBUG, "-----clearTopic-----");
+void clearTopic(Channel *currentChannel, Client *currentCli) {
 	currentChannel->setTopic("");
 	for (std::map<int, Client *>::iterator it = currentChannel->getCliInChannel().begin();
 	it != currentChannel->getCliInChannel().end(); ++it) {
-		sendReply(it->second->getFd(), RPL_NOTOPIC(whatCli->getNick(), currentChannel->getName()));
-		log(DEBUG, "sending clear the topic lol");
-
+		sendReply(it->second->getFd(), RPL_NOTOPIC(currentCli->getNick(), currentChannel->getName()));
 	}
 }
 
-void changeTopic(Channel *currentChannel, Client *whatCli, std::string topic) {
+void changeTopic(Channel *currentChannel, Client *currentCli, std::string topic) {
 	topic.erase(1, 0); //remove the ':'
 	currentChannel->getTopic().clear();
 	currentChannel->setTopic(topic);
-	log(DEBUG, "Topic set : ", RPL_TOPICCHANGED(whatCli->getPrefix(), currentChannel->getName(), currentChannel->getTopic()));
-
 	for (std::map<int, Client *>::iterator it = currentChannel->getCliInChannel().begin();
 		it != currentChannel->getCliInChannel().end(); ++it) {
-			sendReply(it->second->getFd(), RPL_TOPICCHANGED(whatCli->getPrefix(), currentChannel->getName(), currentChannel->getTopic())); }
+			sendReply(it->second->getFd(), RPL_TOPICCHANGED(currentCli->getPrefix(), currentChannel->getName(), currentChannel->getTopic())); }
 }
 
-bool handleTopic(std::string params, int fd) {
-	log(DEBUG, "-----handleTopic-----");
-	
+bool handleTopic(std::string params, Client *currentCli) {
 	static Server &server = Server::GetInstanceServer(gPort, gPassword);
 	
 	std::istringstream iss(params);
@@ -59,31 +50,32 @@ bool handleTopic(std::string params, int fd) {
 	std::getline(iss, topic);
 
 	std::map< std::string, Channel * >::iterator currentChannel = server.getAllCha().find(channelName);
+	
 	//does the channel exists
 	if (currentChannel == server.getAllCha().end()) {
-		sendReply(fd, ERR_NOSUCHCHANNEL(server.getAllCli()[fd]->getNick(), channelName));
+		sendReply(currentCli->getFd(), ERR_NOSUCHCHANNEL(server.getAllCli()[currentCli->getFd()]->getNick(), channelName));
 		return (false); }
 
-	std::map<int, Client*>::iterator whatCli = currentChannel->second->getCliInChannel().find(fd);
 	//is the client on the channel
+	std::map<int, Client*>::iterator whatCli = currentChannel->second->getCliInChannel().find(currentCli->getFd());
 	if (whatCli == currentChannel->second->getCliInChannel().end()) {
-		sendReply(fd, ERR_NOTONCHANNEL(server.getAllCli()[fd]->getNick(), currentChannel->second->getName()));
+		sendReply(currentCli->getFd(), ERR_NOTONCHANNEL(server.getAllCli()[currentCli->getFd()]->getNick(), currentChannel->second->getName()));
 		return (false); }
 	
 	//if no params (= topic is empty) after channelname, client only checks the topic
 	if (topic.empty() == true) {
-		checkTopic(currentChannel->second, whatCli->second, fd);
+		checkTopic(currentChannel->second, currentCli);
 		return (true); }
 
 	//if topic is = ":", the client clears the topic for the channel
 	//sends the notification to all clients of the channel
 	if (topic == " ::") {
-		clearTopic(currentChannel->second, whatCli->second);
+		clearTopic(currentChannel->second, currentCli);
 		return (true); }
 	
 	//if topic is :[other_topic], client changes the topic of the channel
 	if (topic.empty() == false) {
-		changeTopic(currentChannel->second, whatCli->second, topic);
+		changeTopic(currentChannel->second, currentCli, topic);
 		return (true); }
 
 	return (false);

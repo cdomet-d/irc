@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 09:56:01 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/06 16:11:53 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ class Server {
 	bool servInit();
 	bool servRun();
 	void acceptClient();
+	void processBuffer(Client *currentCli);
+
 	
 	/*                               GETTERS                                  */
 	std::map< int, Client * > &getAllCli();
@@ -89,18 +91,18 @@ class Server {
 /*                               PARSING                                  */
 std::vector< std::string > VectorSplit(std::string &s,
 	const std::string &delimiter);
-void	inputToken(std::string inputCli, int fd);
+void	inputToken(std::string inputCli, Client *currentCli);
 
 /*                               COMMAND                                  */
 //NICK--USER
-void	handleClientRegistration(const std::string& input, int fd);
+void	handleClientRegistration(const std::string& input, Client *currentCli);
 //JOIN
 Channel	*createChannel(const std::string& channelName);
-bool	handleJoin(std::string params, int fd);
+bool	handleJoin(std::string params, Client *currentCli);
 //TOPIC
-bool handleTopic(std::string params, int fd);
+bool handleTopic(std::string params, Client *currentCli);
 //PRIVMSG
-bool handlePrivsmg(std::string params, int fd);
+bool handlePrivsmg(std::string params, Client *currentCli);
 
 /*                               DEBUG                                  */
 void	log(logLevel level, std::string message);

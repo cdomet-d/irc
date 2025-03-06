@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/05 10:22:25 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:00:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ class Client {
 	struct epoll_event *getCliEpoll();
 	std::string getIP() const;
 	std::string getPrefix() const;
+	std::string getBuffer() const;
 	std::vector< std::string > &getJoinedChans();
 
 
@@ -52,6 +53,8 @@ class Client {
 	void setIP(std::string ip);
 	void setHostname(std::string hostname);
 	void setPrefix();
+	void setBuffer(std::string buffer);
+	
 	struct sockaddr_in _cliAddress;
 
   private:
@@ -68,6 +71,7 @@ class Client {
 	// socket infos
 	struct epoll_event _cliEpoll;
 	int _cliFd;
+	std::string _buffer;
 
 	// channels
 	std::vector< std::string > _joinedChans;
