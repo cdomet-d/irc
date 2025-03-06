@@ -1,31 +1,108 @@
-//HEADER
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
+/*   Updated: 2025/03/06 11:47:21 by cdomet-d         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "Client.hpp"
+#include <arpa/inet.h>
+#include <string.h>
 
-/* constructors & destructor */
-Client::Client(void)
+/* ************************************************************************** */
+/*                               ORTHODOX CLASS                               */
+/* ************************************************************************** */
+Client::~Client() {}
+Client::Client(const Client &rhs)
 {
-	//std::cout << "Client default constructor called" << std::endl;
+	static_cast< void >(rhs);
+}
+Client::Client(void) : _name(""), _nick(""), _pass(""), _realName("") {}
+Client &Client::operator=(const Client &rhs)
+{
+	static_cast< void >(rhs);
+	return *this;
 }
 
-Client::Client(const Client& obj)
+/* ************************************************************************** */
+/*                               METHODS                                      */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/*                               GETTERS                                      */
+/* ************************************************************************** */
+int Client::getFd() const
 {
-	//std::cout << "Client copy constructor called" << std::endl;
-	*this = obj;
+	return _cliFd;
+}
+std::string Client::getName() const
+{
+	return _name;
+}
+std::string Client::getNick() const
+{
+	return _nick;
+}
+std::string Client::getUsername() const
+{
+	return _username;
+};
+std::string Client::getRealName() const
+{
+	return _realName;
+}
+struct epoll_event *Client::getCliEpoll()
+{
+	return (&_cliEpoll);
+}
+std::string Client::getIP() const
+{
+	return (_IP);
+}
+std::string Client::getHostname() const {
+	return (_hostname);
+}
+std::string Client::getPrefix() const {
+	return (_prefix);
+}
+std::vector <std::string> &Client::getJoinedChans() {
+	return (_joinedChans);
 }
 
-Client::~Client(void)
+/* ************************************************************************** */
+/*                               SETTERS                                      */
+/* ************************************************************************** */
+void Client::setNick(const std::string &newNick)
 {
-	//std::cout << "Client destructor called" << std::endl;
+	_nick = newNick;
 }
-
-/*operators*/
-Client&	Client::operator=(const Client& obj)
+void Client::setUsername(const std::string &username)
 {
-	//std::cout << "Client copy assignment operator called" << std::endl;
-	if (this != &obj)
-	{
-		this->registration = obj.registration;
-	}
-	return (*this);
+	_username = username;
+}
+void Client::setFd(int fd)
+{
+	_cliFd = fd;
+}
+void Client::setCliEpoll(struct epoll_event epoll)
+{
+	_cliEpoll.events = epoll.events;
+	_cliEpoll.data.fd = epoll.data.fd;
+}
+void Client::setIP(std::string ip) {
+	_IP = ip;
+}
+void Client::setHostname(std::string hostname) {
+	if (!hostname.empty())
+		_hostname = hostname;
+	else
+		_hostname = "NULL";
+}
+void Client::setPrefix() {
+	_prefix = _nick + "!" + _username + "@" + _hostname;
 }
