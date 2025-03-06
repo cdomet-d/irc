@@ -6,14 +6,13 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/06 16:59:41 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/06 17:20:42 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME:= ircserv
 DEBUG_NAME:= d-ircserv
-BDIR:=.bdir/
-DBDIR:=.dbdir/
+
 H:=  -I headers/ \
 	-I headers/builder/command-execution/ \
 	-I headers/builder/command-validation/ \
@@ -24,18 +23,19 @@ H:=  -I headers/ \
 
 CC:=c++
 CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow
-DFLAGS:= -std=c++98 -Wshadow -Wextra -Wall -g3
+DFLAGS:= -std=c++98 -Wshadow -g3
 CXXFLAGS:=-MMD -MP $(H)
 MAKEFLAGS:=--no-print-directory
 
 # ----------------------------- SOURCES DIRECTORIES -------------------------- #
+BDIR:=.bdir/
+DBDIR:=.dbdir/
 
 SRC_DIR:= src/
 
-BUILDER_DIR:= $(SRC_DIR)builder/
-BUILDER_EXEC_DIR:= $(BUILDER_DIR)command-execution/
-BUILDER_VALID_DIR:= $(BUILDER_DIR)command-validation/
-BUILDER_MANAGE_DIR:= $(BUILDER_DIR)manager/
+BUILD_EXE_DIR:= $(SRC_DIR)builder/command-execution/
+BUILD_VAL_DIR:= $(SRC_DIR)builder/command-validation/
+BUILD_MAN_DIR:= $(SRC_DIR)builder/manager/
 
 CLI_DIR:= $(SRC_DIR)client/
 DEBUG_DIR:= $(SRC_DIR)debug/
@@ -51,46 +51,50 @@ DEBUG_SRC:=				Log.cpp \
 
 CLI_SRC:=				Client.cpp \
 
-BUILDER_EXEC_SRC:=		Privmsg.cpp \
+BUILD_EXE_SRC:=		Privmsg.cpp \
 						NickUser.cpp \
 						Join.cpp \
 						Topic.cpp \
 
-BUILDER_VALID_SRC:=		InputClientParsing.cpp \
+BUILD_VAL_SRC:=		InputClientParsing.cpp \
 						MessageValidator.cpp \
 
-BUILDER_MANAGE_SRC:=	\
+BUILD_MAN_SRC:=	\
 
 SRC_ROOT:=				main.cpp \
 
 # ----------------------------- BUILDING PATH -------------------------------- #
 
 SRC:= $(addprefix $(SRC_DIR), $(SRC_ROOT))
-SRC+= $(addprefix $(BUILDER_EXEC_DIR), $(BUILDER_EXEC_SRC))
-SRC+= $(addprefix $(BUILDER_MANAGE_DIR), $(BUILDER_MANAGE_SRC))
-SRC+= $(addprefix $(BUILDER_VALID_DIR), $(BUILDER_VALID_SRC))
+SRC+= $(addprefix $(BUILD_EXE_DIR), $(BUILD_EXE_SRC))
+SRC+= $(addprefix $(BUILD_MAN_DIR), $(BUILD_MAN_SRC))
+SRC+= $(addprefix $(BUILD_VAL_DIR), $(BUILD_VAL_SRC))
 SRC+= $(addprefix $(CLI_DIR), $(CLI_SRC))
 SRC+= $(addprefix $(DEBUG_DIR), $(DEBUG_SRC))
 SRC+= $(addprefix $(SERV_DIR), $(SERV_SRC))
 
-OBJ:=$(addprefix $(BDIR), $(SRC:%.cpp=%.o))
-DEPS:=$(OBJ:%.o=%.d)
 
-RM:= rm -rf
+
+# ----------------------------- MAKE ----------------------------------------- #
 
 all: $(NAME)
 
+OBJ:=$(addprefix $(BDIR), $(SRC:%.cpp=%.o))
+DEPS:=$(OBJ:%.o=%.d)
+
 $(NAME): $(OBJ)
 	@echo
-	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(NAME)... ----------------------"
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(NAME)... --------------------"
+	$(CC) $(OBJ) -o $(NAME)
 	@echo
-	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- $(NAME) done ! --------------------------"
+	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- $(NAME) done ! -----------------------"
 
 $(BDIR)%.o: %.cpp
 	@mkdir -p $(dir $@)
-	@echo "$@"
-	$(CC) $(CFLAGS) $(CXXFLAGS) -o $@ -c $<
+	@echo "$(CC) $(CFLAGS) $@"
+	@$(CC) $(CFLAGS) $(CXXFLAGS) -o $@ -c $<
+
+# ----------------------------- MAKE DEBUG ----------------------------------- #
 
 debug: $(DEBUG_NAME)
 
@@ -99,32 +103,41 @@ DDEPS:=$(DOBJ:%.o=%.d)
 
 $(DEBUG_NAME): $(DOBJ)
 	@echo
-	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(DEBUG_NAME)... ----------------------"
+	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(DEBUG_NAME)... --------------"
 	$(CC) $(DFLAGS) $(DOBJ) -o $(DEBUG_NAME)
 	@echo
-	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- $(DEBUG_NAME) done ! --------------------------"
+	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- $(DEBUG_NAME) done ! -----------------"
 
 $(DBDIR)%.o: %.cpp
 	@mkdir -p $(dir $@)
-	@echo "$@"
-	$(CC) $(DFLAGS) $(CXXFLAGS) -o $@ -c $<
+	@echo "$(CC) $(DFLAGS) $@"
+	@$(CC) $(DFLAGS) $(CXXFLAGS) -o $@ -c $<
 
 -include $(DEPS)
 
+RM:= rm -rf
+
+# ----------------------------- MAKE CLEAN  ---------------------------------- #
+
 clean:
 	@echo
-	@printf '$(CYBOLD)%.30s\n$(R)' "-- Cleaning... -------------------------------"
+	@printf '$(CYBOLD)%.30s\n$(R)' "-- Cleaning... ----------------------------"
 	$(RM) $(BDIR)
 	$(RM) $(DBDIR)
 	$(RM) src.mk
 
+# ----------------------------- MAKE FCLEAN  --------------------------------- #
 
 fclean: clean
 	$(RM) $(NAME)
 	$(RM) $(DEBUG_NAME)
 	@echo
 
+# ----------------------------- MAKE RE -------------------------------------- #
+
 re: fclean all
+
+# ----------------------------- MAKE INFO ------------------------------------ #
 
 info:
 	@echo $(CXXFLAGS)
@@ -135,6 +148,7 @@ info:
 
 .PHONY: all clean info fclean re debug
 
+# ----------------------------- FORMATTING ----------------------------------- #
 # Formatting combinations
 PIBOLD= $(BO)$(M)
 BLBOLD= $(BO)$(B)
