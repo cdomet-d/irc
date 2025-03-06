@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/06 11:46:24 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/06 16:41:44 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,29 +14,70 @@ NAME:= ircserv
 DEBUG_NAME:= d-ircserv
 BDIR:=.bdir/
 DBDIR:=.dbdir/
-SRC_DIR:= src/
-H:= headers/
+H:=  -I headers/ \
+	-I headers/builder/command-execution/ \
+	-I headers/builder/command-validation/ \
+	-I headers/builder/manager/ \
+	-I headers/client/ \
+	-I headers/debug/ \
+	-I headers/server/ \
 
 CC:=c++
 CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow
 DFLAGS:= -std=c++98 -Wshadow -Wextra -Wall -g3
-CXXFLAGS:=-MMD -MP -I $(H)
+CXXFLAGS:=-MMD -MP $(H)
 MAKEFLAGS:=--no-print-directory
 
-SRC_PATH+= $(addprefix $(SRC_DIR), $(SRC))
-SRC=	main.cpp \
-		Client.cpp \
-		Server.cpp \
-		Channel.cpp \
-		NickUser.cpp \
-		Join.cpp \
-		Privmsg.cpp \
-		Topic.cpp \
-		InputClientParsing.cpp \
-		Log.cpp \
-		reply.cpp \
+# ----------------------------- SOURCES DIRECTORIES -------------------------- #
 
-OBJ:=$(addprefix $(BDIR), $(SRC_PATH:%.cpp=%.o))
+SRC_DIR:= src/
+
+BUILDER_DIR:= $(SRC_DIR)builder/
+BUILDER_EXEC_DIR:= $(BUILDER_DIR)command-execution/
+BUILDER_VALID_DIR:= $(BUILDER_DIR)command-validation/
+BUILDER_MANAGE_DIR:= $(BUILDER_DIR)manager/
+
+CLI_DIR:= $(SRC_DIR)client/
+DEBUG_DIR:= $(SRC_DIR)debug/
+SERV_DIR:= $(SRC_DIR)server/
+
+# ----------------------------- SOURCES FILES -------------------------------- #
+
+SERV_SRC:=				Channel.cpp \
+						Server.cpp \
+						reply.cpp \
+
+DEBUG_SRC:=				Log.cpp \
+
+CLI_SRC:=				Client.cpp \
+
+BUILDER_EXEC_SRC:=		Privmsg.cpp \
+						NickUser.cpp \
+						Join.cpp \
+						Topic.cpp \
+
+BUILDER_VALID_SRC:=		CommandSpec.cpp \
+						InputClientParsing.cpp \
+						InputTokenizer.cpp \
+						CommandParam.cpp \
+						ParamCheckers.cpp \
+						MessageValidator.cpp \
+
+BUILDER_MANAGE_SRC:=	CommandManager.cpp \
+
+SRC_ROOT:=				main.cpp \
+
+# ----------------------------- BUILDING PATH -------------------------------- #
+
+SRC:= $(addprefix $(SRC_DIR), $(SRC_ROOT))
+SRC+= $(addprefix $(BUILDER_EXEC_DIR), $(BUILDER_EXEC_SRC))
+SRC+= $(addprefix $(BUILDER_MANAGE_DIR), $(BUILDER_MANAGE_SRC))
+SRC+= $(addprefix $(BUILDER_VALID_DIR), $(BUILDER_VALID_SRC))
+SRC+= $(addprefix $(CLI_DIR), $(CLI_SRC))
+SRC+= $(addprefix $(DEBUG_DIR), $(DEBUG_SRC))
+SRC+= $(addprefix $(SERV_DIR), $(SERV_SRC))
+
+OBJ:=$(addprefix $(BDIR), $(SRC:%.cpp=%.o))
 DEPS:=$(OBJ:%.o=%.d)
 
 RM:= rm -rf
@@ -57,7 +98,7 @@ $(BDIR)%.o: %.cpp
 
 debug: $(DEBUG_NAME)
 
-DOBJ:=$(addprefix $(DBDIR), $(SRC_PATH:%.cpp=%.o))
+DOBJ:=$(addprefix $(DBDIR), $(SRC:%.cpp=%.o))
 DDEPS:=$(DOBJ:%.o=%.d)
 
 $(DEBUG_NAME): $(DOBJ)
@@ -81,17 +122,19 @@ clean:
 	$(RM) $(DBDIR)
 	$(RM) src.mk
 
-	
+
 fclean: clean
 	$(RM) $(NAME)
 	$(RM) $(DEBUG_NAME)
 	@echo
-	
+
 re: fclean all
 
 info:
 	@echo $(CXXFLAGS)
+	@echo
 	@echo $(SRC_PATH)
+	@echo
 	@echo $(SRC)
 
 .PHONY: all clean info fclean re debug
@@ -114,7 +157,7 @@ BO=\033[1m
 
 # Font color
 # red
-RE=\033[0;31m 
+RE=\033[0;31m
 # green
 G=\033[0;32m
 # yellow
