@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/06 16:41:44 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/06 16:59:41 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,14 +56,10 @@ BUILDER_EXEC_SRC:=		Privmsg.cpp \
 						Join.cpp \
 						Topic.cpp \
 
-BUILDER_VALID_SRC:=		CommandSpec.cpp \
-						InputClientParsing.cpp \
-						InputTokenizer.cpp \
-						CommandParam.cpp \
-						ParamCheckers.cpp \
+BUILDER_VALID_SRC:=		InputClientParsing.cpp \
 						MessageValidator.cpp \
 
-BUILDER_MANAGE_SRC:=	CommandManager.cpp \
+BUILDER_MANAGE_SRC:=	\
 
 SRC_ROOT:=				main.cpp \
 

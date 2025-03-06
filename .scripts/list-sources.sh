@@ -1,6 +1,9 @@
 #!/bin/bash
 
-rm src.mk
+if [ "$(rm src.mk)" == 0 ]; then
+	rm src.mk
+fi
+
 prevdir="";
 
 find src -type f -name "*.cpp" | while read -r file; do
@@ -11,5 +14,5 @@ find src -type f -name "*.cpp" | while read -r file; do
 		prevdir="$dir";
 	fi
 	filename="$(basename "$file")"
-	echo "	$filename" >> src.mk
+	echo "	$filename \\" >> src.mk
 done
