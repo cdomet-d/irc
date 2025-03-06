@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 11:46:10 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/06 11:54:12 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ class	Client
 	public:
 		//constructors & destructor
 		Client(void);
-		Client(const Client& obj);
 		~Client(void);
 
 	/*                               METHODS                                  */
