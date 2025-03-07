@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:13:44 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/03 17:28:26 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/07 17:00:37 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,14 @@
 class	CommandParam
 {
 	private:
-		std::vector<std::string>			param;
-		std::vector<int(*)(std::string&)>	checkers; //faire un template ??
-	public:
-		//constructors & destructor
+		std::vector<std::string>			param_;
+		std::vector<int(*)(std::string&)>	checkers_; //faire un template ??
+		//constructors
 		CommandParam(void);
 		CommandParam(std::vector<std::string> param, std::vector<int(*)(std::string&)> checkers);
 		CommandParam(const CommandParam& obj);
+	public:
+		//destructor
 		~CommandParam(void);
 
 		//operators
@@ -43,8 +44,8 @@ class	CommandParam
 		class	ParamBuilder
 		{
 			private:
-				std::vector<std::string>			param;
-				std::vector<int(*)(std::string&)>	checkers;
+				std::vector<std::string>			param_;
+				std::vector<int(*)(std::string&)>	checkers_;
 			public:
 				//constructors & destructor
 				ParamBuilder(void);

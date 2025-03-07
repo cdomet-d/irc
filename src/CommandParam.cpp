@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:14:44 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/03 15:14:46 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/07 17:00:37 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ CommandParam::CommandParam(void)
 
 CommandParam::CommandParam(std::vector<std::string> param, std::vector<int(*)(std::string&)> checkers)
 {
-	this->param = param;
-	this->checkers = checkers;
+	this->param_ = param;
+	this->checkers_ = checkers;
 }
 
 CommandParam::CommandParam(const CommandParam& obj)
@@ -41,8 +41,8 @@ CommandParam&	CommandParam::operator=(const CommandParam& obj)
 	//std::cout << "CommandParam copy assignment operator called" << std::endl;
 	if (this != &obj)
 	{
-		this->param = obj.param;
-		this->checkers = obj.checkers;
+		this->param_ = obj.param_;
+		this->checkers_ = obj.checkers_;
 	}
 	return (*this);
 }
@@ -50,28 +50,28 @@ CommandParam&	CommandParam::operator=(const CommandParam& obj)
 std::string&	CommandParam::operator[](unsigned int i)
 {
 	//add verif of index
-	return (this->param[i]);
+	return (this->param_[i]);
 }
 
 /*methods*/
 std::vector<std::string>&	CommandParam::getParam(void)
 {
-	return (this->param);
+	return (this->param_);
 }
 
 size_t	CommandParam::getParamSize(void)
 {
-	return (this->param.size());
+	return (this->param_.size());
 }
 
 int	(*CommandParam::getChecker(unsigned int i))(std::string&)
 {
-	return (checkers[i]);
+	return (checkers_[i]);
 }
 
 size_t	CommandParam::getCheckerSize(void)
 {
-	return (this->checkers.size());
+	return (this->checkers_.size());
 }
 
 
@@ -107,11 +107,11 @@ CommandParam::ParamBuilder&	CommandParam::ParamBuilder::operator=(const ParamBui
 /*methods*/
 CommandParam::ParamBuilder&	CommandParam::ParamBuilder::addChecker(int(*ft)(std::string&))
 {
-	this->checkers.push_back(ft);
+	this->checkers_.push_back(ft);
 	return (*this);
 }
 
 CommandParam*	CommandParam::ParamBuilder::build()
 {
-	return (new CommandParam(this->param, this->checkers));
+	return (new CommandParam(this->param_, this->checkers_));
 }
