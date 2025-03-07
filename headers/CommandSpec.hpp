@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:13:38 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/03 17:11:20 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/07 16:44:04 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,13 @@ class	CommandSpec
 		std::vector<void(*)()>		issuerChecks; //faire un template ??
 		Executor*					cmExecutor;
 		bool						cancelled;
-	public:
-		//constructors & destructor
+		//constructors
 		CommandSpec(void);
 		CommandSpec(std::string name, void(*inputTokenizer)(std::string& buffer, CommandParam& param), int registrationStage, \
 					std::vector<CommandParam*> params, int minParam, std::vector<void(*)()>	issuerChecks, Executor* cmExecutor);
 		CommandSpec(const CommandSpec& obj);
+	public:
+		//destructor
 		~CommandSpec(void);
 
 		//operators
