@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:23:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/07 11:52:29 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/07 13:26:52 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ std::string removeNewlines(const std::string &input) {
 	return result;
 }
 
-void inputToken(std::string inputCli, int fd) {
+void inputToken(std::string inputCli, Client *currentCli)
+{
 	inputCli = removeNewlines(inputCli);
 	MessageValidator::
 }

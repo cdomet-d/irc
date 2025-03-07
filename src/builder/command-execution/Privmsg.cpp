@@ -6,15 +6,18 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 13:57:12 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/07 13:26:03 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <sstream>
 
+//TODO need to add reply when client not a channel
+//TODO need to add reply when channel not found
 //only works for channel usage
-bool handlePrivsmg(std::string params, int fd) {
+bool handlePrivsmg(std::string params, Client *currentCLi)
+{
 	static Server &server = Server::GetInstanceServer(gPort, gPassword);
 
 	std::istringstream iss(params);
@@ -24,25 +27,28 @@ bool handlePrivsmg(std::string params, int fd) {
 	iss >> channelName;
 	std::getline(iss, message);
 
-	std::map< std::string, Channel * >::iterator curChan =
+	//check if channel exist
+	std::map< std::string, Channel * >::iterator currentChannel =
 		server.getAllCha().find(channelName);
-	if (curChan->second == NULL) {
+	if (currentChannel->second == NULL) {
 		log(DEBUG, "did not found channel");
 		return (false);
 	}
 
-	clientMapIt senderIt =
-		curChan->second->getCliInChannel().find(fd);
-	if (senderIt == curChan->second->getCliInChannel().end())
+	//check if client is a channel
+	std::map< int, Client * >::iterator senderIt =
+		currentChannel->second->getCliInChannel().find(currentCLi->getFd());
+	if (senderIt == currentChannel->second->getCliInChannel().end())
 		return (false);
-	Client *sender = senderIt->second;
-	for (clientMapIt itCli =
-			 curChan->second->getCliInChannel().begin();
-		 itCli != curChan->second->getCliInChannel().end(); ++itCli) {
-		if (itCli->first != fd)
+
+	//send message to everyone but the sender itself
+	for (std::map< int, Client * >::iterator itCli =
+			 currentChannel->second->getCliInChannel().begin();
+		 itCli != currentChannel->second->getCliInChannel().end(); ++itCli) {
+		if (itCli->first != currentCLi->getFd())
 			sendReply(itCli->second->getFd(),
-					  RPL_PRIVMSG(sender->getPrefix(),
-								  curChan->second->getName(), message));
+					  RPL_PRIVMSG(currentCLi->getPrefix(),
+								  currentChannel->second->getName(), message));
 	}
 	return (true);
 }
