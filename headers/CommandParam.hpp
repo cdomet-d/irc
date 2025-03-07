@@ -76,5 +76,5 @@ int	validKick(std::string& channel, std::string& targetNickname);
 int	validMode(/*??*/);
 int	validMess(CommandParam& param);
 
-
+//a la place donner CommandSpec a tous ? et mettre une instance Client dans CommandSpec ?
 #endif
