@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/06 17:20:42 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/07 11:26:30 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,12 +14,12 @@ NAME:= ircserv
 DEBUG_NAME:= d-ircserv
 
 H:=  -I headers/ \
+	-I headers/server/ \
 	-I headers/builder/command-execution/ \
 	-I headers/builder/command-validation/ \
 	-I headers/builder/manager/ \
 	-I headers/client/ \
 	-I headers/debug/ \
-	-I headers/server/ \
 
 CC:=c++
 CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow
@@ -51,13 +51,12 @@ DEBUG_SRC:=				Log.cpp \
 
 CLI_SRC:=				Client.cpp \
 
-BUILD_EXE_SRC:=		Privmsg.cpp \
+BUILD_EXE_SRC:=			Join.cpp \
 						NickUser.cpp \
-						Join.cpp \
+						Privmsg.cpp \
 						Topic.cpp \
 
-BUILD_VAL_SRC:=		InputClientParsing.cpp \
-						MessageValidator.cpp \
+BUILD_VAL_SRC:=			InputClientParsing.cpp \
 
 BUILD_MAN_SRC:=	\
 
@@ -72,8 +71,6 @@ SRC+= $(addprefix $(BUILD_VAL_DIR), $(BUILD_VAL_SRC))
 SRC+= $(addprefix $(CLI_DIR), $(CLI_SRC))
 SRC+= $(addprefix $(DEBUG_DIR), $(DEBUG_SRC))
 SRC+= $(addprefix $(SERV_DIR), $(SERV_SRC))
-
-
 
 # ----------------------------- MAKE ----------------------------------------- #
 
@@ -149,7 +146,7 @@ info:
 .PHONY: all clean info fclean re debug
 
 # ----------------------------- FORMATTING ----------------------------------- #
-# Formatting combinations
+
 PIBOLD= $(BO)$(M)
 BLBOLD= $(BO)$(B)
 CYBOLD= $(BO)$(C)

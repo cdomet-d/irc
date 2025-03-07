@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:23:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 12:40:28 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/07 11:25:34 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 #include <sstream>
 
 std::vector< std::string > vectorSplit(std::string &s,
-									   const std::string &delimiter)
-{
+									   const std::string &delimiter) {
 	std::vector< std::string > inputCli;
 	size_t pos = 0;
 	std::string token;
@@ -30,14 +29,14 @@ std::vector< std::string > vectorSplit(std::string &s,
 	return (inputCli);
 }
 
-std::string removeNewlines(const std::string& input) {
-    std::string result;
-    for (size_t i = 0; i < input.length(); ++i) {
-        if (input[i] != '\r' && input[i] != '\n') {
-            result += input[i];
-        }
-    }
-    return result;
+std::string removeNewlines(const std::string &input) {
+	std::string result;
+	for (size_t i = 0; i < input.length(); ++i) {
+		if (input[i] != '\r' && input[i] != '\n') {
+			result += input[i];
+		}
+	}
+	return result;
 }
 
 void inputToken(std::string inputCli, int fd) {
@@ -53,16 +52,18 @@ void inputToken(std::string inputCli, int fd) {
 
 	iss >> command;
 	std::getline(iss, params);
-	
+
 	log(DEBUG, "Command =\t", command);
 	log(DEBUG, "params =\t", params);
-	
+
 	if (command == "JOIN") {
 		handleJoin(params, fd);
-		return ; }
+		return;
+	}
 	if (command == "PRIVMSG") {
 		handlePrivsmg(params, fd);
-		return ; }
+		return;
+	}
 	if (command == "TOPIC") {
 		handleTopic(params, fd);
 	}
