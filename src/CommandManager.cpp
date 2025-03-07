@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:14:35 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/03 17:16:12 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/07 17:24:13 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ void	CommandManager::generateCmds()
 												.addChecker(validChan) //(2)
 												.build())
 									.Parameters(CommandParam::ParamBuilder() //modes + mode arg ?
-												// .addChecker(validMode) //(2)
+												// .addChecker(validMode) //(4)
 												.build())
 									// .IssuerChecks(hasChanPriv) //(3)
 									// .CmExecutor()
@@ -242,8 +242,8 @@ void	CommandManager::generateCmds()
 												.build())
 									.Parameters(CommandParam::ParamBuilder() //topic (opt)
 												.build())
-									// .IssuerChecks(onChan)
-									// .IssuerChecks(hasChanPriv) (only if mode +t is set)
+									// .IssuerChecks(onChan) //(3)
+									// .IssuerChecks(hasChanPriv) (only if mode +t is set) //(4)
 									// .CmExecutor()
 									.build();
 
