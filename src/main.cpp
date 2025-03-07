@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/02/24 13:28:05 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:46:06 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,18 @@
 #include <csignal>
 #include <cstdlib>
 
-int sign = false;
+int gSign = false;
+int gPort = 0;
+std::string gPassword = "";
 
-void SignalHandler(int signum) {
+void SignalHandler(int signum)
+{
 	(void)signum;
-	sign = true;
+	gSign = true;
 }
 
-int main(int ac, char **av) {
+int main(int ac, char **av)
+{
 	(void)av;
 	if (ac != 3)
 		return (std::cout << "Missing arguments (port and password)\n", 0);
@@ -29,8 +33,22 @@ int main(int ac, char **av) {
 	signal(SIGINT, SignalHandler);
 	signal(SIGQUIT, SignalHandler);
 
-	static Server &server = Server::GetInstanceServer(atoi(av[1]), av[2]);
+	gPort = atoi(av[1]);
+	gPassword = av[2];
+	static Server &server = Server::GetInstanceServer(gPort, gPassword);
 	server.servInit();
 	server.servRun();
+
+	for (std::map< std::string, Channel * >::iterator it =
+			 server.getAllCha().begin();
+		 it != server.getAllCha().end(); ++it) {
+		std::cout << "Channel: " << it->second->getName() << std::endl;
+		for (std::map< int, Client * >::iterator itCli =
+				 it->second->getCliInChannel().begin();
+			 itCli != it->second->getCliInChannel().end(); ++itCli) {
+			std::cout << "Client: " << itCli->second->getNick() << std::endl;
+		}
+	}
+
 	return (0);
 }
