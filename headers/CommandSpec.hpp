@@ -17,6 +17,13 @@
 # include "CommandParam.hpp"
 # include "Executor.hpp"
 # include "Join.hpp"
+# include <map>
+
+typedef enum e_enum
+{
+	channel,
+	target,
+};
 
 class	CommandSpec
 {
@@ -24,9 +31,11 @@ class	CommandSpec
 		std::string					name;
 		void(*inputTokenizer)(std::string& buffer, CommandParam& param);
 		int							registrationStage;
-		std::vector<CommandParam*>	params;
+		// std::vector<CommandParam*>	params;
+		std::map<e_enum, std::vector<std::string>>	params;
 		int							minParam;
-		std::vector<void(*)()>		issuerChecks; //faire un template ??
+		// std::vector<void(*)()>		issuerChecks; //faire un template ??
+		std::vector<void(*)()>		Checkers; //faire un template ??
 		Executor*					cmExecutor;
 		bool						cancelled;
 	public:
@@ -55,9 +64,11 @@ class	CommandSpec
 				std::string					name;
 				void(*inputTokenizer)(std::string& buffer, CommandParam& param);
 				int							registrationStage;
-				std::vector<CommandParam*>	params;
+				// std::vector<CommandParam*>	params;
+				std::map<e_enum, std::vector<std::string>>	params;
 				int							minParam;
-				std::vector<void(*)()>		issuerChecks;
+				// std::vector<void(*)()>		issuerChecks;
+				std::vector<void(*)()>		Checkers; //faire un template ?
 				Executor*					cmExecutor;
 			public:
 				//constructors & destructor
