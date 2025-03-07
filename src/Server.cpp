@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 17:46:17 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/07 11:42:39 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,10 +189,9 @@ void Server::processBuffer(Client *currentCli)
 	while ((pos = currentCli->getBuffer().find('\n')) != std::string::npos) {
 		if (!currentCli->getBuffer().find("QUIT")) {
 			std::cout << "Exit server" << std::endl;
-			currentCli->setBuffer("");
+			disconnectClient(currentCli->getFd());
 			return;
 		}
-
 		if (currentCli->getBuffer().find("CAP LS") != std::string::npos ||
 			currentCli->getBuffer().find("NICK") != std::string::npos ||
 			currentCli->getBuffer().find("USER") != std::string::npos) {

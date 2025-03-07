@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:23:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 17:45:58 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/07 11:42:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,12 @@ void inputToken(std::string inputCli, Client *currentCli)
 	}
 	if (command == "TOPIC") {
 		handleTopic(params, currentCli);
+		return ;
 	}
 	if (command == "MODE") {
 		//handleMode(currentCli)
 		std::cout << "its mode guys" << std::endl;
+		return ;
 	}
 
 	//clean the istringstream
