@@ -32,12 +32,3 @@ void	splitOnComa(std::string& buffer, CommandParam& param)
 			buffer.erase(0, 1);
 }
 
-// void	splitJoin(std::string& buffer, CommandParam& param)
-// {
-	
-// }
-
-void	splitOnSpace(std::string& buffer, CommandParam& param)
-{
-
-}
