@@ -6,12 +6,12 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/07 13:21:39 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 09:55:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
-# define CLIENT_HPP
+#define CLIENT_HPP
 
 #include <fcntl.h>
 #include <iostream>
@@ -23,15 +23,15 @@
 #include <unistd.h>
 #include <vector>
 
-class	Client
-{
-	private:
-		//attributes
-		int	registration;
-	public:
-		//constructors & destructor
-		Client(void);
-		~Client(void);
+class Client {
+  private:
+	//attributes
+	int registration;
+
+  public:
+	//constructors & destructor
+	Client(void);
+	~Client(void);
 
 	/*                               METHODS                                  */
 
