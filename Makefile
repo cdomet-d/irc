@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/10 10:27:51 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/10 16:24:52 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,12 +14,12 @@ NAME:= ircserv
 DEBUG_NAME:= d-ircserv
 
 H:=  -I headers/ \
+	-I headers/server/ \
 	-I headers/builder/command-execution/ \
 	-I headers/builder/command-validation/ \
 	-I headers/builder/manager/ \
 	-I headers/client/ \
 	-I headers/debug/ \
-	-I headers/server/ \
 
 CC:=c++
 CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow
@@ -148,7 +148,7 @@ info:
 .PHONY: all clean info fclean re debug
 
 # ----------------------------- FORMATTING ----------------------------------- #
-# Formatting combinations
+
 PIBOLD= $(BO)$(M)
 BLBOLD= $(BO)$(B)
 CYBOLD= $(BO)$(C)
