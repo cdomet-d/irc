@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/07 13:24:16 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:07:08 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#define MAX_EVENTS 100
 
 enum logLevel { INFO, ERROR, DEBUG };
 
@@ -41,7 +40,7 @@ class Server {
 
   public:
 	/*                               ORTHODOX CLASS                           */
-	static Server &GetInstanceServer(int port, std::string password);
+	static Server &GetServerInstance(int port, std::string password);
 	~Server(void);
 
 	/*                               EXCEPTIONS                                */
@@ -59,11 +58,11 @@ class Server {
 	bool servInit();
 	bool servRun();
 	void acceptClient();
-	void processBuffer(Client *currentCli);
+	void processBuffer(Client *curCli);
 
 	/*                               GETTERS                                  */
 	clientMap &getAllCli();
-	std::map< std::string, Channel * > &getAllCha();
+	channelMap &getAllCha();
 
   private:
 	/*                               METHODS                                  */
@@ -89,20 +88,21 @@ class Server {
 };
 
 /*                               PARSING                                  */
-std::vector< std::string > VectorSplit(std::string &s,
-									   const std::string &delimiter);
-void inputToken(std::string inputCli, Client *currentCli);
+void inputToken(std::string inputCli, Client *curCli);
 
 /*                               COMMAND                                  */
 //NICK--USER
-void handleClientRegistration(const std::string &input, Client *currentCli);
+void handleClientRegistration(const std::string &input, Client *curCli);
+
 //JOIN
 Channel *createChannel(const std::string &channelName);
-bool handleJoin(std::string params, Client *currentCli);
+bool handleJoin(std::string params, Client *curCli);
+
 //TOPIC
-bool handleTopic(std::string params, Client *currentCli);
+bool handleTopic(std::string params, Client *curCli);
+
 //PRIVMSG
-bool handlePrivsmg(std::string params, Client *currentCli);
+bool handlePrivsmg(std::string params, Client *curCli);
 
 /*                               DEBUG                                  */
 void log(logLevel level, std::string message);
