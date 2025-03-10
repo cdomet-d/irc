@@ -6,12 +6,12 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:23:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/07 13:26:52 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:08:48 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
 #include "MessageValidator.hpp"
+#include "Server.hpp"
 #include <sstream>
 
 std::vector< std::string > vectorSplit(std::string &s,
@@ -40,8 +40,7 @@ std::string removeNewlines(const std::string &input) {
 	return result;
 }
 
-void inputToken(std::string inputCli, Client *currentCli)
-{
+void inputToken(std::string inputCli, Client *curCli) {
 	inputCli = removeNewlines(inputCli);
-	MessageValidator::
+	// MessageValidator::assess();
 }

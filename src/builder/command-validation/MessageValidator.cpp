@@ -6,28 +6,34 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/07 11:47:45 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 09:59:20 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MessageValidator.hpp"
+#include "Reply.hpp"
 #include <algorithm>
 #include <iostream>
-#define MESSAGE_TERMINATION "\r\n"
 
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-bool MessageValidator::hasPrefix(const std::string &mess) {
-	if (mess.at(0) == ':') {
-		std::string::size_type sep = mess.find(" ");
-		if (sep != std::string::npos) {	
-			std::string prefix = mess.substr(0, sep);
-			std::cout << prefix << std::endl;
-		}
-	}
-		
-}
+// void MessageValidator::assess(const Client &sender) { 
+// 	std::string message = sender.getBuffer();
+// 	if (lenIsValid(message) == false)
+// 		// send
+// }
+
+// bool MessageValidator::hasPrefix(const std::string &mess,
+// 								 const std::string &cliPrefix) {
+// 	if (mess.at(0) == ':') {
+// 		std::string::size_type sep = mess.find(" ");
+// 		if (sep != std::string::npos) {
+// 			std::string prefix = mess.substr(0, sep);
+// 			std::cout << prefix << std::endl;
+// 		}
+// 	}
+// }
 
 // bool MessageValidator::hasTrailing(const std::string &mess) {}
 

@@ -6,36 +6,17 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/07 13:25:08 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:07:44 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <sstream>
 
-std::vector< std::string > VectorSplit(std::string &s,
-									   const std::string &delimiter)
-{
-	std::vector< std::string > inputCli;
-	size_t pos = 0;
-	std::string token;
+Channel *createChannel(const std::string &channelName) {
+	static Server &server = Server::GetServerInstance(gPort, gPassword);
 
-	while ((pos = s.find(delimiter)) != std::string::npos) {
-		token = s.substr(0, pos);
-		inputCli.push_back(token);
-		s.erase(0, pos + delimiter.length());
-	}
-	inputCli.push_back(s);
-
-	return (inputCli);
-}
-
-Channel *createChannel(const std::string &channelName)
-{
-	//log(DEBUG, "-----createChannel-----");
-	static Server &server = Server::GetInstanceServer(gPort, gPassword);
-
-	std::map< std::string, Channel * >::iterator it =
+	channelMapIt it =
 		server.getAllCha().find(channelName);
 	if (it != server.getAllCha().end()) {
 		return (it->second);
@@ -49,8 +30,7 @@ Channel *createChannel(const std::string &channelName)
 	return (newChannel);
 }
 
-bool handleJoin(std::string params, Client *currentCli)
-{
+bool handleJoin(std::string params, Client *curCli) {
 	log(DEBUG, "-----handleJoin-----");
 
 	std::istringstream iss(params);
@@ -61,14 +41,14 @@ bool handleJoin(std::string params, Client *currentCli)
 	getline(iss, password);
 	log(DEBUG, "channel name = ", channelName);
 
-	Channel *currentChannel = createChannel(channelName);
-	if (currentChannel->getIsPassword() == true)
-		if (currentChannel->getPassword() != password) {
-			sendReply(currentCli->getFd(),
-					  ERR_BADCHANNELKEY(currentCli->getNick(),
-										currentChannel->getName()));
+	Channel *curChan = createChannel(channelName);
+	if (curChan->getIsPassword() == true)
+		if (curChan->getPassword() != password) {
+			sendReply(curCli->getFd(),
+					  ERR_BADCHANNELKEY(curCli->getNick(),
+										curChan->getName()));
 			return (false);
 		}
-	currentChannel->addClientChannel(currentChannel, currentCli);
+	curChan->addClientChannel(curChan, curCli);
 	return (true);
 }

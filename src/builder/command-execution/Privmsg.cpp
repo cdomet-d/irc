@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/07 13:26:03 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/07 14:11:35 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 //TODO need to add reply when client not a channel
 //TODO need to add reply when channel not found
 //only works for channel usage
-bool handlePrivsmg(std::string params, Client *currentCLi)
+bool handlePrivsmg(std::string params, Client *curCli)
 {
-	static Server &server = Server::GetInstanceServer(gPort, gPassword);
+	static Server &server = Server::GetServerInstance(gPort, gPassword);
 
 	std::istringstream iss(params);
 	std::string channelName;
@@ -28,27 +28,27 @@ bool handlePrivsmg(std::string params, Client *currentCLi)
 	std::getline(iss, message);
 
 	//check if channel exist
-	std::map< std::string, Channel * >::iterator currentChannel =
+	channelMapIt curChan =
 		server.getAllCha().find(channelName);
-	if (currentChannel->second == NULL) {
+	if (curChan->second == NULL) {
 		log(DEBUG, "did not found channel");
 		return (false);
 	}
 
 	//check if client is a channel
 	std::map< int, Client * >::iterator senderIt =
-		currentChannel->second->getCliInChannel().find(currentCLi->getFd());
-	if (senderIt == currentChannel->second->getCliInChannel().end())
+		curChan->second->getCliInChan().find(curCli->getFd());
+	if (senderIt == curChan->second->getCliInChan().end())
 		return (false);
 
 	//send message to everyone but the sender itself
 	for (std::map< int, Client * >::iterator itCli =
-			 currentChannel->second->getCliInChannel().begin();
-		 itCli != currentChannel->second->getCliInChannel().end(); ++itCli) {
-		if (itCli->first != currentCLi->getFd())
+			 curChan->second->getCliInChan().begin();
+		 itCli != curChan->second->getCliInChan().end(); ++itCli) {
+		if (itCli->first != curCli->getFd())
 			sendReply(itCli->second->getFd(),
-					  RPL_PRIVMSG(currentCLi->getPrefix(),
-								  currentChannel->second->getName(), message));
+					  RPL_PRIVMSG(curCli->getPrefix(),
+								  curChan->second->getName(), message));
 	}
 	return (true);
 }
