@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/07 11:42:39 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:37:51 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,12 @@
 /* ************************************************************************** */
 
 Server::Server(int port, std::string password)
-	: _port(port), _password(password)
-{
-}
+	: _port(port), _password(password) {}
 Server::Server(void) : _port(0), _password("") {}
 
-Server::~Server(void)
-{
+Server::~Server(void) {
 	std::cout << "Calling destructor" << std::endl;
-	for (std::map< int, Client * >::iterator it = _client.begin();
-		 it != _client.end(); ++it) {
+	for (clientMapIt it = _clients.begin(); it != _clients.end(); ++it) {
 		it->second->getNick().clear();
 		it->second->getUsername().clear();
 		close(it->first);
@@ -50,8 +46,7 @@ Server::~Server(void)
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
-bool Server::servInit()
-{
+bool Server::servInit() {
 	int en = 1;
 
 	_epollFd = epoll_create1(0);
@@ -80,8 +75,7 @@ bool Server::servInit()
 	return (true);
 }
 
-bool Server::servRun()
-{
+bool Server::servRun() {
 	int nbFds;
 
 	log(INFO, "Loop IRC server started");
@@ -102,8 +96,7 @@ bool Server::servRun()
 	return (true);
 }
 
-void Server::acceptClient()
-{
+void Server::acceptClient() {
 	try {
 		log(INFO, "Accepting new client");
 		Client *newCli = new Client();
@@ -145,24 +138,15 @@ void Server::acceptClient()
 				const_cast< const char * >(strerror(errno)));
 		}
 
-		_client.insert(std::pair< int, Client * >(newCli->getFd(), newCli));
+		_clients.insert(clientPair(newCli->getFd(), newCli));
 		_usedNicks.push_back(newCli->getNick());
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected";
 		log(INFO, ss.str());
-	} catch (std::exception &e) {
-		std::cerr << e.what() << std::endl;
-	}
+	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
 }
 
-// TODO: Limit message size
-// Most IRC servers limit messages to 512 bytes in length,
-//including the trailing CR-LF characters. Implementations which include
-//message tags need to allow additional bytes for the tags section of a
-//message; clients must allow 8191 additional bytes and servers must allow
-// 4096 additional bytes
-bool Server::handleData(int fd)
-{
+bool Server::handleData(int fd) {
 	log(INFO, "-----handleData-----");
 
 	char bufTemp[1024];
@@ -212,13 +196,12 @@ Server &Server::GetInstanceServer(int port, std::string password)
 	return (instance);
 }
 
-bool Server::disconnectClient(int fd)
-{
-	std::map< int, Client * >::iterator it = _client.find(fd);
-	if (it != _client.end()) {
+bool Server::disconnectClient(int fd) {
+	clientMapIt it = _clients.find(fd);
+	if (it != _clients.end()) {
 		std::cout << "Client [" << fd << "] disconnected" << std::endl;
 		delete it->second;
-		_client.erase(fd);
+		_clients.erase(fd);
 		close(fd);
 		return true;
 	}
@@ -229,8 +212,7 @@ bool Server::disconnectClient(int fd)
 /*                               EXCEPTIONS                                   */
 /* ************************************************************************** */
 
-const char *Server::InitFailed::what() const throw()
-{
+const char *Server::InitFailed::what() const throw() {
 	std::cerr << "irc: ";
 	return errMessage;
 }
@@ -240,11 +222,9 @@ Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-std::map< int, Client * > &Server::getAllCli()
-{
-	return (_client);
+clientMap &Server::getAllCli() {
+	return (_clients);
 }
-std::map< std::string, Channel * > &Server::getAllCha()
-{
+std::map< std::string, Channel * > &Server::getAllCha() {
 	return (_channels);
 }

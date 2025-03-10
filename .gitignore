@@ -1,6 +1,6 @@
-notes.txt
-.vscode/
-.obj/
 .bdir/
-ircserv
+.dbdir/
+.vscode/
 *.mk
+d-ircserv
+ircserv

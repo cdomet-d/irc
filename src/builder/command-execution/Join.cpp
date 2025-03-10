@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:20:13 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:33:19 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,14 @@ bool handleJoin(std::string params, Client *currentCli)
 	getline(iss, password);
 	log(DEBUG, "channel name = ", channelName);
 
-	Channel *currentChannel = createChannel(channelName);
-	if (currentChannel->getIsPassword() == true)
-		if (currentChannel->getPassword() != password) {
+	Channel *curChan = createChannel(channelName);
+	if (curChan->getIsPassword() == true)
+		if (curChan->getPassword() != password) {
 			sendReply(currentCli->getFd(),
 					  ERR_BADCHANNELKEY(currentCli->getNick(),
-										currentChannel->getName()));
+										curChan->getName()));
 			return (false);
 		}
-	currentChannel->addClientChannel(currentChannel, currentCli);
-	return (true);
+	curChan->addClientChannel(curChan, currentCli);
+	return (false);
 }

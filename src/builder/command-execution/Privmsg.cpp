@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:07:16 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:34:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,31 +27,25 @@ bool handlePrivsmg(std::string params, Client *currentCli)
 	iss >> channelName;
 	std::getline(iss, message);
 
-	//check if channel exist
-	std::map< std::string, Channel * >::iterator currentChannel =
+	std::map< std::string, Channel * >::iterator curChan =
 		server.getAllCha().find(channelName);
-	if (currentChannel->second == NULL) {
-		sendReply(currentCli->getFd(), ERR_NOSUCHCHANNEL(currentCli->getNick(), channelName));
+	if (curChan->second == NULL) {
 		log(DEBUG, "did not found channel");
 		return (false);
 	}
 
-	//check if client is a channel
-	std::map< int, Client * >::iterator senderIt =
-		currentChannel->second->getCliInChannel().find(currentCli->getFd());
-	if (senderIt == currentChannel->second->getCliInChannel().end()) {
-		
+	clientMapIt senderIt =
+		curChan->second->getCliInChannel().find(fd);
+	if (senderIt == curChan->second->getCliInChannel().end())
 		return (false);
-	}
-
-	//send message to everyone but the sender itself
-	for (std::map< int, Client * >::iterator itCli =
-			 currentChannel->second->getCliInChannel().begin();
-		 itCli != currentChannel->second->getCliInChannel().end(); ++itCli) {
-		if (itCli->first != currentCli->getFd())
+	Client *sender = senderIt->second;
+	for (clientMapIt itCli =
+			 curChan->second->getCliInChannel().begin();
+		 itCli != curChan->second->getCliInChannel().end(); ++itCli) {
+		if (itCli->first != fd)
 			sendReply(itCli->second->getFd(),
-					  RPL_PRIVMSG(currentCli->getPrefix(),
-								  currentChannel->second->getName(), message));
+					  RPL_PRIVMSG(sender->getPrefix(),
+								  curChan->second->getName(), message));
 	}
 	return (true);
 }

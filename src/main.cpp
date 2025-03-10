@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:14:24 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:37:58 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,12 @@ int gSign = false;
 int gPort = 0;
 std::string gPassword = "";
 
-void SignalHandler(int signum)
-{
+void SignalHandler(int signum) {
 	(void)signum;
 	gSign = true;
 }
 
-int main(int ac, char **av)
-{
+int main(int ac, char **av) {
 	(void)av;
 	if (ac != 3)
 		return (std::cout << "Missing arguments (port and password)\n", 0);

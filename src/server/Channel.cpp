@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:21:25 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 11:12:15 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,37 +32,30 @@ Channel::~Channel(void)
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
-bool Channel::addClientChannel(Channel *currentChannel, Client *currentCli)
-{
+bool Channel::addClientChannel(Channel *curChan, Client *currentCli) {
 	//log(DEBUG, "-----addClientChannel-----");
 
-	std::map< int, Client * > &clients = currentChannel->getCliInChannel();
-	for (std::map< int, Client * >::iterator it = clients.begin();
-		 it != clients.end(); ++it)
-		if (currentCli == it->second) {
+	static Server &server = Server::GetInstanceServer(gPort, gPassword);
+
+	clientMapIt whatCli = server.getAllCli().find(currentCli->getFd());
+	clientMap &clients = curChan->getCliInChannel();
+	for (clientMapIt it = clients.begin(); it != clients.end(); ++it)
+		if (whatCli->second == it->second) {
 			log(INFO, "Client already in channel");
 			return (false);
 		}
-	if (currentChannel->getCliInChannel().empty())
-		currentChannel->getOpCli().insert(
-			std::pair< int, Client * >(currentCli->getFd(), currentCli));
-	currentChannel->getCliInChannel().insert(
-		std::pair< int, Client * >(currentCli->getFd(), currentCli));
-	currentCli->getJoinedChans().push_back(currentChannel->getName());
+	if (curChan->getCliInChannel().empty())
+		curChan->getOpCli().insert(clientPair(currentCli->getFd(), whatCli->second));
+	curChan->getCliInChannel().insert(clientPair(currentCli->getFd(), whatCli->second));
+	whatCli->second->getJoinedChans().push_back(curChan->getName());
 
-	for (std::map< int, Client * >::iterator itCli =
-			currentChannel->getCliInChannel().begin();
-		itCli != currentChannel->getCliInChannel().end(); ++itCli) {
-		sendReply(itCli->second->getFd(),
-			  JOINED(currentCli->getNick(), currentChannel->getName()));
-	}
-	if (currentChannel->getTopic().empty() == true)
-		sendReply(currentCli->getFd(), RPL_NOTOPIC(currentCli->getNick(),
-												   currentChannel->getName()));
-	else
+	sendReply(currentCli->getFd(), JOINED(whatCli->second->getNick(), curChan->getName()));
+	if (curChan->getTopic().empty() == true)
 		sendReply(currentCli->getFd(),
-				  RPL_TOPIC(currentCli->getNick(), currentChannel->getName(),
-							currentChannel->getTopic()));
+				  RPL_NOTOPIC(whatCli->second->getNick(), curChan->getName()));
+	else
+		sendReply(currentCli->getFd(), RPL_TOPIC(whatCli->second->getNick(), curChan->getName(),
+								curChan->getTopic()));
 	return (true);
 }
 
@@ -94,16 +87,13 @@ bool Channel::getLimitCli() const
 {
 	return (_isLimitCli);
 }
-std::map< int, Client * > &Channel::getCliInChannel()
-{
+clientMap &Channel::getCliInChannel() {
 	return (_cliInChannel);
 }
-std::map< int, Client * > &Channel::getBannedCli()
-{
+clientMap &Channel::getBannedCli() {
 	return (_bannedCli);
 }
-std::map< int, Client * > &Channel::getOpCli()
-{
+clientMap &Channel::getOpCli() {
 	return (_opCli);
 }
 std::string Channel::getPassword() const

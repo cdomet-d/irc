@@ -1,68 +1,154 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
+#    Updated: 2025/03/10 11:00:40 by aljulien         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME:= ircserv
-BDIR:=.bdir/
-SRC_DIR:= src/
-H:= headers/
+DEBUG_NAME:= d-ircserv
+
+H:=  -I headers/ \
+	-I headers/server/ \
+	-I headers/builder/command-execution/ \
+	-I headers/builder/command-validation/ \
+	-I headers/builder/manager/ \
+	-I headers/client/ \
+	-I headers/debug/ \
 
 CC:=c++
-CFLAGS:= -Werror -Wextra -Wall -Wshadow -g3 -std=c++98
-CXXFLAGS:=-MMD -MP -I $(H)
+CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow
+DFLAGS:= -std=c++98 -Wshadow -g3
+CXXFLAGS:=-MMD -MP $(H)
 MAKEFLAGS:=--no-print-directory
 
-SRC_PATH+= $(addprefix $(SRC_DIR), $(SRC))
-SRC=	main.cpp \
-		Client.cpp \
-		Server.cpp \
-		Channel.cpp \
-		NickUser.cpp \
-		Join.cpp \
-		Privmsg.cpp \
-		Topic.cpp \
-		Part.cpp \
-		InputClientParsing.cpp \
-		Log.cpp \
-		reply.cpp \
+# ----------------------------- SOURCES DIRECTORIES -------------------------- #
+BDIR:=.bdir/
+DBDIR:=.dbdir/
 
-OBJ:=$(addprefix $(BDIR), $(SRC_PATH:%.cpp=%.o))
-DEPS:=$(OBJ:%.o=%.d)
+SRC_DIR:= src/
 
-RM:= rm -rf
+BUILD_EXE_DIR:= $(SRC_DIR)builder/command-execution/
+BUILD_VAL_DIR:= $(SRC_DIR)builder/command-validation/
+BUILD_MAN_DIR:= $(SRC_DIR)builder/manager/
+
+CLI_DIR:= $(SRC_DIR)client/
+DEBUG_DIR:= $(SRC_DIR)debug/
+SERV_DIR:= $(SRC_DIR)server/
+
+# ----------------------------- SOURCES FILES -------------------------------- #
+
+SERV_SRC:=				Channel.cpp \
+						Server.cpp \
+						reply.cpp \
+
+DEBUG_SRC:=				Log.cpp \
+
+CLI_SRC:=				Client.cpp \
+
+BUILD_EXE_SRC:=			Join.cpp \
+						NickUser.cpp \
+						Privmsg.cpp \
+						Topic.cpp \
+						Part.cpp \
+						Mode.cpp \
+
+BUILD_VAL_SRC:=			InputClientParsing.cpp \
+
+BUILD_MAN_SRC:=	\
+
+SRC_ROOT:=				main.cpp \
+
+# ----------------------------- BUILDING PATH -------------------------------- #
+
+SRC:= $(addprefix $(SRC_DIR), $(SRC_ROOT))
+SRC+= $(addprefix $(BUILD_EXE_DIR), $(BUILD_EXE_SRC))
+SRC+= $(addprefix $(BUILD_MAN_DIR), $(BUILD_MAN_SRC))
+SRC+= $(addprefix $(BUILD_VAL_DIR), $(BUILD_VAL_SRC))
+SRC+= $(addprefix $(CLI_DIR), $(CLI_SRC))
+SRC+= $(addprefix $(DEBUG_DIR), $(DEBUG_SRC))
+SRC+= $(addprefix $(SERV_DIR), $(SERV_SRC))
+
+# ----------------------------- MAKE ----------------------------------------- #
 
 all: $(NAME)
 
+OBJ:=$(addprefix $(BDIR), $(SRC:%.cpp=%.o))
+DEPS:=$(OBJ:%.o=%.d)
+
 $(NAME): $(OBJ)
 	@echo
-	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(NAME)... ----------------------"
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(NAME)... --------------------"
+	$(CC) $(OBJ) -o $(NAME)
 	@echo
-	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- $(NAME) done ! --------------------------"
+	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- $(NAME) done ! -----------------------"
 
 $(BDIR)%.o: %.cpp
 	@mkdir -p $(dir $@)
-	@echo "$@"
-	$(CC) $(CFLAGS) $(CXXFLAGS) -o $@ -c $<
+	@echo "$(CC) $(CFLAGS) $@"
+	@$(CC) $(CFLAGS) $(CXXFLAGS) -o $@ -c $<
+
+# ----------------------------- MAKE DEBUG ----------------------------------- #
+
+debug: $(DEBUG_NAME)
+
+DOBJ:=$(addprefix $(DBDIR), $(SRC:%.cpp=%.o))
+DDEPS:=$(DOBJ:%.o=%.d)
+
+$(DEBUG_NAME): $(DOBJ)
+	@echo
+	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(DEBUG_NAME)... --------------"
+	$(CC) $(DFLAGS) $(DOBJ) -o $(DEBUG_NAME)
+	@echo
+	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- $(DEBUG_NAME) done ! -----------------"
+
+$(DBDIR)%.o: %.cpp
+	@mkdir -p $(dir $@)
+	@echo "$(CC) $(DFLAGS) $@"
+	@$(CC) $(DFLAGS) $(CXXFLAGS) -o $@ -c $<
 
 -include $(DEPS)
 
+RM:= rm -rf
+
+# ----------------------------- MAKE CLEAN  ---------------------------------- #
+
 clean:
 	@echo
-	@printf '$(CYBOLD)%.30s\n$(R)' "-- Cleaning... -------------------------------"
+	@printf '$(CYBOLD)%.30s\n$(R)' "-- Cleaning... ----------------------------"
 	$(RM) $(BDIR)
+	$(RM) $(DBDIR)
+	$(RM) src.mk
 
-	
+# ----------------------------- MAKE FCLEAN  --------------------------------- #
+
 fclean: clean
-	$(RM) $(NAME) 
+	$(RM) $(NAME)
+	$(RM) $(DEBUG_NAME)
 	@echo
-	
+
+# ----------------------------- MAKE RE -------------------------------------- #
+
 re: fclean all
+
+# ----------------------------- MAKE INFO ------------------------------------ #
 
 info:
 	@echo $(CXXFLAGS)
+	@echo
 	@echo $(SRC_PATH)
+	@echo
 	@echo $(SRC)
 
-.PHONY: all clean info fclean re
+.PHONY: all clean info fclean re debug
 
-# Formatting combinations
+# ----------------------------- FORMATTING ----------------------------------- #
+
 PIBOLD= $(BO)$(M)
 BLBOLD= $(BO)$(B)
 CYBOLD= $(BO)$(C)
@@ -80,7 +166,7 @@ BO=\033[1m
 
 # Font color
 # red
-RE=\033[0;31m 
+RE=\033[0;31m
 # green
 G=\033[0;32m
 # yellow

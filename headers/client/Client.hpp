@@ -6,12 +6,12 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 17:46:25 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:31:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
-#define CLIENT_HPP
+# define CLIENT_HPP
 
 #include <fcntl.h>
 #include <iostream>
@@ -23,11 +23,15 @@
 #include <unistd.h>
 #include <vector>
 
-class Client {
-  public:
-	/*                               ORTHODOX CLASS                           */
-	Client(void);
-	~Client(void);
+class	Client
+{
+	private:
+		//attributes
+		int	registration;
+	public:
+		//constructors & destructor
+		Client(void);
+		~Client(void);
 
 	/*                               METHODS                                  */
 
