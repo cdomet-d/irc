@@ -12,22 +12,13 @@
 
 #include "CommandParam.hpp"
 
-/* constructors & destructor */
-CommandParam::CommandParam(void)
-{
-	//std::cout << "CommandParam default constructor called" << std::endl;
-}
-
-CommandParam::CommandParam(std::vector<std::string> param, std::vector<int(*)(std::string&)> checkers)
+/* constructor & destructor */
+CommandParam::CommandParam(std::vector<std::string> param, bool opt, \
+	void(*inputTokenizer)(std::string& buffer, CommandParam& param))
 {
 	this->param_ = param;
-	this->checkers_ = checkers;
-}
-
-CommandParam::CommandParam(const CommandParam& obj)
-{
-	//std::cout << "CommandParam copy constructor called" << std::endl;
-	*this = obj;
+	this->opt_ = opt;
+	this->inputTokenizer_ = inputTokenizer;
 }
 
 CommandParam::~CommandParam(void)
@@ -36,17 +27,6 @@ CommandParam::~CommandParam(void)
 }
 
 /*operators*/
-CommandParam&	CommandParam::operator=(const CommandParam& obj)
-{
-	//std::cout << "CommandParam copy assignment operator called" << std::endl;
-	if (this != &obj)
-	{
-		this->param_ = obj.param_;
-		this->checkers_ = obj.checkers_;
-	}
-	return (*this);
-}
-
 std::string&	CommandParam::operator[](unsigned int i)
 {
 	//add verif of index
@@ -64,28 +44,14 @@ size_t	CommandParam::getParamSize(void)
 	return (this->param_.size());
 }
 
-int	(*CommandParam::getChecker(unsigned int i))(std::string&)
-{
-	return (checkers_[i]);
-}
-
-size_t	CommandParam::getCheckerSize(void)
-{
-	return (this->checkers_.size());
-}
-
 
 //------------------------------ nested class ------------------------------------
 /* constructors & destructor */
 CommandParam::ParamBuilder::ParamBuilder(void)
 {
 	//std::cout << "ParamBuilder default constructor called" << std::endl;
-}
-
-CommandParam::ParamBuilder::ParamBuilder(const ParamBuilder& obj)
-{
-	//std::cout << "ParamBuilder copy constructor called" << std::endl;
-	*this = obj;
+	this->opt_ = false;
+	this->inputTokenizer_ = NULL;
 }
 
 CommandParam::ParamBuilder::~ParamBuilder(void)
@@ -93,25 +59,20 @@ CommandParam::ParamBuilder::~ParamBuilder(void)
 	//std::cout << "ParamBuilder destructor called" << std::endl;
 }
 
-/*operators*/
-CommandParam::ParamBuilder&	CommandParam::ParamBuilder::operator=(const ParamBuilder& obj)
+/*methods*/
+CommandParam::ParamBuilder&	CommandParam::ParamBuilder::isOpt(bool opt)
 {
-	//std::cout << "ParamBuilder copy assignment operator called" << std::endl;
-	if (this != &obj)
-	{
-		//
-	}
+	this->opt_ = opt;
 	return (*this);
 }
 
-/*methods*/
-CommandParam::ParamBuilder&	CommandParam::ParamBuilder::addChecker(int(*ft)(std::string&))
+CommandParam::ParamBuilder&	CommandParam::ParamBuilder::InputTokenizer(void(*ft)(std::string& buffer, CommandParam& param))
 {
-	this->checkers_.push_back(ft);
+	this->inputTokenizer_ = ft;
 	return (*this);
 }
 
 CommandParam*	CommandParam::ParamBuilder::build()
 {
-	return (new CommandParam(this->param_, this->checkers_));
+	return (new CommandParam(this->param_, this->opt_, this->inputTokenizer_));
 }

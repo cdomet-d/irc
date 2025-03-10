@@ -15,8 +15,6 @@
 
 # include <iostream>
 # include "CommandParam.hpp"
-// # include "Executor.hpp"
-// # include "Join.hpp"
 # include <map>
 
 typedef enum	p_enum
@@ -24,9 +22,15 @@ typedef enum	p_enum
 	password,
 	nickname,
 	username,
+	hostname,
+	servername,
+	realname,
 	channel,
 	key,
-	target
+	target,
+	comment,
+	mode_,
+	modeArg
 };
 
 class	CommandSpec
@@ -38,11 +42,11 @@ class	CommandSpec
 		std::vector<void(*)(CommandSpec&)>				checkers_;
 		void(*cmExecutor_)(CommandSpec& cmd);
 		bool											cancelled_;
-		Client&											sender;
+		Client*											sender_;
 		
 		//constructor
 		CommandSpec(std::string name, int registrationStage, std::map<p_enum, std::vector<CommandParam*> > params, \
-					std::vector<void(*)(CommandSpec&)> checkers, void(*cmExecutor_)(CommandSpec& cmd));
+					std::vector<void(*)(CommandSpec&)> checkers, void(*cmExecutor)(CommandSpec& cmd));
 	public:
 		//destructor
 		~CommandSpec(void);
@@ -53,11 +57,11 @@ class	CommandSpec
 		//getters
 		std::string		getName(void);
 		bool			getCancelled(void);
-		// Executor*		getExecutor(void);
-		// int				(*getChecker(unsigned int i))(std::string&);
-		// size_t			getCheckerSize(void);
+		void			(*getExecutor(void))(CommandSpec& cmd);
 		
-		
+		//setters
+		void	setSender(Client& sender);
+
 		// nested class --------------------------------------------------------
 		class	CommandBuilder //builds a command
 		{
@@ -75,7 +79,7 @@ class	CommandSpec
 				//methods
 				CommandBuilder&	Name(const std::string& name);
 				CommandBuilder&	Registration(int stage);
-				CommandBuilder&	Parameters(CommandParam* param);
+				CommandBuilder&	Parameters(p_enum type, CommandParam* param);
 				CommandBuilder&	addChecker(void(*ft)(CommandSpec& cmd));
 				CommandBuilder&	CmExecutor(void(*ft)(CommandSpec& cmd));
 				CommandSpec*	build();

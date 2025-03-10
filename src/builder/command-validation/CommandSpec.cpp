@@ -12,45 +12,22 @@
 
 #include "CommandSpec.hpp"
 
-/* constructors & destructor */
-CommandSpec::CommandSpec(void)
-{
-	//std::cout << "CommandSpec default constructor called" << std::endl;
-}
-
-CommandSpec::CommandSpec(std::string name, void(*inputTokenizer)(std::string& buffer, CommandParam& param), int registrationStage, \
-					std::vector<CommandParam*> params, int minParam, std::vector<void(*)()>	issuerChecks, Executor* cmExecutor)
+/* constructor & destructor */
+CommandSpec::CommandSpec(std::string name, int registrationStage, std::map<p_enum, std::vector<CommandParam*> > params, \
+						std::vector<void(*)(CommandSpec&)> checkers, void(*cmExecutor)(CommandSpec& cmd))
 {
 	this->name_ = name;
-	this->inputTokenizer_ = inputTokenizer;
 	this->registrationStage_ = registrationStage;
 	this->params_ = params;
-	this->minParam_ = minParam;
-	this->issuerChecks_ = issuerChecks;
+	this->checkers_ = checkers;
 	this->cmExecutor_ = cmExecutor;
 	this->cancelled_ = false;
-}
-
-CommandSpec::CommandSpec(const CommandSpec& obj)
-{
-	//std::cout << "CommandSpec copy constructor called" << std::endl;
-	*this = obj;
+	this->sender_ = NULL;
 }
 
 CommandSpec::~CommandSpec(void)
 {
 	//std::cout << "CommandSpec destructor called" << std::endl;
-}
-
-/*operators*/
-CommandSpec&	CommandSpec::operator=(const CommandSpec& obj)
-{
-	//std::cout << "CommandSpec copy assignment operator called" << std::endl;
-	if (this != &obj)
-	{
-		//
-	}
-	return (*this);
 }
 
 /*methods*/
@@ -104,7 +81,7 @@ bool	CommandSpec::getCancelled(void)
 	return (this->cancelled_);
 }
 
-Executor*	CommandSpec::getExecutor(void)
+void	(*CommandSpec::getExecutor(void))(CommandSpec& cmd)
 {
 	return (this->cmExecutor_);
 }
@@ -114,6 +91,9 @@ Executor*	CommandSpec::getExecutor(void)
 CommandSpec::CommandBuilder::CommandBuilder(void)
 {
 	//std::cout << "CommandBuilder default constructor called" << std::endl;
+	this->name_ = "";
+	this->registrationStage_ = 0;
+	this->cmExecutor_ = NULL;
 }
 
 CommandSpec::CommandBuilder::CommandBuilder(const CommandBuilder& obj)
@@ -145,43 +125,31 @@ CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::Name(const std::string
 	return (*this);
 }
 
-CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::InputTokenizer(void(*ft)(std::string& buffer, CommandParam& param))
-{
-	this->inputTokenizer_ = ft;
-	return (*this);
-}
-
 CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::Registration(int stage)
 {
 	this->registrationStage_ = stage;
 	return (*this);
 }
 
-CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::Parameters(CommandParam* param)
+CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::Parameters(p_enum type, CommandParam* param)
 {
-	this->params_.push_back(param);
+	this->params_[type].push_back(param);
 	return (*this);
 }
 
-CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::MinParam(int minParam)
+CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::addChecker(void(*ft)(CommandSpec& cmd))
 {
-	this->minParam_ = minParam;
+	this->checkers_.push_back(ft);
 	return (*this);
 }
 
-CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::IssuerChecks(void(*ft)())
+CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::CmExecutor(void(*ft)(CommandSpec& cmd))
 {
-	this->issuerChecks_.push_back(ft);
-	return (*this);
-}
-
-CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::CmExecutor(Executor* cmExecutor)
-{
-	this->cmExecutor_ = cmExecutor;
+	this->cmExecutor_ = ft;
 	return (*this);
 }
 
 CommandSpec*	CommandSpec::CommandBuilder::build()
 {
-	return (new CommandSpec(name_, inputTokenizer_, registrationStage_, params_, minParam_, issuerChecks_, cmExecutor_));
+	return (new CommandSpec(name_, registrationStage_, params_, checkers_, cmExecutor_));
 }

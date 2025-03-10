@@ -54,7 +54,7 @@ CommandSpec&	CommandManager::getCmd(const std::string& cmName)
 void	CommandManager::executeCm(CommandSpec& cm)
 {
 	if (!cm.getCancelled())
-		cm.getExecutor()->execute(/*CommandParam*/);
+		cm.getExecutor()(cm);
 }
 void	CommandManager::generateCmds()
 {
@@ -62,26 +62,21 @@ void	CommandManager::generateCmds()
 	CommandSpec	*pass = CommandSpec::CommandBuilder()
 									.Name("PASS")
 									.Registration(0)
-									.InputTokenizer(splitOnSpace)
-									.MinParam(1) //(1)
-									.Parameters(CommandParam::ParamBuilder() //password
-												// .addChecker(pwMatch) (3)
-												.build())
-									// .IssuerChecks(isRegistered) //(2)
+									.Parameters(password, CommandParam::ParamBuilder().build())
+									// .addChecker(isRegistered) //(2)
+									// .addChecker(pwMatch) (3)
 									// .CmExecutor()
 									.build();
 
 	log(pass);
 
 	//nick
+	//on veut pas afficher ERR_NEEDMOREPARAMS si nickname est pas donné
 	CommandSpec	*nick = CommandSpec::CommandBuilder()
 									.Name("NICK")
 									.Registration(1)
-									.InputTokenizer(splitOnSpace)
-									.MinParam(0) //on veut pas afficher ERR_NEEDMOREPARAMS si nickname est pas donné
-									.Parameters(CommandParam::ParamBuilder() //nickname
-												// .addChecker(validNick)
-												.build())
+									.Parameters(nickname, CommandParam::ParamBuilder().build())
+									// .addChecker(validNick)
 									// .CmExecutor()
 									.build();
 
@@ -91,18 +86,13 @@ void	CommandManager::generateCmds()
 	CommandSpec	*user = CommandSpec::CommandBuilder()
 									.Name("USER")
 									.Registration(2)
-									// .InputTokenizer() split on space except if realname starts with ":"
-									.MinParam(4) //(1)
-									.Parameters(CommandParam::ParamBuilder() //username
-												// .addChecker(validUser) //(3)
-												.build())
-									.Parameters(CommandParam::ParamBuilder() //0
-												.build())
-									.Parameters(CommandParam::ParamBuilder() //*
-												.build())
-									.Parameters(CommandParam::ParamBuilder() //realname
-												.build())
-									// .IssuerChecks(isRegistered) //(2)
+									.Parameters(username, CommandParam::ParamBuilder().build())
+									.Parameters(hostname, CommandParam::ParamBuilder().build())
+									.Parameters(servername, CommandParam::ParamBuilder().build())
+									.Parameters(realname, CommandParam::ParamBuilder().build())
+									// .addChecker(isRegistered) //(2)
+									// .addChecker(validUser) //(3)
+									// .CmExecutor()
 									.build();
 
 	log(user);
@@ -111,34 +101,32 @@ void	CommandManager::generateCmds()
 	CommandSpec	*join = CommandSpec::CommandBuilder()
 									.Name("JOIN")
 									.Registration(3)
-									.InputTokenizer(splitOnComa)
-									.MinParam(1) //(1)
-									.Parameters(CommandParam::ParamBuilder() //channel(s)
-												.addChecker(validChan) //(2)
-												// .addChecker(joinChanRequest) //(3)
+									.Parameters(channel, CommandParam::ParamBuilder() //meme si un channel est faut on fait cexu qui sont juste
+												.InputTokenizer(splitOnComa)
 												.build())
-									.Parameters(CommandParam::ParamBuilder() //key(s) (opt)
+									.Parameters(key, CommandParam::ParamBuilder()
+												.isOpt(true)
+												.InputTokenizer(splitOnComa)
 												.build())
-									.CmExecutor(new Join())//delete
+									// .addChecker(validChan) //(2)
+									// .addChecker(joinChanRequest) //(3)
+									// .CmExecutor()
 									.build();
 
 	log(join);
 
 	//invite
+	//can have 0 params or 2
 	CommandSpec	*invite = CommandSpec::CommandBuilder()
 									.Name("INVITE")
 									.Registration(3)
-									.InputTokenizer(splitOnSpace)
-									.MinParam(2)//or 0 ? //(1) 
-									.Parameters(CommandParam::ParamBuilder() ///nickname
-												// .addChecker(validTarget) //(2)
-												// .addChecker(validInvite) //(5)
-												.build())
-									.Parameters(CommandParam::ParamBuilder() ///channel
-												.addChecker(validChan) //(3)
-												.build())
-									// .IssuerChecks(onChan) //(4)
-									// .IssuerChecks(hasChanPriv) //(6)
+									.Parameters(target, CommandParam::ParamBuilder().build())
+									.Parameters(channel, CommandParam::ParamBuilder().build())
+									// .addChecker(validTarget) //(2)
+									// .addChecker(validChan) //(3)
+									// .addChecker(onChan) //(4)
+									// .addChecker(validInvite) //(5)
+									// .addChecker(hasChanPriv) //(6)
 									// .CmExecutor()
 									.build();
 								
@@ -148,19 +136,18 @@ void	CommandManager::generateCmds()
 	CommandSpec	*kick = CommandSpec::CommandBuilder()
 									.Name("KICK")
 									.Registration(3)
-									.InputTokenizer(splitOnComa)
-									.MinParam(2) //(1)
-									.Parameters(CommandParam::ParamBuilder() //channel
-												.addChecker(validChan) //(2)
+									.Parameters(channel, CommandParam::ParamBuilder().build())
+									.Parameters(target, CommandParam::ParamBuilder() //si un target est faux on fait pas les ceux qui suivent
+												.InputTokenizer(splitOnComa)
 												.build())
-									.Parameters(CommandParam::ParamBuilder() //user(s)
-												// .addChecker(validTarget) //(5)
-												// .addChecker(validKick) //(6)
+									.Parameters(comment, CommandParam::ParamBuilder()
+												.isOpt(true)
 												.build())
-									.Parameters(CommandParam::ParamBuilder() //comment (opt)
-												.build())
-									// .IssuerChecks(onChan) //(3)
-									// .IssuerChecks(hasChanPriv) //(4)
+									// .addChecker(validChan) //(2)
+									// .addChecker(onChan) //(3)
+									// .addChecker(hasChanPriv) //(4)
+									// .addChecker(validTarget) //(5)
+									// .addChecker(validKick) //(6)
 									// .CmExecutor()
 									.build();
 
@@ -170,15 +157,18 @@ void	CommandManager::generateCmds()
 	CommandSpec	*mode = CommandSpec::CommandBuilder()
 									.Name("MODE")
 									.Registration(3)
-									// .InputTokenizer()
-									.MinParam(1) //(1)
-									.Parameters(CommandParam::ParamBuilder() //channel
-												.addChecker(validChan) //(2)
+									.Parameters(channel, CommandParam::ParamBuilder().build())
+									.Parameters(mode_, CommandParam::ParamBuilder()
+												.isOpt(true)
+												// .InputTokenizer()
 												.build())
-									.Parameters(CommandParam::ParamBuilder() //modes + mode arg ?
-												// .addChecker(validMode) //(2)
+									.Parameters(modeArg, CommandParam::ParamBuilder()
+												.isOpt(true)
+												// .InputTokenizer()
 												.build())
-									// .IssuerChecks(hasChanPriv) //(3)
+									// .addChecker(validChan) //(2)
+									// .addChecker(hasChanPriv) //(3)
+									// .addChecker(validMode) //(4)
 									// .CmExecutor()
 									.build();
 
@@ -195,7 +185,7 @@ void	CommandManager::generateCmds()
 												.build())
 									.Parameters(CommandParam::ParamBuilder() //reason (opt)
 												.build())
-									// .IssuerChecks(onChan) //(3)
+									// .addChecker(onChan) //(3)
 									// .CmExecutor()
 									.build();
 
@@ -242,8 +232,8 @@ void	CommandManager::generateCmds()
 												.build())
 									.Parameters(CommandParam::ParamBuilder() //topic (opt)
 												.build())
-									// .IssuerChecks(onChan)
-									// .IssuerChecks(hasChanPriv) (only if mode +t is set)
+									// .addChecker(onChan)
+									// .addChecker(hasChanPriv) (only if mode +t is set)
 									// .CmExecutor()
 									.build();
 

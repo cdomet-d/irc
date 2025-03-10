@@ -21,17 +21,17 @@ class	CommandParam
 {
 	private:
 		std::vector<std::string>	param_;
-		bool						opt;
-		void(*inputTokenizer)(std::string& buffer, CommandParam& param);
+		bool						opt_;
+		void(*inputTokenizer_)(std::string& buffer, CommandParam& param);
 		
 		//constructor
-		CommandParam(std::vector<std::string> param, std::vector<int(*)(std::string&)> checkers);
+		CommandParam(std::vector<std::string> param, bool opt, \
+			void(*inputTokenizer)(std::string& buffer, CommandParam& param));
 	public:
 		//destructor
 		~CommandParam(void);
 
 		//operators
-		CommandParam&	operator=(const CommandParam& obj);
 		std::string&	operator[](unsigned int i);
 
 		//methods
@@ -43,14 +43,15 @@ class	CommandParam
 		{
 			private:
 				std::vector<std::string>	param_;
-				bool						opt;
-				void(*inputTokenizer)(std::string& buffer, CommandParam& param);
+				bool						opt_;
+				void(*inputTokenizer_)(std::string& buffer, CommandParam& param);
 			public:
 				//constructors & destructor
 				ParamBuilder(void);
 				~ParamBuilder(void);
 
 				//methods
+				ParamBuilder&	isOpt(bool opt);
 				ParamBuilder&	InputTokenizer(void(*ft)(std::string& buffer, CommandParam& param));
 				CommandParam*	build();
 		};
