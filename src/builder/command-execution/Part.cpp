@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 12:40:34 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:01:52 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ bool handlePart(std::string params, Client *currentCli) {
 		else
 			sendReply(itCli->second->getFd(), RPL_PARTREASON(currentCli->getPrefix(), channelName, reason));
 	}
-	
+
 	currentChannel->second->getCliInChannel().erase(senderIt);
 	return (true);
 }
