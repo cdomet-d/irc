@@ -3,18 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   Privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 13:57:12 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 11:18:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <sstream>
 
+//TODO need to add reply when client not a channel
+//TODO need to add reply when channel not found
 //only works for channel usage
-bool handlePrivsmg(std::string params, int fd) {
+bool handlePrivsmg(std::string params, Client *currentCli)
+{
 	static Server &server = Server::GetInstanceServer(gPort, gPassword);
 
 	std::istringstream iss(params);
@@ -32,14 +35,14 @@ bool handlePrivsmg(std::string params, int fd) {
 	}
 
 	clientMapIt senderIt =
-		curChan->second->getCliInChannel().find(fd);
+		curChan->second->getCliInChannel().find(currentCli->getFd());
 	if (senderIt == curChan->second->getCliInChannel().end())
 		return (false);
 	Client *sender = senderIt->second;
 	for (clientMapIt itCli =
 			 curChan->second->getCliInChannel().begin();
 		 itCli != curChan->second->getCliInChannel().end(); ++itCli) {
-		if (itCli->first != fd)
+		if (itCli->first != currentCli->getFd())
 			sendReply(itCli->second->getFd(),
 					  RPL_PRIVMSG(sender->getPrefix(),
 								  curChan->second->getName(), message));

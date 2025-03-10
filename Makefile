@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
+#    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/07 11:26:30 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/10 11:00:40 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,8 @@ BUILD_EXE_SRC:=			Join.cpp \
 						NickUser.cpp \
 						Privmsg.cpp \
 						Topic.cpp \
+						Part.cpp \
+						Mode.cpp \
 
 BUILD_VAL_SRC:=			InputClientParsing.cpp \
 

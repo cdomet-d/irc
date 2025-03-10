@@ -3,15 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   InputClientParsing.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:23:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/07 11:25:34 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 12:21:37 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <sstream>
+
+std::string removeNewlines(const std::string &input)
+{
+	std::string result;
+	for (size_t i = 0; i < input.length(); ++i) {
+		if (input[i] != '\r' && input[i] != '\n') {
+			result += input[i];
+		}
+	}
+	return result;
+}
 
 std::vector< std::string > vectorSplit(std::string &s,
 									   const std::string &delimiter) {
@@ -24,22 +35,11 @@ std::vector< std::string > vectorSplit(std::string &s,
 		inputCli.push_back(token);
 		s.erase(0, pos + delimiter.length());
 	}
-	inputCli.push_back(s);
-
 	return (inputCli);
 }
 
-std::string removeNewlines(const std::string &input) {
-	std::string result;
-	for (size_t i = 0; i < input.length(); ++i) {
-		if (input[i] != '\r' && input[i] != '\n') {
-			result += input[i];
-		}
-	}
-	return result;
-}
-
-void inputToken(std::string inputCli, int fd) {
+void inputToken(std::string inputCli, Client *currentCli)
+{
 	inputCli = removeNewlines(inputCli);
 	std::istringstream iss(inputCli);
 
@@ -57,15 +57,24 @@ void inputToken(std::string inputCli, int fd) {
 	log(DEBUG, "params =\t", params);
 
 	if (command == "JOIN") {
-		handleJoin(params, fd);
+		handleJoin(params, currentCli);
 		return;
 	}
 	if (command == "PRIVMSG") {
-		handlePrivsmg(params, fd);
+		handlePrivsmg(params, currentCli);
 		return;
 	}
 	if (command == "TOPIC") {
-		handleTopic(params, fd);
+		handleTopic(params, currentCli);
+		return ;
+	}
+	if (command == "MODE") {
+		handleMode(params, currentCli);
+		return ;
+	}
+	if (command == "PART") {
+		handlePart(params, currentCli);
+		return ;
 	}
 
 	//clean the istringstream

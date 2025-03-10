@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 11:47:21 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 11:38:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,14 +64,21 @@ std::string Client::getIP() const
 {
 	return (_IP);
 }
-std::string Client::getHostname() const {
+std::string Client::getHostname() const
+{
 	return (_hostname);
 }
-std::string Client::getPrefix() const {
+std::string Client::getPrefix() const
+{
 	return (_prefix);
 }
-std::vector <std::string> &Client::getJoinedChans() {
-	return (_joinedChans);
+std::vector< std::string > &Client::getRPL_JOINChans()
+{
+	return (_RPL_JOINChans);
+}
+std::string Client::getBuffer() const
+{
+	return (_buffer);
 }
 
 /* ************************************************************************** */
@@ -94,15 +101,22 @@ void Client::setCliEpoll(struct epoll_event epoll)
 	_cliEpoll.events = epoll.events;
 	_cliEpoll.data.fd = epoll.data.fd;
 }
-void Client::setIP(std::string ip) {
+void Client::setIP(std::string ip)
+{
 	_IP = ip;
 }
-void Client::setHostname(std::string hostname) {
+void Client::setHostname(std::string hostname)
+{
 	if (!hostname.empty())
 		_hostname = hostname;
 	else
 		_hostname = "NULL";
 }
-void Client::setPrefix() {
+void Client::setPrefix()
+{
 	_prefix = _nick + "!" + _username + "@" + _hostname;
+}
+void Client::setBuffer(std::string buffer)
+{
+	_buffer = buffer;
 }

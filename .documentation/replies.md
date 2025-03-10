@@ -85,7 +85,7 @@ RPL_NAMREPLY which is mentionned in the doc but not under numeric replies:
 | 462     | ERR_ALREADYREGISTRED | ":You may not reregister"                               |
 | 471     | ERR_CHANNELISFULL    | "< channel > :Cannot join channel (+l)"                 |
 | 473     | ERR_INVITEONLYCHAN   | "< channel > :Cannot join channel (+i)"                 |
-| 405     | ERR_TOOMANYCHANNELS  | "< channel name > :You have joined too many channels"   |
+| 405     | ERR_TOOMANYCHANNELS  | "< channel name > :You have RPL_JOIN too many channels"   |
 | 411     | ERR_NORECIPIENT      | ":No recipient given (< command >)"                     |
 | 404     | ERR_CANNOTSENDTOCHAN | "< channel name > :Cannot send to channel"              |
 | 401     | ERR_NOSUCHNICK       | "< nickname > :No such nick/channel"                    |

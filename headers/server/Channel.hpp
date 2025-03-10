@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 14:00:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 13:16:00 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 #include "reply.h"
 #include "typedef.hpp"
 #include "Client.hpp"
-#include <map>
+#include "reply.h"
 #include <iostream>
+#include <map>
 #include <string>
 
 class Client;
@@ -27,36 +28,46 @@ class Channel {
 	/*                               ORTHODOX CLASS                           */
 	Channel(std::string name);
 	~Channel(void);
-	
+
 	/*                               METHODS                                  */
-	bool addClientChannel(Channel *curChan, int fd);
+	bool addClientChannel(Channel *currentChannel, Client *currentCli);
 	
 	/*                               GETTERS                                  */
 	std::string	getName() const;
 	std::string	getTopic() const;
+	std::string getPassword() const;
+	std::string getModes() const;
+
 	int			getMaxCli() const;
 	bool		getInviteOnly() const;
 	bool		getIsPassword() const;
-	bool		getLimitCli() const;
+	bool		getTopicRestrict() const;
 	clientMap	&getCliInChannel();
-	clientMap	&getBannedCli();
 	clientMap	&getOpCli();
 	
 	/*                               SETTERS                                  */
 	void setName(std::string name);
 	void setTopic(std::string topic);
+	void setPassword(std::string password);
+	void setModes();
+	
+	void setMaxCli(int maxCli);
+	void setInviteOnly(bool inviteOnly);
+	void setIspassword(bool isPassword);
+	void setTopicRestrict(bool topicRestrict); 
 
   private:
 	std::string _name;
 	std::string _topic;
-	
-	int		_maxCli;
-	bool	_inviteOnly;
-	bool	_isPassword;
-	bool	_isLimitCli;
+	std::string _password;
+	std::string modes_;
+
+	int _maxCli;
+	bool _inviteOnly;
+	bool _isPassword;
+	bool topicRestrict_;
 
 	clientMap _cliInChannel;
-	clientMap _bannedCli;
 	clientMap _opCli;
 };
 
