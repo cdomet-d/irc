@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/06 17:20:42 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/10 10:05:23 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,25 +43,26 @@ SERV_DIR:= $(SRC_DIR)server/
 
 # ----------------------------- SOURCES FILES -------------------------------- #
 
-SERV_SRC:=				Channel.cpp \
-						Server.cpp \
-						reply.cpp \
+SERV_SRC:=			Channel.cpp \
+					Server.cpp \
+					Reply.cpp \
 
-DEBUG_SRC:=				Log.cpp \
+DEBUG_SRC:=			Log.cpp \
 
-CLI_SRC:=				Client.cpp \
+CLI_SRC:=			Client.cpp \
 
-BUILD_EXE_SRC:=		Privmsg.cpp \
-						NickUser.cpp \
-						Join.cpp \
-						Topic.cpp \
+BUILD_EXE_SRC:=		Join.cpp \
+					Privmsg.cpp \
+					Topic.cpp \
+					NickUser.cpp \
+					Mode.cpp \
 
 BUILD_VAL_SRC:=		InputClientParsing.cpp \
-						MessageValidator.cpp \
+					MessageValidator.cpp \
 
 BUILD_MAN_SRC:=	\
 
-SRC_ROOT:=				main.cpp \
+SRC_ROOT:=			main.cpp \
 
 # ----------------------------- BUILDING PATH -------------------------------- #
 
