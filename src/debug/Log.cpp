@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:56:23 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 09:58:38 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:16:31 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,16 @@
 #include <iostream>
 #include <string>
 
-std::string timeStamp() {
+std::string timeStamp()
+{
 	char time_buf[80];
 	time_t now = time(0);
 	strftime(time_buf, sizeof(time_buf), "%Y-%m-%d %H:%M:%S", localtime(&now));
 	return (time_buf);
 }
 
-void log(logLevel level, std::string message) {
+void log(logLevel level, std::string message)
+{
 	switch (level) {
 	case INFO:
 		std::cout << "[" << timeStamp() << "] INFO:\t" << BLUE << message
@@ -40,7 +42,8 @@ void log(logLevel level, std::string message) {
 	}
 }
 
-void log(logLevel level, std::string message, std::string additionalInfo) {
+void log(logLevel level, std::string message, std::string additionalInfo)
+{
 	switch (level) {
 	case (INFO):
 		std::cout << "[" << timeStamp() << ']' << " INFO:\t" << BLUE << message

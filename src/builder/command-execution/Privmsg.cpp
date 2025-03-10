@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:12:24 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:16:57 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ bool handlePrivsmg(std::string params, Client *curCli)
 	std::getline(iss, message);
 
 	//check if channel exist
-	channelMapIt curChan =
-		server.getAllCha().find(channelName);
+	channelMapIt curChan = server.getAllCha().find(channelName);
 	if (curChan->second == NULL) {
 		log(DEBUG, "did not found channel");
 		return (false);
@@ -42,8 +41,7 @@ bool handlePrivsmg(std::string params, Client *curCli)
 		return (false);
 
 	//send message to everyone but the sender itself
-	for (clientMapIt itCli =
-			 curChan->second->getCliInChan().begin();
+	for (clientMapIt itCli = curChan->second->getCliInChan().begin();
 		 itCli != curChan->second->getCliInChan().end(); ++itCli) {
 		if (itCli->first != curCli->getFd())
 			sendReply(itCli->second->getFd(),

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:23:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:08:48 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:17:06 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 #include <sstream>
 
 std::vector< std::string > vectorSplit(std::string &s,
-									   const std::string &delimiter) {
+									   const std::string &delimiter)
+{
 	std::vector< std::string > inputCli;
 	size_t pos = 0;
 	std::string token;
@@ -30,7 +31,8 @@ std::vector< std::string > vectorSplit(std::string &s,
 	return (inputCli);
 }
 
-std::string removeNewlines(const std::string &input) {
+std::string removeNewlines(const std::string &input)
+{
 	std::string result;
 	for (size_t i = 0; i < input.length(); ++i) {
 		if (input[i] != '\r' && input[i] != '\n') {
@@ -40,7 +42,8 @@ std::string removeNewlines(const std::string &input) {
 	return result;
 }
 
-void inputToken(std::string inputCli, Client *curCli) {
+void inputToken(std::string inputCli, Client *curCli)
+{
 	inputCli = removeNewlines(inputCli);
-	// MessageValidator::assess();
+	MessageValidator::assess();
 }

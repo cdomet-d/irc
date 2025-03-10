@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/10 09:59:20 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:17:10 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-// void MessageValidator::assess(const Client &sender) { 
+// void MessageValidator::assess(const Client &sender) {
 // 	std::string message = sender.getBuffer();
 // 	if (lenIsValid(message) == false)
 // 		// send
@@ -37,7 +37,8 @@
 
 // bool MessageValidator::hasTrailing(const std::string &mess) {}
 
-bool MessageValidator::lenIsValid(const std::string &mess) {
+bool MessageValidator::lenIsValid(const std::string &mess)
+{
 
 	if (mess.empty())
 		return false;

@@ -6,16 +6,16 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:24:55 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:17:23 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
 
-#include "typedef.hpp"
 #include "Client.hpp"
 #include "Reply.hpp"
+#include "typedef.hpp"
 #include <iostream>
 #include <map>
 #include <string>
@@ -32,17 +32,17 @@ class Channel {
 	bool addClientChannel(Channel *curChan, Client *curCli);
 
 	/*                               GETTERS                                  */
-	bool		getInviteOnly() const;
-	bool		getIsPassword() const;
-	bool		getLimitCli() const;
-	clientMap	&getBannedCli();
-	clientMap	&getCliInChan();
-	clientMap	&getOpCli();
-	int			getMaxCli() const;
-	std::string	getPassword() const;
-	std::string	getName() const;
-	std::string	getTopic() const;
-	
+	bool getInviteOnly() const;
+	bool getIsPassword() const;
+	bool getLimitCli() const;
+	clientMap &getBannedCli();
+	clientMap &getCliInChan();
+	clientMap &getOpCli();
+	int getMaxCli() const;
+	std::string getPassword() const;
+	std::string getName() const;
+	std::string getTopic() const;
+
 	/*                               SETTERS                                  */
 	void setName(std::string name);
 	void setTopic(std::string topic);

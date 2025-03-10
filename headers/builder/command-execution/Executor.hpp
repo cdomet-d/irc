@@ -1,21 +1,20 @@
 //HEADER
 
 #ifndef EXECUTOR_HPP
-# define EXECUTOR_HPP
+#define EXECUTOR_HPP
 
-# include <iostream>
+#include <iostream>
 
-class	Executor
-{
-	private:
-		//attributes
-	public:
-		//constructors & destructor
-		Executor(void) {};
-		virtual ~Executor(void) {};
+class Executor {
+  private:
+	//attributes
+  public:
+	//constructors & destructor
+	Executor(void) {};
+	virtual ~Executor(void) {};
 
-		//methods
-		virtual void	execute() = 0;
+	//methods
+	virtual void execute() = 0;
 };
 
 #endif

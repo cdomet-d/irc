@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:12:24 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:17:01 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #include "Server.hpp"
 #include <sstream>
 
-void checkTopic(Channel *curChan, Client *curCli) {
+void checkTopic(Channel *curChan, Client *curCli)
+{
 	if (curChan->getTopic().empty() == true) {
 		sendReply(curCli->getFd(),
 				  RPL_NOTOPIC(curCli->getNick(), curChan->getName()));
@@ -25,22 +26,22 @@ void checkTopic(Channel *curChan, Client *curCli) {
 	return;
 }
 
-void clearTopic(Channel *curChan, Client *curCli) {
+void clearTopic(Channel *curChan, Client *curCli)
+{
 	curChan->setTopic("");
-	for (clientMapIt it =
-			 curChan->getCliInChan().begin();
+	for (clientMapIt it = curChan->getCliInChan().begin();
 		 it != curChan->getCliInChan().end(); ++it) {
 		sendReply(it->second->getFd(),
 				  RPL_NOTOPIC(curCli->getNick(), curChan->getName()));
 	}
 }
 
-void changeTopic(Channel *curChan, Client *curCli, std::string topic) {
+void changeTopic(Channel *curChan, Client *curCli, std::string topic)
+{
 	topic.erase(1, 0); //remove the ':'
 	curChan->getTopic().clear();
 	curChan->setTopic(topic);
-	for (clientMapIt it =
-			 curChan->getCliInChan().begin();
+	for (clientMapIt it = curChan->getCliInChan().begin();
 		 it != curChan->getCliInChan().end(); ++it) {
 		sendReply(it->second->getFd(),
 				  RPL_TOPICCHANGED(curCli->getPrefix(), curChan->getName(),
@@ -48,7 +49,8 @@ void changeTopic(Channel *curChan, Client *curCli, std::string topic) {
 	}
 }
 
-bool handleTopic(std::string params, Client *curCli) {
+bool handleTopic(std::string params, Client *curCli)
+{
 	static Server &server = Server::GetServerInstance(gPort, gPassword);
 
 	std::istringstream iss(params);
@@ -69,8 +71,7 @@ bool handleTopic(std::string params, Client *curCli) {
 	}
 
 	//is the client on the channel
-	clientMapIt whatCli =
-		curChan->second->getCliInChan().find(curCli->getFd());
+	clientMapIt whatCli = curChan->second->getCliInChan().find(curCli->getFd());
 	if (whatCli == curChan->second->getCliInChan().end()) {
 		sendReply(
 			curCli->getFd(),
