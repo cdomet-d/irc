@@ -1,0 +1,6 @@
+.bdir/
+.dbdir/
+.vscode/
+*.mk
+d-ircserv
+ircserv
