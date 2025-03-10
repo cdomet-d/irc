@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:31:50 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 11:38:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,6 @@
 
 class	Client
 {
-	private:
-		//attributes
-		int	registration;
 	public:
 		//constructors & destructor
 		Client(void);
@@ -46,7 +43,7 @@ class	Client
 	std::string getIP() const;
 	std::string getPrefix() const;
 	std::string getBuffer() const;
-	std::vector< std::string > &getJoinedChans();
+	std::vector< std::string > &getRPL_JOINChans();
 
 	/*                               SETTERS                                  */
 	void setNick(const std::string &newNick);
@@ -71,13 +68,16 @@ class	Client
 	std::string _hostname;
 	std::string _prefix;
 
+	//attributes
+	//int	registration;
+	
 	// socket infos
 	struct epoll_event _cliEpoll;
 	int _cliFd;
 	std::string _buffer;
 
 	// channels
-	std::vector< std::string > _joinedChans;
+	std::vector< std::string > _RPL_JOINChans;
 
 	/*                               METHODS                                  */
 	// private constructors

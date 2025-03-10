@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 11:11:04 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 12:21:24 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,21 +91,24 @@ class Server {
 /*                               PARSING                                  */
 std::vector< std::string > vectorSplit(std::string &s,
 									   const std::string &delimiter);
-void inputToken(std::string inputCli, int fd);
+void inputToken(std::string inputCli, Client *currentCli);
+
 
 /*                               COMMAND                                  */
 //NICK--USER
-void handleClientRegistration(const std::string &input, int cliFd,
-							  clientMap &registeredClients);
+void handleClientRegistration(const std::string &input, Client *currentCli);
+
 //JOIN
-Channel *createChannel(const std::string &channelName);
 bool handleJoin(std::string params, Client *currentCli);
+Channel *createChannel(const std::string &channelName);
 //TOPIC
 bool handleTopic(std::string params, Client *currentCli);
 //PRIVMSG
 bool handlePrivsmg(std::string params, Client *currentCli);
 //PART
 bool handlePart(std::string params, Client *currentCli);
+//MODE
+bool handleMode(std::string params, Client *currentlCli);
 
 /*                               DEBUG                                  */
 void log(logLevel level, std::string message);

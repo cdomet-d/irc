@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:23:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:40:17 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 12:21:37 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ std::string removeNewlines(const std::string &input)
 		if (input[i] != '\r' && input[i] != '\n') {
 			result += input[i];
 		}
-		return result;
 	}
+	return result;
 }
 
 std::vector< std::string > vectorSplit(std::string &s,
@@ -35,6 +35,7 @@ std::vector< std::string > vectorSplit(std::string &s,
 		inputCli.push_back(token);
 		s.erase(0, pos + delimiter.length());
 	}
+	return (inputCli);
 }
 
 void inputToken(std::string inputCli, Client *currentCli)
@@ -68,8 +69,7 @@ void inputToken(std::string inputCli, Client *currentCli)
 		return ;
 	}
 	if (command == "MODE") {
-		//handleMode(currentCli)
-		std::cout << "its mode guys" << std::endl;
+		handleMode(params, currentCli);
 		return ;
 	}
 	if (command == "PART") {

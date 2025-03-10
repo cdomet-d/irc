@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:33:19 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 14:18:05 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ Channel *createChannel(const std::string &channelName)
 
 	Channel *newChannel = new Channel(channelName);
 	newChannel->setName(channelName);
+	newChannel->setModes();
 	server.getAllCha().insert(
 		std::pair< std::string, Channel * >(newChannel->getName(), newChannel));
 	log(INFO, "Channel created: ", channelName);

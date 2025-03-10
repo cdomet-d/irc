@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:36:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 11:38:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,9 @@ std::string Client::getPrefix() const
 {
 	return (_prefix);
 }
-std::vector< std::string > &Client::getJoinedChans()
+std::vector< std::string > &Client::getRPL_JOINChans()
 {
-	return (_joinedChans);
+	return (_RPL_JOINChans);
 }
 std::string Client::getBuffer() const
 {

@@ -6,13 +6,14 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:17:58 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 12:40:34 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <sstream>
 
+//use the define for the map of client and channel
 bool handlePart(std::string params, Client *currentCli) {
 	
 	static Server &server = Server::GetInstanceServer(gPort, gPassword);
@@ -55,6 +56,7 @@ bool handlePart(std::string params, Client *currentCli) {
 		else
 			sendReply(itCli->second->getFd(), RPL_PARTREASON(currentCli->getPrefix(), channelName, reason));
 	}
+	
 	currentChannel->second->getCliInChannel().erase(senderIt);
 	return (true);
 }

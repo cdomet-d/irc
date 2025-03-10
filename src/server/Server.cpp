@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:37:51 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 11:20:53 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ bool Server::handleData(int fd) {
 
 	log(DEBUG, "RAW INPUT : ", inputCli);
 
-	Client *currentCli = _client.find(fd)->second;
+	Client *currentCli = _clients.find(fd)->second;
 	if (bytes <= 0)
 		return (disconnectClient(fd));
 	else {

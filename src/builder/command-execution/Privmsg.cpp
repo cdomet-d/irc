@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:34:20 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 11:18:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,14 @@ bool handlePrivsmg(std::string params, Client *currentCli)
 	}
 
 	clientMapIt senderIt =
-		curChan->second->getCliInChannel().find(fd);
+		curChan->second->getCliInChannel().find(currentCli->getFd());
 	if (senderIt == curChan->second->getCliInChannel().end())
 		return (false);
 	Client *sender = senderIt->second;
 	for (clientMapIt itCli =
 			 curChan->second->getCliInChannel().begin();
 		 itCli != curChan->second->getCliInChannel().end(); ++itCli) {
-		if (itCli->first != fd)
+		if (itCli->first != currentCli->getFd())
 			sendReply(itCli->second->getFd(),
 					  RPL_PRIVMSG(sender->getPrefix(),
 								  curChan->second->getName(), message));
