@@ -59,6 +59,13 @@ BUILD_EXE_SRC:=			Join.cpp \
 						Mode.cpp \
 
 BUILD_VAL_SRC:=			InputClientParsing.cpp \
+						CommandSpec.cpp \
+						InputTokenizer.cpp \
+						CommandManager.cpp \
+						main.cpp \
+						ParamCheckers.cpp \
+						Join.cpp \
+						CommandParam.cpp \
 
 BUILD_MAN_SRC:=	\
 
