@@ -10,25 +10,85 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "CommandParam.hpp"
+#include "Checkers.hpp"
 
-int	validChan(std::string& channel)
+
+int	pwMatch(CommandSpec& cmd)
 {
-	if (channel[0] != '#')
-	{
-		std::cerr << channel << " :No such channel" << std::endl;
-		//trouver un moyen de supprimer ce param pour pas qu'il soit la lors de l'execution
-	}
+	(void)cmd;
+	return (0);
 }
 
-// int	validKey(std::string& param)
-// {
-
-// }
-
-int	joinChanRequest(std::string& param, Client& client)
+int	isRegistered(CommandSpec& cmd)
 {
+	(void)cmd;
+	return (0);
+}
+
+int	validNick(CommandSpec& cmd)
+{
+	(void)cmd;
+	return (0);
+}
+
+int	validUser(CommandSpec& cmd)
+{
+	(void)cmd;
+	return (0);
+}
+
+int	validChan(CommandSpec& cmd)
+{
+	(void)cmd;
+	return (0);	
+}
+
+int	joinChanRequest(CommandSpec& cmd)
+{
+	(void)cmd;
 	//supprimer chaque channel faux, ainsi que toutes les keys \
 	pour qu'il reste que les channel valide a join pour l'exec
-												
+	return (0);
+}
+
+int	validTarget(CommandSpec& cmd)
+{
+	(void)cmd;
+	return (0);
+}
+
+int	validInvite(CommandSpec& cmd)
+{
+	(void)cmd;
+	return (0);
+}
+
+int	OnChan(CommandSpec& cmd)
+{
+	(void)cmd;
+	return (0);
+}
+
+int	hasChanPriv(CommandSpec& cmd)
+{
+	(void)cmd;
+	return (0);
+}
+
+int	validKick(CommandSpec& cmd)
+{
+	(void)cmd;
+	return (0);
+}
+
+int	validMode(CommandSpec& cmd)
+{
+	(void)cmd;
+	return (0);
+}
+
+int	validMess(CommandSpec& cmd)
+{
+	(void)cmd;
+	return (0);
 }

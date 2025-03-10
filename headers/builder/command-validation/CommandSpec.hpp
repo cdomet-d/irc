@@ -16,8 +16,9 @@
 # include <iostream>
 # include "CommandParam.hpp"
 # include <map>
+# include "Checkers.hpp"
 
-typedef enum	p_enum
+typedef enum
 {
 	password,
 	nickname,
@@ -28,10 +29,11 @@ typedef enum	p_enum
 	channel,
 	key,
 	target,
-	comment,
+	message,
 	mode_,
-	modeArg
-};
+	modeArg,
+	topic_
+}	p_enum;
 
 class	CommandSpec
 {
@@ -60,7 +62,7 @@ class	CommandSpec
 		void			(*getExecutor(void))(CommandSpec& cmd);
 		
 		//setters
-		void	setSender(Client& sender);
+		void			setSender(Client& sender);
 
 		// nested class --------------------------------------------------------
 		class	CommandBuilder //builds a command
@@ -85,23 +87,6 @@ class	CommandSpec
 				CommandSpec*	build();
 		};
 };
-
-int	pwMatch(std::string& password);
-int	isRegistered(Client& client);
-int	validNick(std::string& nickname);
-int	validUser(std::string& username);
-int	validChan(std::string& channel);
-// int	validKey(std::string& param);
-int	joinChanRequest(std::string& channel, std::string& key, Client& client);
-int	validTarget(std::string& targetNickname);
-int	validInvite(std::string& channel, std::string& targetNickname);
-int	OnChan(std::string& channel, Client& client);
-int	hasChanPriv(std::string& channel, Client& client);
-int	validKick(std::string& channel, std::string& targetNickname);
-int	validMode(/*??*/);
-int	validMess(CommandParam& param);
-
-//a la place donner CommandSpec a tous ? et mettre une instance Client dans CommandSpec ?
 
 #endif
 
