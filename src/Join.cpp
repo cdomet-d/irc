@@ -41,5 +41,5 @@ Join&	Join::operator=(const Join& obj)
 
 void	Join::execute()
 {
-	std::cout << "yoooooooooooooo\n";
+	// std::cout << "yoooooooooooooo\n";
 }

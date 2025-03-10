@@ -117,8 +117,8 @@ void	CommandManager::generateCmds()
 												.addChecker(validChan) //(2)
 												// .addChecker(joinChanRequest) //(3)
 												.build())
-									// .Parameters(CommandParam::ParamBuilder() //key(s) (opt)
-									// 			.build())
+									.Parameters(CommandParam::ParamBuilder() //key(s) (opt)
+												.build())
 									.CmExecutor(new Join())//delete
 									.build();
 
