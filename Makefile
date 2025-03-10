@@ -23,7 +23,7 @@ H:=  -I headers/ \
 
 CC:=c++
 CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow
-DFLAGS:= -std=c++98 -Wshadow -g3
+DFLAGS:= -std=c++98 -Wextra -Wall -Wshadow -g3
 CXXFLAGS:=-MMD -MP $(H)
 MAKEFLAGS:=--no-print-directory
 
@@ -59,13 +59,11 @@ BUILD_EXE_SRC:=			Join.cpp \
 						Mode.cpp \
 
 BUILD_VAL_SRC:=			InputClientParsing.cpp \
-						CommandSpec.cpp \
-						InputTokenizer.cpp \
 						CommandManager.cpp \
-						main.cpp \
-						ParamCheckers.cpp \
-						Join.cpp \
+						CommandSpec.cpp \
 						CommandParam.cpp \
+						InputTokenizer.cpp \
+						Checkers.cpp \
 
 BUILD_MAN_SRC:=	\
 
