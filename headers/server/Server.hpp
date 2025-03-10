@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:07:08 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:36:08 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ class Server {
 	bool servInit();
 	bool servRun();
 	void acceptClient();
-	void processBuffer(Client *curCli);
+	void processBuffer(Client *currentCli);
 
 	/*                               GETTERS                                  */
 	clientMap &getAllCli();
@@ -102,7 +102,11 @@ bool handleJoin(std::string params, Client *curCli);
 bool handleTopic(std::string params, Client *curCli);
 
 //PRIVMSG
-bool handlePrivsmg(std::string params, Client *curCli);
+bool handlePrivsmg(std::string params, Client *currentCli);
+//PART
+bool handlePart(std::string params, Client *currentCli);
+//MODE
+bool handleMode(std::string params, Client *currentlCli);
 
 /*                               DEBUG                                  */
 void log(logLevel level, std::string message);

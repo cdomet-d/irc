@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 16:16:26 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:42:17 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@
 
 Channel::Channel(std::string name)
 	: _name(name), _topic(""), _maxCli(0), _inviteOnly(false),
-	  _isPassword(false), _isLimitCli(false)
+	  _isPassword(false), topicRestrict_(false)
 {
+	setModes();
 }
 
 Channel::~Channel(void)
@@ -82,25 +83,23 @@ bool Channel::getIsPassword() const
 {
 	return (_isPassword);
 }
-bool Channel::getLimitCli() const
+bool Channel::getTopicRestrict() const 
 {
-	return (_isLimitCli);
+	return (topicRestrict_);
 }
-clientMap &Channel::getCliInChan()
-{
+clientMap &Channel::getCliInChannel() {
 	return (_cliInChannel);
 }
-clientMap &Channel::getBannedCli()
-{
-	return (_bannedCli);
-}
-clientMap &Channel::getOpCli()
-{
+clientMap &Channel::getOpCli() {
 	return (_opCli);
 }
 std::string Channel::getPassword() const
 {
 	return (_password);
+}
+std::string Channel::getModes() const
+{
+	return (modes_);
 }
 /* ************************************************************************** */
 /*                               SETTERS                                      */
@@ -116,4 +115,34 @@ void Channel::setTopic(std::string topic)
 void Channel::setPassword(std::string password)
 {
 	_password = password;
+}
+void Channel::setModes()
+{
+	std::string modes = "+";
+
+	if (getMaxCli() != 0)
+		modes.append("l");
+	if (getInviteOnly() == true)
+		modes.append("i");
+	if (getIsPassword() == true)
+		modes.append("k");
+	if (getTopicRestrict() == true)
+		modes.append("t");
+	modes_ = modes;
+}
+void Channel::setMaxCli(int maxCli) 
+{
+	_maxCli = maxCli;
+}
+void Channel::setInviteOnly(bool inviteOnly)
+{
+	_inviteOnly = inviteOnly;
+}
+void Channel::setIspassword(bool isPassword)
+{
+	_isPassword = isPassword;	
+}
+void Channel::setTopicRestrict(bool topicRestrict)
+{
+	topicRestrict_ = topicRestrict;
 }

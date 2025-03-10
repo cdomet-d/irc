@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/07 13:26:56 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:41:25 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,9 @@ std::string Client::getPrefix() const
 {
 	return (_prefix);
 }
-std::vector< std::string > &Client::getJoinedChans()
+std::vector< std::string > &Client::getRPL_JOINChans()
 {
-	return (_joinedChans);
+	return (_RPL_JOINChans);
 }
 std::string Client::getBuffer() const
 {

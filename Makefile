@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/10 16:24:52 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/10 16:32:37 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,11 +51,12 @@ DEBUG_SRC:=			Log.cpp \
 
 CLI_SRC:=			Client.cpp \
 
-BUILD_EXE_SRC:=		Join.cpp \
-					Privmsg.cpp \
-					Topic.cpp \
-					NickUser.cpp \
-					Mode.cpp \
+BUILD_EXE_SRC:=			Join.cpp \
+						NickUser.cpp \
+						Privmsg.cpp \
+						Topic.cpp \
+						Part.cpp \
+						Mode.cpp \
 
 BUILD_VAL_SRC:=		InputClientParsing.cpp \
 					MessageValidator.cpp \
