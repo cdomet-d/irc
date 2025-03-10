@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/07 13:45:51 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/07 14:11:35 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ Server::~Server(void) {
 		close(it->first);
 		delete it->second;
 	}
-	for (std::map< std::string, Channel * >::iterator it = _channels.begin();
+	for (channelMapIt it = _channels.begin();
 		 it != _channels.end(); ++it)
 		delete it->second;
 
@@ -157,40 +157,40 @@ bool Server::handleData(int fd) {
 
 	log(DEBUG, "RAW INPUT : ", inputCli);
 
-	Client *currentCli = _client.find(fd)->second;
+	Client *curCli = _clients.find(fd)->second;
 	if (bytes <= 0)
 		return (disconnectClient(fd));
 	else {
-		currentCli->setBuffer(currentCli->getBuffer().append(bufTemp, bytes));
-		processBuffer(currentCli);
+		curCli->setBuffer(curCli->getBuffer().append(bufTemp, bytes));
+		processBuffer(curCli);
 	}
 	return (true);
 }
 
-void Server::processBuffer(Client *currentCli)
+void Server::processBuffer(Client *curCli)
 {
 	size_t pos;
-	while ((pos = currentCli->getBuffer().find('\n')) != std::string::npos) {
-		if (!currentCli->getBuffer().find("QUIT")) {
+	while ((pos = curCli->getBuffer().find('\n')) != std::string::npos) {
+		if (!curCli->getBuffer().find("QUIT")) {
 			std::cout << "Exit server" << std::endl;
-			disconnectClient(currentCli->getFd());
+			disconnectClient(curCli->getFd());
 			return;
 		}
-		if (currentCli->getBuffer().find("CAP LS") != std::string::npos ||
-			currentCli->getBuffer().find("NICK") != std::string::npos ||
-			currentCli->getBuffer().find("USER") != std::string::npos) {
-			handleClientRegistration(currentCli->getBuffer(), currentCli);
-			currentCli->setBuffer("");
+		if (curCli->getBuffer().find("CAP LS") != std::string::npos ||
+			curCli->getBuffer().find("NICK") != std::string::npos ||
+			curCli->getBuffer().find("USER") != std::string::npos) {
+			handleClientRegistration(curCli->getBuffer(), curCli);
+			curCli->setBuffer("");
 			return;
 		} else {
-			inputToken(currentCli->getBuffer(), currentCli);
-			currentCli->setBuffer("");
+			inputToken(curCli->getBuffer(), curCli);
+			curCli->setBuffer("");
 			return;
 		}
 	}
 }
 
-Server &Server::GetInstanceServer(int port, std::string password) {
+Server &Server::GetServerInstance(int port, std::string password) {
 	static Server instance(port, password);
 	return (instance);
 }
@@ -224,6 +224,6 @@ Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
 clientMap &Server::getAllCli() {
 	return (_clients);
 }
-std::map< std::string, Channel * > &Server::getAllCha() {
+channelMap &Server::getAllCha() {
 	return (_channels);
 }
