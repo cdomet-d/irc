@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/07 13:24:28 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:12:24 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,16 @@ int main(int ac, char **av) {
 
 	gPort = atoi(av[1]);
 	gPassword = av[2];
-	static Server &server = Server::GetInstanceServer(gPort, gPassword);
+	static Server &server = Server::GetServerInstance(gPort, gPassword);
 	server.servInit();
 	server.servRun();
 
-	for (std::map< std::string, Channel * >::iterator it =
-			 server.getAllCha().begin();
+	for (channelMapIt it = server.getAllCha().begin();
 		 it != server.getAllCha().end(); ++it) {
 		std::cout << "Channel: " << it->second->getName() << std::endl;
-		for (std::map< int, Client * >::iterator itCli =
-				 it->second->getCliInChannel().begin();
-			 itCli != it->second->getCliInChannel().end(); ++itCli) {
+		for (clientMapIt itCli =
+				 it->second->getCliInChan().begin();
+			 itCli != it->second->getCliInChan().end(); ++itCli) {
 			std::cout << "Client: " << itCli->second->getNick() << std::endl;
 		}
 	}
