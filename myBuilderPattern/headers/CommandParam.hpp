@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:13:44 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/10 16:29:00 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/10 17:26:50 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,10 @@ class	CommandParam
 	private:
 		std::vector<std::string>	param_;
 		bool						opt;
-		void(*inputTokenizer)(std::string& buffer);
-		// std::vector<int(*)(std::string&)>	checkers_; //faire un template ??
+		void(*inputTokenizer)(std::string& buffer, CommandParam& param);
 		
-		//constructors
-		CommandParam(void);
+		//constructor
 		CommandParam(std::vector<std::string> param, std::vector<int(*)(std::string&)> checkers);
-		CommandParam(const CommandParam& obj);
 	public:
 		//destructor
 		~CommandParam(void);
@@ -40,8 +37,6 @@ class	CommandParam
 		//methods
 		std::vector<std::string>&	getParam(void);
 		size_t						getParamSize(void);
-		int							(*getChecker(unsigned int i))(std::string&);
-		size_t						getCheckerSize(void);
 
 		//--------------------nested class----------------------
 		class	ParamBuilder
@@ -49,38 +44,20 @@ class	CommandParam
 			private:
 				std::vector<std::string>	param_;
 				bool						opt;
-				void(*inputTokenizer)(std::string& buffer);
-				// std::vector<int(*)(std::string&)>	checkers_;
+				void(*inputTokenizer)(std::string& buffer, CommandParam& param);
 			public:
 				//constructors & destructor
 				ParamBuilder(void);
-				ParamBuilder(const ParamBuilder& obj);
 				~ParamBuilder(void);
 
-				//operators
-				ParamBuilder&		operator=(const ParamBuilder& obj);
-
 				//methods
-				// ParamBuilder&	addChecker(int(*ft)(std::string&));
+				ParamBuilder&	InputTokenizer(void(*ft)(std::string& buffer, CommandParam& param));
 				CommandParam*	build();
-
 		};
 };
 
-int	pwMatch(std::string& password);
-int	isRegistered(Client& client);
-int	validNick(std::string& nickname);
-int	validUser(std::string& username);
-int	validChan(std::string& channel);
-// int	validKey(std::string& param);
-int	joinChanRequest(std::string& channel, std::string& key, Client& client);
-int	validTarget(std::string& targetNickname);
-int	validInvite(std::string& channel, std::string& targetNickname);
-int	OnChan(std::string& channel, Client& client);
-int	hasChanPriv(std::string& channel, Client& client);
-int	validKick(std::string& channel, std::string& targetNickname);
-int	validMode(/*??*/);
-int	validMess(CommandParam& param);
+void	splitOnComa(std::string& buffer, CommandParam& param);
+// void	splitJoin(std::string& buffer, CommandParam& param);
+void	splitOnSpace(std::string& buffer, CommandParam& param);
 
-//a la place donner CommandSpec a tous ? et mettre une instance Client dans CommandSpec ?
 #endif
