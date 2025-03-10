@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:46:19 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/07 14:11:35 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:12:24 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool nickInUse(std::string newNickname, Client *curCli)
 
 	static Server &server = Server::GetServerInstance(gPort, gPassword);
 
-	for (std::map< int, Client * >::iterator it = server.getAllCli().begin();
+	for (clientMapIt it = server.getAllCli().begin();
 		 it != server.getAllCli().end(); ++it) {
 		if (newNickname == it->second->getNick()) {
 			sendReply(curCli->getFd(),

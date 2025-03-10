@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/07 14:11:35 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:12:24 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,13 @@ bool handlePrivsmg(std::string params, Client *curCli)
 	}
 
 	//check if client is a channel
-	std::map< int, Client * >::iterator senderIt =
+	clientMapIt senderIt =
 		curChan->second->getCliInChan().find(curCli->getFd());
 	if (senderIt == curChan->second->getCliInChan().end())
 		return (false);
 
 	//send message to everyone but the sender itself
-	for (std::map< int, Client * >::iterator itCli =
+	for (clientMapIt itCli =
 			 curChan->second->getCliInChan().begin();
 		 itCli != curChan->second->getCliInChan().end(); ++itCli) {
 		if (itCli->first != curCli->getFd())

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 10:03:51 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:12:24 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void checkTopic(Channel *curChan, Client *curCli) {
 
 void clearTopic(Channel *curChan, Client *curCli) {
 	curChan->setTopic("");
-	for (std::map< int, Client * >::iterator it =
+	for (clientMapIt it =
 			 curChan->getCliInChan().begin();
 		 it != curChan->getCliInChan().end(); ++it) {
 		sendReply(it->second->getFd(),
@@ -39,7 +39,7 @@ void changeTopic(Channel *curChan, Client *curCli, std::string topic) {
 	topic.erase(1, 0); //remove the ':'
 	curChan->getTopic().clear();
 	curChan->setTopic(topic);
-	for (std::map< int, Client * >::iterator it =
+	for (clientMapIt it =
 			 curChan->getCliInChan().begin();
 		 it != curChan->getCliInChan().end(); ++it) {
 		sendReply(it->second->getFd(),
@@ -69,7 +69,7 @@ bool handleTopic(std::string params, Client *curCli) {
 	}
 
 	//is the client on the channel
-	std::map< int, Client * >::iterator whatCli =
+	clientMapIt whatCli =
 		curChan->second->getCliInChan().find(curCli->getFd());
 	if (whatCli == curChan->second->getCliInChan().end()) {
 		sendReply(
