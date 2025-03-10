@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:13:44 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/07 17:00:37 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:29:00 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,11 @@
 class	CommandParam
 {
 	private:
-		std::vector<std::string>			param_;
-		std::vector<int(*)(std::string&)>	checkers_; //faire un template ??
+		std::vector<std::string>	param_;
+		bool						opt;
+		void(*inputTokenizer)(std::string& buffer);
+		// std::vector<int(*)(std::string&)>	checkers_; //faire un template ??
+		
 		//constructors
 		CommandParam(void);
 		CommandParam(std::vector<std::string> param, std::vector<int(*)(std::string&)> checkers);
@@ -44,8 +47,10 @@ class	CommandParam
 		class	ParamBuilder
 		{
 			private:
-				std::vector<std::string>			param_;
-				std::vector<int(*)(std::string&)>	checkers_;
+				std::vector<std::string>	param_;
+				bool						opt;
+				void(*inputTokenizer)(std::string& buffer);
+				// std::vector<int(*)(std::string&)>	checkers_;
 			public:
 				//constructors & destructor
 				ParamBuilder(void);
@@ -56,7 +61,7 @@ class	CommandParam
 				ParamBuilder&		operator=(const ParamBuilder& obj);
 
 				//methods
-				ParamBuilder&	addChecker(int(*ft)(std::string&));
+				// ParamBuilder&	addChecker(int(*ft)(std::string&));
 				CommandParam*	build();
 
 		};

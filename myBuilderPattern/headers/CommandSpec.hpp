@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:13:38 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/07 17:03:55 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:50:06 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,38 @@
 
 # include <iostream>
 # include "CommandParam.hpp"
-# include "Executor.hpp"
-# include "Join.hpp"
+// # include "Executor.hpp"
+// # include "Join.hpp"
+# include <map>
+
+typedef enum	p_enum
+{
+	password,
+	nickname,
+	username,
+	channel,
+	key,
+	target
+};
 
 class	CommandSpec
 {
 	private:
-		std::string					name_;
-		void(*inputTokenizer_)(std::string& buffer, CommandParam& param);
-		int							registrationStage_;
-		std::vector<CommandParam*>	params_;
-		int							minParam_;
-		std::vector<void(*)()>		issuerChecks_; //faire un template ??
-		Executor*					cmExecutor_;
-		bool						cancelled_;
+		std::string										name_;
+		// void(*inputTokenizer_)(std::string& buffer, CommandParam& param);
+		int												registrationStage_;
+		std::map<p_enum, std::vector<CommandParam*> >	params_;
+		// int												minParam_;
+		std::vector<void(*)(CommandSpec&)>				checkers_; //faire un template ??
+		// Executor*										cmExecutor_;
+		void(*cmExecutor_)(CommandSpec& cmd);
+		bool											cancelled_;
+		Client&											sender;
+		
 		//constructors
 		CommandSpec(void);
-		CommandSpec(std::string name, void(*inputTokenizer)(std::string& buffer, CommandParam& param), int registrationStage, \
-					std::vector<CommandParam*> params, int minParam, std::vector<void(*)()>	issuerChecks, Executor* cmExecutor);
+		CommandSpec(std::string name, int registrationStage, std::map<p_enum, std::vector<CommandParam*> > params, \
+					std::vector<void(*)(CommandSpec&)> checkers, void(*cmExecutor_)(CommandSpec& cmd));
 		CommandSpec(const CommandSpec& obj);
 	public:
 		//destructor
@@ -47,19 +61,18 @@ class	CommandSpec
 		//getters
 		std::string		getName(void);
 		bool			getCancelled(void);
-		Executor*		getExecutor(void);
+		// Executor*		getExecutor(void);
+		
 		
 		// nested class
 		class	CommandBuilder //builds a command
 		{
 			private:
-				std::string					name_;
-				void(*inputTokenizer_)(std::string& buffer, CommandParam& param);
-				int							registrationStage_;
-				std::vector<CommandParam*>	params_;
-				int							minParam_;
-				std::vector<void(*)()>		issuerChecks_;
-				Executor*					cmExecutor_;
+				std::string										name_;
+				int												registrationStage_;
+				std::map<p_enum, std::vector<CommandParam*> >	params_;
+				std::vector<void(*)(CommandSpec& cmd)>			checkers_; //faire un template ??
+				void(*cmExecutor_)(CommandSpec& cmd);
 			public:
 				//constructors & destructor
 				CommandBuilder(void);
@@ -72,11 +85,11 @@ class	CommandSpec
 				//methods
 				CommandBuilder&	Name(const std::string& name);
 				CommandBuilder&	Registration(int stage);
-				CommandBuilder&	IssuerChecks(void(*ft)());
-				CommandBuilder&	InputTokenizer(void(*ft)(std::string& buffer, CommandParam& param));
+				CommandBuilder&	addChecker(void(*ft)(CommandSpec& cmd));
+				// CommandBuilder&	InputTokenizer(void(*ft)(std::string& buffer, CommandParam& param));
 				CommandBuilder&	Parameters(CommandParam* param);
-				CommandBuilder&	MinParam(int minParam);
-				CommandBuilder&	CmExecutor(Executor* cmExecutor);
+				// CommandBuilder&	MinParam(int minParam);
+				CommandBuilder&	CmExecutor(void(*ft)(CommandSpec& cmd));
 				CommandSpec*	build();
 		};
 };
