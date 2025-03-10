@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 17:46:39 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:07:45 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ bool handleJoin(std::string params, Client *currentCli);
 bool handleTopic(std::string params, Client *currentCli);
 //PRIVMSG
 bool handlePrivsmg(std::string params, Client *currentCli);
+//PART
+bool handlePart(std::string params, Client *currentCli);
 
 /*                               DEBUG                                  */
 void log(logLevel level, std::string message);

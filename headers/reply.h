@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 17:46:35 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:13:12 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,14 @@
 #define ERR_NOTONCHANNEL(nickname, channel) (": 442 " + nickname + " " + channel + " :You're not on that channel" + "\r\n") 
 #define ERR_CHANOPRIVSNEEDED(nickname, channel) (": 482 " + nickname + " " + channel + " :You're not channel operator" + "\r\n")
 #define ERR_BADCHANNELKEY(nickname, channel) (" 475 " + nickname + " " + channel + " :Cannot join channel (+k)" + "\r\n")
+#define ERR_NEEDMOREPARAMS(nickname, command) (" 461 " + nickname + " " + command + " :Not enough parameters" + "\r\n")
 
 //user define replies
 #define JOINED(nickname, channel) (":" + nickname + " JOIN :" + channel + "\r\n")
 #define RPL_PRIVMSG(prefix, target, message) (":" + prefix + " PRIVMSG " + target + message + "\r\n")
 #define RPL_TOPICCHANGED(prefix, channel, topic) (":" + prefix + " TOPIC " + channel + topic + "\r\n")
+#define RPL_PARTREASON(prefix, channel, reason) (":" + prefix + " PART " + channel + " " + reason + "\r\n")
+#define RPL_PARTNOREASON(prefix, channel) (":" + prefix + " PART " + channel + "\r\n")
 
 void sendReply(int fd, std::string reply);
 

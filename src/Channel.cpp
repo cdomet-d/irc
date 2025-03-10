@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 17:45:52 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:21:25 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,12 @@ bool Channel::addClientChannel(Channel *currentChannel, Client *currentCli)
 		std::pair< int, Client * >(currentCli->getFd(), currentCli));
 	currentCli->getJoinedChans().push_back(currentChannel->getName());
 
-	sendReply(currentCli->getFd(),
+	for (std::map< int, Client * >::iterator itCli =
+			currentChannel->getCliInChannel().begin();
+		itCli != currentChannel->getCliInChannel().end(); ++itCli) {
+		sendReply(itCli->second->getFd(),
 			  JOINED(currentCli->getNick(), currentChannel->getName()));
+	}
 	if (currentChannel->getTopic().empty() == true)
 		sendReply(currentCli->getFd(), RPL_NOTOPIC(currentCli->getNick(),
 												   currentChannel->getName()));

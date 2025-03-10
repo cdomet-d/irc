@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 17:46:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/10 10:14:24 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,5 @@ int main(int ac, char **av)
 			std::cout << "Client: " << itCli->second->getNick() << std::endl;
 		}
 	}
-
 	return (0);
 }
