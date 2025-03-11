@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   CommandManager.cpp                                 :+:      :+:    :+:   */
+/*   CmdManager.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,29 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "CommandManager.hpp"
+#include "CmdManager.hpp"
 
 /* constructors & destructor */
-CommandManager::CommandManager(void)
+CmdManager::CmdManager(void)
 {
-	//std::cout << "CommandManager default constructor called" << std::endl;
+	//std::cout << "CmdManager default constructor called" << std::endl;
 }
 
-CommandManager::CommandManager(const CommandManager& obj)
+CmdManager::CmdManager(const CmdManager& obj)
 {
-	//std::cout << "CommandManager copy constructor called" << std::endl;
+	//std::cout << "CmdManager copy constructor called" << std::endl;
 	*this = obj;
 }
 
-CommandManager::~CommandManager(void)
+CmdManager::~CmdManager(void)
 {
-	//std::cout << "CommandManager destructor called" << std::endl;
+	//std::cout << "CmdManager destructor called" << std::endl;
 }
 
 /*operators*/
-CommandManager&	CommandManager::operator=(const CommandManager& obj)
+CmdManager&	CmdManager::operator=(const CmdManager& obj)
 {
-	//std::cout << "CommandManager copy assignment operator called" << std::endl;
+	//std::cout << "CmdManager copy assignment operator called" << std::endl;
 	if (this != &obj)
 	{
 		this->commandList = obj.commandList;
@@ -41,9 +41,9 @@ CommandManager&	CommandManager::operator=(const CommandManager& obj)
 }
 
 /*methods*/
-CommandSpec&	CommandManager::getCmd(const std::string& cmName)
+CmdSpec&	CmdManager::getCmd(const std::string& cmName)
 {
-	std::map<std::string, CommandSpec*>::iterator	it;
+	std::map<std::string, CmdSpec*>::iterator	it;
 
 	it = this->commandList.find(cmName);
 	// if (it == commandList.end())
@@ -51,51 +51,51 @@ CommandSpec&	CommandManager::getCmd(const std::string& cmName)
 	return (*it->second); 
 }
 
-void	CommandManager::executeCm(CommandSpec& cm)
+void	CmdManager::executeCm(CmdSpec& cm)
 {
 	if (!cm.getCancelled())
 		cm.getExecutor()(cm);
 	cm.clean();
 }
-void	CommandManager::generateCmds()
+void	CmdManager::generateCmds()
 {
-	log(CommandSpec::CommandBuilder()
+	log(CmdSpec::CommandBuilder()
 					.Name("PASS")
 					.Registration(0)
-					.Parameters(password, CommandParam::ParamBuilder().build())
+					.Parameters(password, CmdParam::ParamBuilder().build())
 					.addChecker(isRegistered)
 					.addChecker(pwMatch)
 					// .CmExecutor()
 					.build());
 
 	//on veut pas afficher ERR_NEEDMOREPARAMS si nickname est pas donné
-	log(CommandSpec::CommandBuilder()
+	log(CmdSpec::CommandBuilder()
 					.Name("NICK")
 					.Registration(1)
-					.Parameters(nickname, CommandParam::ParamBuilder().build())
+					.Parameters(nickname, CmdParam::ParamBuilder().build())
 					.addChecker(validNick)
 					// .CmExecutor()
 					.build());
 
-	log(CommandSpec::CommandBuilder()
+	log(CmdSpec::CommandBuilder()
 					.Name("USER")
 					.Registration(2)
-					.Parameters(username, CommandParam::ParamBuilder().build())
-					.Parameters(hostname, CommandParam::ParamBuilder().build())
-					.Parameters(servername, CommandParam::ParamBuilder().build())
-					.Parameters(realname, CommandParam::ParamBuilder().build())
+					.Parameters(username, CmdParam::ParamBuilder().build())
+					.Parameters(hostname, CmdParam::ParamBuilder().build())
+					.Parameters(servername, CmdParam::ParamBuilder().build())
+					.Parameters(realname, CmdParam::ParamBuilder().build())
 					.addChecker(isRegistered)
 					.addChecker(validUser)
 					// .CmExecutor()
 					.build());
 
-	log(CommandSpec::CommandBuilder()
+	log(CmdSpec::CommandBuilder()
 					.Name("JOIN")
 					.Registration(3)
-					.Parameters(channel, CommandParam::ParamBuilder() //meme si un channel est faut on fait ceux qui sont juste
+					.Parameters(channel, CmdParam::ParamBuilder() //meme si un channel est faut on fait ceux qui sont juste
 								.InputTokenizer(splitOnComa)
 								.build())
-					.Parameters(key, CommandParam::ParamBuilder()
+					.Parameters(key, CmdParam::ParamBuilder()
 								.isOpt(true)
 								.InputTokenizer(splitOnComa)
 								.build())
@@ -104,11 +104,11 @@ void	CommandManager::generateCmds()
 					.build());
 
 	//can have 0 params or 2
-	log(CommandSpec::CommandBuilder()
+	log(CmdSpec::CommandBuilder()
 					.Name("INVITE")
 					.Registration(3)
-					.Parameters(target, CommandParam::ParamBuilder().build())
-					.Parameters(channel, CommandParam::ParamBuilder().build())
+					.Parameters(target, CmdParam::ParamBuilder().build())
+					.Parameters(channel, CmdParam::ParamBuilder().build())
 					.addChecker(validTarget)
 					.addChecker(validChan)
 					.addChecker(onChan)
@@ -117,14 +117,14 @@ void	CommandManager::generateCmds()
 					// .CmExecutor()
 					.build());
 								
-	log(CommandSpec::CommandBuilder()
+	log(CmdSpec::CommandBuilder()
 					.Name("KICK")
 					.Registration(3)
-					.Parameters(channel, CommandParam::ParamBuilder().build())
-					.Parameters(target, CommandParam::ParamBuilder() //si un target est faux on fait pas ceux qui suivent
+					.Parameters(channel, CmdParam::ParamBuilder().build())
+					.Parameters(target, CmdParam::ParamBuilder() //si un target est faux on fait pas ceux qui suivent
 								.InputTokenizer(splitOnComa)
 								.build())
-					.Parameters(message, CommandParam::ParamBuilder()
+					.Parameters(message, CmdParam::ParamBuilder()
 								.isOpt(true)
 								.build())
 					.addChecker(validChan)
@@ -135,15 +135,15 @@ void	CommandManager::generateCmds()
 					// .CmExecutor()
 					.build());
 
-	log(CommandSpec::CommandBuilder()
+	log(CmdSpec::CommandBuilder()
 					.Name("MODE")
 					.Registration(3)
-					.Parameters(channel, CommandParam::ParamBuilder().build())
-					.Parameters(mode_, CommandParam::ParamBuilder()
+					.Parameters(channel, CmdParam::ParamBuilder().build())
+					.Parameters(mode_, CmdParam::ParamBuilder()
 								.isOpt(true)
 								// .InputTokenizer()
 								.build())
-					.Parameters(modeArg, CommandParam::ParamBuilder()
+					.Parameters(modeArg, CmdParam::ParamBuilder()
 								.isOpt(true)
 								// .InputTokenizer()
 								.build())
@@ -153,13 +153,13 @@ void	CommandManager::generateCmds()
 					// .CmExecutor()
 					.build());
 
-	log(CommandSpec::CommandBuilder()
+	log(CmdSpec::CommandBuilder()
 					.Name("PART")
 					.Registration(3)
-					.Parameters(channel, CommandParam::ParamBuilder()
+					.Parameters(channel, CmdParam::ParamBuilder()
 								.InputTokenizer(splitOnComa)
 								.build())
-					.Parameters(message, CommandParam::ParamBuilder()
+					.Parameters(message, CmdParam::ParamBuilder()
 								.isOpt(true)
 								.build())
 					.addChecker(validChan)
@@ -168,32 +168,32 @@ void	CommandManager::generateCmds()
 					.build());
 
 	//we want ERR_NORECIPIENT not ERR_NEEDMOREPARAMS
-	log(CommandSpec::CommandBuilder()
+	log(CmdSpec::CommandBuilder()
 					.Name("PRIVMSG")
 					.Registration(3)
-					.Parameters(target, CommandParam::ParamBuilder()
+					.Parameters(target, CmdParam::ParamBuilder()
 								.InputTokenizer(splitOnComa)
 								.build())
-					.Parameters(message, CommandParam::ParamBuilder().build())
+					.Parameters(message, CmdParam::ParamBuilder().build())
 					.addChecker(validMess)
 					.addChecker(validTarget)
 					// .CmExecutor()
 					.build());
 
-	log(CommandSpec::CommandBuilder()
+	log(CmdSpec::CommandBuilder()
 					.Name("QUIT")
 					.Registration(0)
-					.Parameters(message, CommandParam::ParamBuilder()
+					.Parameters(message, CmdParam::ParamBuilder()
 								.isOpt(true)
 								.build())
 					// .CmExecutor()
 					.build());
 
-	log(CommandSpec::CommandBuilder()
+	log(CmdSpec::CommandBuilder()
 					.Name("TOPIC")
 					.Registration(3)
-					.Parameters(channel, CommandParam::ParamBuilder().build())
-					.Parameters(topic_, CommandParam::ParamBuilder()
+					.Parameters(channel, CmdParam::ParamBuilder().build())
+					.Parameters(topic_, CmdParam::ParamBuilder()
 								.isOpt(true)
 								.build())
 					.addChecker(validChan)
@@ -203,7 +203,7 @@ void	CommandManager::generateCmds()
 					.build());
 }
 
-void	CommandManager::log(CommandSpec* cm)
+void	CmdManager::log(CmdSpec* cm)
 {
 	this->commandList[cm->getName()] = cm;
 }

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   CommandParam.cpp                                   :+:      :+:    :+:   */
+/*   CmdParam.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,36 +10,36 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "CommandParam.hpp"
+#include "CmdParam.hpp"
 
 /* constructor & destructor */
-CommandParam::CommandParam(std::vector<std::string> param, bool opt, \
-	void(*inputTokenizer)(std::string& buffer, CommandParam& param))
+CmdParam::CmdParam(std::vector<std::string> param, bool opt, \
+	void(*inputTokenizer)(std::string& buffer, CmdParam& param))
 {
 	this->param_ = param;
 	this->opt_ = opt;
 	this->inputTokenizer_ = inputTokenizer;
 }
 
-CommandParam::~CommandParam(void)
+CmdParam::~CmdParam(void)
 {
-	//std::cout << "CommandParam destructor called" << std::endl;
+	//std::cout << "CmdParam destructor called" << std::endl;
 }
 
 /*operators*/
-std::string&	CommandParam::operator[](unsigned int i)
+std::string&	CmdParam::operator[](unsigned int i)
 {
 	//add verif of index
 	return (this->param_[i]);
 }
 
 /*methods*/
-std::vector<std::string>&	CommandParam::getParam(void)
+std::vector<std::string>&	CmdParam::getParam(void)
 {
 	return (this->param_);
 }
 
-size_t	CommandParam::getParamSize(void)
+size_t	CmdParam::getParamSize(void)
 {
 	return (this->param_.size());
 }
@@ -47,32 +47,32 @@ size_t	CommandParam::getParamSize(void)
 
 //------------------------------ nested class ------------------------------------
 /* constructors & destructor */
-CommandParam::ParamBuilder::ParamBuilder(void)
+CmdParam::ParamBuilder::ParamBuilder(void)
 {
 	//std::cout << "ParamBuilder default constructor called" << std::endl;
 	this->opt_ = false;
 	this->inputTokenizer_ = NULL;
 }
 
-CommandParam::ParamBuilder::~ParamBuilder(void)
+CmdParam::ParamBuilder::~ParamBuilder(void)
 {
 	//std::cout << "ParamBuilder destructor called" << std::endl;
 }
 
 /*methods*/
-CommandParam::ParamBuilder&	CommandParam::ParamBuilder::isOpt(bool opt)
+CmdParam::ParamBuilder&	CmdParam::ParamBuilder::isOpt(bool opt)
 {
 	this->opt_ = opt;
 	return (*this);
 }
 
-CommandParam::ParamBuilder&	CommandParam::ParamBuilder::InputTokenizer(void(*ft)(std::string& buffer, CommandParam& param))
+CmdParam::ParamBuilder&	CmdParam::ParamBuilder::InputTokenizer(void(*ft)(std::string& buffer, CmdParam& param))
 {
 	this->inputTokenizer_ = ft;
 	return (*this);
 }
 
-CommandParam*	CommandParam::ParamBuilder::build()
+CmdParam*	CmdParam::ParamBuilder::build()
 {
-	return (new CommandParam(this->param_, this->opt_, this->inputTokenizer_));
+	return (new CmdParam(this->param_, this->opt_, this->inputTokenizer_));
 }

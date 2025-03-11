@@ -12,37 +12,37 @@
 
 #include "Checkers.hpp"
 
-int	pwMatch(CommandSpec& cmd)
+int	pwMatch(CmdSpec& cmd)
 {
 	(void)cmd;
 	return (0);
 }
 
-int	isRegistered(CommandSpec& cmd)
+int	isRegistered(CmdSpec& cmd)
 {
 	(void)cmd;
 	return (0);
 }
 
-int	validNick(CommandSpec& cmd)
+int	validNick(CmdSpec& cmd)
 {
 	(void)cmd;
 	return (0);
 }
 
-int	validUser(CommandSpec& cmd)
+int	validUser(CmdSpec& cmd)
 {
 	(void)cmd;
 	return (0);
 }
 
-int	validChan(CommandSpec& cmd)
+int	validChan(CmdSpec& cmd)
 {
 	(void)cmd;
 	return (0);	
 }
 
-int	joinChanRequest(CommandSpec& cmd)
+int	joinChanRequest(CmdSpec& cmd)
 {
 	(void)cmd;
 	//supprimer chaque channel faux, ainsi que toutes les keys
@@ -50,43 +50,43 @@ int	joinChanRequest(CommandSpec& cmd)
 	return (0);
 }
 
-int	validTarget(CommandSpec& cmd)
+int	validTarget(CmdSpec& cmd)
 {
 	(void)cmd;
 	return (0);
 }
 
-int	validInvite(CommandSpec& cmd)
+int	validInvite(CmdSpec& cmd)
 {
 	(void)cmd;
 	return (0);
 }
 
-int	onChan(CommandSpec& cmd)
+int	onChan(CmdSpec& cmd)
 {
 	(void)cmd;
 	return (0);
 }
 
-int	hasChanPriv(CommandSpec& cmd)
+int	hasChanPriv(CmdSpec& cmd)
 {
 	(void)cmd;
 	return (0);
 }
 
-int	validKick(CommandSpec& cmd)
+int	validKick(CmdSpec& cmd)
 {
 	(void)cmd;
 	return (0);
 }
 
-int	validMode(CommandSpec& cmd)
+int	validMode(CmdSpec& cmd)
 {
 	(void)cmd;
 	return (0);
 }
 
-int	validMess(CommandSpec& cmd)
+int	validMess(CmdSpec& cmd)
 {
 	(void)cmd;
 	return (0);

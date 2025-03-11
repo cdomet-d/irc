@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   CommandSpec.hpp                                    :+:      :+:    :+:   */
+/*   CmdSpec.hpp                                    	:+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -14,7 +14,7 @@
 # define COMMANDSPEC_HPP
 
 # include <iostream>
-# include "CommandParam.hpp"
+# include "CmdParam.hpp"
 # include <map>
 # include "Checkers.hpp"
 
@@ -35,35 +35,35 @@ typedef enum
 	topic_
 }	p_enum;
 
-class	CommandSpec
+class	CmdSpec
 {
 	private:
-		std::string								name_;
-		int										registrationStage_;
-		std::map<p_enum, CommandParam*>			params_;
-		std::vector<int(*)(CommandSpec&)>		checkers_;
-		void(*cmExecutor_)(CommandSpec& cmd);
-		bool									cancelled_;
-		Client*									sender_;
+		std::string							name_;
+		int									registrationStage_;
+		std::map<p_enum, CmdParam*>			params_;
+		std::vector<int(*)(CmdSpec&)>		checkers_;
+		void(*cmExecutor_)(CmdSpec& cmd);
+		bool								cancelled_;
+		Client*								sender_;
 		
 		//constructor
-		CommandSpec(std::string name, int registrationStage, std::map<p_enum, CommandParam*> params, \
-					std::vector<int(*)(CommandSpec&)> checkers, void(*cmExecutor)(CommandSpec& cmd));
+		CmdSpec(std::string name, int registrationStage, std::map<p_enum, CmdParam*> params, \
+					std::vector<int(*)(CmdSpec&)> checkers, void(*cmExecutor)(CmdSpec& cmd));
 	public:
 		//destructor
-		~CommandSpec(void);
+		~CmdSpec(void);
 
 		//operators
-		CommandParam&	operator[](p_enum type);	
+		CmdParam&	operator[](p_enum type);	
 
 		//method
-		CommandSpec&	process(std::string& buffer, Client& client);
+		CmdSpec&	process(std::string& buffer, Client& client);
 		void			clean(void);
 
 		//getters
 		std::string		getName(void);
 		bool			getCancelled(void);
-		void			(*getExecutor(void))(CommandSpec& cmd);
+		void			(*getExecutor(void))(CmdSpec& cmd);
 		
 		//setters
 		void			setSender(Client& sender);
@@ -72,11 +72,11 @@ class	CommandSpec
 		class	CommandBuilder //builds a command
 		{
 			private:
-				std::string										name_;
-				int												registrationStage_;
-				std::map<p_enum, CommandParam*>	params_;
-				std::vector<int(*)(CommandSpec& cmd)>			checkers_;
-				void(*cmExecutor_)(CommandSpec& cmd);
+				std::string							name_;
+				int									registrationStage_;
+				std::map<p_enum, CmdParam*>			params_;
+				std::vector<int(*)(CmdSpec& cmd)>	checkers_;
+				void(*cmExecutor_)(CmdSpec& cmd);
 			public:
 				//constructors & destructor
 				CommandBuilder(void);
@@ -85,10 +85,10 @@ class	CommandSpec
 				//methods
 				CommandBuilder&	Name(const std::string& name);
 				CommandBuilder&	Registration(int stage);
-				CommandBuilder&	Parameters(p_enum type, CommandParam* param);
-				CommandBuilder&	addChecker(int(*ft)(CommandSpec& cmd));
-				CommandBuilder&	CmExecutor(void(*ft)(CommandSpec& cmd));
-				CommandSpec*	build();
+				CommandBuilder&	Parameters(p_enum type, CmdParam* param);
+				CommandBuilder&	addChecker(int(*ft)(CmdSpec& cmd));
+				CommandBuilder&	CmExecutor(void(*ft)(CmdSpec& cmd));
+				CmdSpec*	build();
 		};
 };
 

@@ -22,7 +22,7 @@ Client::Client(const Client &rhs)
 {
 	static_cast< void >(rhs);
 }
-Client::Client(void) : name_(""), nick_(""), pass_(""), realName_(""), registration(0) {}
+Client::Client(void) : name_(""), nick_(""), pass_(""), realName_(""), registration_(0) {}
 Client &Client::operator=(const Client &rhs)
 {
 	static_cast< void >(rhs);

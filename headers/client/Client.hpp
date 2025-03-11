@@ -33,6 +33,7 @@ class Client {
 	/*                               GETTERS                                  */
 	int getFd() const;
 	std::string getBuffer() const;
+	struct epoll_event *getCliEpoll();
 	std::string getHostname() const;
 	std::string getIP() const;
 	std::string getName() const;
@@ -40,9 +41,8 @@ class Client {
 	std::string getPrefix() const;
 	std::string getRealName() const;
 	std::string getUsername() const;
-	stringVec &getRPL_JOINChans();
-	struct epoll_event *getCliEpoll();
 	int	getRegistration(void) const;
+	stringVec &getRPL_JOINChans();
 
 	/*                               SETTERS                                  */
 	void setBuffer(std::string buffer);
@@ -70,9 +70,6 @@ class Client {
 	std::string realName_;
 	int			registration_;
 	std::string username_;
-
-	//attributes
-	//int	registration;
 
 	// socket infos
 	int cliFd_;

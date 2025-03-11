@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   CommandManager.hpp                                 :+:      :+:    :+:   */
+/*   CmdManager.hpp                                 	:+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,31 +10,31 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COMMANDMANAGER_HPP
-# define COMMANDMANAGER_HPP
+#ifndef CMDMANAGER_HPP
+# define CMDMANAGER_HPP
 
 # include <iostream>
 # include <map>
-# include "CommandSpec.hpp"
+# include "CmdSpec.hpp"
 
-class	CommandManager
+class	CmdManager
 {
 	private:
-		std::map<std::string, CommandSpec*>	commandList;
+		std::map<std::string, CmdSpec*>	commandList;
 	public:
 		//constructors & destructor
-		CommandManager(void);
-		CommandManager(const CommandManager& obj);
-		~CommandManager(void);
+		CmdManager(void);
+		CmdManager(const CmdManager& obj);
+		~CmdManager(void);
 
 		//operators
-		CommandManager&	operator=(const CommandManager& obj);
+		CmdManager&	operator=(const CmdManager& obj);
 
 		//methods
 		void			generateCmds();
-		CommandSpec&	getCmd(const std::string& cmName);
-		void			executeCm(CommandSpec& cm);
-		void			log(CommandSpec* cm);
+		CmdSpec&	getCmd(const std::string& cmName);
+		void			executeCm(CmdSpec& cm);
+		void			log(CmdSpec* cm);
 };
 
 #endif

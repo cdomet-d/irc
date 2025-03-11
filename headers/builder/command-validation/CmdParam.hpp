@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   CommandParam.hpp                                   :+:      :+:    :+:   */
+/*   CmdParam.hpp                                   	:+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,26 +10,26 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COMMANDPARAM_HPP
-# define COMMANDPARAM_HPP
+#ifndef CMDPARAM_HPP
+# define CMDPARAM_HPP
 
 # include <iostream>
 # include <vector>
 # include "../client/Client.hpp"
 
-class	CommandParam
+class	CmdParam
 {
 	private:
 		std::vector<std::string>	param_;
 		bool						opt_;
-		void(*inputTokenizer_)(std::string& buffer, CommandParam& param);
+		void(*inputTokenizer_)(std::string& buffer, CmdParam& param);
 		
 		//constructor
-		CommandParam(std::vector<std::string> param, bool opt, \
-			void(*inputTokenizer)(std::string& buffer, CommandParam& param));
+		CmdParam(std::vector<std::string> param, bool opt, \
+			void(*inputTokenizer)(std::string& buffer, CmdParam& param));
 	public:
 		//destructor
-		~CommandParam(void);
+		~CmdParam(void);
 
 		//operators
 		std::string&	operator[](unsigned int i);
@@ -44,7 +44,7 @@ class	CommandParam
 			private:
 				std::vector<std::string>	param_;
 				bool						opt_;
-				void(*inputTokenizer_)(std::string& buffer, CommandParam& param);
+				void(*inputTokenizer_)(std::string& buffer, CmdParam& param);
 			public:
 				//constructors & destructor
 				ParamBuilder(void);
@@ -52,13 +52,13 @@ class	CommandParam
 
 				//methods
 				ParamBuilder&	isOpt(bool opt);
-				ParamBuilder&	InputTokenizer(void(*ft)(std::string& buffer, CommandParam& param));
-				CommandParam*	build();
+				ParamBuilder&	InputTokenizer(void(*ft)(std::string& buffer, CmdParam& param));
+				CmdParam*	build();
 		};
 };
 
-void	splitOnComa(std::string& buffer, CommandParam& param);
-// void	splitJoin(std::string& buffer, CommandParam& param);
-void	splitOnSpace(std::string& buffer, CommandParam& param);
+void	splitOnComa(std::string& buffer, CmdParam& param);
+// void	splitJoin(std::string& buffer, CmdParam& param);
+void	splitOnSpace(std::string& buffer, CmdParam& param);
 
 #endif

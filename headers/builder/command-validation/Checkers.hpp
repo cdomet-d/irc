@@ -3,22 +3,22 @@
 #ifndef CHECKERS_HPP
 # define CHECKERS_HPP
 
-# include "CommandSpec.hpp"
+# include "CmdSpec.hpp"
 
-class CommandSpec;
+class CmdSpec;
 
-int	pwMatch(CommandSpec& cmd);
-int	isRegistered(CommandSpec& cmd);
-int	validNick(CommandSpec& cmd);
-int	validUser(CommandSpec& cmd);
-int	validChan(CommandSpec& cmd);
-int	joinChanRequest(CommandSpec& cmd);
-int	validTarget(CommandSpec& cmd);
-int	validInvite(CommandSpec& cmd);
-int	onChan(CommandSpec& cmd);
-int	hasChanPriv(CommandSpec& cmd);
-int	validKick(CommandSpec& cmd);
-int	validMode(CommandSpec& cmd);
-int	validMess(CommandSpec& cmd);
+int	pwMatch(CmdSpec& cmd);
+int	isRegistered(CmdSpec& cmd);
+int	validNick(CmdSpec& cmd);
+int	validUser(CmdSpec& cmd);
+int	validChan(CmdSpec& cmd);
+int	joinChanRequest(CmdSpec& cmd);
+int	validTarget(CmdSpec& cmd);
+int	validInvite(CmdSpec& cmd);
+int	onChan(CmdSpec& cmd);
+int	hasChanPriv(CmdSpec& cmd);
+int	validKick(CmdSpec& cmd);
+int	validMode(CmdSpec& cmd);
+int	validMess(CmdSpec& cmd);
 
 #endif

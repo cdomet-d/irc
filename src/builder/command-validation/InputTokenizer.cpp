@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "CommandParam.hpp"
+#include "CmdParam.hpp"
 
-void	splitOnComa(std::string& buffer, CommandParam& param)
+void	splitOnComa(std::string& buffer, CmdParam& param)
 {
 	size_t i = 0;
 	size_t	index = 0;

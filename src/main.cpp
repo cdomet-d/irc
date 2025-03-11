@@ -51,7 +51,7 @@ int main(int ac, char **av) {
 }
 
 // #include <iostream>
-// #include "CommandManager.hpp"
+// #include "CmdManager.hpp"
 // #include "Client.hpp"
 
 // int	main(int argc, char** argv)
@@ -59,7 +59,7 @@ int main(int ac, char **av) {
 // 	(void)argc;
 // 	Client			client;
 // 	std::string		buffer = "JOIN #pizza,#bitch,prout key1,key2 other shit";//argv[1]
-// 	CommandManager	cmManager;
+// 	CmdManager	cmManager;
 // 	size_t			i = 0;
 // 	std::string		cm;
 

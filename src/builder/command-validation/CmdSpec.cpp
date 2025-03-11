@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   CommandSpec.cpp                                    :+:      :+:    :+:   */
+/*   CmdSpec.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,11 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "CommandSpec.hpp"
+#include "CmdSpec.hpp"
 
 /* constructor & destructor */
-CommandSpec::CommandSpec(std::string name, int registrationStage, std::map<p_enum, CommandParam*> params, \
-						std::vector<int(*)(CommandSpec&)> checkers, void(*cmExecutor)(CommandSpec& cmd))
+CmdSpec::CmdSpec(std::string name, int registrationStage, std::map<p_enum, CmdParam*> params, \
+						std::vector<int(*)(CmdSpec&)> checkers, void(*cmExecutor)(CmdSpec& cmd))
 {
 	this->name_ = name;
 	this->registrationStage_ = registrationStage;
@@ -25,15 +25,15 @@ CommandSpec::CommandSpec(std::string name, int registrationStage, std::map<p_enu
 	this->sender_ = NULL;
 }
 
-CommandSpec::~CommandSpec(void)
+CmdSpec::~CmdSpec(void)
 {
-	//std::cout << "CommandSpec destructor called" << std::endl;
+	//std::cout << "CmdSpec destructor called" << std::endl;
 }
 
 /*operators*/
-CommandParam&	CommandSpec::operator[](p_enum type)
+CmdParam&	CmdSpec::operator[](p_enum type)
 {
-	std::map<p_enum, CommandParam*>::iterator	it;
+	std::map<p_enum, CmdParam*>::iterator	it;
 
 	it = this->params_.find(type);
 	// if (it == this->params_.end())
@@ -42,14 +42,14 @@ CommandParam&	CommandSpec::operator[](p_enum type)
 }
 
 /*methods*/
-CommandSpec&	CommandSpec::process(std::string& buffer, Client& client)
+CmdSpec&	CmdSpec::process(std::string& buffer, Client& client)
 {
 	(void)buffer;
 	(void)client;
 	// std::cout << this->name << std::endl;
 	// std::cout << "'" << buffer << "'" << std::endl;
 	// std::cout << params.getParams().size() << std::endl;
-	// void(*tokenizer)(std::string& buffer, CommandParam& param)	= this->inputTokenizer_;
+	// void(*tokenizer)(std::string& buffer, CmdParam& param)	= this->inputTokenizer_;
 	
 	// if (client.getRegistration() != this->registrationStage_)
 	// {
@@ -84,29 +84,29 @@ CommandSpec&	CommandSpec::process(std::string& buffer, Client& client)
 	return (*this);
 }
 
-void	CommandSpec::clean(void)
+void	CmdSpec::clean(void)
 {
 
 }
 
-std::string	CommandSpec::getName(void)
+std::string	CmdSpec::getName(void)
 {
 	return (this->name_);
 }
 
-bool	CommandSpec::getCancelled(void)
+bool	CmdSpec::getCancelled(void)
 {
 	return (this->cancelled_);
 }
 
-void	(*CommandSpec::getExecutor(void))(CommandSpec& cmd)
+void	(*CmdSpec::getExecutor(void))(CmdSpec& cmd)
 {
 	return (this->cmExecutor_);
 }
 
 /*----------------------------------- nested class -----------------------------------*/
 /* constructors & destructor */
-CommandSpec::CommandBuilder::CommandBuilder(void)
+CmdSpec::CommandBuilder::CommandBuilder(void)
 {
 	//std::cout << "CommandBuilder default constructor called" << std::endl;
 	this->name_ = "";
@@ -114,43 +114,43 @@ CommandSpec::CommandBuilder::CommandBuilder(void)
 	this->cmExecutor_ = NULL;
 }
 
-CommandSpec::CommandBuilder::~CommandBuilder(void)
+CmdSpec::CommandBuilder::~CommandBuilder(void)
 {
 	//std::cout << "CommandBuilder destructor called" << std::endl;
 }
 
 /*methods*/
-CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::Name(const std::string& name)
+CmdSpec::CommandBuilder&	CmdSpec::CommandBuilder::Name(const std::string& name)
 {
 	this->name_ = name;
 	return (*this);
 }
 
-CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::Registration(int stage)
+CmdSpec::CommandBuilder&	CmdSpec::CommandBuilder::Registration(int stage)
 {
 	this->registrationStage_ = stage;
 	return (*this);
 }
 
-CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::Parameters(p_enum type, CommandParam* param)
+CmdSpec::CommandBuilder&	CmdSpec::CommandBuilder::Parameters(p_enum type, CmdParam* param)
 {
 	this->params_[type] = param;
 	return (*this);
 }
 
-CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::addChecker(int(*ft)(CommandSpec& cmd))
+CmdSpec::CommandBuilder&	CmdSpec::CommandBuilder::addChecker(int(*ft)(CmdSpec& cmd))
 {
 	this->checkers_.push_back(ft);
 	return (*this);
 }
 
-CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::CmExecutor(void(*ft)(CommandSpec& cmd))
+CmdSpec::CommandBuilder&	CmdSpec::CommandBuilder::CmExecutor(void(*ft)(CmdSpec& cmd))
 {
 	this->cmExecutor_ = ft;
 	return (*this);
 }
 
-CommandSpec*	CommandSpec::CommandBuilder::build()
+CmdSpec*	CmdSpec::CommandBuilder::build()
 {
-	return (new CommandSpec(name_, registrationStage_, params_, checkers_, cmExecutor_));
+	return (new CmdSpec(name_, registrationStage_, params_, checkers_, cmExecutor_));
 }
