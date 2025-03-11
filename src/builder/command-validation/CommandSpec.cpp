@@ -61,9 +61,9 @@ CommandSpec&	CommandSpec::process(std::string& buffer, Client& client)
 	// //verif le nombre de param
 	// for (size_t i = 0; i < params_.size(); i++)
 	// {
-	// 	//est ce que j'applique un checker a la fois sur chaque param \
-	// 		ou tous les checkers sur chaque param a la fois? \
-	// 		dans quel ordre faire les checkers ? \
+	// 	//est ce que j'applique un checker a la fois sur chaque param
+	// 		ou tous les checkers sur chaque param a la fois?
+	// 		dans quel ordre faire les checkers ?
 	// 		si y a un checkers qui est pas bon est ce qu'on arrete ou on fait les autres checkers ?
 	// 	for (size_t j = 0; j < params_[i]->getCheckerSize(); j++)
 	// 	{
@@ -82,6 +82,11 @@ CommandSpec&	CommandSpec::process(std::string& buffer, Client& client)
 	// }
 
 	return (*this);
+}
+
+void	CommandSpec::clean(void)
+{
+
 }
 
 std::string	CommandSpec::getName(void)

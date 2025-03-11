@@ -12,7 +12,6 @@
 
 #include "Checkers.hpp"
 
-
 int	pwMatch(CommandSpec& cmd)
 {
 	(void)cmd;
@@ -46,8 +45,8 @@ int	validChan(CommandSpec& cmd)
 int	joinChanRequest(CommandSpec& cmd)
 {
 	(void)cmd;
-	//supprimer chaque channel faux, ainsi que toutes les keys \
-	pour qu'il reste que les channel valide a join pour l'exec
+	//supprimer chaque channel faux, ainsi que toutes les keys
+	//pour qu'il reste que les channel valide a join pour l'exec
 	return (0);
 }
 

@@ -55,6 +55,7 @@ void	CommandManager::executeCm(CommandSpec& cm)
 {
 	if (!cm.getCancelled())
 		cm.getExecutor()(cm);
+	cm.clean();
 }
 void	CommandManager::generateCmds()
 {

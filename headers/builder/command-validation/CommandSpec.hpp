@@ -58,6 +58,7 @@ class	CommandSpec
 
 		//method
 		CommandSpec&	process(std::string& buffer, Client& client);
+		void			clean(void);
 
 		//getters
 		std::string		getName(void);
