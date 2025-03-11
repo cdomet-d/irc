@@ -15,7 +15,7 @@ int	validChan(CommandSpec& cmd);
 int	joinChanRequest(CommandSpec& cmd);
 int	validTarget(CommandSpec& cmd);
 int	validInvite(CommandSpec& cmd);
-int	OnChan(CommandSpec& cmd);
+int	onChan(CommandSpec& cmd);
 int	hasChanPriv(CommandSpec& cmd);
 int	validKick(CommandSpec& cmd);
 int	validMode(CommandSpec& cmd);

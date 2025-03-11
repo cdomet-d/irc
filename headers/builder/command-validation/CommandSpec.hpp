@@ -41,14 +41,14 @@ class	CommandSpec
 		std::string								name_;
 		int										registrationStage_;
 		std::map<p_enum, CommandParam*>			params_;
-		std::vector<void(*)(CommandSpec&)>		checkers_;
+		std::vector<int(*)(CommandSpec&)>		checkers_;
 		void(*cmExecutor_)(CommandSpec& cmd);
 		bool									cancelled_;
 		Client*									sender_;
 		
 		//constructor
 		CommandSpec(std::string name, int registrationStage, std::map<p_enum, CommandParam*> params, \
-					std::vector<void(*)(CommandSpec&)> checkers, void(*cmExecutor)(CommandSpec& cmd));
+					std::vector<int(*)(CommandSpec&)> checkers, void(*cmExecutor)(CommandSpec& cmd));
 	public:
 		//destructor
 		~CommandSpec(void);
@@ -74,7 +74,7 @@ class	CommandSpec
 				std::string										name_;
 				int												registrationStage_;
 				std::map<p_enum, CommandParam*>	params_;
-				std::vector<void(*)(CommandSpec& cmd)>			checkers_;
+				std::vector<int(*)(CommandSpec& cmd)>			checkers_;
 				void(*cmExecutor_)(CommandSpec& cmd);
 			public:
 				//constructors & destructor
@@ -85,7 +85,7 @@ class	CommandSpec
 				CommandBuilder&	Name(const std::string& name);
 				CommandBuilder&	Registration(int stage);
 				CommandBuilder&	Parameters(p_enum type, CommandParam* param);
-				CommandBuilder&	addChecker(void(*ft)(CommandSpec& cmd));
+				CommandBuilder&	addChecker(int(*ft)(CommandSpec& cmd));
 				CommandBuilder&	CmExecutor(void(*ft)(CommandSpec& cmd));
 				CommandSpec*	build();
 		};

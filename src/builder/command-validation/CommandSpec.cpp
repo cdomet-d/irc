@@ -14,7 +14,7 @@
 
 /* constructor & destructor */
 CommandSpec::CommandSpec(std::string name, int registrationStage, std::map<p_enum, CommandParam*> params, \
-						std::vector<void(*)(CommandSpec&)> checkers, void(*cmExecutor)(CommandSpec& cmd))
+						std::vector<int(*)(CommandSpec&)> checkers, void(*cmExecutor)(CommandSpec& cmd))
 {
 	this->name_ = name;
 	this->registrationStage_ = registrationStage;
@@ -133,7 +133,7 @@ CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::Parameters(p_enum type
 	return (*this);
 }
 
-CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::addChecker(void(*ft)(CommandSpec& cmd))
+CommandSpec::CommandBuilder&	CommandSpec::CommandBuilder::addChecker(int(*ft)(CommandSpec& cmd))
 {
 	this->checkers_.push_back(ft);
 	return (*this);

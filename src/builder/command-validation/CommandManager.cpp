@@ -58,182 +58,148 @@ void	CommandManager::executeCm(CommandSpec& cm)
 }
 void	CommandManager::generateCmds()
 {
-	//pass
-	CommandSpec	*pass = CommandSpec::CommandBuilder()
-									.Name("PASS")
-									.Registration(0)
-									.Parameters(password, CommandParam::ParamBuilder().build())
-									// .addChecker(isRegistered) //(2)
-									// .addChecker(pwMatch) (3)
-									// .CmExecutor()
-									.build();
+	log(CommandSpec::CommandBuilder()
+					.Name("PASS")
+					.Registration(0)
+					.Parameters(password, CommandParam::ParamBuilder().build())
+					.addChecker(isRegistered)
+					.addChecker(pwMatch)
+					// .CmExecutor()
+					.build());
 
-	log(pass);
-
-	//nick
 	//on veut pas afficher ERR_NEEDMOREPARAMS si nickname est pas donné
-	CommandSpec	*nick = CommandSpec::CommandBuilder()
-									.Name("NICK")
-									.Registration(1)
-									.Parameters(nickname, CommandParam::ParamBuilder().build())
-									// .addChecker(validNick)
-									// .CmExecutor()
-									.build();
+	log(CommandSpec::CommandBuilder()
+					.Name("NICK")
+					.Registration(1)
+					.Parameters(nickname, CommandParam::ParamBuilder().build())
+					.addChecker(validNick)
+					// .CmExecutor()
+					.build());
 
-	log(nick);
+	log(CommandSpec::CommandBuilder()
+					.Name("USER")
+					.Registration(2)
+					.Parameters(username, CommandParam::ParamBuilder().build())
+					.Parameters(hostname, CommandParam::ParamBuilder().build())
+					.Parameters(servername, CommandParam::ParamBuilder().build())
+					.Parameters(realname, CommandParam::ParamBuilder().build())
+					.addChecker(isRegistered)
+					.addChecker(validUser)
+					// .CmExecutor()
+					.build());
 
-	//user
-	CommandSpec	*user = CommandSpec::CommandBuilder()
-									.Name("USER")
-									.Registration(2)
-									.Parameters(username, CommandParam::ParamBuilder().build())
-									.Parameters(hostname, CommandParam::ParamBuilder().build())
-									.Parameters(servername, CommandParam::ParamBuilder().build())
-									.Parameters(realname, CommandParam::ParamBuilder().build())
-									// .addChecker(isRegistered) //(2)
-									// .addChecker(validUser) //(3)
-									// .CmExecutor()
-									.build();
+	log(CommandSpec::CommandBuilder()
+					.Name("JOIN")
+					.Registration(3)
+					.Parameters(channel, CommandParam::ParamBuilder() //meme si un channel est faut on fait ceux qui sont juste
+								.InputTokenizer(splitOnComa)
+								.build())
+					.Parameters(key, CommandParam::ParamBuilder()
+								.isOpt(true)
+								.InputTokenizer(splitOnComa)
+								.build())
+					.addChecker(joinChanRequest)
+					// .CmExecutor()
+					.build());
 
-	log(user);
-
-	//join
-	CommandSpec	*join = CommandSpec::CommandBuilder()
-									.Name("JOIN")
-									.Registration(3)
-									.Parameters(channel, CommandParam::ParamBuilder() //meme si un channel est faut on fait cexu qui sont juste
-												.InputTokenizer(splitOnComa)
-												.build())
-									.Parameters(key, CommandParam::ParamBuilder()
-												.isOpt(true)
-												.InputTokenizer(splitOnComa)
-												.build())
-									// .addChecker(validChan) //(2)
-									// .addChecker(joinChanRequest) //(3)
-									// .CmExecutor()
-									.build();
-
-	log(join);
-
-	//invite
 	//can have 0 params or 2
-	CommandSpec	*invite = CommandSpec::CommandBuilder()
-									.Name("INVITE")
-									.Registration(3)
-									.Parameters(target, CommandParam::ParamBuilder().build())
-									.Parameters(channel, CommandParam::ParamBuilder().build())
-									// .addChecker(validTarget) //(2)
-									// .addChecker(validChan) //(3)
-									// .addChecker(onChan) //(4)
-									// .addChecker(validInvite) //(5)
-									// .addChecker(hasChanPriv) //(6)
-									// .CmExecutor()
-									.build();
+	log(CommandSpec::CommandBuilder()
+					.Name("INVITE")
+					.Registration(3)
+					.Parameters(target, CommandParam::ParamBuilder().build())
+					.Parameters(channel, CommandParam::ParamBuilder().build())
+					.addChecker(validTarget)
+					.addChecker(validChan)
+					.addChecker(onChan)
+					.addChecker(validInvite)
+					.addChecker(hasChanPriv)
+					// .CmExecutor()
+					.build());
 								
-	log(invite);
-	
-	//kick
-	CommandSpec	*kick = CommandSpec::CommandBuilder()
-									.Name("KICK")
-									.Registration(3)
-									.Parameters(channel, CommandParam::ParamBuilder().build())
-									.Parameters(target, CommandParam::ParamBuilder() //si un target est faux on fait pas ceux qui suivent
-												.InputTokenizer(splitOnComa)
-												.build())
-									.Parameters(message, CommandParam::ParamBuilder()
-												.isOpt(true)
-												.build())
-									// .addChecker(validChan) //(2)
-									// .addChecker(onChan) //(3)
-									// .addChecker(hasChanPriv) //(4)
-									// .addChecker(validTarget) //(5)
-									// .addChecker(validKick) //(6)
-									// .CmExecutor()
-									.build();
+	log(CommandSpec::CommandBuilder()
+					.Name("KICK")
+					.Registration(3)
+					.Parameters(channel, CommandParam::ParamBuilder().build())
+					.Parameters(target, CommandParam::ParamBuilder() //si un target est faux on fait pas ceux qui suivent
+								.InputTokenizer(splitOnComa)
+								.build())
+					.Parameters(message, CommandParam::ParamBuilder()
+								.isOpt(true)
+								.build())
+					.addChecker(validChan)
+					.addChecker(onChan)
+					.addChecker(hasChanPriv)
+					.addChecker(validTarget)
+					.addChecker(validKick)
+					// .CmExecutor()
+					.build());
 
-	log(kick);
+	log(CommandSpec::CommandBuilder()
+					.Name("MODE")
+					.Registration(3)
+					.Parameters(channel, CommandParam::ParamBuilder().build())
+					.Parameters(mode_, CommandParam::ParamBuilder()
+								.isOpt(true)
+								// .InputTokenizer()
+								.build())
+					.Parameters(modeArg, CommandParam::ParamBuilder()
+								.isOpt(true)
+								// .InputTokenizer()
+								.build())
+					.addChecker(validChan)
+					.addChecker(hasChanPriv)
+					.addChecker(validMode)
+					// .CmExecutor()
+					.build());
 
-	//Mode
-	CommandSpec	*mode = CommandSpec::CommandBuilder()
-									.Name("MODE")
-									.Registration(3)
-									.Parameters(channel, CommandParam::ParamBuilder().build())
-									.Parameters(mode_, CommandParam::ParamBuilder()
-												.isOpt(true)
-												// .InputTokenizer()
-												.build())
-									.Parameters(modeArg, CommandParam::ParamBuilder()
-												.isOpt(true)
-												// .InputTokenizer()
-												.build())
-									// .addChecker(validChan) //(2)
-									// .addChecker(hasChanPriv) //(3)
-									// .addChecker(validMode) //(4)
-									// .CmExecutor()
-									.build();
+	log(CommandSpec::CommandBuilder()
+					.Name("PART")
+					.Registration(3)
+					.Parameters(channel, CommandParam::ParamBuilder()
+								.InputTokenizer(splitOnComa)
+								.build())
+					.Parameters(message, CommandParam::ParamBuilder()
+								.isOpt(true)
+								.build())
+					.addChecker(validChan)
+					.addChecker(onChan)
+					// .CmExecutor()
+					.build());
 
-	log(mode);
-
-	//part
-	CommandSpec	*part = CommandSpec::CommandBuilder()
-									.Name("PART")
-									.Registration(3)
-									.Parameters(channel, CommandParam::ParamBuilder()
-												.InputTokenizer(splitOnComa)
-												.build())
-									.Parameters(message, CommandParam::ParamBuilder()
-												.isOpt(true)
-												.build())
-									// .addChecker(validChan) //(2)
-									// .addChecker(onChan) //(3)
-									// .CmExecutor()
-									.build();
-
-	log(part);
-
-	//privmsg
 	//we want ERR_NORECIPIENT not ERR_NEEDMOREPARAMS
-	CommandSpec	*privmsg = CommandSpec::CommandBuilder()
-									.Name("PRIVMSG")
-									.Registration(3)
-									.Parameters(target, CommandParam::ParamBuilder()
-												.InputTokenizer(splitOnComa)
-												.build())
-									.Parameters(message, CommandParam::ParamBuilder().build())
-									// .addChecker(validMess) (1)
-									// .addChecker(validTarget) (2)
-									// .CmExecutor()
-									.build();
+	log(CommandSpec::CommandBuilder()
+					.Name("PRIVMSG")
+					.Registration(3)
+					.Parameters(target, CommandParam::ParamBuilder()
+								.InputTokenizer(splitOnComa)
+								.build())
+					.Parameters(message, CommandParam::ParamBuilder().build())
+					.addChecker(validMess)
+					.addChecker(validTarget)
+					// .CmExecutor()
+					.build());
 
-	log(privmsg);
+	log(CommandSpec::CommandBuilder()
+					.Name("QUIT")
+					.Registration(0)
+					.Parameters(message, CommandParam::ParamBuilder()
+								.isOpt(true)
+								.build())
+					// .CmExecutor()
+					.build());
 
-	//quit
-	CommandSpec	*quit = CommandSpec::CommandBuilder()
-									.Name("QUIT")
-									.Registration(0)
-									.Parameters(message, CommandParam::ParamBuilder()
-												.isOpt(true)
-												.build())
-									// .CmExecutor()
-									.build();
-
-	log(quit);
-
-	//topic
-	CommandSpec	*topic = CommandSpec::CommandBuilder()
-									.Name("TOPIC")
-									.Registration(3)
-									.Parameters(channel, CommandParam::ParamBuilder().build())
-									.Parameters(topic_, CommandParam::ParamBuilder()
-												.isOpt(true)
-												.build())
-									// .addChecker(validChan) //(2)
-									// .addChecker(onChan) //(3)
-									// .addChecker(hasChanPriv) //(4) (only if mode +t is set)
-									// .CmExecutor()
-									.build();
-
-	log(topic);
+	log(CommandSpec::CommandBuilder()
+					.Name("TOPIC")
+					.Registration(3)
+					.Parameters(channel, CommandParam::ParamBuilder().build())
+					.Parameters(topic_, CommandParam::ParamBuilder()
+								.isOpt(true)
+								.build())
+					.addChecker(validChan)
+					.addChecker(onChan)
+					.addChecker(hasChanPriv) //(only if mode +t is set)
+					// .CmExecutor()
+					.build());
 }
 
 void	CommandManager::log(CommandSpec* cm)

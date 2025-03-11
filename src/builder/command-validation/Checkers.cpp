@@ -63,7 +63,7 @@ int	validInvite(CommandSpec& cmd)
 	return (0);
 }
 
-int	OnChan(CommandSpec& cmd)
+int	onChan(CommandSpec& cmd)
 {
 	(void)cmd;
 	return (0);
