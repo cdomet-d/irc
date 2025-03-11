@@ -11,30 +11,27 @@
 /* ************************************************************************** */
 
 #ifndef CMDMANAGER_HPP
-# define CMDMANAGER_HPP
+#define CMDMANAGER_HPP
 
-# include <iostream>
-# include <map>
-# include "CmdSpec.hpp"
+#include "CmdSpec.hpp"
+#include <iostream>
+#include <map>
 
-class	CmdManager
-{
-	private:
-		std::map<std::string, CmdSpec*>	commandList;
-	public:
-		//constructors & destructor
-		CmdManager(void);
-		CmdManager(const CmdManager& obj);
-		~CmdManager(void);
+class CmdManager {
+  public:
+	/*                               CONSTRUCTORS                             */
+	CmdManager(void);
+	~CmdManager(void);
 
-		//operators
-		CmdManager&	operator=(const CmdManager& obj);
+	/*                               METHODS                                  */
+	CmdSpec &getCmd(const std::string &cmName);
+	void executeCm(CmdSpec &cm);
+	void generateCmds();
+	void log(CmdSpec *cm);
 
-		//methods
-		void			generateCmds();
-		CmdSpec&	getCmd(const std::string& cmName);
-		void			executeCm(CmdSpec& cm);
-		void			log(CmdSpec* cm);
+  private:
+	/*                               MEMBERS                                  */
+	std::map< std::string, CmdSpec * > commandList;
 };
 
 #endif

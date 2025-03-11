@@ -12,48 +12,47 @@
 
 #include "CmdSpec.hpp"
 
-/* constructor & destructor */
-CmdSpec::CmdSpec(const std::string name, int registrationStage, std::map<p_enum, CmdParam*> params, \
-						std::vector<int(*)(CmdSpec&)> checkers, void(*cmExecutor)(CmdSpec& cmd))
-				: name_(name)
-{
-	this->registrationStage_ = registrationStage;
-	this->params_ = params;
-	this->checkers_ = checkers;
-	this->cmExecutor_ = cmExecutor;
-	this->cancelled_ = false;
-	this->sender_ = NULL;
+/* ************************************************************************** */
+/*                               ORTHODOX CLASS                               */
+/* ************************************************************************** */
+CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
+				 std::vector< int (*)(CmdSpec &) > checkers,
+				 void (*cmExecutor)(CmdSpec &cmd))
+	: name_(name) {
+	registrationStage_ = registrationStage;
+	params_ = params;
+	checkers_ = checkers;
+	cmExecutor_ = cmExecutor;
+	cancelled_ = false;
+	sender_ = NULL;
 }
 
-CmdSpec::~CmdSpec(void)
-{
-	//std::cout << "CmdSpec destructor called" << std::endl;
-}
+CmdSpec::~CmdSpec(void) {}
 
-/*operators*/
-CmdParam&	CmdSpec::operator[](p_enum type)
-{
-	std::map<p_enum, CmdParam*>::iterator	it;
+CmdParam &CmdSpec::operator[](e_param type) {
+	paramMap::iterator it;
 
-	it = this->params_.find(type);
-	// if (it == this->params_.end())
+	it = params_.find(type);
+	//TODO: add secu if type not found
+	// if (it == params_.end())
 	// 	return (NULL);
 	return (*it->second);
 }
 
-/*methods*/
-CmdSpec&	CmdSpec::process(std::string& buffer, Client& client)
-{
+/* ************************************************************************** */
+/*                               METHODS                                      */
+/* ************************************************************************** */
+CmdSpec &CmdSpec::process(std::vector< std::string > &buffer, Client &client) {
 	(void)buffer;
-	(void)client;
-	// std::cout << this->name << std::endl;
+	setSender(client);
+	// std::cout << name << std::endl;
 	// std::cout << "'" << buffer << "'" << std::endl;
 	// std::cout << params.getParams().size() << std::endl;
-	// void(*tokenizer)(std::string& buffer, CmdParam& param)	= this->inputTokenizer_;
-	
-	// if (client.getRegistration() != this->registrationStage_)
+	// void(*tokenizer)(std::string& buffer, CmdParam& param)	= inputTokenizer_;
+
+	// if (client.getRegistration() != registrationStage_)
 	// {
-	// 	this->cancelled_ = true;
+	// 	cancelled_ = true;
 	// 	return (*this);
 	// }
 	// for (size_t i = 0; i < params_.size(); i++)
@@ -84,73 +83,69 @@ CmdSpec&	CmdSpec::process(std::string& buffer, Client& client)
 	return (*this);
 }
 
-void	CmdSpec::clean(void)
-{
+void CmdSpec::clean(void) {}
 
+/* ************************************************************************** */
+/*                               GETTERS                                      */
+/* ************************************************************************** */
+const std::string &CmdSpec::getName(void) const {
+	return (name_);
 }
 
-std::string	CmdSpec::getName(void)
-{
-	return (this->name_);
+bool CmdSpec::getCancelled(void) {
+	return (cancelled_);
 }
 
-bool	CmdSpec::getCancelled(void)
-{
-	return (this->cancelled_);
+void (*CmdSpec::getExecutor(void))(CmdSpec &cmd) {
+	return (cmExecutor_);
 }
 
-void	(*CmdSpec::getExecutor(void))(CmdSpec& cmd)
-{
-	return (this->cmExecutor_);
+/* ************************************************************************** */
+/*                               SETTERS                                      */
+/* ************************************************************************** */
+void CmdSpec::setSender(Client &sender) {
+	sender_ = &sender;
 }
 
-/*----------------------------------- nested class -----------------------------------*/
-/* constructors & destructor */
-CmdSpec::CommandBuilder::CommandBuilder(void)
-{
-	//std::cout << "CommandBuilder default constructor called" << std::endl;
-	this->name_ = "";
-	this->registrationStage_ = 0;
-	this->cmExecutor_ = NULL;
+/* ************************************************************************** */
+/*                               NESTED CLASS                                 */
+/* ************************************************************************** */
+CmdSpec::CmdBuilder::CmdBuilder(void) {
+	name_ = "";
+	registrationStage_ = 0;
+	cmExecutor_ = NULL;
 }
 
-CmdSpec::CommandBuilder::~CommandBuilder(void)
-{
-	//std::cout << "CommandBuilder destructor called" << std::endl;
-}
+CmdSpec::CmdBuilder::~CmdBuilder(void) {}
 
-/*methods*/
-CmdSpec::CommandBuilder&	CmdSpec::CommandBuilder::Name(const std::string& name)
-{
-	this->name_ = name;
+/* methods */
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Name(const std::string &name) {
+	name_ = name;
 	return (*this);
 }
 
-CmdSpec::CommandBuilder&	CmdSpec::CommandBuilder::Registration(int stage)
-{
-	this->registrationStage_ = stage;
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Registration(int stage) {
+	registrationStage_ = stage;
 	return (*this);
 }
 
-CmdSpec::CommandBuilder&	CmdSpec::CommandBuilder::Parameters(p_enum type, CmdParam* param)
-{
-	this->params_[type] = param;
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Parameters(e_param type,
+													 CmdParam *param) {
+	params_[type] = param;
 	return (*this);
 }
 
-CmdSpec::CommandBuilder&	CmdSpec::CommandBuilder::addChecker(int(*ft)(CmdSpec& cmd))
-{
-	this->checkers_.push_back(ft);
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(int (*ft)(CmdSpec &cmd)) {
+	checkers_.push_back(ft);
 	return (*this);
 }
 
-CmdSpec::CommandBuilder&	CmdSpec::CommandBuilder::CmExecutor(void(*ft)(CmdSpec& cmd))
-{
-	this->cmExecutor_ = ft;
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::CmExecutor(void (*ft)(CmdSpec &cmd)) {
+	cmExecutor_ = ft;
 	return (*this);
 }
 
-CmdSpec*	CmdSpec::CommandBuilder::build()
-{
-	return (new CmdSpec(name_, registrationStage_, params_, checkers_, cmExecutor_));
+CmdSpec *CmdSpec::CmdBuilder::build() {
+	return (new CmdSpec(name_, registrationStage_, params_, checkers_,
+						cmExecutor_));
 }

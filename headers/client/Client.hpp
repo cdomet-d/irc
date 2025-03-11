@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:54:21 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 16:02:41 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ class Client {
 
 	/*                               GETTERS                                  */
 	int getFd() const;
+	int	getRegistration(void) const;
 	std::string getBuffer() const;
-	struct epoll_event *getCliEpoll();
 	std::string getHostname() const;
 	std::string getIP() const;
 	std::string getName() const;
@@ -41,8 +41,8 @@ class Client {
 	std::string getPrefix() const;
 	std::string getRealName() const;
 	std::string getUsername() const;
-	int	getRegistration(void) const;
 	stringVec &getRPL_JOINChans();
+	struct epoll_event *getCliEpoll();
 
 	/*                               SETTERS                                  */
 	void setBuffer(std::string buffer);
@@ -61,6 +61,7 @@ class Client {
   private:
 	/*                               MEMBERS                                  */
 	// user info
+	int			registration_;
 	std::string hostname_;
 	std::string ip_;
 	std::string name_;
@@ -68,7 +69,6 @@ class Client {
 	std::string pass_;
 	std::string prefix_;
 	std::string realName_;
-	int			registration_;
 	std::string username_;
 
 	// socket infos
@@ -79,7 +79,6 @@ class Client {
 	// channels
 	stringVec _RPL_JOINChans;
 
-	/*                               METHODS                                  */
 	// private constructors
 	Client &operator=(const Client &rhs);
 	Client(const Client &rhs);

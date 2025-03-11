@@ -10,87 +10,90 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COMMANDSPEC_HPP
-# define COMMANDSPEC_HPP
+#ifndef CMDSPEC_HPP
+#define CMDSPEC_HPP
 
-# include <iostream>
-# include "CmdParam.hpp"
-# include <map>
-# include "Checkers.hpp"
+#include "Checkers.hpp"
+#include "CmdParam.hpp"
+#include <iostream>
+#include <map>
+#include <vector>
 
-typedef enum
-{
-	password,
-	nickname,
-	username,
-	hostname,
-	servername,
-	realname,
+class Client;
+
+typedef enum {
 	channel,
+	hostname,
 	key,
-	target,
 	message,
 	mode_,
 	modeArg,
-	topic_
-}	p_enum;
+	nickname,
+	password,
+	realname,
+	servername,
+	target,
+	topic_,
+	username,
+} e_param;
 
-class	CmdSpec
-{
-	private:
-		const std::string					name_;
-		int									registrationStage_;
-		std::map<p_enum, CmdParam*>			params_;
-		std::vector<int(*)(CmdSpec&)>		checkers_;
-		void(*cmExecutor_)(CmdSpec& cmd);
-		bool								cancelled_;
-		Client*								sender_;
-		
-		//constructor
-		CmdSpec(const std::string name, int registrationStage, std::map<p_enum, CmdParam*> params, \
-					std::vector<int(*)(CmdSpec&)> checkers, void(*cmExecutor)(CmdSpec& cmd));
-	public:
-		//destructor
-		~CmdSpec(void);
+typedef std::map< e_param, CmdParam * > paramMap;
 
-		//operators
-		CmdParam&	operator[](p_enum type);	
+class CmdSpec {
+  public:
+	/*                               CONSTRUCTORS                             */
+	~CmdSpec(void);
 
-		//method
-		CmdSpec&	process(std::string& buffer, Client& client);
-		void			clean(void);
+	/*                               METHODS                                  */
+	CmdParam &operator[](e_param type);
+	CmdSpec &process(std::vector< std::string > &buffer, Client &client);
+	void clean(void);
 
-		//getters
-		std::string		getName(void);
-		bool			getCancelled(void);
-		void			(*getExecutor(void))(CmdSpec& cmd);
-		
-		//setters
-		void			setSender(Client& sender);
+	/*                               GETTERS                                  */
+	//TODO: replace cancelled with valid
+	bool getCancelled(void);
+	const std::string &getName(void) const;
+	void (*getExecutor(void))(CmdSpec &cmd);
 
-		// nested class --------------------------------------------------------
-		class	CommandBuilder //builds a command
-		{
-			private:
-				std::string							name_;
-				int									registrationStage_;
-				std::map<p_enum, CmdParam*>			params_;
-				std::vector<int(*)(CmdSpec& cmd)>	checkers_;
-				void(*cmExecutor_)(CmdSpec& cmd);
-			public:
-				//constructors & destructor
-				CommandBuilder(void);
-				~CommandBuilder(void);
+	/*                               SETTERS                                  */
+	void setSender(Client &sender);
 
-				//methods
-				CommandBuilder&	Name(const std::string& name);
-				CommandBuilder&	Registration(int stage);
-				CommandBuilder&	Parameters(p_enum type, CmdParam* param);
-				CommandBuilder&	addChecker(int(*ft)(CmdSpec& cmd));
-				CommandBuilder&	CmExecutor(void(*ft)(CmdSpec& cmd));
-				CmdSpec*	build();
-		};
+	/*                               NESTED CLASS                             */
+	class CmdBuilder {
+	  public:
+		CmdBuilder(void);
+		~CmdBuilder(void);
+
+		//methods
+		CmdBuilder &addChecker(int (*ft)(CmdSpec &cmd));
+		CmdBuilder &CmExecutor(void (*ft)(CmdSpec &cmd));
+		CmdBuilder &Name(const std::string &name);
+		CmdBuilder &Parameters(e_param type, CmdParam *param);
+		CmdBuilder &Registration(int stage);
+		CmdSpec *build();
+
+	  private:
+		int registrationStage_;
+		paramMap params_;
+		std::string name_;
+		std::vector< int (*)(CmdSpec &cmd) > checkers_;
+		void (*cmExecutor_)(CmdSpec &cmd);
+	};
+
+  private:
+	/*                               MEMBERS                                  */
+	bool cancelled_;
+	Client *sender_;
+	const std::string name_;
+	int registrationStage_;
+	paramMap params_;
+	std::vector< int (*)(CmdSpec &cmd) > checkers_;
+	void (*cmExecutor_)(CmdSpec &cmd);
+
+	// private constructor
+	CmdSpec(const std::string name, int registrationStage, paramMap params,
+			std::vector< int (*)(CmdSpec &) > checkers,
+			void (*cmExecutor)(CmdSpec &cmd));
 };
 
 #endif
-
