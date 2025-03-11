@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:46:19 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 11:17:40 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:10:58 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 bool nickInUse(std::string newNick, Client *curCli)
 {
-	log(DEBUG, "nickInUse");
+	// log(DEBUG, "nickInUse");
 
 	static Server &server = Server::GetServerInstance(gPort, gPassword);
 
@@ -23,7 +23,7 @@ bool nickInUse(std::string newNick, Client *curCli)
 		 it != server.getAllCli().end(); ++it) {
 		if (newNick == it->second->getNick()) {
 			sendReply(curCli->getFd(),
-					  ERR_NICKNAMEINUSE(it->second->getNick(), newNick));
+					  ERR_NICKNAMEINUSE(it->second->getNick()));
 			return (false);
 		}
 	}
@@ -44,16 +44,16 @@ void handleClientRegistration(const std::string &input, Client *curCli)
 			nickStream >> nick >> nick;
 			if (nickInUse(nick, curCli))
 				curCli->setNick(nick);
-			log(DEBUG, "nick = ", curCli->getNick());
+			// log(DEBUG, "nick = ", curCli->getNick());
 		} else if (line.find("USER") != std::string::npos) {
 			std::string username, mode, unused, realname;
 			std::istringstream userStream(line);
 			userStream >> username >> username >> mode >> unused;
 			std::getline(userStream, realname);
 			curCli->setUsername(username);
-			log(DEBUG, "username = ", username);
+			// log(DEBUG, "username = ", username);
 		}
 	}
 	curCli->setPrefix();
-	log(DEBUG, "getPrefix = ", curCli->getPrefix());
+	// log(DEBUG, "getPrefix = ", curCli->getPrefix());
 }

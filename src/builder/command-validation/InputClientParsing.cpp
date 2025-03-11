@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:23:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 11:19:57 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:31:53 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ stringVec vectorSplit(std::string &s,
 		inputCli.push_back(token);
 		s.erase(0, pos + del.length());
 	}
+	inputCli.push_back(s);
 	return (inputCli);
 }
 
@@ -39,8 +40,10 @@ std::string removeNewlines(const std::string &input)
 	return result;
 }
 
-void inputToken(std::string inputCli, Client *curCli)
+void inputToken(std::string inputCli, Client &sender)
 {
-	inputCli = removeNewlines(inputCli);
-	MessageValidator::assess();
+	(void)inputCli;
+	removeNewlines(sender.getBuffer());
+	
+	MessageValidator::assess(sender);
 }

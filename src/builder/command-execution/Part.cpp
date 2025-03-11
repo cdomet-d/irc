@@ -6,11 +6,12 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:10:58 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "Reply.hpp"
 #include <sstream>
 
 //use the define for the map of client and channel
@@ -27,8 +28,8 @@ bool handlePart(std::string params, Client *curCli) {
 
 	//needMoreParams
 	if (chanName.empty() == true) {
-		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->getNick(), "PART"));
-		log(DEBUG, "PART", "ERR_NEEDMOREPARAMS");
+		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->getNick()));
+		// log(DEBUG, "PART", "ERR_NEEDMOREPARAMS");
 		return (false);
 	}
 
@@ -36,7 +37,7 @@ bool handlePart(std::string params, Client *curCli) {
 	channelMapIt curChan = server.getAllChan().find(chanName);
 	if (curChan== server.getAllChan().end()) {
 		sendReply(curCli->getFd(), ERR_NOSUCHCHANNEL(curCli->getNick(), chanName));
-		log(DEBUG, "PART", "ERR_NOSUCHCHANNEL");
+		// log(DEBUG, "PART", "ERR_NOSUCHCHANNEL");
 		return (false);
 	}
 
@@ -44,7 +45,7 @@ bool handlePart(std::string params, Client *curCli) {
 	clientMapIt senderIt = curChan->second->getCliInChan().find(curCli->getFd());
 	if (senderIt == curChan->second->getCliInChan().end()) {
 		sendReply(curCli->getFd(), ERR_NOTONCHANNEL(curCli->getNick(), chanName));
-		log(DEBUG, "PART", "ERR_NOTONCHANNEL");
+		// log(DEBUG, "PART", "ERR_NOTONCHANNEL");
 		return (false);
 	}
 	

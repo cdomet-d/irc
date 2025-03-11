@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 11:16:23 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:12:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ class Server {
 /*                               PARSING                                  */
 stringVec vectorSplit(std::string &s,
 									   const std::string &del);
-void inputToken(std::string inputCli, Client *curCli);
+void inputToken(std::string inputCli, Client &sender);
 
 /*                               COMMAND                                  */
 //NICK--USER

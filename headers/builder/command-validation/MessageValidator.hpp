@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:04 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/07 14:23:23 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:38:23 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,18 @@ class MessageValidator {
 	MessageValidator &operator=(const MessageValidator &rhs);
 
 	/*                               METHODS                                  */
-	static void assess(const Client &sender);
+	static bool assess(const Client &sender);
 	/*                               GETTERS                                  */
 
 	/*                               SETTERS                                  */
 
   private:
 	/*                               METHODS                                  */
-	static bool hasPrefix(const std::string &mess,
-						  const std::string &cliPrefix);
+	static bool hasPrefix(std::string &mess, const std::string &cliPrefix);
 	static bool hasTrailing(const std::string &mess);
-	static bool lenIsValid(const std::string &mess);
+	static bool lenIsValid(const std::string &mess, const Client &sender);
 	static std::string getTrailing(const std::string &mess);
-	static std::string trimPrefix(const std::string &mess);
+	static std::string trimPrefix(std::string &mess, std::string::iterator del);
 	static stringVec vectorSplit(std::string &s, const std::string &del);
 	static stringVec StructureIsValid(const std::string &mess);
 };

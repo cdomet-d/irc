@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 11:20:40 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:00:51 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ Channel::Channel(std::string name)
 
 Channel::~Channel(void)
 {
-	log(INFO, "Channel deleted:", this->getName());
+	// log(INFO, "Channel deleted:", this->getName());
 }
 
 /* ************************************************************************** */
@@ -35,19 +35,19 @@ Channel::~Channel(void)
 
 bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 {
-	//log(DEBUG, "-----addClientToChan-----");
+	// log(DEBUG, "-----addClientToChan-----");
 
 	std::map< int, Client * > &clients = curChan->getCliInChan();
 	for (clientMapIt it = clients.begin(); it != clients.end(); ++it)
 		if (curCli == it->second) {
-			log(INFO, "Client already in channel");
+			// log(INFO, "Client already in channel");
 			return (false);
 		}
 
 	if (curChan->getCliInChan().empty())
 		curChan->getOpCli().insert(clientPair(curCli->getFd(), curCli));
 	curChan->getCliInChan().insert(clientPair(curCli->getFd(), curCli));
-	curCli->getRPL_JOINChans().push_back(curChan->getName());
+	curCli->getJoinedChans().push_back(curChan->getName());
 
 	for (clientMapIt itCli = curChan->getCliInChan().begin();
 		 itCli != curChan->getCliInChan().end(); ++itCli) {

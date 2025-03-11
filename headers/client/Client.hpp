@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 11:15:24 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:01:26 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,13 @@ class Client {
 	std::string getPrefix() const;
 	std::string getRealName() const;
 	std::string getUsername() const;
-	stringVec &getRPL_JOINChans();
+	stringVec &getJoinedChans();
+	stringVec getCmdParam(std::string buffer);
 	struct epoll_event *getCliEpoll();
 
 	/*                               SETTERS                                  */
 	void setBuffer(std::string buffer);
+	void setCmdParam(std::string buffer);
 	void setCliEpoll(struct epoll_event epoll);
 	void setFd(int fd);
 	void setHostname(std::string hostname);
@@ -73,11 +75,14 @@ class Client {
 
 	// socket infos
 	int cliFd_;
-	std::string buffer_;
 	struct epoll_event cliEpoll_;
 
+	// message transmission
+	std::string buffer_;
+	stringVec cmdParam_;
+
 	// channels
-	stringVec _RPL_JOINChans;
+	stringVec joinedChans_;
 
 	/*                               METHODS                                  */
 	// private constructors

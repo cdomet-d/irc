@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 11:21:30 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:10:58 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ bool Server::servInit()
 	servPoll_.events = POLLIN;
 	if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, servFd_, &servPoll_) == -1)
 		return 0;
-	log(INFO, "IRC server initialized");
+	// log(INFO, "IRC server initialized");
 	return (true);
 }
 
@@ -79,7 +79,7 @@ bool Server::servRun()
 {
 	int nbFds;
 
-	log(INFO, "Loop IRC server started");
+	// log(INFO, "Loop IRC server started");
 	std::cout << "Server listening on port " << port_
 			  << " | IP adress: " << inet_ntoa(servAddr_.sin_addr) << std::endl;
 	while (gSign == false) {
@@ -99,7 +99,7 @@ bool Server::servRun()
 void Server::acceptClient()
 {
 	try {
-		log(INFO, "Accepting new client");
+		// log(INFO, "Accepting new client");
 		Client *newCli = new Client();
 		struct epoll_event cliEpollTemp;
 		socklen_t cliLen = sizeof(newCli->cliAddr_);
@@ -144,7 +144,7 @@ void Server::acceptClient()
 		usedNicks_.push_back(newCli->getNick());
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected";
-		log(INFO, ss.str());
+		// log(INFO, ss.str());
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
 	}
@@ -152,15 +152,13 @@ void Server::acceptClient()
 
 bool Server::handleData(int fd)
 {
-	log(INFO, "-----handleData-----");
+	// log(INFO, "-----handleData-----");
 
 	char tmpBuf[1024];
 	memset(tmpBuf, 0, sizeof(tmpBuf));
 	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, 0);
 	std::string inputCli;
 	inputCli.append(tmpBuf);
-
-	log(DEBUG, "RAW INPUT : ", inputCli);
 
 	Client *curCli = clients_.find(fd)->second;
 	if (bytes <= 0)
@@ -188,7 +186,7 @@ void Server::processBuffer(Client *curCli)
 			curCli->setBuffer("");
 			return;
 		} else {
-			inputToken(curCli->getBuffer(), curCli);
+			inputToken(curCli->getBuffer(), *curCli);
 			curCli->setBuffer("");
 			return;
 		}
