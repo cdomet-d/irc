@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:54:21 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:22:21 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ class Client {
 	std::string getPrefix() const;
 	std::string getRealName() const;
 	std::string getUsername() const;
-	stringVec &getRPL_JOINChans();
+	stringVec &getChans();
 	struct epoll_event *getCliEpoll();
 
 	/*                               SETTERS                                  */

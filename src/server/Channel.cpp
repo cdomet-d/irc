@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:34:33 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:22:21 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 	if (curChan->getCliInChan().empty())
 		curChan->getOpCli().insert(clientPair(curCli->getFd(), curCli));
 	curChan->getCliInChan().insert(clientPair(curCli->getFd(), curCli));
-	curCli->getRPL_JOINChans().push_back(curChan->getName());
+	curCli->getChans().push_back(curChan->getName());
 
 	for (clientMapIt itCli = curChan->getCliInChan().begin();
 		 itCli != curChan->getCliInChan().end(); ++itCli) {

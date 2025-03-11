@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:23:36 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,13 @@ Channel *createChan(const std::string &chanName)
 	return (newChan);
 }
 
+void partAllChans(Client *curCli) {
+
+    //for(stringVec::iterator currChanName = currCli->getChans().begin(); currChanName != currCli->getChans().end(); ++currChanName) {
+        handlePart("#test", curCli);
+    //}
+}
+
 bool handleJoin(std::string params, Client *curCli)
 {
 	log(DEBUG, "-----handleJoin-----");
@@ -43,6 +50,11 @@ bool handleJoin(std::string params, Client *curCli)
 	iss >> chanName;
 	getline(iss, password);
 	log(DEBUG, "channel name = ", chanName);
+
+    if (chanName == "0") {
+        partAllChans(curCli);
+        return (true);
+    }
 
 	Channel *curChan = createChan(chanName);
 	if (curChan->getIsPassMatch() == true)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:24:38 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,17 +201,40 @@ Server &Server::GetServerInstance(int port, std::string password)
 	return (instance);
 }
 
-bool Server::disconnectCli(int fd)
-{
-	clientMapIt it = clients_.find(fd);
-	if (it != clients_.end()) {
-		std::cout << "Client [" << fd << "] disconnected" << std::endl;
-		delete it->second;
-		clients_.erase(fd);
-		close(fd);
-		return true;
-	}
-	return false;
+bool checkOnlyOperator(int fd) {
+    log(DEBUG, "checkOnlyOperator");
+    static Server &server = Server::GetServerInstance(gPort, gPassword);
+
+    clientMap::iterator currCli = server.getAllCli().find(fd);
+    handleJoin("0", currCli->second);
+    for(stringVec::iterator currChanName = currCli->second->getChans().begin(); currChanName != currCli->second->getChans().end(); ++currChanName)
+    {
+        log(DEBUG, "found channel");
+        channelMapIt currChan = server.getAllChan().find(*currChanName);
+        if (!currChan->second->getOpCli().size()) {
+            log(DEBUG, "no op");
+            if (currChan->second->getCliInChan().size() > 1) {
+                log(DEBUG, "more then one client in channel");
+                currChan->second->getOpCli().insert(clientPair(currChan->second->getCliInChan().begin()->second->getFd(), currChan->second->getCliInChan().begin()->second));
+                log(DEBUG, "New OP: ", currChan->second->getCliInChan().begin()->second->getNick());
+                return (true);
+            }
+        }
+    }
+    return (false);
+}
+
+bool Server::disconnectCli(int fd) {
+    clientMapIt it = clients_.find(fd);
+    if (it != clients_.end()) {
+        checkOnlyOperator(fd);
+        std::cout << "Client [" << fd << "] disconnected" << std::endl;
+        delete it->second;
+        clients_.erase(fd);
+        close(fd);
+        return true;
+    }
+    return false;
 }
 
 /* ************************************************************************** */
