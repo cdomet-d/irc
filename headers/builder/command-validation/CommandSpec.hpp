@@ -54,7 +54,7 @@ class	CommandSpec
 		~CommandSpec(void);
 
 		//operators
-		// CommandParam*	
+		CommandParam*	operator[](p_enum type);	
 
 		//method
 		CommandSpec&	process(std::string& buffer, Client& client);

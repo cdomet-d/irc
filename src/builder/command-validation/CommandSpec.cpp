@@ -30,6 +30,17 @@ CommandSpec::~CommandSpec(void)
 	//std::cout << "CommandSpec destructor called" << std::endl;
 }
 
+/*operators*/
+CommandParam*	CommandSpec::operator[](p_enum type)
+{
+	std::map<p_enum, CommandParam*>::iterator	it;
+
+	it = this->params_.find(type);
+	if (it == this->params_.end())
+		return (NULL);
+	return (it->second);
+}
+
 /*methods*/
 CommandSpec&	CommandSpec::process(std::string& buffer, Client& client)
 {
