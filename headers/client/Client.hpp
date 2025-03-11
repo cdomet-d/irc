@@ -44,16 +44,18 @@ class	Client
 	std::string getPrefix() const;
 	std::string getBuffer() const;
 	std::vector< std::string > &getRPL_JOINChans();
+	int	getRegistration(void) const;
 
 	/*                               SETTERS                                  */
-	void setNick(const std::string &newNick);
-	void setUsername(const std::string &username);
-	void setFd(int fd);
-	void setCliEpoll(struct epoll_event epoll);
-	void setIP(std::string ip);
-	void setHostname(std::string hostname);
-	void setPrefix();
-	void setBuffer(std::string buffer);
+	void	setNick(const std::string &newNick);
+	void	setUsername(const std::string &username);
+	void	setFd(int fd);
+	void	setCliEpoll(struct epoll_event epoll);
+	void	setIP(std::string ip);
+	void	setHostname(std::string hostname);
+	void	setPrefix();
+	void	setBuffer(std::string buffer);
+	void	setRegistration(int stage);
 
 	struct sockaddr_in _cliAddress;
 
@@ -67,6 +69,7 @@ class	Client
 	std::string _IP;
 	std::string _hostname;
 	std::string _prefix;
+	int			registration_;
 
 	//attributes
 	//int	registration;

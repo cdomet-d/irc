@@ -22,7 +22,7 @@ Client::Client(const Client &rhs)
 {
 	static_cast< void >(rhs);
 }
-Client::Client(void) : _name(""), _nick(""), _pass(""), _realName("") {}
+Client::Client(void) : _name(""), _nick(""), _pass(""), _realName(""), registration(0) {}
 Client &Client::operator=(const Client &rhs)
 {
 	static_cast< void >(rhs);
@@ -81,6 +81,11 @@ std::string Client::getBuffer() const
 	return (_buffer);
 }
 
+int	Client::getRegistration(void) const
+{
+	return (this->registration_);
+}
+
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
@@ -119,4 +124,9 @@ void Client::setPrefix()
 void Client::setBuffer(std::string buffer)
 {
 	_buffer = buffer;
+}
+
+void	Client::setRegistration(int stage)
+{
+	this->registration_ = stage;
 }
