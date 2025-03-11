@@ -24,10 +24,12 @@ class CmdManager {
 	~CmdManager(void);
 
 	/*                               METHODS                                  */
-	CmdSpec &getCmd(const std::string &cmName);
 	void executeCm(CmdSpec &cm);
 	void generateCmds();
 	void log(CmdSpec *cm);
+
+	/*                               GETTERS                                  */
+	CmdSpec &getCmd(const std::string &cmName);
 
   private:
 	/*                               MEMBERS                                  */

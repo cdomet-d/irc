@@ -26,6 +26,7 @@ class CmdParam {
 	std::string &operator[](unsigned int i);
 
 	/*                               GETTERS                                  */
+	bool getOpt(void) const;
 	size_t getParamSize(void) const;
 	std::vector< std::string > &getParam(void); //TODO: add const ?
 

@@ -50,10 +50,9 @@ class CmdSpec {
 	void clean(void);
 
 	/*                               GETTERS                                  */
-	//TODO: replace cancelled with valid
-	bool getCancelled(void);
+	bool getValid(void) const;
 	const std::string &getName(void) const;
-	void (*getExecutor(void))(CmdSpec &cmd);
+	void (*getExecutor(void) const)(CmdSpec &cmd);
 
 	/*                               SETTERS                                  */
 	void setSender(Client &sender);
@@ -82,7 +81,7 @@ class CmdSpec {
 
   private:
 	/*                               MEMBERS                                  */
-	bool cancelled_;
+	bool valid_;
 	Client *sender_;
 	const std::string name_;
 	int registrationStage_;

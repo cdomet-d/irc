@@ -23,7 +23,7 @@ CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
 	params_ = params;
 	checkers_ = checkers;
 	cmExecutor_ = cmExecutor;
-	cancelled_ = false;
+	valid_ = true;
 	sender_ = NULL;
 }
 
@@ -52,7 +52,7 @@ CmdSpec &CmdSpec::process(std::vector< std::string > &buffer, Client &client) {
 
 	// if (client.getRegistration() != registrationStage_)
 	// {
-	// 	cancelled_ = true;
+	// 	valid_ = false;
 	// 	return (*this);
 	// }
 	// for (size_t i = 0; i < params_.size(); i++)
@@ -92,11 +92,11 @@ const std::string &CmdSpec::getName(void) const {
 	return (name_);
 }
 
-bool CmdSpec::getCancelled(void) {
-	return (cancelled_);
+bool CmdSpec::getValid(void) const {
+	return (valid_);
 }
 
-void (*CmdSpec::getExecutor(void))(CmdSpec &cmd) {
+void (*CmdSpec::getExecutor(void) const)(CmdSpec &cmd) {
 	return (cmExecutor_);
 }
 

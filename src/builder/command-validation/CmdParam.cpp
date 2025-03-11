@@ -23,18 +23,23 @@ CmdParam::~CmdParam(void) {}
 
 std::string &CmdParam::operator[](unsigned int i) {
 	//TODO: add verif of index
-	return (this->param_[i]);
+	return (param_[i]);
 }
 
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
 std::vector< std::string > &CmdParam::getParam(void) {
-	return (this->param_);
+	return (param_);
 }
 
 size_t CmdParam::getParamSize(void) const {
-	return (this->param_.size());
+	return (param_.size());
+}
+
+bool CmdParam::getOpt(void) const
+{
+	return (opt_);
 }
 
 /* ************************************************************************** */
@@ -46,15 +51,16 @@ CmdParam::ParamBuilder::~ParamBuilder(void) {}
 
 /* methods */
 CmdParam::ParamBuilder &CmdParam::ParamBuilder::isOpt(bool opt) {
-	this->opt_ = opt;
+	opt_ = opt;
 	return (*this);
 }
 
 CmdParam::ParamBuilder &
 CmdParam::ParamBuilder::setDelim(const std::string &delim) {
-	this->delim_ = delim;
+	delim_ = delim;
+	return (*this);
 }
 
 CmdParam *CmdParam::ParamBuilder::build() {
-	return (new CmdParam(this->param_, this->opt_, this->delim_));
+	return (new CmdParam(param_, opt_, delim_));
 }

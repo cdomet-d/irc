@@ -22,18 +22,8 @@ CmdManager::~CmdManager(void) {}
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-CmdSpec &CmdManager::getCmd(const std::string &cmName) {
-	std::map< std::string, CmdSpec * >::iterator it;
-
-	it = this->commandList.find(cmName);
-	//TODO: add secu if command not found
-	// if (it == commandList.end())
-	// 	return ;
-	return (*it->second);
-}
-
 void CmdManager::executeCm(CmdSpec &cm) {
-	if (!cm.getCancelled())
+	if (cm.getValid())
 		cm.getExecutor()(cm);
 	cm.clean();
 }
@@ -162,5 +152,18 @@ void CmdManager::generateCmds() {
 }
 
 void CmdManager::log(CmdSpec *cm) {
-	this->commandList[cm->getName()] = cm;
+	commandList[cm->getName()] = cm;
+}
+
+/* ************************************************************************** */
+/*                               GETTERS                                      */
+/* ************************************************************************** */
+CmdSpec &CmdManager::getCmd(const std::string &cmName) {
+	std::map< std::string, CmdSpec * >::iterator it;
+
+	it = commandList.find(cmName);
+	//TODO: add secu if command not found
+	// if (it == commandList.end())
+	// 	return ;
+	return (*it->second);
 }
