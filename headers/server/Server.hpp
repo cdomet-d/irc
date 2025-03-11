@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 16:24:47 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,8 @@
 #include <arpa/inet.h>
 #include <cstring>
 #include <iostream>
-#include <map>
 #include <netinet/in.h>
 #include <poll.h>
-#include <string>
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>

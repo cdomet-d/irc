@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
+#    By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/10 11:00:40 by aljulien         ###   ########.fr        #
+#    Updated: 2025/03/11 16:25:18 by csweetin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -116,7 +116,7 @@ $(DBDIR)%.o: %.cpp
 	@echo "$(CC) $(DFLAGS) $@"
 	@$(CC) $(DFLAGS) $(CXXFLAGS) -o $@ -c $<
 
--include $(DEPS)
+-include $(DDEPS)
 
 RM:= rm -rf
 
