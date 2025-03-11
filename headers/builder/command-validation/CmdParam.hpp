@@ -21,12 +21,13 @@ class	CmdParam
 {
 	private:
 		std::vector<std::string>	param_;
-		bool						opt_;
-		void(*inputTokenizer_)(std::string& buffer, CmdParam& param);
+		const bool					opt_;
+		const std::string			delim_;
 		
 		//constructor
-		CmdParam(std::vector<std::string> param, bool opt, \
-			void(*inputTokenizer)(std::string& buffer, CmdParam& param));
+		CmdParam(std::vector<std::string>& param, const bool opt, \
+					const std::string& delim);
+
 	public:
 		//destructor
 		~CmdParam(void);
@@ -36,7 +37,7 @@ class	CmdParam
 
 		//methods
 		std::vector<std::string>&	getParam(void);
-		size_t						getParamSize(void);
+		size_t						getParamSize(void) const;
 
 		//--------------------nested class----------------------
 		class	ParamBuilder
@@ -44,7 +45,7 @@ class	CmdParam
 			private:
 				std::vector<std::string>	param_;
 				bool						opt_;
-				void(*inputTokenizer_)(std::string& buffer, CmdParam& param);
+				std::string					delim_;
 			public:
 				//constructors & destructor
 				ParamBuilder(void);
@@ -52,13 +53,9 @@ class	CmdParam
 
 				//methods
 				ParamBuilder&	isOpt(bool opt);
-				ParamBuilder&	InputTokenizer(void(*ft)(std::string& buffer, CmdParam& param));
+				ParamBuilder&	setDelim(const std::string &delim);
 				CmdParam*	build();
 		};
 };
-
-void	splitOnComa(std::string& buffer, CmdParam& param);
-// void	splitJoin(std::string& buffer, CmdParam& param);
-void	splitOnSpace(std::string& buffer, CmdParam& param);
 
 #endif

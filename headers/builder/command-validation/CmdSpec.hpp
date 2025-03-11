@@ -38,7 +38,7 @@ typedef enum
 class	CmdSpec
 {
 	private:
-		std::string							name_;
+		const std::string					name_;
 		int									registrationStage_;
 		std::map<p_enum, CmdParam*>			params_;
 		std::vector<int(*)(CmdSpec&)>		checkers_;
@@ -47,7 +47,7 @@ class	CmdSpec
 		Client*								sender_;
 		
 		//constructor
-		CmdSpec(std::string name, int registrationStage, std::map<p_enum, CmdParam*> params, \
+		CmdSpec(const std::string name, int registrationStage, std::map<p_enum, CmdParam*> params, \
 					std::vector<int(*)(CmdSpec&)> checkers, void(*cmExecutor)(CmdSpec& cmd));
 	public:
 		//destructor

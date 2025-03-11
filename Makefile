@@ -62,7 +62,6 @@ BUILD_VAL_SRC:=			InputClientParsing.cpp \
 						CmdManager.cpp \
 						CmdSpec.cpp \
 						CmdParam.cpp \
-						InputTokenizer.cpp \
 						Checkers.cpp \
 
 BUILD_MAN_SRC:=	\

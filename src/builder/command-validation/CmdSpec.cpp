@@ -13,10 +13,10 @@
 #include "CmdSpec.hpp"
 
 /* constructor & destructor */
-CmdSpec::CmdSpec(std::string name, int registrationStage, std::map<p_enum, CmdParam*> params, \
+CmdSpec::CmdSpec(const std::string name, int registrationStage, std::map<p_enum, CmdParam*> params, \
 						std::vector<int(*)(CmdSpec&)> checkers, void(*cmExecutor)(CmdSpec& cmd))
+				: name_(name)
 {
-	this->name_ = name;
 	this->registrationStage_ = registrationStage;
 	this->params_ = params;
 	this->checkers_ = checkers;
