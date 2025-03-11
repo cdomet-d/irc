@@ -399,7 +399,9 @@ command issuer client object
 (3) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
 					if not display ERR_CHANOPRIVSNEEDED
 
-(4) verifier que chaque mode a bien les arguments qu'il lui faut
+(4) validMode() -> verifier que le mode existe sinon ERR_UNKNOWNMODE
+
+(5) verifier que chaque mode a bien les arguments qu'il lui faut sinon ERR_INVALIDMODEPARAM
 pour -+o verifier que le target existe et qu'il soit sur le channel
 pour -+i si ce mode a deja ete active et que le client refait un +i, ne rien faire
 pour -+k si aucune key n'est donné ne rien faire que ce soit pour le set ou remove car pour remove il faut donner la clé qui a ete set

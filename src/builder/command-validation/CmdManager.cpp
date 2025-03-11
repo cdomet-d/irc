@@ -59,7 +59,7 @@ void CmdManager::generateCmds() {
 			// .CmExecutor()
 			.build());
 
-	//meme si un channel est faut on fait ceux qui sont juste
+	//meme si un channel est faux on fait ceux qui sont juste
 	log(CmdSpec::CmdBuilder()
 			.Name("JOIN")
 			.Registration(3)
@@ -108,6 +108,7 @@ void CmdManager::generateCmds() {
 			.addChecker(validChan)
 			.addChecker(hasChanPriv)
 			.addChecker(validMode)
+			// .addChecker(validArg)
 			// .CmExecutor()
 			.build());
 
@@ -164,6 +165,7 @@ CmdSpec &CmdManager::getCmd(const std::string &cmName) {
 	it = commandList.find(cmName);
 	//TODO: add secu if command not found
 	// if (it == commandList.end())
+	// ERR_UNKNOWNCOMMAND
 	// 	return ;
 	return (*it->second);
 }

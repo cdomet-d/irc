@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ParamCheckers.cpp                                  :+:      :+:    :+:   */
+/*   Checkers.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/03 17:18:22 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:51:03 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	joinChanRequest(CmdSpec& cmd)
 	(void)cmd;
 	//supprimer chaque channel faux, ainsi que toutes les keys
 	//pour qu'il reste que les channel valide a join pour l'exec
+	//s'ils ont tous ete supprimes mettre valid a false
 	return (0);
 }
 
