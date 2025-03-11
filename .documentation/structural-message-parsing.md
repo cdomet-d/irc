@@ -57,7 +57,7 @@ bool hasTrailing(const std::string &message);
 int lenIsValid(const std::string &message);
 std::string extractTrailing(const std::message &message);
 std::string trimPrefix(const std::string &message);
-std::vector< std::string > vectorSplit(std::string &s, const std::string &delimiter);
+stringVec vectorSplit(std::string &s, const std::string &del);
 std::vector<string> messageStructureIsValid(const std::string &message);
 ```
 

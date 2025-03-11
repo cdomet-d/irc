@@ -3,73 +3,54 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 14:18:05 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <sstream>
 
-std::vector< std::string > VectorSplit(std::string &s,
-									   const std::string &delimiter)
+Channel *createChan(const std::string &chanName)
 {
-	std::vector< std::string > inputCli;
-	size_t pos = 0;
-	std::string token;
+	//log(DEBUG, "-----createChan-----");
+	static Server &server = Server::GetServerInstance(gPort, gPassword);
 
-	while ((pos = s.find(delimiter)) != std::string::npos) {
-		token = s.substr(0, pos);
-		inputCli.push_back(token);
-		s.erase(0, pos + delimiter.length());
-	}
-	inputCli.push_back(s);
-
-	return (inputCli);
-}
-
-Channel *createChannel(const std::string &channelName)
-{
-	//log(DEBUG, "-----createChannel-----");
-	static Server &server = Server::GetInstanceServer(gPort, gPassword);
-
-	std::map< std::string, Channel * >::iterator it =
-		server.getAllCha().find(channelName);
-	if (it != server.getAllCha().end()) {
+	channelMapIt it = server.getAllChan().find(chanName);
+	if (it != server.getAllChan().end()) {
 		return (it->second);
 	}
 
-	Channel *newChannel = new Channel(channelName);
-	newChannel->setName(channelName);
-	newChannel->setModes();
-	server.getAllCha().insert(
-		std::pair< std::string, Channel * >(newChannel->getName(), newChannel));
-	log(INFO, "Channel created: ", channelName);
-	return (newChannel);
+	Channel *newChan = new Channel(chanName);
+	newChan->setName(chanName);
+	newChan->setModes();
+	server.getAllChan().insert(
+		std::pair< std::string, Channel * >(newChan->getName(), newChan));
+	log(INFO, "Channel created: ", chanName);
+	return (newChan);
 }
 
-bool handleJoin(std::string params, Client *currentCli)
+bool handleJoin(std::string params, Client *curCli)
 {
 	log(DEBUG, "-----handleJoin-----");
 
 	std::istringstream iss(params);
-	std::string channelName;
+	std::string chanName;
 	std::string password;
 
-	iss >> channelName;
+	iss >> chanName;
 	getline(iss, password);
-	log(DEBUG, "channel name = ", channelName);
+	log(DEBUG, "channel name = ", chanName);
 
-	Channel *curChan = createChannel(channelName);
-	if (curChan->getIsPassword() == true)
+	Channel *curChan = createChan(chanName);
+	if (curChan->getIsPassMatch() == true)
 		if (curChan->getPassword() != password) {
-			sendReply(currentCli->getFd(),
-					  ERR_BADCHANNELKEY(currentCli->getNick(),
-										curChan->getName()));
+			sendReply(curCli->getFd(),
+					  ERR_BADCHANNELKEY(curCli->getNick(), curChan->getName()));
 			return (false);
 		}
-	curChan->addClientChannel(curChan, currentCli);
+	curChan->addClientToChan(curChan, curCli);
 	return (false);
 }
