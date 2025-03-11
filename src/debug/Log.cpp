@@ -6,11 +6,10 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:56:23 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 16:41:35 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:20:20 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "Log.h"
 #include "Server.hpp"
 #include <ctime>
 #include <iostream>

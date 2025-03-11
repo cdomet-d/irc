@@ -6,24 +6,24 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:46:19 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 16:38:51 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:17:40 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <sstream>
 
-bool nickInUse(std::string newNickname, Client *curCli)
+bool nickInUse(std::string newNick, Client *curCli)
 {
 	log(DEBUG, "nickInUse");
 
 	static Server &server = Server::GetServerInstance(gPort, gPassword);
 
-	for (std::map< int, Client * >::iterator it = server.getAllCli().begin();
+	for (clientMapIt it = server.getAllCli().begin();
 		 it != server.getAllCli().end(); ++it) {
-		if (newNickname == it->second->getNick()) {
+		if (newNick == it->second->getNick()) {
 			sendReply(curCli->getFd(),
-					  ERR_NICKNAMEINUSE(it->second->getNick(), newNickname));
+					  ERR_NICKNAMEINUSE(it->second->getNick(), newNick));
 			return (false);
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 16:36:08 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:16:23 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,29 +58,29 @@ class Server {
 	bool servInit();
 	bool servRun();
 	void acceptClient();
-	void processBuffer(Client *currentCli);
+	void processBuffer(Client *curCli);
 
 	/*                               GETTERS                                  */
 	clientMap &getAllCli();
-	channelMap &getAllCha();
+	channelMap &getAllChan();
 
   private:
 	/*                               METHODS                                  */
-	bool disconnectClient(int fd);
+	bool disconnectCli(int fd);
 
 	// attributes
-	const int _port;
-	const std::string _password;
+	const int port_;
+	const std::string pass_;
 
-	int _epollFd;
-	int _servFd;
-	struct epoll_event _events[MAX_EVENTS];
-	struct epoll_event _servPoll;
-	struct sockaddr_in _servAddress;
+	int epollFd_;
+	int servFd_;
+	struct epoll_event events_[MAX_EVENTS];
+	struct epoll_event servPoll_;
+	struct sockaddr_in servAddr_;
 
-	clientMap _clients;
-	channelMap _channels;
-	std::vector< std::string > _usedNicks;
+	clientMap clients_;
+	channelMap channels_;
+	stringVec usedNicks_;
 
 	// private constructor
 	Server(void);
@@ -88,6 +88,8 @@ class Server {
 };
 
 /*                               PARSING                                  */
+stringVec vectorSplit(std::string &s,
+									   const std::string &del);
 void inputToken(std::string inputCli, Client *curCli);
 
 /*                               COMMAND                                  */
@@ -95,16 +97,14 @@ void inputToken(std::string inputCli, Client *curCli);
 void handleClientRegistration(const std::string &input, Client *curCli);
 
 //JOIN
-Channel *createChannel(const std::string &channelName);
 bool handleJoin(std::string params, Client *curCli);
-
+Channel *createChan(const std::string &chanName);
 //TOPIC
 bool handleTopic(std::string params, Client *curCli);
-
 //PRIVMSG
-bool handlePrivsmg(std::string params, Client *currentCli);
+bool handlePrivsmg(std::string params, Client *curCli);
 //PART
-bool handlePart(std::string params, Client *currentCli);
+bool handlePart(std::string params, Client *curCli);
 //MODE
 bool handleMode(std::string params, Client *currentlCli);
 

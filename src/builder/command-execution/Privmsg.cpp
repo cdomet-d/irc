@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 16:39:40 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:18:03 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,13 @@ bool handlePrivsmg(std::string params, Client *curCli)
 	static Server &server = Server::GetServerInstance(gPort, gPassword);
 
 	std::istringstream iss(params);
-	std::string channelName;
+	std::string chanName;
 	std::string message;
 
-	iss >> channelName;
+	iss >> chanName;
 	std::getline(iss, message);
 
-	//check if channel exist
-	channelMapIt curChan = server.getAllCha().find(channelName);
+	channelMapIt curChan = server.getAllChan().find(chanName);
 	if (curChan->second == NULL) {
 		log(DEBUG, "did not found channel");
 		return (false);
@@ -39,8 +38,7 @@ bool handlePrivsmg(std::string params, Client *curCli)
 		curChan->second->getCliInChan().find(curCli->getFd());
 	if (senderIt == curChan->second->getCliInChan().end())
 		return (false);
-
-	//send message to everyone but the sender itself
+	Client *sender = senderIt->second;
 	for (clientMapIt itCli = curChan->second->getCliInChan().begin();
 		 itCli != curChan->second->getCliInChan().end(); ++itCli) {
 		if (itCli->first != curCli->getFd())

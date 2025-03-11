@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 16:36:59 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:16:44 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,12 @@ int main(int ac, char **av)
 	server.servInit();
 	server.servRun();
 
-	for (channelMapIt it = server.getAllCha().begin();
-		 it != server.getAllCha().end(); ++it) {
+	for (channelMapIt it =
+			 server.getAllChan().begin();
+		 it != server.getAllChan().end(); ++it) {
 		std::cout << "Channel: " << it->second->getName() << std::endl;
-		for (clientMapIt itCli = it->second->getCliInChan().begin();
+		for (clientMapIt itCli =
+				 it->second->getCliInChan().begin();
 			 itCli != it->second->getCliInChan().end(); ++itCli) {
 			std::cout << "Client: " << itCli->second->getNick() << std::endl;
 		}
