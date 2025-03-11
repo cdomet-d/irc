@@ -3,34 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   NickUser.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:46:19 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 11:22:33 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/11 10:35:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <sstream>
 
-bool nickInUse(std::string newNickname, Client *currentCli)
+bool nickInUse(std::string newNick, Client *curCli)
 {
 	log(DEBUG, "nickInUse");
 
-	static Server &server = Server::GetInstanceServer(gPort, gPassword);
+	static Server &server = Server::GetServerInstance(gPort, gPassword);
 
-	for (std::map< int, Client * >::iterator it = server.getAllCli().begin();
+	for (clientMapIt it = server.getAllCli().begin();
 		 it != server.getAllCli().end(); ++it) {
-		if (newNickname == it->second->getNick()) {
-			sendReply(currentCli->getFd(),
-					  ERR_NICKNAMEINUSE(it->second->getNick(), newNickname));
+		if (newNick == it->second->getNick()) {
+			sendReply(curCli->getFd(),
+					  ERR_NICKNAMEINUSE(it->second->getNick(), newNick));
 			return (false);
 		}
 	}
 	return (true);
 }
 
-void handleClientRegistration(const std::string &input, Client *currentCli)
+void handleClientRegistration(const std::string &input, Client *curCli)
 {
 	std::istringstream iss(input);
 	std::string line;
@@ -42,18 +42,18 @@ void handleClientRegistration(const std::string &input, Client *currentCli)
 			std::string nick;
 			std::istringstream nickStream(line);
 			nickStream >> nick >> nick;
-			if (nickInUse(nick, currentCli))
-				currentCli->setNick(nick);
-			log(DEBUG, "nick = ", currentCli->getNick());
+			if (nickInUse(nick, curCli))
+				curCli->setNick(nick);
+			log(DEBUG, "nick = ", curCli->getNick());
 		} else if (line.find("USER") != std::string::npos) {
 			std::string username, mode, unused, realname;
 			std::istringstream userStream(line);
 			userStream >> username >> username >> mode >> unused;
 			std::getline(userStream, realname);
-			currentCli->setUsername(username);
+			curCli->setUsername(username);
 			log(DEBUG, "username = ", username);
 		}
 	}
-	currentCli->setPrefix();
-	log(DEBUG, "getPrefix = ", currentCli->getPrefix());
+	curCli->setPrefix();
+	log(DEBUG, "getPrefix = ", curCli->getPrefix());
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 11:38:14 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/11 10:54:21 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ Client::Client(const Client &rhs)
 {
 	static_cast< void >(rhs);
 }
-Client::Client(void) : _name(""), _nick(""), _pass(""), _realName("") {}
+Client::Client(void) : name_(""), nick_(""), pass_(""), realName_("") {}
 Client &Client::operator=(const Client &rhs)
 {
 	static_cast< void >(rhs);
@@ -38,85 +38,85 @@ Client &Client::operator=(const Client &rhs)
 /* ************************************************************************** */
 int Client::getFd() const
 {
-	return _cliFd;
+	return cliFd_;
 }
 std::string Client::getName() const
 {
-	return _name;
+	return name_;
 }
 std::string Client::getNick() const
 {
-	return _nick;
+	return nick_;
 }
 std::string Client::getUsername() const
 {
-	return _username;
+	return username_;
 };
 std::string Client::getRealName() const
 {
-	return _realName;
-}
-struct epoll_event *Client::getCliEpoll()
-{
-	return (&_cliEpoll);
+	return realName_;
 }
 std::string Client::getIP() const
 {
-	return (_IP);
+	return (ip_);
 }
 std::string Client::getHostname() const
 {
-	return (_hostname);
+	return (hostname_);
 }
 std::string Client::getPrefix() const
 {
-	return (_prefix);
+	return (prefix_);
 }
-std::vector< std::string > &Client::getRPL_JOINChans()
+stringVec &Client::getRPL_JOINChans()
 {
 	return (_RPL_JOINChans);
 }
 std::string Client::getBuffer() const
 {
-	return (_buffer);
+	return (buffer_);
 }
 
+struct epoll_event *Client::getCliEpoll()
+{
+	return (&cliEpoll_);
+}
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
 void Client::setNick(const std::string &newNick)
 {
-	_nick = newNick;
+	nick_ = newNick;
 }
 void Client::setUsername(const std::string &username)
 {
-	_username = username;
+	username_ = username;
 }
 void Client::setFd(int fd)
 {
-	_cliFd = fd;
+	cliFd_ = fd;
 }
 void Client::setCliEpoll(struct epoll_event epoll)
 {
-	_cliEpoll.events = epoll.events;
-	_cliEpoll.data.fd = epoll.data.fd;
+	cliEpoll_.events = epoll.events;
+	cliEpoll_.data.fd = epoll.data.fd;
 }
 void Client::setIP(std::string ip)
 {
-	_IP = ip;
+	ip_ = ip;
 }
 void Client::setHostname(std::string hostname)
 {
 	if (!hostname.empty())
-		_hostname = hostname;
+		hostname_ = hostname;
 	else
-		_hostname = "NULL";
+		hostname_ = "NULL";
 }
 void Client::setPrefix()
 {
-	_prefix = _nick + "!" + _username + "@" + _hostname;
+	prefix_ = nick_ + "!" + username_ + "@" + hostname_;
 }
 void Client::setBuffer(std::string buffer)
 {
-	_buffer = buffer;
+	buffer_ = buffer;
 }

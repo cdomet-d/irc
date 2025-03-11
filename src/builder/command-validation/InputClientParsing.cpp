@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   InputClientParsing.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:23:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 12:21:37 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/11 10:37:33 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,21 @@ std::string removeNewlines(const std::string &input)
 	return result;
 }
 
-std::vector< std::string > vectorSplit(std::string &s,
-									   const std::string &delimiter) {
-	std::vector< std::string > inputCli;
+stringVec vectorSplit(std::string &s,
+									   const std::string &del) {
+	stringVec inputCli;
 	size_t pos = 0;
 	std::string token;
 
-	while ((pos = s.find(delimiter)) != std::string::npos) {
+	while ((pos = s.find(del)) != std::string::npos) {
 		token = s.substr(0, pos);
 		inputCli.push_back(token);
-		s.erase(0, pos + delimiter.length());
+		s.erase(0, pos + del.length());
 	}
 	return (inputCli);
 }
 
-void inputToken(std::string inputCli, Client *currentCli)
+void inputToken(std::string inputCli, Client *curCli)
 {
 	inputCli = removeNewlines(inputCli);
 	std::istringstream iss(inputCli);
@@ -57,23 +57,23 @@ void inputToken(std::string inputCli, Client *currentCli)
 	log(DEBUG, "params =\t", params);
 
 	if (command == "JOIN") {
-		handleJoin(params, currentCli);
+		handleJoin(params, curCli);
 		return;
 	}
 	if (command == "PRIVMSG") {
-		handlePrivsmg(params, currentCli);
+		handlePrivsmg(params, curCli);
 		return;
 	}
 	if (command == "TOPIC") {
-		handleTopic(params, currentCli);
+		handleTopic(params, curCli);
 		return ;
 	}
 	if (command == "MODE") {
-		handleMode(params, currentCli);
+		handleMode(params, curCli);
 		return ;
 	}
 	if (command == "PART") {
-		handlePart(params, currentCli);
+		handlePart(params, curCli);
 		return ;
 	}
 
