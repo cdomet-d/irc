@@ -38,20 +38,23 @@ typedef enum
 class	CommandSpec
 {
 	private:
-		std::string										name_;
-		int												registrationStage_;
-		std::map<p_enum, std::vector<CommandParam*> >	params_;
-		std::vector<void(*)(CommandSpec&)>				checkers_;
+		std::string								name_;
+		int										registrationStage_;
+		std::map<p_enum, CommandParam*>			params_;
+		std::vector<void(*)(CommandSpec&)>		checkers_;
 		void(*cmExecutor_)(CommandSpec& cmd);
-		bool											cancelled_;
-		Client*											sender_;
+		bool									cancelled_;
+		Client*									sender_;
 		
 		//constructor
-		CommandSpec(std::string name, int registrationStage, std::map<p_enum, std::vector<CommandParam*> > params, \
+		CommandSpec(std::string name, int registrationStage, std::map<p_enum, CommandParam*> params, \
 					std::vector<void(*)(CommandSpec&)> checkers, void(*cmExecutor)(CommandSpec& cmd));
 	public:
 		//destructor
 		~CommandSpec(void);
+
+		//operators
+		// CommandParam*	
 
 		//method
 		CommandSpec&	process(std::string& buffer, Client& client);
@@ -70,7 +73,7 @@ class	CommandSpec
 			private:
 				std::string										name_;
 				int												registrationStage_;
-				std::map<p_enum, std::vector<CommandParam*> >	params_;
+				std::map<p_enum, CommandParam*>	params_;
 				std::vector<void(*)(CommandSpec& cmd)>			checkers_;
 				void(*cmExecutor_)(CommandSpec& cmd);
 			public:
