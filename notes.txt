@@ -77,7 +77,7 @@ handleJoin :
 	sends a responds to the client
 
 PRIVMSG :
-:senderNick!senderUser@senderHostname PRIVMSG #channelName :Message content here\r\n
+:senderNick!senderUser@senderHostname PRIVMSG #chanName :Message content here\r\n
 
 add : we check if a nickname is available before setting it.
 		Files for organizing the commands and better clarity

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Log.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:36:08 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/10 11:33:29 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/11 09:48:43 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Colors.hpp"
+#include "typedef.hpp"
 #include <ctime>
 #include <iostream>
 #include <string>
