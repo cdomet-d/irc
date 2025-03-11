@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 13:57:41 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,98 +14,96 @@
 #include "Server.hpp"
 #include <sstream>
 
-bool handleTopic(std::string params, int fd) {
-	log(DEBUG, "-----handleTopic-----");
+void checkTopic(Channel *curChan, Client *curCli)
+{
+	if (curChan->getTopic().empty() == true) {
+		sendReply(curCli->getFd(), RPL_NOTOPIC(curCli->getNick(),
+												   curChan->getName()));
+		return;
+	}
+	sendReply(curCli->getFd(),
+			  RPL_TOPIC(curCli->getNick(), curChan->getName(),
+						curChan->getTopic()));
+	return;
+}
 
-	static Server &server = Server::GetInstanceServer(gPort, gPassword);
+void clearTopic(Channel *curChan, Client *curCli)
+{
+	curChan->setTopic("");
+	for (clientMapIt it =
+			 curChan->getCliInChan().begin();
+		 it != curChan->getCliInChan().end(); ++it) {
+		sendReply(it->second->getFd(), RPL_NOTOPIC(curCli->getNick(),
+												   curChan->getName()));
+	}
+}
+
+void changeTopic(Channel *curChan, Client *curCli, std::string topic)
+{
+	topic.erase(1, 0); //remove the ':'
+	curChan->getTopic().clear();
+	curChan->setTopic(topic);
+	for (clientMapIt it =
+			 curChan->getCliInChan().begin();
+		 it != curChan->getCliInChan().end(); ++it) {
+		sendReply(it->second->getFd(),
+				  RPL_TOPICCHANGED(curCli->getPrefix(),
+								   curChan->getName(),
+								   curChan->getTopic()));
+	}
+}
+
+bool handleTopic(std::string params, Client *curCli)
+{
+	static Server &server = Server::GetServerInstance(gPort, gPassword);
 
 	std::istringstream iss(params);
-	std::string channelName;
+	std::string chanName;
 	std::string topic;
-
-	iss >> channelName;
+	iss >> chanName;
 	std::getline(iss, topic);
 
-	std::map< std::string, Channel * >::iterator curChan =
-		server.getAllCha().find(channelName);
-	if (curChan == server.getAllCha().end()) {
-		log(ERROR, "Channel not found: " + channelName);
-		return (false);
-	}
-	log(DEBUG, "Channel found");
+	channelMapIt curChan =
+		server.getAllChan().find(chanName);
 
 	//does the channel exists
-	if (curChan->second == NULL) {
-		sendReply(fd, ERR_NOSUCHCHANNEL(server.getAllCli()[fd]->getNick(),
-										curChan->second->getName()));
+	if (curChan == server.getAllChan().end()) {
+		sendReply(curCli->getFd(),
+				  ERR_NOSUCHCHANNEL(
+					  server.getAllCli()[curCli->getFd()]->getNick(),
+					  chanName));
 		return (false);
 	}
 
-	clientMapIt whatCli =
-		curChan->second->getCliInChannel().find(fd);
 	//is the client on the channel
-	if (whatCli == curChan->second->getCliInChannel().end()) {
-		sendReply(fd, ERR_NOTONCHANNEL(whatCli->second->getNick(),
-									   curChan->second->getName()));
+	clientMapIt whatCli =
+		curChan->second->getCliInChan().find(curCli->getFd());
+	if (whatCli == curChan->second->getCliInChan().end()) {
+		sendReply(
+			curCli->getFd(),
+			ERR_NOTONCHANNEL(server.getAllCli()[curCli->getFd()]->getNick(),
+							 curChan->second->getName()));
 		return (false);
 	}
-	log(DEBUG, "Client in channel found");
 
-	//if no params (= topic is empty) after channelname, client only checks the topic
+	//if no params (= topic is empty) after chanName, client only checks the topic
 	if (topic.empty() == true) {
-		if (curChan->second->getTopic().empty() == true) {
-			log(DEBUG, "No topic found : ",
-				RPL_NOTOPIC(whatCli->second->getNick(),
-							curChan->second->getName()));
-			sendReply(fd, RPL_NOTOPIC(whatCli->second->getNick(),
-									  curChan->second->getName()));
-			return (true);
-		}
-		log(DEBUG, "Topic found : ",
-			RPL_TOPIC(whatCli->second->getNick(), curChan->second->getName(),
-					  curChan->second->getTopic()));
-		sendReply(fd, RPL_TOPIC(whatCli->second->getNick(),
-								curChan->second->getName(),
-								curChan->second->getTopic()));
+		checkTopic(curChan->second, curCli);
 		return (true);
 	}
 
 	//if topic is = ":", the client clears the topic for the channel
 	//sends the notification to all clients of the channel
-	if (topic == ":") {
-		for (clientMapIt it =
-				 curChan->second->getCliInChannel().begin();
-			 it != curChan->second->getCliInChannel().end(); ++it) {
-			log(DEBUG, "Topic cleared : ",
-				RPL_TOPICCLEARED(whatCli->second->getPrefix(),
-								 curChan->second->getName()));
-			sendReply(it->second->getFd(),
-					  RPL_TOPICCLEARED(whatCli->second->getPrefix(),
-									   curChan->second->getName()));
-		}
+	if (topic == " ::") {
+		clearTopic(curChan->second, curCli);
 		return (true);
 	}
 
 	//if topic is :[other_topic], client changes the topic of the channel
 	if (topic.empty() == false) {
-		topic.erase(1, 0); //remove the ':'
-		curChan->second->getTopic().clear();
-		curChan->second->setTopic(topic);
-		log(DEBUG, "Topic set : ",
-			RPL_TOPICCHANGED(whatCli->second->getPrefix(),
-							 curChan->second->getName(),
-							 curChan->second->getTopic()));
-
-		for (clientMapIt it =
-				 curChan->second->getCliInChannel().begin();
-			 it != curChan->second->getCliInChannel().end(); ++it) {
-			sendReply(it->second->getFd(),
-					  RPL_TOPICCHANGED(whatCli->second->getPrefix(),
-									   curChan->second->getName(),
-									   curChan->second->getTopic()));
-		}
+		changeTopic(curChan->second, curCli, topic);
 		return (true);
 	}
-	log(DEBUG, "command Topic failed unexpectedly");
+
 	return (false);
 }

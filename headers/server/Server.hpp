@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 14:36:26 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#define MAX_EVENTS 100
 
 enum logLevel { INFO, ERROR, DEBUG };
 
@@ -41,7 +40,7 @@ class Server {
 
   public:
 	/*                               ORTHODOX CLASS                           */
-	static Server &GetInstanceServer(int port, std::string password);
+	static Server &GetServerInstance(int port, std::string password);
 	~Server(void);
 
 	/*                               EXCEPTIONS                                */
@@ -59,28 +58,29 @@ class Server {
 	bool servInit();
 	bool servRun();
 	void acceptClient();
+	void processBuffer(Client *curCli);
 
 	/*                               GETTERS                                  */
 	clientMap &getAllCli();
-	std::map< std::string, Channel * > &getAllCha();
+	channelMap &getAllChan();
 
   private:
 	/*                               METHODS                                  */
-	bool disconnectClient(int fd);
+	bool disconnectCli(int fd);
 
 	// attributes
-	const int _port;
-	const std::string _password;
+	const int port_;
+	const std::string pass_;
 
-	int _epollFd;
-	int _servFd;
-	struct epoll_event _events[MAX_EVENTS];
-	struct epoll_event _servPoll;
-	struct sockaddr_in _servAddress;
+	int epollFd_;
+	int servFd_;
+	struct epoll_event events_[MAX_EVENTS];
+	struct epoll_event servPoll_;
+	struct sockaddr_in servAddr_;
 
-	clientMap _clients;
-	channelMap _channels;
-	std::vector< std::string > _usedNicks;
+	clientMap clients_;
+	channelMap channels_;
+	stringVec usedNicks_;
 
 	// private constructor
 	Server(void);
@@ -88,21 +88,25 @@ class Server {
 };
 
 /*                               PARSING                                  */
-std::vector< std::string > vectorSplit(std::string &s,
-									   const std::string &delimiter);
-void inputToken(std::string inputCli, int fd);
+stringVec vectorSplit(std::string &s,
+									   const std::string &del);
+void inputToken(std::string inputCli, Client *curCli);
 
 /*                               COMMAND                                  */
 //NICK--USER
-void handleClientRegistration(const std::string &input, int cliFd,
-							  clientMap &registeredClients);
+void handleClientRegistration(const std::string &input, Client *curCli);
+
 //JOIN
-Channel *createChannel(const std::string &channelName);
-bool handleJoin(std::string params, int fd);
+bool handleJoin(std::string params, Client *curCli);
+Channel *createChan(const std::string &chanName);
 //TOPIC
-bool handleTopic(std::string params, int fd);
+bool handleTopic(std::string params, Client *curCli);
 //PRIVMSG
-bool handlePrivsmg(std::string params, int fd);
+bool handlePrivsmg(std::string params, Client *curCli);
+//PART
+bool handlePart(std::string params, Client *curCli);
+//MODE
+bool handleMode(std::string params, Client *currentlCli);
 
 /*                               DEBUG                                  */
 void log(logLevel level, std::string message);

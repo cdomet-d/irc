@@ -6,11 +6,10 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:56:23 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 11:54:37 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 09:48:30 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Colors.hpp"
 #include "Server.hpp"
 #include <ctime>
 #include <iostream>
@@ -51,12 +50,11 @@ void log(logLevel level, std::string message, std::string additionalInfo)
 		break;
 	case (ERROR):
 		std::cout << "[" << timeStamp() << ']' << " ERROR:\t" << RED << message
-					<< additionalInfo << RESET << std::endl;
+				  << additionalInfo << RESET << std::endl;
 		break;
 	case (DEBUG):
 		std::cout << "[" << timeStamp() << ']' << " DEBUG:\t" << YELLOW
-				  << message << additionalInfo << RESET
-				  << std::endl;
+				  << message << additionalInfo << RESET << std::endl;
 		break;
 	}
 }

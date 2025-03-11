@@ -1,0 +1,87 @@
+
+TODO :
+Obliger le client nc a utiliser les commandes dans cet ordre :
+			-NICK
+			-USER
+			-JOIN
+Add election d'un operateur en cas de deco du suel operateur d'un channel
+Add a function that sends a reply to an entire channel
+Faire une fonction qui trouve le currClient ou le currChannel
+Add join with a password
+Mettre les replies dans une classe
+Fix historique (il apparait le nombre de fois qu'il y avait de clients sur le channel au moment ou le message a ete envoye)
+
+Execution de mode 
+Join avec password
+
+REPLY into a class
+
+We don't have to develop a client 
+We don't have to handles server to server connection
+
+The server has to handle multiple client at a time without blocking
+All in/out operations (?) need to be none blocking
+We need to choose one IRC client, we'll use said client as a reference
+Said client we'll need to be able to connect to our server
+Communication between client and server will use TCP/IP (v4 or v6)
+
+To start we need to create a general-purpose server and then configure it as an IRC server.
+Step to create a general-purpose server :
+		*choose a hosting provider or use own hardware
+		*Install a server operating system
+	
+Commands :
+
+PASS, PART, INVITE, KICK, QUIT, MODE //need to do 
+PRIVMSG, USER, NICK, JOIN, TOPIC //currently working on
+
+TRAME :
+
+1. Create classes and methods
+	1.1 Create a server class
+		The server class will contain all the info about the server. It will have a vector (or other container ?) of client to kep track of all the clients and manage their requests
+	1.2 Create a client class
+		The client class will contain of the info about a specific client inside the server
+
+2. Create a socket and handle server signals
+	
+3. Use poll (or epoll ?) function to check if an event as occurred
+4. If the event is a new client, register said client
+5. If the event is the data from a client, handle said event
+
+
+serverTesting explained :
+
+First we handle signal to be able to close the server
+
+servInit : 
+	*Variables : 
+		-Vector of the pollfd struct (the struct is used for monitoring the fd for I/O events, usually used with poll())
+		-The port the server will be listening on
+		-The fd of the server
+		-struct sockaddr_in which describe a IPv4 address and port number combinaison
+
+	We set all variables with appropriate value. See comments in code for futher explainations.
+
+
+nc -C 0.0.0.0 4444 :
+		-C for nc to add \n\r 
+		0.0.0.0 IP 
+		4444 Port
+
+handleJoin :
+	clears the input client to get the name of the channels
+	checks if the channel already exists
+		-if doesn't : creates the channel and add the first user in it
+		-if does : adds the client to said channel
+	sends a responds to the client
+
+PRIVMSG :
+:senderNick!senderUser@senderHostname PRIVMSG #chanName :Message content here\r\n
+
+add : we check if a nickname is available before setting it.
+		Files for organizing the commands and better clarity
+refractor : Join, privmsg, nick, user now use the istringstream for parsing which is way better.
+
+
+JOIN 0 = part donc ca te retire de tout les channels

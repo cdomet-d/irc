@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/06 14:05:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 10:34:33 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,14 @@
 /* ************************************************************************** */
 
 Channel::Channel(std::string name)
-	: _name(name), _topic(""), _maxCli(0), _inviteOnly(false),
-	  _isPassword(false), _isLimitCli(false) {}
+	: inviteOnly_(false), isPassMatch_(false), topicRestrict_(false),
+	  maxCli_(0), name_(name), topic_("")
+{
+	setModes();
+}
 
-Channel::~Channel(void) {
+Channel::~Channel(void)
+{
 	log(INFO, "Channel deleted:", this->getName());
 }
 
@@ -29,30 +33,34 @@ Channel::~Channel(void) {
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
-bool Channel::addClientChannel(Channel *curChan, int fd) {
-	//log(DEBUG, "-----addClientChannel-----");
+bool Channel::addClientToChan(Channel *curChan, Client *curCli)
+{
+	//log(DEBUG, "-----addClientToChan-----");
 
-	static Server &server = Server::GetInstanceServer(gPort, gPassword);
-
-	clientMapIt whatCli = server.getAllCli().find(fd);
-	clientMap &clients = curChan->getCliInChannel();
+	std::map< int, Client * > &clients = curChan->getCliInChan();
 	for (clientMapIt it = clients.begin(); it != clients.end(); ++it)
-		if (whatCli->second == it->second) {
+		if (curCli == it->second) {
 			log(INFO, "Client already in channel");
 			return (false);
 		}
-	if (curChan->getCliInChannel().empty())
-		curChan->getOpCli().insert(clientPair(fd, whatCli->second));
-	curChan->getCliInChannel().insert(clientPair(fd, whatCli->second));
-	whatCli->second->getJoinedChans().push_back(curChan->getName());
 
-	sendReply(fd, JOINED(whatCli->second->getNick(), curChan->getName()));
+	if (curChan->getCliInChan().empty())
+		curChan->getOpCli().insert(clientPair(curCli->getFd(), curCli));
+	curChan->getCliInChan().insert(clientPair(curCli->getFd(), curCli));
+	curCli->getRPL_JOINChans().push_back(curChan->getName());
+
+	for (clientMapIt itCli = curChan->getCliInChan().begin();
+		 itCli != curChan->getCliInChan().end(); ++itCli) {
+		sendReply(itCli->second->getFd(),
+				  RPL_JOIN(curCli->getNick(), curChan->getName()));
+	}
 	if (curChan->getTopic().empty() == true)
-		sendReply(fd,
-				  RPL_NOTOPIC(whatCli->second->getNick(), curChan->getName()));
+		sendReply(curCli->getFd(),
+				  RPL_NOTOPIC(curCli->getNick(), curChan->getName()));
 	else
-		sendReply(fd, RPL_TOPIC(whatCli->second->getNick(), curChan->getName(),
-								curChan->getTopic()));
+		sendReply(curCli->getFd(),
+				  RPL_TOPIC(curCli->getNick(), curChan->getName(),
+							curChan->getTopic()));
 	return (true);
 }
 
@@ -60,40 +68,88 @@ bool Channel::addClientChannel(Channel *curChan, int fd) {
 /*                               GETTERS                                      */
 /* ************************************************************************** */
 
-std::string Channel::getName() const {
-	return (_name);
+std::string Channel::getName() const
+{
+	return (name_);
 }
-std::string Channel::getTopic() const {
-	return (_topic);
+std::string Channel::getTopic() const
+{
+	return (topic_);
 }
-int Channel::getMaxCli() const {
-	return (_maxCli);
+int Channel::getMaxCli() const
+{
+	return (maxCli_);
 }
-bool Channel::getInviteOnly() const {
-	return (_inviteOnly);
+bool Channel::getInviteOnly() const
+{
+	return (inviteOnly_);
 }
-bool Channel::getIsPassword() const {
-	return (_isPassword);
+bool Channel::getIsPassMatch() const
+{
+	return (isPassMatch_);
 }
-bool Channel::getLimitCli() const {
-	return (_isLimitCli);
+bool Channel::getTopicRestrict() const
+{
+	return (topicRestrict_);
 }
-clientMap &Channel::getCliInChannel() {
-	return (_cliInChannel);
+clientMap &Channel::getCliInChan()
+{
+	return (cliInChan_);
 }
-clientMap &Channel::getBannedCli() {
-	return (_bannedCli);
+clientMap &Channel::getOpCli()
+{
+	return (cliIsOperator_);
 }
-clientMap &Channel::getOpCli() {
-	return (_opCli);
+std::string Channel::getPassword() const
+{
+	return (pass_);
 }
-
+std::string Channel::getModes() const
+{
+	return (modes_);
+}
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
-void Channel::setName(std::string name) {
-	_name = name;
+void Channel::setName(std::string name)
+{
+	name_ = name;
 }
-void Channel::setTopic(std::string topic) {
-	_topic = topic;
+void Channel::setTopic(std::string topic)
+{
+	topic_ = topic;
+}
+void Channel::setPassword(std::string password)
+{
+	pass_ = password;
+}
+void Channel::setModes()
+{
+	std::string modes = "+";
+
+	if (getMaxCli() != 0)
+		modes.append("l");
+	if (getInviteOnly() == true)
+		modes.append("i");
+	if (getIsPassMatch() == true)
+		modes.append("k");
+	if (getTopicRestrict() == true)
+		modes.append("t");
+	modes_ = modes;
+}
+void Channel::setMaxCli(int maxCli)
+{
+	maxCli_ = maxCli;
+}
+void Channel::setInviteOnly(bool inviteOnly)
+{
+	inviteOnly_ = inviteOnly;
+}
+void Channel::setIsPassMatch(bool password)
+{
+	isPassMatch_ = password;
+}
+void Channel::setTopicRestrict(bool topicRestrict)
+{
+	topicRestrict_ = topicRestrict;
 }
