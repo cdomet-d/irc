@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 14:10:58 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/12 14:20:43 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@
 Server::Server(int port, std::string password) : port_(port), pass_(password) {}
 Server::Server(void) : port_(0), pass_("") {}
 
-Server::~Server(void)
-{
+Server::~Server(void) {
 	std::cout << "Calling destructor" << std::endl;
 	for (clientMapIt it = clients_.begin(); it != clients_.end(); ++it) {
 		it->second->getNick().clear();
@@ -34,8 +33,7 @@ Server::~Server(void)
 		close(it->first);
 		delete it->second;
 	}
-	for (channelMapIt it = channels_.begin(); it != channels_.end();
-		 ++it)
+	for (channelMapIt it = channels_.begin(); it != channels_.end(); ++it)
 		delete it->second;
 
 	close(epollFd_);
@@ -46,8 +44,7 @@ Server::~Server(void)
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
-bool Server::servInit()
-{
+bool Server::servInit() {
 	int en = 1;
 
 	epollFd_ = epoll_create1(0);
@@ -75,8 +72,7 @@ bool Server::servInit()
 	return (true);
 }
 
-bool Server::servRun()
-{
+bool Server::servRun() {
 	int nbFds;
 
 	// log(INFO, "Loop IRC server started");
@@ -96,8 +92,7 @@ bool Server::servRun()
 	return (true);
 }
 
-void Server::acceptClient()
-{
+void Server::acceptClient() {
 	try {
 		// log(INFO, "Accepting new client");
 		Client *newCli = new Client();
@@ -145,13 +140,10 @@ void Server::acceptClient()
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected";
 		// log(INFO, ss.str());
-	} catch (std::exception &e) {
-		std::cerr << e.what() << std::endl;
-	}
+	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
 }
 
-bool Server::handleData(int fd)
-{
+bool Server::handleData(int fd) {
 	// log(INFO, "-----handleData-----");
 
 	char tmpBuf[1024];
@@ -170,8 +162,7 @@ bool Server::handleData(int fd)
 	return (true);
 }
 
-void Server::processBuffer(Client *curCli)
-{
+void Server::processBuffer(Client *curCli) {
 	size_t pos;
 	while ((pos = curCli->getBuffer().find('\n')) != std::string::npos) {
 		if (!curCli->getBuffer().find("QUIT")) {
@@ -186,21 +177,19 @@ void Server::processBuffer(Client *curCli)
 			curCli->setBuffer("");
 			return;
 		} else {
-			inputToken(curCli->getBuffer(), *curCli);
+			MessageValidator::assess(*curCli);
 			curCli->setBuffer("");
 			return;
 		}
 	}
 }
 
-Server &Server::GetServerInstance(int port, std::string password)
-{
+Server &Server::GetServerInstance(int port, std::string password) {
 	static Server instance(port, password);
 	return (instance);
 }
 
-bool Server::disconnectCli(int fd)
-{
+bool Server::disconnectCli(int fd) {
 	clientMapIt it = clients_.find(fd);
 	if (it != clients_.end()) {
 		std::cout << "Client [" << fd << "] disconnected" << std::endl;
@@ -216,8 +205,7 @@ bool Server::disconnectCli(int fd)
 /*                               EXCEPTIONS                                   */
 /* ************************************************************************** */
 
-const char *Server::InitFailed::what() const throw()
-{
+const char *Server::InitFailed::what() const throw() {
 	std::cerr << "irc: ";
 	return errMessage;
 }
@@ -227,11 +215,9 @@ Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-clientMap &Server::getAllCli()
-{
+clientMap &Server::getAllCli() {
 	return (clients_);
 }
-channelMap &Server::getAllChan()
-{
+channelMap &Server::getAllChan() {
 	return (channels_);
 }

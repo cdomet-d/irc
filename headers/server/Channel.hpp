@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 11:15:46 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:10:22 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #define CHANNEL_HPP
 
 #include "Client.hpp"
-#include "reply.h"
+#include "Reply.hpp"
 #include "typedef.hpp"
 #include <iostream>
 #include <map>

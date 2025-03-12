@@ -54,5 +54,6 @@
 		"ranges": "cpp",
 		"span": "cpp",
 		"cinttypes": "cpp"
-	}
+	},
+	"explorer.excludeGitIgnore": true
 }

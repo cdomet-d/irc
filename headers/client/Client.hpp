@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 17:01:26 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/12 14:26:50 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,13 @@ class Client {
 	std::string getRealName() const;
 	std::string getUsername() const;
 	stringVec &getJoinedChans();
-	stringVec getCmdParam(std::string buffer);
+	stringVec getCmdParam();
 	struct epoll_event *getCliEpoll();
 
 	/*                               SETTERS                                  */
 	void setBuffer(std::string buffer);
-	void setCmdParam(std::string buffer);
+	void setCmdParam(const stringVec &splitBuffer);
+	void setTrailingParam(const std::string &trail);
 	void setCliEpoll(struct epoll_event epoll);
 	void setFd(int fd);
 	void setHostname(std::string hostname);
