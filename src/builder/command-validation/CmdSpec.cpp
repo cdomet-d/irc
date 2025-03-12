@@ -34,26 +34,24 @@ CmdSpec::~CmdSpec(void) {
 }
 
 CmdParam &CmdSpec::operator[](e_param type) {
-	paramMap::iterator it = params_.begin();
-
-	it = params_.find(type);
-	if (it == params_.end())
-		throw std::out_of_range("Param not found\n");
-	return (*it->second);
+	for (size_t i = 0; i < params_.size(); i++) {
+		if (params_[i].first == type)
+			return ((*params_[i].second));
+	}
+	throw std::out_of_range("Param not found");
 }
 
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-
 bool CmdSpec::enoughParams() {
 	if (name_ != "NICK" && name_ != "PRIVMSG") {
 		for (paramMap::iterator it = params_.begin(); it != params_.end();
 			 it++) {
-			CmdParam &params = *it->second;
-			if (!params.getOpt() && params.getParam().empty()) {
+			CmdParam &param = *it->second;
+			if (!param.getOpt() && param.getParam().empty()) {
 				it++;
-				if (name_ == "INVITE" && params.getParam().empty())
+				if (name_ == "INVITE" && param.getParam().empty())
 					return (true);
 				std::cout << ERR_NEEDMOREPARAMS((*sender_).getNick(), name_);
 				valid_ = false;
@@ -66,14 +64,14 @@ bool CmdSpec::enoughParams() {
 
 CmdSpec &CmdSpec::process(stringVec &buffer, Client &client) {
 	setSender(client);
-	if ((*sender_).getRegistration() < registrationStage_) {
+	if (registrationStage_ > (*sender_).getRegistration()) {
 		valid_ = false;
 		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER")
 			std::cout << ERR_NOTREGISTERED;
 		return (*this);
 	}
 	size_t i = 0;
-	paramMap::iterator it = params_.begin();
+	paramMap::iterator it = params_.begin(); //TODO: enlever iterator ?
 	while (it != params_.end() && i < buffer.size()) {
 		(*it->second).setOne(buffer[i]);
 		it++;
@@ -83,14 +81,14 @@ CmdSpec &CmdSpec::process(stringVec &buffer, Client &client) {
 		return (*this);
 	for (paramMap::iterator ite = params_.begin(); ite != params_.end();
 		 ite++) {
-		CmdParam &params = *ite->second;
-		if (params.getList()) {
+		CmdParam &param = *ite->second;
+		if (param.getList()) {
 			try {
-				params.setList(vectorSplit(params[0], ","));
+				param.setList(vectorSplit(param[0], ","));
 			} catch (const std::out_of_range &e) {};
 		}
 	}
-	displayParams();
+	// displayParams();
 	for (size_t j = 0; j < checkers_.size(); j++) {
 		checkers_[j](*this);
 		if (!valid_)
@@ -102,26 +100,25 @@ CmdSpec &CmdSpec::process(stringVec &buffer, Client &client) {
 void CmdSpec::clean(void) {}
 
 static std::string enumToString(e_param color) {
-    switch (color) {
-        case 0: return "channel";
-        case 1: return "hostname";
-        case 2: return "key";
-		case 3: return "message";
-		case 4: return "mode";
-		case 5: return "modeArg";
-		case 6: return "nickname";
-		case 7: return "password";
-		case 8: return "realname";
-		case 9: return "servername";
-		case 10: return "target";
-		case 11: return "topic";
-		case 12: return "username";
-        default: return "Unknown";
-    }
+	switch (color) {
+	case 0:	return "channel";
+	case 1:	return "hostname";
+	case 2:	return "key";
+	case 3:	return "message";
+	case 4:	return "mode";
+	case 5:	return "modeArg";
+	case 6:	return "nickname";
+	case 7:	return "password";
+	case 8:	return "realname";
+	case 9:	return "servername";
+	case 10: return "target";
+	case 11: return "topic";
+	case 12: return "username";
+	default: return "Unknown";
+	}
 }
 
-void	CmdSpec::displayParams(void)
-{
+void CmdSpec::displayParams(void) {
 	size_t i = 0;
 	for (paramMap::iterator itt = params_.begin(); itt != params_.end();
 		 itt++) {
@@ -135,6 +132,7 @@ void	CmdSpec::displayParams(void)
 		} catch (const std::out_of_range &e) {
 			std::cerr << e.what() << std::endl;
 		}
+		std::cout << "\n";
 		i++;
 	}
 }
@@ -152,6 +150,10 @@ bool CmdSpec::getValid(void) const {
 
 void (*CmdSpec::getExecutor(void) const)(CmdSpec &cmd) {
 	return (cmExecutor_);
+}
+
+Client &CmdSpec::getSender(void) const {
+	return (*sender_);
 }
 
 /* ************************************************************************** */
@@ -185,7 +187,7 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Registration(int stage) {
 
 CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Parameters(e_param type,
 													 CmdParam *param) {
-	params_[type] = param;
+	params_.push_back(std::make_pair(type, param));
 	return (*this);
 }
 

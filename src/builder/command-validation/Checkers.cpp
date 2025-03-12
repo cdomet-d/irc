@@ -12,83 +12,73 @@
 
 #include "Checkers.hpp"
 
-int	pwMatch(CmdSpec& cmd)
-{
+int pwMatch(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int	isRegistered(CmdSpec& cmd)
-{
+int isRegistered(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int	validNick(CmdSpec& cmd)
-{
+int validNick(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int	validUser(CmdSpec& cmd)
-{
+int validUser(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int	validChan(CmdSpec& cmd)
-{
+int validChan(CmdSpec &cmd) {
 	(void)cmd;
-	return (0);	
+	return (0);
 }
 
-int	joinChanRequest(CmdSpec& cmd)
-{
-	(void)cmd;
+int joinChanRequest(CmdSpec &cmd) {
+	if (cmd[channel][0][0] != '#') {
+		std::cout << ERR_NOSUCHCHANNEL(cmd.getSender().getNick(),
+									   cmd[channel][0]);
+	}
 	//supprimer chaque channel faux, ainsi que toutes les keys
 	//pour qu'il reste que les channel valide a join pour l'exec
 	//s'ils ont tous ete supprimes mettre valid a false
 	return (0);
 }
 
-int	validTarget(CmdSpec& cmd)
-{
+int validTarget(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int	validInvite(CmdSpec& cmd)
-{
+int validInvite(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int	onChan(CmdSpec& cmd)
-{
+int onChan(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int	hasChanPriv(CmdSpec& cmd)
-{
+int hasChanPriv(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int	validKick(CmdSpec& cmd)
-{
+int validKick(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int	validMode(CmdSpec& cmd)
-{
+int validMode(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int	validMess(CmdSpec& cmd)
-{
+int validMess(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }

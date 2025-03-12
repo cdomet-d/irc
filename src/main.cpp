@@ -50,27 +50,29 @@ void SignalHandler(int signum) {
 // 	return (0);
 // }
 
-#include <iostream>
-#include "CmdManager.hpp"
 #include "Client.hpp"
+#include "CmdManager.hpp"
+#include <iostream>
 
-int	main(int argc, char** argv)
-{
-	(void)argc;
-	Client			client;
-	std::vector<std::string>	buffer;
-	CmdManager	cmManager;
-	size_t			i = 0;
-	std::string		cm;
+int main(int argc, char **argv) {
+	Client client;
+	std::vector< std::string > buffer;
+	CmdManager cmManager;
 
+	if (argc < 2)
+		return (1);
+	for (size_t i = 2; i < argc; i++) {
+		buffer.push_back(argv[i]);
+	}
 	client.setRegistration(3);
-	
+
 	//create the map with all registered commands
 	cmManager.generateCmds();
 
 	//execute command
-	// buffer.push_back("chacham");
-	buffer.push_back("#pizza,#bitch,prout");
-	buffer.push_back("key1,key2");
-	cmManager.executeCm(cmManager.getCmd("JOIN").process(buffer, client));
+	try {
+		cmManager.executeCm(cmManager.getCmd(argv[1]).process(buffer, client));
+	} catch (const std::out_of_range &e) {
+		std::cout << ERR_UNKNOWNCOMMAND(client.getNick(), argv[1]);
+	}
 }

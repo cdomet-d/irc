@@ -19,8 +19,8 @@
 #include "reply.h"
 #include <iostream>
 #include <map>
-#include <vector>
 #include <utility>
+#include <vector>
 
 class Client;
 
@@ -40,7 +40,7 @@ typedef enum {
 	username,
 } e_param;
 
-typedef std::map< e_param, CmdParam * > paramMap;
+typedef std::vector< std::pair< e_param, CmdParam * > > paramMap;
 
 class CmdSpec {
   public:
@@ -57,6 +57,7 @@ class CmdSpec {
 
 	/*                               GETTERS                                  */
 	bool getValid(void) const;
+	Client &getSender(void) const;
 	const std::string &getName(void) const;
 	void (*getExecutor(void) const)(CmdSpec &cmd);
 

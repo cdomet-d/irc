@@ -38,6 +38,7 @@
 #define ERR_CHANOPRIVSNEEDED(nickname, channel) (": 482 " + nickname + " " + channel + " :You're not channel operator" + "\r\n")
 #define ERR_UNKNOWNMODE(nickname, modechar) (": 472 " + nickname + " " + modechar + " :is unknown mode char to me" + "\r\n")
 #define ERR_NOTREGISTERED ": 451 * :You have not registered\r\n"
+#define ERR_UNKNOWNCOMMAND(nickname, command) (": 421 " + nickname + " " + command + " :Unknown command\r\n")
 
 void sendReply(int fd, std::string reply);
 

@@ -168,9 +168,8 @@ CmdSpec &CmdManager::getCmd(const std::string &cmName) {
 	cmdMap::iterator it;
 
 	it = commandList_.find(cmName);
-	//TODO: add secu if command not found
-	// if (it == commandList_.end())
-	// ERR_UNKNOWNCOMMAND
-	// 	return ;
+	if (it == commandList_.end()) {
+		throw std::out_of_range("Command not found\n");//TODO: faire des exception + specifique
+	}
 	return (*it->second);
 }

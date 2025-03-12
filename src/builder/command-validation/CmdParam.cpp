@@ -18,12 +18,28 @@
 CmdParam::CmdParam(stringVec &param, const bool opt, const bool list)
 	: opt_(opt), list_(list), param_(param) {}
 
+CmdParam::CmdParam(const CmdParam &rhs) {
+	*this = rhs;
+}
+
 CmdParam::~CmdParam(void) {}
 
+/* ************************************************************************** */
+/*                               METHODS                                      */
+/* ************************************************************************** */
 std::string &CmdParam::operator[](unsigned int i) {
 	if (i >= param_.size())
-		throw std::out_of_range("Param not found\n");
+		throw std::out_of_range("Param not found");
 	return (param_[i]);
+}
+
+CmdParam &CmdParam::operator=(const CmdParam &rhs) {
+	if (this != &rhs) {
+		opt_ = rhs.getOpt();
+		list_ = rhs.getList();
+		param_ = rhs.getParam();
+	}
+	return (*this);
 }
 
 /* ************************************************************************** */

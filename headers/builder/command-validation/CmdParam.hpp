@@ -26,6 +26,7 @@ class CmdParam {
 
 	/*                               METHODS                                  */
 	std::string &operator[](unsigned int i);
+	CmdParam &operator=(const CmdParam &rhs);
 
 	/*                               GETTERS                                  */
 	bool getOpt(void) const;
@@ -56,12 +57,13 @@ class CmdParam {
 
   private:
 	/*                               MEMBERS                                  */
-	const bool opt_;
-	const bool list_;
+	bool opt_;
+	bool list_;
 	stringVec param_;
 
 	// private constructor
 	CmdParam(stringVec &param, const bool opt, const bool list);
+	CmdParam(const CmdParam &rhs);
 };
 
 #endif
