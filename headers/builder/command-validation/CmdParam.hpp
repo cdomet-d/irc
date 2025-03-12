@@ -14,6 +14,7 @@
 #define CMDPARAM_HPP
 
 #include "../client/Client.hpp"
+#include "typedef.hpp"
 #include <iostream>
 #include <vector>
 

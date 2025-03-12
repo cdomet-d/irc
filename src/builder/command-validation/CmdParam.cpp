@@ -53,6 +53,10 @@ void CmdParam::setOne(std::string &buffer) {
 	param_.push_back(buffer);
 }
 
+void CmdParam::setList(std::vector< std::string > &buffer) {
+	
+}
+
 /* ************************************************************************** */
 /*                               NESTED CLASS                                 */
 /* ************************************************************************** */

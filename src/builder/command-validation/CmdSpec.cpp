@@ -41,13 +41,14 @@ CmdParam &CmdSpec::operator[](e_param type) {
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
+
 bool CmdSpec::enoughParams() {
 	if (name_ != "NICK" && name_ != "PRIVMSG") {
 		for (size_t i = 0; i < params_.size(); i++) {
-			if (!(*params_[i].second).getOpt() &&
-				(*params_[i].second).getParam().empty()) {
-				if (name_ == "INVITE" &&
-					(*params_[i + 1].second).getParam().empty())
+			CmdParam &params = *params_[i].second;
+			if (!params.getOpt() && params.getParam().empty()) {
+				i++;
+				if (name_ == "INVITE" && params.getParam().empty())
 					return (true);
 				ERR_NEEDMOREPARAMS((*sender_).getNick(), name_);
 				valid_ = false;
@@ -59,10 +60,6 @@ bool CmdSpec::enoughParams() {
 }
 
 CmdSpec &CmdSpec::process(std::vector< std::string > &buffer, Client &client) {
-	// std::cout << name << std::endl;
-	// std::cout << "'" << buffer << "'" << std::endl;
-	// std::cout << params.getParams().size() << std::endl;
-	// void(*tokenizer)(std::string& buffer, CmdParam& param)	= inputTokenizer_;
 
 	setSender(client);
 	if ((*sender_).getRegistration() < registrationStage_) {
@@ -77,8 +74,10 @@ CmdSpec &CmdSpec::process(std::vector< std::string > &buffer, Client &client) {
 	if (!enoughParams())
 		return (*this);
 	for (size_t i = 0; i < params_.size(); i++) {
-		if (!(*params_[i].second).getDelim().empty())
-			setList(vectorSplit((*params_[i].second).getParam()[0], (*params_[i].second).getDelim()));
+		CmdParam &params = *params_[i].second;
+		if (!params.getDelim().empty()) {
+			params.setList(vectorSplit(params[0], params.getDelim()));
+		}
 	}
 	for (size_t i = 0; i < checkers_.size(); i++) {
 		checkers_[i](*this);
@@ -110,10 +109,6 @@ void (*CmdSpec::getExecutor(void) const)(CmdSpec &cmd) {
 /* ************************************************************************** */
 void CmdSpec::setSender(Client &sender) {
 	sender_ = &sender;
-}
-
-void setList(std::vector< std::string > &buffer) {
-	
 }
 
 /* ************************************************************************** */
