@@ -15,9 +15,8 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdParam::CmdParam(std::vector< std::string > &param, const bool opt,
-				   const std::string &delim)
-	: param_(param), opt_(opt), delim_(delim) {}
+CmdParam::CmdParam(stringVec &param, const bool opt, bool list)
+	: param_(param), opt_(opt), list_(list) {}
 
 CmdParam::~CmdParam(void) {}
 
@@ -30,7 +29,7 @@ std::string &CmdParam::operator[](unsigned int i) {
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-std::vector< std::string > &CmdParam::getParam(void) {
+const stringVec &CmdParam::getParam(void) const {
 	return (param_);
 }
 
@@ -42,8 +41,8 @@ bool CmdParam::getOpt(void) const {
 	return (opt_);
 }
 
-const std::string &CmdParam::getDelim() const {
-	return (delim_);
+bool CmdParam::getList(void) const {
+	return (list_);
 }
 
 /* ************************************************************************** */
@@ -53,14 +52,14 @@ void CmdParam::setOne(std::string &buffer) {
 	param_.push_back(buffer);
 }
 
-void CmdParam::setList(std::vector< std::string > &buffer) {
-	
+void CmdParam::setList(const stringVec &buffer) {
+	param_ = buffer;
 }
 
 /* ************************************************************************** */
 /*                               NESTED CLASS                                 */
 /* ************************************************************************** */
-CmdParam::ParamBuilder::ParamBuilder(void) : opt_(false), delim_("") {}
+CmdParam::ParamBuilder::ParamBuilder(void) : opt_(false), list_(false) {}
 
 CmdParam::ParamBuilder::~ParamBuilder(void) {}
 
@@ -70,12 +69,11 @@ CmdParam::ParamBuilder &CmdParam::ParamBuilder::isOpt(bool opt) {
 	return (*this);
 }
 
-CmdParam::ParamBuilder &
-CmdParam::ParamBuilder::setDelim(const std::string &delim) {
-	delim_ = delim;
+CmdParam::ParamBuilder &CmdParam::ParamBuilder::isList(bool list) {
+	list_ = list;
 	return (*this);
 }
 
 CmdParam *CmdParam::ParamBuilder::build() {
-	return (new CmdParam(param_, opt_, delim_));
+	return (new CmdParam(param_, opt_, list_));
 }

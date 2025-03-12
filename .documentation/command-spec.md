@@ -406,7 +406,7 @@ pour -+o verifier que le target existe et qu'il soit sur le channel
 pour -+i si ce mode a deja ete active et que le client refait un +i, ne rien faire
 pour -+k si aucune key n'est donné ne rien faire que ce soit pour le set ou remove car pour remove il faut donner la clé qui a ete set
 pour -+t 
-pour -+l si on met pas le nombre limite ERR_NEEDMOREPARAMS
+pour -+l si on met pas le nombre limite ERR_NEEDMOREPARAMS. la limite doit au mois etre 1 
 
 -- executors --
 changeMode() -> sets or removes given mode \

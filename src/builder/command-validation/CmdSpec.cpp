@@ -30,12 +30,12 @@ CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
 CmdSpec::~CmdSpec(void) {}
 
 CmdParam &CmdSpec::operator[](e_param type) {
+	paramMap::iterator it = params_.begin();
 
-	for (size_t i = 0; i < params_.size(); i++) {
-		if (params_[i].first == type)
-			return ((*params_[i].second));
-	}
-	throw std::out_of_range("Param not found\n");
+	it = params_.find(type);
+	if (it == params_.end())
+		throw std::out_of_range("Param not found\n");
+	return (*it->second);
 }
 
 /* ************************************************************************** */
@@ -44,10 +44,11 @@ CmdParam &CmdSpec::operator[](e_param type) {
 
 bool CmdSpec::enoughParams() {
 	if (name_ != "NICK" && name_ != "PRIVMSG") {
-		for (size_t i = 0; i < params_.size(); i++) {
-			CmdParam &params = *params_[i].second;
+		for (paramMap::iterator it = params_.begin(); it != params_.end();
+			 it++) {
+			CmdParam &params = *it->second;
 			if (!params.getOpt() && params.getParam().empty()) {
-				i++;
+				it++;
 				if (name_ == "INVITE" && params.getParam().empty())
 					return (true);
 				ERR_NEEDMOREPARAMS((*sender_).getNick(), name_);
@@ -59,7 +60,7 @@ bool CmdSpec::enoughParams() {
 	return (true);
 }
 
-CmdSpec &CmdSpec::process(std::vector< std::string > &buffer, Client &client) {
+CmdSpec &CmdSpec::process(stringVec &buffer, Client &client) {
 
 	setSender(client);
 	if ((*sender_).getRegistration() < registrationStage_) {
@@ -68,19 +69,24 @@ CmdSpec &CmdSpec::process(std::vector< std::string > &buffer, Client &client) {
 			ERR_NOTREGISTERED;
 		return (*this);
 	}
-	for (size_t i = 0; i < params_.size(); i++) {
-		(*params_[i].second).setOne(buffer[i]);
+	size_t i = 0;
+	paramMap::iterator it = params_.begin();
+	while (it != params_.end() && i < buffer.size()) {
+		(*it->second).setOne(buffer[i]);
+		it++;
+		i++;
 	}
 	if (!enoughParams())
 		return (*this);
-	for (size_t i = 0; i < params_.size(); i++) {
-		CmdParam &params = *params_[i].second;
-		if (!params.getDelim().empty()) {
-			params.setList(vectorSplit(params[0], params.getDelim()));
+	for (paramMap::iterator ite = params_.begin(); ite != params_.end();
+		 ite++) {
+		CmdParam &params = *ite->second;
+		if (params.getList()) {
+			params.setList(vectorSplit(params[0], ","));
 		}
 	}
-	for (size_t i = 0; i < checkers_.size(); i++) {
-		checkers_[i](*this);
+	for (size_t j = 0; j < checkers_.size(); j++) {
+		checkers_[j](*this);
 		if (!valid_)
 			return (*this);
 	}
@@ -135,7 +141,7 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Registration(int stage) {
 
 CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Parameters(e_param type,
 													 CmdParam *param) {
-	params_.push_back(std::make_pair(type, param));
+	params_[type] = param;
 	return (*this);
 }
 

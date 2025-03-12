@@ -40,7 +40,7 @@ typedef enum {
 	username,
 } e_param;
 
-typedef std::vector< std::pair< e_param, CmdParam * > > paramMap;
+typedef std::map< e_param, CmdParam * > paramMap;
 
 class CmdSpec {
   public:
@@ -49,7 +49,7 @@ class CmdSpec {
 
 	/*                               METHODS                                  */
 	CmdParam &operator[](e_param type);
-	CmdSpec &process(std::vector< std::string > &buffer, Client &client);
+	CmdSpec &process(stringVec &buffer, Client &client);
 	bool enoughParams(void);
 	void clean(void);
 

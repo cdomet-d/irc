@@ -29,13 +29,13 @@ class CmdParam {
 
 	/*                               GETTERS                                  */
 	bool getOpt(void) const;
-	const std::string &getDelim() const;
+	bool getList() const;
 	size_t getParamSize(void) const;
-	std::vector< std::string > &getParam(void); //TODO: add const ?
+	const stringVec &getParam(void) const;
 
 	/*                               SETTERS                                  */
 	void setOne(std::string &buffer);
-	void setList(std::vector< std::string > &buffer);
+	void setList(const stringVec &buffer);
 
 	/*                               NESTED CLASS                             */
 	class ParamBuilder {
@@ -46,23 +46,22 @@ class CmdParam {
 		//methods
 		CmdParam *build();
 		ParamBuilder &isOpt(bool opt);
-		ParamBuilder &setDelim(const std::string &delim);
+		ParamBuilder &isList(bool list);
 
 	  private:
 		bool opt_;
-		std::string delim_;
-		std::vector< std::string > param_;
+		bool list_;
+		stringVec param_;
 	};
 
   private:
 	/*                               MEMBERS                                  */
 	const bool opt_;
-	const std::string delim_;
-	std::vector< std::string > param_;
+	bool list_;
+	stringVec param_;
 
 	// private constructor
-	CmdParam(std::vector< std::string > &param, const bool opt,
-			 const std::string &delim);
+	CmdParam(stringVec &param, const bool opt, bool list);
 };
 
 #endif
