@@ -71,6 +71,6 @@ int	main(int argc, char** argv)
 	//execute command
 	// buffer.push_back("chacham");
 	buffer.push_back("#pizza,#bitch,prout");
-	buffer.push_back("key1,key2 other shit");
-	cmManager.executeCm(cmManager.getCmd("NICK").process(buffer, client));
+	buffer.push_back("key1,key2");
+	cmManager.executeCm(cmManager.getCmd("JOIN").process(buffer, client));
 }

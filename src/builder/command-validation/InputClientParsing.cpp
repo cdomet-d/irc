@@ -35,6 +35,8 @@ stringVec vectorSplit(std::string &s,
 		inputCli.push_back(token);
 		s.erase(0, pos + del.length());
 	}
+	if (!s.empty())
+		inputCli.push_back(s);
 	return (inputCli);
 }
 

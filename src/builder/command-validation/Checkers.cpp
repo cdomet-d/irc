@@ -48,7 +48,6 @@ int	joinChanRequest(CmdSpec& cmd)
 	//supprimer chaque channel faux, ainsi que toutes les keys
 	//pour qu'il reste que les channel valide a join pour l'exec
 	//s'ils ont tous ete supprimes mettre valid a false
-	std::cout << "yooo\n";
 	return (0);
 }
 

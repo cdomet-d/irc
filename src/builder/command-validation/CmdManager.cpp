@@ -18,7 +18,7 @@
 CmdManager::CmdManager(void) {}
 
 CmdManager::~CmdManager(void) {
-	for (std::map< std::string, CmdSpec * >::iterator it = commandList_.begin(); \
+	for (cmdMap::iterator it = commandList_.begin(); \
 		it != commandList_.end(); it++) {
 			delete it->second;
 		}
@@ -165,7 +165,7 @@ void CmdManager::log(CmdSpec *cm) {
 /*                               GETTERS                                      */
 /* ************************************************************************** */
 CmdSpec &CmdManager::getCmd(const std::string &cmName) {
-	std::map< std::string, CmdSpec * >::iterator it;
+	cmdMap::iterator it;
 
 	it = commandList_.find(cmName);
 	//TODO: add secu if command not found

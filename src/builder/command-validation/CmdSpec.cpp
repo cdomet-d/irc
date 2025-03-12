@@ -85,20 +85,12 @@ CmdSpec &CmdSpec::process(stringVec &buffer, Client &client) {
 		 ite++) {
 		CmdParam &params = *ite->second;
 		if (params.getList()) {
-			params.setList(vectorSplit(params[0], ","));
+			try {
+				params.setList(vectorSplit(params[0], ","));
+			} catch (const std::out_of_range &e) {};
 		}
 	}
-
-	i = 0;
-	for (paramMap::iterator ite = params_.begin(); ite != params_.end();
-		 ite++) {
-			std::cout << "param[" << i << "] :\n";
-			for (size_t index = 0; index < (*ite->second).getParamSize(); index++) {
-				std::cout << "[" << index << "] : " << (*ite->second)[i] << std::endl;
-			}
-		i++;
-	} //TODO
-
+	displayParams();
 	for (size_t j = 0; j < checkers_.size(); j++) {
 		checkers_[j](*this);
 		if (!valid_)
@@ -108,6 +100,44 @@ CmdSpec &CmdSpec::process(stringVec &buffer, Client &client) {
 }
 
 void CmdSpec::clean(void) {}
+
+static std::string enumToString(e_param color) {
+    switch (color) {
+        case 0: return "channel";
+        case 1: return "hostname";
+        case 2: return "key";
+		case 3: return "message";
+		case 4: return "mode";
+		case 5: return "modeArg";
+		case 6: return "nickname";
+		case 7: return "password";
+		case 8: return "realname";
+		case 9: return "servername";
+		case 10: return "target";
+		case 11: return "topic";
+		case 12: return "username";
+        default: return "Unknown";
+    }
+}
+
+void	CmdSpec::displayParams(void)
+{
+	size_t i = 0;
+	for (paramMap::iterator itt = params_.begin(); itt != params_.end();
+		 itt++) {
+		std::cout << "param[" << i << "] :\n";
+		try {
+			for (size_t index = 0; index < (*itt->second).getParamSize();
+				 index++) {
+				std::cout << "[" << enumToString(itt->first)
+						  << "] : " << (*itt->second)[index] << std::endl;
+			}
+		} catch (const std::out_of_range &e) {
+			std::cerr << e.what() << std::endl;
+		}
+		i++;
+	}
+}
 
 /* ************************************************************************** */
 /*                               GETTERS                                      */

@@ -53,6 +53,8 @@ class CmdSpec {
 	bool enoughParams(void);
 	void clean(void);
 
+	void displayParams(void); //to be removed
+
 	/*                               GETTERS                                  */
 	bool getValid(void) const;
 	const std::string &getName(void) const;

@@ -17,6 +17,8 @@
 #include <iostream>
 #include <map>
 
+typedef	 std::map< std::string, CmdSpec * > cmdMap;
+
 class CmdManager {
   public:
 	/*                               CONSTRUCTORS                             */
@@ -33,7 +35,7 @@ class CmdManager {
 
   private:
 	/*                               MEMBERS                                  */
-	std::map< std::string, CmdSpec * > commandList_;
+	cmdMap commandList_;
 };
 
 #endif
