@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 17:10:22 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:47:32 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@
 #include "Client.hpp"
 #include "Reply.hpp"
 #include "typedef.hpp"
-#include <iostream>
-#include <map>
-#include <string>
+
 
 class Client;
 

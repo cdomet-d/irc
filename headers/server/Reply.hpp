@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 10:31:25 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:50:33 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@
 
 // Tokenization errors
 // #define ERR_ERRONEUSNICKNAME(nickname, badnick) (":432 " + nickname + " " + badnick + " :Erroneous nickname\r\n")
-
 
 //user define replies
 #define RPL_JOIN(nickname, channel) (":" + nickname + " JOIN :" + channel + "\r\n")
