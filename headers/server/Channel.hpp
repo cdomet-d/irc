@@ -13,7 +13,7 @@
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
 
-#include "Client.hpp"
+#include "../client/Client.hpp"
 #include "reply.h"
 #include "typedef.hpp"
 #include <iostream>

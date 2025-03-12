@@ -17,7 +17,7 @@
 /* ************************************************************************** */
 CmdManager::CmdManager(void) {}
 
-CmdManager::~CmdManager(void) {}
+CmdManager::~CmdManager(void) {} //TODO: delete cmds from commandList ?
 
 /* ************************************************************************** */
 /*                               METHODS                                      */
@@ -108,7 +108,7 @@ void CmdManager::generateCmds() {
 			.addChecker(validChan)
 			.addChecker(hasChanPriv)
 			.addChecker(validMode)
-			// .addChecker(validArg)
+			// .addChecker(validArg) ?
 			// .CmExecutor()
 			.build());
 

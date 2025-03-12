@@ -13,10 +13,11 @@
 #ifndef CMDPARAM_HPP
 #define CMDPARAM_HPP
 
-#include "Client.hpp"
+#include "../client/Client.hpp"
 #include <iostream>
 #include <vector>
 
+//TODO: utiliser typedef stringVec
 class CmdParam {
   public:
 	/*                               CONSTRUCTORS                             */
@@ -27,8 +28,13 @@ class CmdParam {
 
 	/*                               GETTERS                                  */
 	bool getOpt(void) const;
+	const std::string &getDelim() const;
 	size_t getParamSize(void) const;
 	std::vector< std::string > &getParam(void); //TODO: add const ?
+
+	/*                               SETTERS                                  */
+	void setOne(std::string &buffer);
+	void setList(std::vector< std::string > &buffer);
 
 	/*                               NESTED CLASS                             */
 	class ParamBuilder {

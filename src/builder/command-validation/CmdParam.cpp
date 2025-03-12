@@ -22,7 +22,8 @@ CmdParam::CmdParam(std::vector< std::string > &param, const bool opt,
 CmdParam::~CmdParam(void) {}
 
 std::string &CmdParam::operator[](unsigned int i) {
-	//TODO: add verif of index
+	if (i >= param_.size())
+		throw std::out_of_range("Param not found\n");
 	return (param_[i]);
 }
 
@@ -37,9 +38,19 @@ size_t CmdParam::getParamSize(void) const {
 	return (param_.size());
 }
 
-bool CmdParam::getOpt(void) const
-{
+bool CmdParam::getOpt(void) const {
 	return (opt_);
+}
+
+const std::string &CmdParam::getDelim() const {
+	return (delim_);
+}
+
+/* ************************************************************************** */
+/*                               SETTERS                                      */
+/* ************************************************************************** */
+void CmdParam::setOne(std::string &buffer) {
+	param_.push_back(buffer);
 }
 
 /* ************************************************************************** */

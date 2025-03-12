@@ -14,7 +14,7 @@
 #define SERVER_HPP
 
 #include "Channel.hpp"
-#include "Client.hpp"
+#include "../client/Client.hpp"
 #include "typedef.hpp"
 #include <arpa/inet.h>
 #include <cstring>

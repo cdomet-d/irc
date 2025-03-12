@@ -30,46 +30,57 @@ CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
 CmdSpec::~CmdSpec(void) {}
 
 CmdParam &CmdSpec::operator[](e_param type) {
-	paramMap::iterator it;
 
-	it = params_.find(type);
-	//TODO: add secu if type not found
-	// if (it == params_.end())
-	// 	return (NULL);
-	return (*it->second);
+	for (size_t i = 0; i < params_.size(); i++) {
+		if (params_[i].first == type)
+			return ((*params_[i].second));
+	}
+	throw std::out_of_range("Param not found\n");
 }
 
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
+bool CmdSpec::enoughParams() {
+	if (name_ != "NICK" && name_ != "PRIVMSG") {
+		for (size_t i = 0; i < params_.size(); i++) {
+			if (!(*params_[i].second).getOpt() &&
+				(*params_[i].second).getParam().empty()) {
+				if (name_ == "INVITE" &&
+					(*params_[i + 1].second).getParam().empty())
+					return (true);
+				ERR_NEEDMOREPARAMS((*sender_).getNick(), name_);
+				valid_ = false;
+				return (false);
+			}
+		}
+	}
+	return (true);
+}
+
 CmdSpec &CmdSpec::process(std::vector< std::string > &buffer, Client &client) {
 	// std::cout << name << std::endl;
 	// std::cout << "'" << buffer << "'" << std::endl;
 	// std::cout << params.getParams().size() << std::endl;
+	// void(*tokenizer)(std::string& buffer, CmdParam& param)	= inputTokenizer_;
 
-	(void)buffer;
 	setSender(client);
-	if ((*sender_).getRegistration() != registrationStage_)
-	{
+	if ((*sender_).getRegistration() < registrationStage_) {
 		valid_ = false;
-		// if (name_ != "PASS" && name_ != "NICK" && name_ != "USER")
-			// ERR_NOTREGISTERED
+		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER")
+			ERR_NOTREGISTERED;
 		return (*this);
 	}
-
-	// void(*tokenizer)(std::string& buffer, CmdParam& param)	= inputTokenizer_;
-	// for (size_t i = 0; i < params_.size(); i++)
-	// 	tokenizer(buffer, *params_[i]);
-	// //verif le nombre de param
-	// for (size_t i = 0; i < params.size(); i++)
-	// {
-	// 	std::cout << "\nparam[" << i << "] : " << std::endl;
-	// 	for (size_t j = 0; j < (*params[i]).getParamSize(); j++)
-	// 		std::cout << (*params[i])[j] << std::endl;
-	// }
-	
-	for (size_t i = 0; i < checkers_.size(); i++)
-	{
+	for (size_t i = 0; i < params_.size(); i++) {
+		(*params_[i].second).setOne(buffer[i]);
+	}
+	if (!enoughParams())
+		return (*this);
+	for (size_t i = 0; i < params_.size(); i++) {
+		if (!(*params_[i].second).getDelim().empty())
+			setList(vectorSplit((*params_[i].second).getParam()[0], (*params_[i].second).getDelim()));
+	}
+	for (size_t i = 0; i < checkers_.size(); i++) {
 		checkers_[i](*this);
 		if (!valid_)
 			return (*this);
@@ -101,6 +112,10 @@ void CmdSpec::setSender(Client &sender) {
 	sender_ = &sender;
 }
 
+void setList(std::vector< std::string > &buffer) {
+	
+}
+
 /* ************************************************************************** */
 /*                               NESTED CLASS                                 */
 /* ************************************************************************** */
@@ -125,7 +140,7 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Registration(int stage) {
 
 CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Parameters(e_param type,
 													 CmdParam *param) {
-	params_[type] = param;
+	params_.push_back(std::make_pair(type, param));
 	return (*this);
 }
 
