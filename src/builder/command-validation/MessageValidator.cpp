@@ -6,22 +6,21 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/12 14:30:32 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:47:48 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MessageValidator.hpp"
 #include "Reply.hpp"
 #include <algorithm>
-#include <iostream>
 
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
 bool MessageValidator::assess(Client &sender) {
-	sender.setBuffer(removeNewlines(sender.getBuffer()));
-	std::string message = sender.getBuffer();
+	sender.mess.setBuffer(removeNewlines(sender.mess.getBuffer()));
+	std::string message = sender.mess.getBuffer();
 	std::string trailing;
 	std::cout << "[" + message + "]" << std::endl;
 	if (lenIsValid(message, sender) == false)
@@ -30,9 +29,9 @@ bool MessageValidator::assess(Client &sender) {
 		return false;
 	if (hasTrailing(message, trailing) == false)
 		return false;
-	sender.setCmdParam(vectorSplit(message, " "));
-	sender.setTrailingParam(trailing);
-	printCmdParam(sender.getCmdParam());
+	sender.mess.setCmdParam(vectorSplit(message, " "));
+	sender.mess.setTrailingParam(trailing);
+	printCmdParam(sender.mess.getCmdParam());
 	return true;
 }
 

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 14:20:43 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:26:08 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ bool Server::handleData(int fd) {
 	if (bytes <= 0)
 		return (disconnectCli(fd));
 	else {
-		curCli->setBuffer(curCli->getBuffer().append(tmpBuf, bytes));
+		curCli->mess.setBuffer(curCli->mess.getBuffer().append(tmpBuf, bytes));
 		processBuffer(curCli);
 	}
 	return (true);
@@ -164,21 +164,21 @@ bool Server::handleData(int fd) {
 
 void Server::processBuffer(Client *curCli) {
 	size_t pos;
-	while ((pos = curCli->getBuffer().find('\n')) != std::string::npos) {
-		if (!curCli->getBuffer().find("QUIT")) {
+	while ((pos = curCli->mess.getBuffer().find('\n')) != std::string::npos) {
+		if (!curCli->mess.getBuffer().find("QUIT")) {
 			std::cout << "Exit server" << std::endl;
 			disconnectCli(curCli->getFd());
 			return;
 		}
-		if (curCli->getBuffer().find("CAP LS") != std::string::npos ||
-			curCli->getBuffer().find("NICK") != std::string::npos ||
-			curCli->getBuffer().find("USER") != std::string::npos) {
-			handleClientRegistration(curCli->getBuffer(), curCli);
-			curCli->setBuffer("");
+		if (curCli->mess.getBuffer().find("CAP LS") != std::string::npos ||
+			curCli->mess.getBuffer().find("NICK") != std::string::npos ||
+			curCli->mess.getBuffer().find("USER") != std::string::npos) {
+			handleClientRegistration(curCli->mess.getBuffer(), curCli);
+			curCli->mess.setBuffer("");
 			return;
 		} else {
 			MessageValidator::assess(*curCli);
-			curCli->setBuffer("");
+			curCli->mess.setBuffer("");
 			return;
 		}
 	}

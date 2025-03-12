@@ -6,23 +6,21 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 14:26:50 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:49:24 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
-#include "typedef.hpp"
+#include "Message.hpp"
 #include <fcntl.h>
 #include <iostream>
 #include <netdb.h>
 #include <netinet/in.h>
-#include <string>
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <vector>
 
 class Client {
   public:
@@ -32,7 +30,6 @@ class Client {
 
 	/*                               GETTERS                                  */
 	int getFd() const;
-	std::string getBuffer() const;
 	std::string getHostname() const;
 	std::string getIP() const;
 	std::string getName() const;
@@ -41,13 +38,10 @@ class Client {
 	std::string getRealName() const;
 	std::string getUsername() const;
 	stringVec &getJoinedChans();
-	stringVec getCmdParam();
 	struct epoll_event *getCliEpoll();
 
 	/*                               SETTERS                                  */
-	void setBuffer(std::string buffer);
-	void setCmdParam(const stringVec &splitBuffer);
-	void setTrailingParam(const std::string &trail);
+
 	void setCliEpoll(struct epoll_event epoll);
 	void setFd(int fd);
 	void setHostname(std::string hostname);
@@ -58,6 +52,7 @@ class Client {
 
 	/*                               MEMBERS                                  */
 	struct sockaddr_in cliAddr_;
+	Message mess;
 
   private:
 	/*                               MEMBERS                                  */
@@ -78,14 +73,11 @@ class Client {
 	int cliFd_;
 	struct epoll_event cliEpoll_;
 
-	// message transmission
-	std::string buffer_;
-	stringVec cmdParam_;
-
 	// channels
 	stringVec joinedChans_;
 
-	/*                               METHODS                                  */
+	// messaging
+	
 	// private constructors
 	Client &operator=(const Client &rhs);
 	Client(const Client &rhs);

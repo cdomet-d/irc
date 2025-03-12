@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 14:27:15 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:27:57 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,8 @@ Client &Client::operator=(const Client &rhs) {
 }
 
 /* ************************************************************************** */
-/*                               METHODS                                      */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-stringVec Client::getCmdParam() {
-	return cmdParam_;
-}
 
 int Client::getFd() const {
 	return cliFd_;
@@ -74,10 +67,6 @@ stringVec &Client::getJoinedChans() {
 	return (joinedChans_);
 }
 
-std::string Client::getBuffer() const {
-	return (buffer_);
-}
-
 struct epoll_event *Client::getCliEpoll() {
 	return (&cliEpoll_);
 }
@@ -85,14 +74,6 @@ struct epoll_event *Client::getCliEpoll() {
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
-void Client::setCmdParam(const stringVec &splitBuffer) {
-	cmdParam_ = splitBuffer;
-}
-
-void Client::setTrailingParam(const std::string &trail) {
-	cmdParam_.push_back(trail);
-}
-
 
 void Client::setNick(const std::string &newNick) {
 	nick_ = newNick;
@@ -124,8 +105,4 @@ void Client::setHostname(std::string hostname) {
 
 void Client::setPrefix() {
 	prefix_ = nick_ + "!" + username_ + "@" + hostname_;
-}
-
-void Client::setBuffer(std::string buffer) {
-	buffer_ = buffer;
 }
