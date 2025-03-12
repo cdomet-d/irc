@@ -27,7 +27,11 @@ CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
 	sender_ = NULL;
 }
 
-CmdSpec::~CmdSpec(void) {}
+CmdSpec::~CmdSpec(void) {
+	for (paramMap::iterator it = params_.begin(); it != params_.end(); it++) {
+		delete it->second;
+	}
+}
 
 CmdParam &CmdSpec::operator[](e_param type) {
 	paramMap::iterator it = params_.begin();

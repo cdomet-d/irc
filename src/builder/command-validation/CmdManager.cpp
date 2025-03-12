@@ -17,7 +17,12 @@
 /* ************************************************************************** */
 CmdManager::CmdManager(void) {}
 
-CmdManager::~CmdManager(void) {} //TODO: delete cmds from commandList ?
+CmdManager::~CmdManager(void) {
+	for (std::map< std::string, CmdSpec * >::iterator it = commandList.begin(); \
+		it != commandList.end(); it++) {
+			delete it->second;
+		}
+}
 
 /* ************************************************************************** */
 /*                               METHODS                                      */
