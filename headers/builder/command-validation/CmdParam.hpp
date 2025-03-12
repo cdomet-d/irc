@@ -57,11 +57,11 @@ class CmdParam {
   private:
 	/*                               MEMBERS                                  */
 	const bool opt_;
-	bool list_;
+	const bool list_;
 	stringVec param_;
 
 	// private constructor
-	CmdParam(stringVec &param, const bool opt, bool list);
+	CmdParam(stringVec &param, const bool opt, const bool list);
 };
 
 #endif

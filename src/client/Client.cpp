@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:54:21 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/12 17:53:48 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,15 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 Client::~Client() {}
-Client::Client(const Client &rhs)
-{
+
+Client::Client(const Client &rhs) {
 	static_cast< void >(rhs);
 }
-Client::Client(void) : name_(""), nick_(""), pass_(""), realName_(""), registration_(0) {}
-Client &Client::operator=(const Client &rhs)
-{
+
+Client::Client(void)
+	: registration_(0), name_(""), nick_(""), pass_(""), realName_("") {}
+	
+Client &Client::operator=(const Client &rhs) {
 	static_cast< void >(rhs);
 	return *this;
 }
@@ -36,98 +38,77 @@ Client &Client::operator=(const Client &rhs)
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-int Client::getFd() const
-{
+int Client::getFd() const {
 	return cliFd_;
 }
-std::string Client::getName() const
-{
+std::string Client::getName() const {
 	return name_;
 }
-std::string Client::getNick() const
-{
+std::string Client::getNick() const {
 	return nick_;
 }
-std::string Client::getUsername() const
-{
+std::string Client::getUsername() const {
 	return username_;
 };
-std::string Client::getRealName() const
-{
+std::string Client::getRealName() const {
 	return realName_;
 }
-std::string Client::getIP() const
-{
+std::string Client::getIP() const {
 	return (ip_);
 }
-std::string Client::getHostname() const
-{
+std::string Client::getHostname() const {
 	return (hostname_);
 }
-std::string Client::getPrefix() const
-{
+std::string Client::getPrefix() const {
 	return (prefix_);
 }
-stringVec &Client::getRPL_JOINChans()
-{
+stringVec &Client::getRPL_JOINChans() {
 	return (_RPL_JOINChans);
 }
-std::string Client::getBuffer() const
-{
+std::string Client::getBuffer() const {
 	return (buffer_);
 }
 
-struct epoll_event *Client::getCliEpoll()
-{
+struct epoll_event *Client::getCliEpoll() {
 	return (&cliEpoll_);
 }
 
-int	Client::getRegistration(void) const
-{
+int Client::getRegistration(void) const {
 	return (registration_);
 }
 
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
-void Client::setNick(const std::string &newNick)
-{
+void Client::setNick(const std::string &newNick) {
 	nick_ = newNick;
 }
-void Client::setUsername(const std::string &username)
-{
+void Client::setUsername(const std::string &username) {
 	username_ = username;
 }
-void Client::setFd(int fd)
-{
+void Client::setFd(int fd) {
 	cliFd_ = fd;
 }
-void Client::setCliEpoll(struct epoll_event epoll)
-{
+void Client::setCliEpoll(struct epoll_event epoll) {
 	cliEpoll_.events = epoll.events;
 	cliEpoll_.data.fd = epoll.data.fd;
 }
-void Client::setIP(std::string ip)
-{
+void Client::setIP(std::string ip) {
 	ip_ = ip;
 }
-void Client::setHostname(std::string hostname)
-{
+void Client::setHostname(std::string hostname) {
 	if (!hostname.empty())
 		hostname_ = hostname;
 	else
 		hostname_ = "NULL";
 }
-void Client::setPrefix()
-{
+void Client::setPrefix() {
 	prefix_ = nick_ + "!" + username_ + "@" + hostname_;
 }
-void Client::setBuffer(std::string buffer)
-{
+void Client::setBuffer(std::string buffer) {
 	buffer_ = buffer;
 }
 
-void	Client::setRegistration(int stage)
-{
+void Client::setRegistration(int stage) {
 	registration_ = stage;
 }

@@ -55,7 +55,7 @@ bool CmdSpec::enoughParams() {
 				it++;
 				if (name_ == "INVITE" && params.getParam().empty())
 					return (true);
-				ERR_NEEDMOREPARAMS((*sender_).getNick(), name_);
+				std::cout << ERR_NEEDMOREPARAMS((*sender_).getNick(), name_);
 				valid_ = false;
 				return (false);
 			}
@@ -65,12 +65,11 @@ bool CmdSpec::enoughParams() {
 }
 
 CmdSpec &CmdSpec::process(stringVec &buffer, Client &client) {
-
 	setSender(client);
 	if ((*sender_).getRegistration() < registrationStage_) {
 		valid_ = false;
 		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER")
-			ERR_NOTREGISTERED;
+			std::cout << ERR_NOTREGISTERED;
 		return (*this);
 	}
 	size_t i = 0;
@@ -89,6 +88,17 @@ CmdSpec &CmdSpec::process(stringVec &buffer, Client &client) {
 			params.setList(vectorSplit(params[0], ","));
 		}
 	}
+
+	i = 0;
+	for (paramMap::iterator ite = params_.begin(); ite != params_.end();
+		 ite++) {
+			std::cout << "param[" << i << "] :\n";
+			for (size_t index = 0; index < (*ite->second).getParamSize(); index++) {
+				std::cout << "[" << index << "] : " << (*ite->second)[i] << std::endl;
+			}
+		i++;
+	} //TODO
+
 	for (size_t j = 0; j < checkers_.size(); j++) {
 		checkers_[j](*this);
 		if (!valid_)

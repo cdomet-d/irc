@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/11 17:51:03 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/12 17:17:14 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	joinChanRequest(CmdSpec& cmd)
 	//supprimer chaque channel faux, ainsi que toutes les keys
 	//pour qu'il reste que les channel valide a join pour l'exec
 	//s'ils ont tous ete supprimes mettre valid a false
+	std::cout << "yooo\n";
 	return (0);
 }
 

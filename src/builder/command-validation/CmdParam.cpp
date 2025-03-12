@@ -15,8 +15,8 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdParam::CmdParam(stringVec &param, const bool opt, bool list)
-	: param_(param), opt_(opt), list_(list) {}
+CmdParam::CmdParam(stringVec &param, const bool opt, const bool list)
+	: opt_(opt), list_(list), param_(param) {}
 
 CmdParam::~CmdParam(void) {}
 

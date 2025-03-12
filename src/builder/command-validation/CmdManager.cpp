@@ -18,8 +18,8 @@
 CmdManager::CmdManager(void) {}
 
 CmdManager::~CmdManager(void) {
-	for (std::map< std::string, CmdSpec * >::iterator it = commandList.begin(); \
-		it != commandList.end(); it++) {
+	for (std::map< std::string, CmdSpec * >::iterator it = commandList_.begin(); \
+		it != commandList_.end(); it++) {
 			delete it->second;
 		}
 }
@@ -28,8 +28,8 @@ CmdManager::~CmdManager(void) {
 /*                               METHODS                                      */
 /* ************************************************************************** */
 void CmdManager::executeCm(CmdSpec &cm) {
-	if (cm.getValid())
-		cm.getExecutor()(cm);
+	// if (cm.getValid())
+	// 	cm.getExecutor()(cm);
 	cm.clean();
 }
 
@@ -158,7 +158,7 @@ void CmdManager::generateCmds() {
 }
 
 void CmdManager::log(CmdSpec *cm) {
-	commandList[cm->getName()] = cm;
+	commandList_[cm->getName()] = cm;
 }
 
 /* ************************************************************************** */
@@ -167,9 +167,9 @@ void CmdManager::log(CmdSpec *cm) {
 CmdSpec &CmdManager::getCmd(const std::string &cmName) {
 	std::map< std::string, CmdSpec * >::iterator it;
 
-	it = commandList.find(cmName);
+	it = commandList_.find(cmName);
 	//TODO: add secu if command not found
-	// if (it == commandList.end())
+	// if (it == commandList_.end())
 	// ERR_UNKNOWNCOMMAND
 	// 	return ;
 	return (*it->second);

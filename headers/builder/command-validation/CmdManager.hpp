@@ -33,7 +33,7 @@ class CmdManager {
 
   private:
 	/*                               MEMBERS                                  */
-	std::map< std::string, CmdSpec * > commandList;
+	std::map< std::string, CmdSpec * > commandList_;
 };
 
 #endif
