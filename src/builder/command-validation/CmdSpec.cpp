@@ -12,6 +12,8 @@
 
 #include "CmdSpec.hpp"
 
+Server &CmdSpec::server_ = Server::GetServerInstance(gPort, gPassword);
+
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */

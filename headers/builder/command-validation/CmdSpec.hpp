@@ -46,6 +46,9 @@ class CmdSpec {
 	/*                               CONSTRUCTORS                             */
 	~CmdSpec(void);
 
+	/*                               MEMBERS                                  */
+	static Server &server_;
+
 	/*                               METHODS                                  */
 	CmdParam &operator[](e_param type);
 	CmdSpec &process(stringVec &buffer, Client &client);
