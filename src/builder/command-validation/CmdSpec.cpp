@@ -88,7 +88,7 @@ CmdSpec &CmdSpec::process(stringVec &buffer, Client &client) {
 			} catch (const std::out_of_range &e) {};
 		}
 	}
-	// displayParams();
+	displayParams();
 	for (size_t j = 0; j < checkers_.size(); j++) {
 		checkers_[j](*this);
 		if (!valid_)
@@ -122,11 +122,11 @@ void CmdSpec::displayParams(void) {
 	size_t i = 0;
 	for (paramMap::iterator itt = params_.begin(); itt != params_.end();
 		 itt++) {
-		std::cout << "param[" << i << "] :\n";
+		std::cout << "param[" << enumToString(itt->first) << "] :\n";
 		try {
 			for (size_t index = 0; index < (*itt->second).getParamSize();
 				 index++) {
-				std::cout << "[" << enumToString(itt->first)
+				std::cout << "\t\t[" << index
 						  << "] : " << (*itt->second)[index] << std::endl;
 			}
 		} catch (const std::out_of_range &e) {

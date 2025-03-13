@@ -18,7 +18,8 @@
 #include <iostream>
 #include <vector>
 
-//TODO: utiliser typedef stringVec
+//TODO: ajouter un rmParam ?
+
 class CmdParam {
   public:
 	/*                               CONSTRUCTORS                             */
