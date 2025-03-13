@@ -3,62 +3,103 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/12 15:41:47 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <sstream>
 
-bool handleMode(std::string params, Client *curCli)
-{
-	log(DEBUG, "HandleMode");
+/* void removeModes(Client * curCli, Channel *curChan, std::string modes) {
+	for (size_t i = 0; modes.c_str()[i] != '+'; i++) {
+		if (modes.c_str()[i] == 'i')
+			curChan->setInviteOnly(true);
+	//	if (modes.c_str()[i] == 'i')
+	}
+}
+
+void addModes(Client * curCli, Channel *curChan, std::string modes) {
+	
+}
+
+bool handleChannelMode(Client * curCli, std::string chanName, std::string modes) {
 	static Server &server = Server::GetServerInstance(gPort, gPassword);
-
-	std::istringstream iss(params);
-	std::string chanName;
-	std::string modes;
-
-	iss >> chanName;
-	getline(iss, modes);
-	log(DEBUG, "chanName: ", chanName);
-	log(DEBUG, "modes: ", modes);
-
-	channelMapIt curChan = server.getAllChan().find(chanName);
-	if (curChan == server.getAllChan().end()) {
+	
+	//does the channel exist ?
+	channelMapIt curChanIt = server.getAllChan().find(chanName);
+	if (curChanIt == server.getAllChan().end()) {
 		sendReply(curCli->getFd(),
 				  ERR_NOSUCHCHANNEL(curCli->getNick(), chanName));
 		log(DEBUG, "PART", "ERR_NOSUCHCHANNEL");
 		return (false);
 	}
-
-	log(DEBUG, "mode of channel:", curChan->second->getModes());
-	log(DEBUG, "channel exists");
+	Channel *curChan = curChanIt->second;
 
 	//returns the current mode of a channel : RPL_CHANNELMODEIS (324)
-	if (modes.empty() == true) {
-		sendReply(curCli->getFd(),
-				  RPL_CHANNELMODEIS(curCli->getNick(), chanName,
-									curChan->second->getModes()));
+	if (modes == " ") {
+		sendReply(curCli->getFd(), RPL_CHANNELMODEIS(curCli->getNick(), chanName));
 		log(DEBUG, "Checking the mode: ",
-			RPL_CHANNELMODEIS(curCli->getNick(), chanName,
-							  curChan->second->getModes()));
+			RPL_CHANNELMODEIS(curCli->getNick(), chanName));
 		return (true);
 	}
-	log(DEBUG, "wants to change the mode of the channel");
 
-	//notOperator
+	//isCliOp ?
 	clientMapIt senderIt =
-		curChan->second->getOpCli().find(curCli->getFd());
-	if (senderIt == curChan->second->getCliInChan().end()) {
+		curChanIt->second->getOpCli().find(curCli->getFd());
+	if (senderIt == curChanIt->second->getCliInChan().end()) {
 		sendReply(curCli->getFd(),
 				  ERR_CHANOPRIVSNEEDED(curCli->getNick(), chanName));
-		log(DEBUG, "PART", "ERR_NOTONCHANNEL");
+		log(DEBUG, "PART", "ERR_CHANOPRIVSNEEDED");
 		return (false);
 	}
-	log(DEBUG, "Client is opeator");
+	log(DEBUG, "Client is operator");
+
+	for(size_t i = 0; i <  modes.size(); i++) {
+		if (modes.c_str()[i] == '-') {
+			modes.erase(i, 1);
+			removeModes(curCli, curChan, modes);
+		}
+		if (modes.c_str()[i] == '+') {
+			modes.erase(i, 1);
+			addModes(curCli, curChan, modes);
+		}
+	}
+	
+	return (false);
+	//change the modes
+}
+
+bool handleUserMode(Client *curCli, std::string userName, std::string modes) {
+	(void)curCli;
+	(void)userName;
+	(void)modes;
+	return (false);
+}
+*/
+//the modes of a channel need to be empty if no moe is activated and +<modes> if any 
+bool handleMode(std::string params, Client *curCli)
+{
+	(void)curCli;
+	log(DEBUG, "HandleMode");
+
+	std::istringstream iss(params);
+	std::string temp;
+
+	iss >> temp;
+	//std::vector<std::string> modes;
+
+	//iss >> chanName;
+	//getline(iss, modes);
+	//log(DEBUG, "chanName: ", chanName);
+	//log(DEBUG, "modes: ", modes);
+
+	//is the first param a chanel or a user ?
+	//if (chanName.c_str()[0] == '#' || chanName.c_str()[1] == '#')
+	//	handleChannelMode(curCli, chanName, modes);
+	//else
+	//	handleUserMode(curCli, chanName, modes);
 	return (true);
 }

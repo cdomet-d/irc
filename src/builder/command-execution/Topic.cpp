@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 09:19:47 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,8 @@ void checkTopic(Channel *curChan, Client *curCli)
 void clearTopic(Channel *curChan, Client *curCli)
 {
 	curChan->setTopic("");
-	for (clientMapIt it =
-			 curChan->getCliInChan().begin();
-		 it != curChan->getCliInChan().end(); ++it) {
-		sendReply(it->second->getFd(), RPL_NOTOPIC(curCli->getNick(),
-												   curChan->getName()));
-	}
+	//messageToAllChannel
+	sendMessageChannel(curChan->getCliInChan(), RPL_NOTOPIC(curCli->getNick(), curChan->getName()));
 }
 
 void changeTopic(Channel *curChan, Client *curCli, std::string topic)
@@ -43,14 +39,7 @@ void changeTopic(Channel *curChan, Client *curCli, std::string topic)
 	topic.erase(1, 0); //remove the ':'
 	curChan->getTopic().clear();
 	curChan->setTopic(topic);
-	for (clientMapIt it =
-			 curChan->getCliInChan().begin();
-		 it != curChan->getCliInChan().end(); ++it) {
-		sendReply(it->second->getFd(),
-				  RPL_TOPICCHANGED(curCli->getPrefix(),
-								   curChan->getName(),
-								   curChan->getTopic()));
-	}
+	sendMessageChannel(curChan->getCliInChan(), RPL_TOPICCHANGED(curCli->getPrefix(), curChan->getName(), curChan->getTopic()));
 }
 
 bool handleTopic(std::string params, Client *curCli)
@@ -90,6 +79,12 @@ bool handleTopic(std::string params, Client *curCli)
 	if (topic.empty() == true) {
 		checkTopic(curChan->second, curCli);
 		return (true);
+	}
+
+	clientMapIt isOp = curChan->second->getOpCli().find(curCli->getFd());
+	if (isOp == curChan->second->getOpCli().end() && curChan->second->getTopicRestrict() == true) {
+		sendReply(curCli->getFd(), ERR_CHANOPRIVSNEEDED(curCli->getNick(), curChan->second->getName()));
+		return (false);
 	}
 
 	//if topic is = ":", the client clears the topic for the channel

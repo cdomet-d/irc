@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/11 13:40:55 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int main(int ac, char **av) {
 	server.servInit();
 	server.servRun();
 
-	for (channelMapIt it =
+/* 	for (channelMapIt it =
 			 server.getAllChan().begin();
 		 it != server.getAllChan().end(); ++it) {
 		std::cout << "Channel: " << it->second->getName() << std::endl;
@@ -46,6 +46,6 @@ int main(int ac, char **av) {
 			 itCli != it->second->getCliInChan().end(); ++itCli) {
 			std::cout << "Client: " << itCli->second->getNick() << std::endl;
 		}
-	}
+	} */
 	return (0);
 }

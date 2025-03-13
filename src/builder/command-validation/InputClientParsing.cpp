@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   InputClientParsing.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:23:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:37:33 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 10:07:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ std::string removeNewlines(const std::string &input)
 			result += input[i];
 		}
 	}
-	return result;
+	return (result);
 }
 
 stringVec vectorSplit(std::string &s,
@@ -74,6 +74,10 @@ void inputToken(std::string inputCli, Client *curCli)
 	}
 	if (command == "PART") {
 		handlePart(params, curCli);
+		return ;
+	}
+	if (command == "INVITE") {
+		handleInvite(params, curCli);
 		return ;
 	}
 

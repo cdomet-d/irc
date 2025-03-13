@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:34:33 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 10:03:08 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ class Channel {
 
 	/*                               METHODS                                  */
 	bool addClientToChan(Channel *curChan, Client *curCli);
+	void printMapValues();
+
 
 	/*                               GETTERS                                  */
 	bool getInviteOnly() const;
@@ -37,6 +39,7 @@ class Channel {
 	bool getTopicRestrict() const;
 	clientMap &getCliInChan();
 	clientMap &getOpCli();
+	clientMap &getInvitCli();
 	int getMaxCli() const;
 	std::string getName() const;
 	std::string getTopic() const;
@@ -59,11 +62,14 @@ class Channel {
 	bool topicRestrict_;
 	clientMap cliInChan_;
 	clientMap cliIsOperator_;
+	clientMap cliInvited_;
 	int maxCli_;
 	std::string modes_;
 	std::string name_;
 	std::string pass_;
 	std::string topic_;
 };
+
+void sendMessageChannel(clientMap allCliChannel, std::string message);
 
 #endif

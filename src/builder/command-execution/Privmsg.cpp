@@ -3,41 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   Privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 11:12:25 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <sstream>
 
-//TODO need to add reply when client not a channel
-//TODO need to add reply when channel not found
-//only works for channel usage
 bool handlePrivsmg(std::string params, Client *curCli)
 {
 	static Server &server = Server::GetServerInstance(gPort, gPassword);
 
 	std::istringstream iss(params);
-	std::string chanName;
+	std::string target;
 	std::string message;
 
-	iss >> chanName;
+	iss >> target;
 	std::getline(iss, message);
 
-	channelMapIt curChan = server.getAllChan().find(chanName);
-	if (curChan->second == NULL) {
-		log(DEBUG, "did not found channel");
+	if (target.find("#") == target.npos) {
+		for (clientMapIt itTarget = server.getAllCli().begin(); itTarget != server.getAllCli().end(); ++itTarget) {
+			if (itTarget->second->getNick() == target) {
+				sendReply(itTarget->first, RPL_PRIVMSG(curCli->getPrefix(), target, message));
+				return (true);
+			}
+		}
+		sendReply(curCli->getFd(), ERR_NOSUCHNICK(curCli->getNick(), target));
 		return (false);
 	}
 
+	channelMapIt curChan = server.getAllChan().find(target);
+	if (curChan == server.getAllChan().end()) {
+		sendReply(curCli->getFd(), ERR_NOSUCHCHANNEL(curCli->getNick(), target));
+		return (false);
+	}
+
+	//TODO : sendReply if client tries to send message to channel he's not a part of
 	clientMapIt senderIt =
 		curChan->second->getCliInChan().find(curCli->getFd());
 	if (senderIt == curChan->second->getCliInChan().end())
 		return (false);
 	Client *sender = senderIt->second;
+
 	for (clientMapIt itCli = curChan->second->getCliInChan().begin();
 		 itCli != curChan->second->getCliInChan().end(); ++itCli) {
 		if (itCli->first != curCli->getFd())
