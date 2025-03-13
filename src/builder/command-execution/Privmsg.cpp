@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 11:12:25 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:41:15 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ bool handlePrivsmg(std::string params, Client *curCli)
 				return (true);
 			}
 		}
-		sendReply(curCli->getFd(), ERR_NOSUCHNICK(curCli->getNick(), target));
+		sendReply(curCli->getFd(), ERR_NOSUCHNICK(target));
 		return (false);
 	}
 

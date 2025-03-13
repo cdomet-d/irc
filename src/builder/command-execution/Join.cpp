@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 11:11:46 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:39:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,14 @@ void partAllChans(Client *curCli) {
 	for(stringVec::iterator currChanName = curCli->getChans().begin(); currChanName != curCli->getChans().end(); ++currChanName) {
         handlePart(*currChanName, curCli);
     }
+	curCli->getChans().clear();
+}
+
+bool isCliInvited(Client *curCli, Channel *curChan) {
+	clientMapIt isOp = curChan->getInvitCli().find(curCli->getFd());
+	if (isOp == curChan->getInvitCli().end())
+		return (false);
+	return (true);
 }
 
 //TODO :add invite only mode if mode +i is enable
@@ -60,6 +68,11 @@ bool handleJoin(std::string params, Client *curCli)
 		if (curChan->getPassword() != password) {
 			sendReply(curCli->getFd(),
 					  ERR_BADCHANNELKEY(curCli->getNick(), curChan->getName()));
+			return (false);
+		}
+	if (curChan->getInviteOnly() == true)
+		if (isCliInvited(curCli, curChan) == false) {
+			sendReply(curCli->getFd(), ERR_INVITEONLYCHAN(curChan->getName()));
 			return (false);
 		}
 	curChan->addClientToChan(curChan, curCli);

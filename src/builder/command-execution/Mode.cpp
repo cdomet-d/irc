@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 15:41:47 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:50:36 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,12 @@ bool handleMode(std::string params, Client *curCli)
 	std::string temp;
 
 	iss >> temp;
+	
+	static Server &server = Server::GetServerInstance(gPort, gPassword);
+	
+	channelMapIt curChan = server.getAllChan().find("#test");
+	
+	curChan->second->setInviteOnly(true);
 	//std::vector<std::string> modes;
 
 	//iss >> chanName;

@@ -6,12 +6,12 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 14:40:26 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:45:36 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include "reply.h"
+#include "Reply.hpp"
 #include<sstream>
 
 bool handleInvite(std::string params, Client *curCli) {
@@ -25,10 +25,10 @@ bool handleInvite(std::string params, Client *curCli) {
 
 	iss >> target;
 	iss >> channel;
-
+	std::string command = "INVITE";
 	//is there enough params
 	if (target.empty() == true || channel.empty() == true) {
-		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->getNick(), "INVITE"));
+		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(command));
 		return (false);
 	}
 	//does channel exists
@@ -47,7 +47,7 @@ bool handleInvite(std::string params, Client *curCli) {
 	}
 	//the message ends-up on the main page of IRC
 	if (targetCli == NULL) {
-		sendReply(curCli->getFd(), ERR_NOSUCHNICK(curCli->getNick(), target));
+		sendReply(curCli->getFd(), ERR_NOSUCHNICK(target));
 		return (false);
 	}
 	//is client sending the invite on the channel
@@ -67,12 +67,12 @@ bool handleInvite(std::string params, Client *curCli) {
 	//the message ends-up on the main page of IRC
 	clientMapIt itTarget = curChan->second->getCliInChan().find(targetCli->getFd());
 	if (itTarget != curChan->second->getCliInChan().end()) {
-		sendReply(curCli->getFd(), ERR_USERONCHANNEL(curCli->getNick(), targetCli->getNick(), channel));
+		sendReply(curCli->getFd(), ERR_USERONCHANNEL(targetCli->getNick(), channel));
 		return (false);
 	} 
 
 	//sendInvite to invited client and sending client
-	sendReply(curCli->getFd(), RPL_INVITING(curCli->getNick(), targetCli->getNick(), channel));
+	sendReply(curCli->getFd(), RPL_INVITING(targetCli->getNick(), channel));
 	sendReply(targetCli->getFd(), RPL_INVITE(curCli->getNick(), targetCli->getNick(), channel));
 	curChan->second->getInvitCli().insert(clientPair(targetCli->getFd(), targetCli));
 

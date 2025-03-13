@@ -71,5 +71,3 @@ SendMessageToChannel :
 -addClientToChannel : getCliInChan, std::map<int, std::string>
 
 donc parametre de fonction : map et message 
-
-
