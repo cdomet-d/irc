@@ -35,7 +35,7 @@ class CmdParam {
 	bool getOpt(void) const;
 	const std::string &getDelim() const;
 	size_t getSize(void) const;
-	const stringVec &getParam(void) const;
+	const stringVec &getInnerParam(void) const;
 
 	/*                               SETTERS                                  */
 	void setOne(std::string &buffer);
@@ -55,14 +55,14 @@ class CmdParam {
 	  private:
 		bool opt_;
 		std::string delim_;
-		stringVec param_;
+		stringVec innerParam_;
 	};
 
   private:
 	/*                               MEMBERS                                  */
 	bool opt_;
 	std::string delim_;
-	stringVec param_;
+	stringVec innerParam_;
 
 	// private constructor
 	CmdParam(stringVec &param, const bool opt, const std::string& delim);

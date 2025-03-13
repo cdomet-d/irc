@@ -23,7 +23,7 @@ Server::Server(void) : port_(0), pass_("") {}
 
 Server::~Server(void)
 {
-	std::cout << "Calling destructor" << std::endl;
+	// std::cout << "Calling destructor" << std::endl;
 	for (clientMapIt it = clients_.begin(); it != clients_.end(); ++it) {
 		it->second->getNick().clear();
 		it->second->getUsername().clear();

@@ -47,13 +47,13 @@ CmdParam &CmdSpec::operator[](e_param type) {
 /*                               METHODS                                      */
 /* ************************************************************************** */
 bool CmdSpec::enoughParams() {
-	if (name_ == "INVITE" && (*this)[target].getParam().empty() &&
-		(*this)[channel].getParam().empty())
+	if (name_ == "INVITE" && (*this)[target].getInnerParam().empty() &&
+		(*this)[channel].getInnerParam().empty())
 		return (true);
 	if (name_ != "NICK" && name_ != "PRIVMSG") {
 		for (size_t i = 0; i < params_.size(); i++) {
 			CmdParam &param = *params_[i].second;
-			if (!param.getOpt() && param.getParam().empty()) {
+			if (!param.getOpt() && param.getInnerParam().empty()) {
 				std::cout << ERR_NEEDMOREPARAMS((*sender_).getNick(), name_);
 				valid_ = false;
 				return (false);
@@ -119,7 +119,6 @@ static std::string enumToString(e_param color) {
 }
 
 void CmdSpec::displayParams(void) {
-	size_t i = 0;
 	for (paramMap::iterator itt = params_.begin(); itt != params_.end();
 		 itt++) {
 		try {
@@ -133,7 +132,6 @@ void CmdSpec::displayParams(void) {
 			std::cerr << e.what() << std::endl;
 		}
 		std::cout << "\n";
-		i++;
 	}
 }
 

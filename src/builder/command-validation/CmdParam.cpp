@@ -16,7 +16,7 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 CmdParam::CmdParam(stringVec &param, const bool opt, const std::string& delim)
-	: opt_(opt), delim_(delim), param_(param) {}
+	: opt_(opt), delim_(delim), innerParam_(param) {}
 
 CmdParam::CmdParam(const CmdParam &rhs) {
 	*this = rhs;
@@ -28,45 +28,45 @@ CmdParam::~CmdParam(void) {}
 /*                               METHODS                                      */
 /* ************************************************************************** */
 std::string &CmdParam::operator[](unsigned int i) {
-	if (i >= param_.size())
+	if (i >= innerParam_.size())
 		throw std::out_of_range("Param not found");
-	return (param_[i]);
+	return (innerParam_[i]);
 }
 
 CmdParam &CmdParam::operator=(const CmdParam &rhs) {
 	if (this != &rhs) {
 		opt_ = rhs.getOpt();
 		delim_ = rhs.getDelim();
-		param_ = rhs.getParam();
+		innerParam_ = rhs.getInnerParam();
 	}
 	return (*this);
 }
 
 void CmdParam::rmParam(unsigned int pos) {
-	param_.erase(param_.begin() + pos);
+	innerParam_.erase(innerParam_.begin() + pos);
 }
 
 void CmdParam::rmParam(stringVec::iterator begin, stringVec::iterator end) {
-	param_.erase(begin, end);
+	innerParam_.erase(begin, end);
 }
 
 void CmdParam::addOne(unsigned int pos) {
-	param_.insert(param_.begin() + pos, "");
+	innerParam_.insert(innerParam_.begin() + pos, "");
 }
 
 void CmdParam::clean(void) {
-	param_.clear();
+	innerParam_.clear();
 }
 
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-const stringVec &CmdParam::getParam(void) const {
-	return (param_);
+const stringVec &CmdParam::getInnerParam(void) const {
+	return (innerParam_);
 }
 
 size_t CmdParam::getSize(void) const {
-	return (param_.size());
+	return (innerParam_.size());
 }
 
 bool CmdParam::getOpt(void) const {
@@ -81,11 +81,11 @@ const std::string &CmdParam::getDelim(void) const {
 /*                               SETTERS                                      */
 /* ************************************************************************** */
 void CmdParam::setOne(std::string &buffer) {
-	param_.push_back(buffer);
+	innerParam_.push_back(buffer);
 }
 
 void CmdParam::setList(const stringVec &buffer) {
-	param_ = buffer;
+	innerParam_ = buffer;
 }
 
 /* ************************************************************************** */
@@ -107,5 +107,5 @@ CmdParam::ParamBuilder &CmdParam::ParamBuilder::isList(const std::string& delim)
 }
 
 CmdParam *CmdParam::ParamBuilder::build() {
-	return (new CmdParam(param_, opt_, delim_));
+	return (new CmdParam(innerParam_, opt_, delim_));
 }
