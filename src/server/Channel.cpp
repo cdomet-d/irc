@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 15:48:22 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:57:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 /* ************************************************************************** */
 
 Channel::Channel(std::string name)
-	: inviteOnly_(false), isPassMatch_(false), topicRestrict_(true),
-	  maxCli_(0), name_(name), topic_("")
+	: inviteOnly_(false), isPassMatch_(false), topicRestrict_(true), maxCli_(0),
+	  name_(name), topic_("")
 {
 	setModes();
 }
@@ -33,8 +33,10 @@ Channel::~Channel(void)
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
-void sendMessageChannel(clientMap allCliChannel, std::string message) {
-	for(clientMapIt it = allCliChannel.begin(); it != allCliChannel.end(); ++it) {
+void sendMessageChannel(clientMap allCliChannel, std::string message)
+{
+	for (clientMapIt it = allCliChannel.begin(); it != allCliChannel.end();
+		 ++it) {
 		sendReply(it->second->getFd(), message);
 	}
 }
@@ -55,7 +57,8 @@ bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 	curCli->getChans().push_back(curChan->getName());
 
 	//messageToAllChannel
-	sendMessageChannel(curChan->getCliInChan(), RPL_JOIN(curCli->getNick(), curChan->getName()));
+	sendMessageChannel(curChan->getCliInChan(),
+					   RPL_JOIN(curCli->getNick(), curChan->getName()));
 
 	if (curChan->getTopic().empty() == true)
 		sendReply(curCli->getFd(),

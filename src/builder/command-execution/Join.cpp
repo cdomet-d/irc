@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 15:39:09 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:57:00 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,18 @@ Channel *createChan(const std::string &chanName)
 	return (newChan);
 }
 
-void partAllChans(Client *curCli) {
+void partAllChans(Client *curCli)
+{
 
-	for(stringVec::iterator currChanName = curCli->getChans().begin(); currChanName != curCli->getChans().end(); ++currChanName) {
-        handlePart(*currChanName, curCli);
-    }
+	for (stringVec::iterator currChanName = curCli->getChans().begin();
+		 currChanName != curCli->getChans().end(); ++currChanName) {
+		handlePart(*currChanName, curCli);
+	}
 	curCli->getChans().clear();
 }
 
-bool isCliInvited(Client *curCli, Channel *curChan) {
+bool isCliInvited(Client *curCli, Channel *curChan)
+{
 	clientMapIt isOp = curChan->getInvitCli().find(curCli->getFd());
 	if (isOp == curChan->getInvitCli().end())
 		return (false);
@@ -58,10 +61,10 @@ bool handleJoin(std::string params, Client *curCli)
 	iss >> chanName;
 	getline(iss, password);
 
-    if (chanName == "0") {
-        partAllChans(curCli);
-        return (true);
-    }
+	if (chanName == "0") {
+		partAllChans(curCli);
+		return (true);
+	}
 
 	Channel *curChan = createChan(chanName);
 	if (curChan->getIsPassMatch() == true)

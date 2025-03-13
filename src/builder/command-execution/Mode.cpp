@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 15:50:36 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:56:51 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ bool handleUserMode(Client *curCli, std::string userName, std::string modes) {
 	return (false);
 }
 */
-//the modes of a channel need to be empty if no moe is activated and +<modes> if any 
+//the modes of a channel need to be empty if no moe is activated and +<modes> if any
 bool handleMode(std::string params, Client *curCli)
 {
 	(void)curCli;
@@ -89,11 +89,11 @@ bool handleMode(std::string params, Client *curCli)
 	std::string temp;
 
 	iss >> temp;
-	
+
 	static Server &server = Server::GetServerInstance(gPort, gPassword);
-	
+
 	channelMapIt curChan = server.getAllChan().find("#test");
-	
+
 	curChan->second->setInviteOnly(true);
 	//std::vector<std::string> modes;
 
