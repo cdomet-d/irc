@@ -6,13 +6,14 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/13 10:18:35 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:06:37 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MessageValidator.hpp"
 #include "Reply.hpp"
 #include <algorithm>
+#include <sstream>
 
 /* ************************************************************************** */
 /*                               METHODS                                      */
@@ -22,17 +23,51 @@ bool MessageValidator::assess(Client &sender) {
 	sender.mess.setBuffer(removeNewlines(sender.mess.getBuffer()));
 	std::string message = sender.mess.getBuffer();
 	std::string trailing;
-	std::cout << "[" + message + "]" << std::endl;
+
+	std::cout << "Message	[" + message + "]" << std::endl;
 	if (lenIsValid(message, sender) == false)
 		return false;
 	if (hasPrefix(message, sender.cliInfo.getPrefix()) == false)
 		return false;
-	if (hasTrailing(message, trailing) == false)
-		return false;
-	sender.mess.setCmdParam(vectorSplit(message, " "));
-	sender.mess.setTrailingParam(trailing);
-	printCmdParam(sender.mess.getCmdParam());
+	hasTrailing(message, trailing);
+	sender.mess.setCmdParam(vectorSplit(message, ' '));
+	if (!trailing.empty())
+		sender.mess.setTrailingParam(trailing);
+	if (sender.mess.getCmd() == "MODE")
+		formatMode(sender.mess.getCmdParam());
 	return true;
+}
+
+void MessageValidator::formatMode(stringVec &mode) {
+
+	if (mode.size() < 2)
+		return;
+	stringVec modeFormat(4);
+	std::string flagformat, paramformat;
+
+	modeFormat.push_back(mode.at(0));
+	modeFormat.push_back(mode.at(1));
+	for (stringVec::iterator i = mode.begin() + 2; i != mode.end(); ++i) {
+		if (!i->empty()) {
+			const char firstChar = (*i)[0];
+			if (firstChar == '+' || firstChar == '-') {
+				std::string flags = *i;
+				for (size_t j = 1; j < flags.size(); ++j) {
+					flagformat += firstChar;
+					flagformat += (*i)[j];
+					flagformat += ' ';
+				}
+			} else {
+				paramformat += *i;
+				paramformat += ' ';
+			}
+		}
+	}
+	if (!flagformat.empty())
+		modeFormat.push_back(flagformat);
+	if (!paramformat.empty())
+		modeFormat.push_back(paramformat);
+	mode = modeFormat;
 }
 
 bool MessageValidator::hasPrefix(std::string &mess,
@@ -77,19 +112,15 @@ bool MessageValidator::lenIsValid(const std::string &mess,
 	return true;
 }
 
-stringVec MessageValidator::vectorSplit(std::string &s,
-										const std::string &del) {
-	stringVec inputCli;
-	size_t pos = 0;
+stringVec MessageValidator::vectorSplit(std::string &s, char del) {
+	stringVec result;
 	std::string token;
+	std::istringstream stream(s);
 
-	while ((pos = s.find(del)) != std::string::npos) {
-		token = s.substr(0, pos);
-		inputCli.push_back(token);
-		s.erase(0, pos + del.length());
+	while (std::getline(stream, token, del)) {
+		result.push_back(token);
 	}
-	inputCli.push_back(s);
-	return (inputCli);
+	return (result);
 }
 
 std::string MessageValidator::removeNewlines(const std::string &input) {
@@ -103,6 +134,7 @@ std::string MessageValidator::removeNewlines(const std::string &input) {
 }
 
 void MessageValidator::printCmdParam(const stringVec &obj) {
+	std::cout << "Print:" << std::endl;
 	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it)
 		std::cout << *it << std::endl;
 }

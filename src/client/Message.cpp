@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/12 16:31:21 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 13:05:25 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,16 @@ Message::~Message(void) {}
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-stringVec Message::getCmdParam() {
+stringVec &Message::getCmdParam() {
 	return cmdParam_;
 }
 
+std::string Message::getCmd() const {
+	return cmdParam_.at(0);
+}
+
 std::string Message::getBuffer() const {
-	return (buffer_);
+	return buffer_;
 }
 
 /* ************************************************************************** */
