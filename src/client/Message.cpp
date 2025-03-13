@@ -1,59 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
+/*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 10:10:13 by cdomet-d         ###   ########.fr       */
+/*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
+/*   Updated: 2025/03/13 13:05:25 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Client.hpp"
-#include <arpa/inet.h>
-#include <string.h>
+#include "Message.hpp"
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-Client::Client(void) {}
-Client::~Client() {}
 
-Client::Client(const Client &rhs) {
-	static_cast< void >(rhs);
-}
+Message::Message(void) {}
 
-Client &Client::operator=(const Client &rhs) {
-	static_cast< void >(rhs);
-	return *this;
-}
+Message::~Message(void) {}
 
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-
-int Client::getFd() const {
-	return cliFd_;
+stringVec &Message::getCmdParam() {
+	return cmdParam_;
 }
 
-stringVec &Client::getJoinedChans() {
-	return (joinedChans_);
+std::string Message::getCmd() const {
+	return cmdParam_.at(0);
 }
 
-struct epoll_event *Client::getCliEpoll() {
-	return (&cliEpoll_);
+std::string Message::getBuffer() const {
+	return buffer_;
 }
 
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
 
-void Client::setFd(int fd) {
-	cliFd_ = fd;
+void Message::setCmdParam(const stringVec &splitBuffer) {
+	cmdParam_ = splitBuffer;
 }
 
-void Client::setCliEpoll(struct epoll_event epoll) {
-	cliEpoll_.events = epoll.events;
-	cliEpoll_.data.fd = epoll.data.fd;
+void Message::setTrailingParam(const std::string &trail) {
+	cmdParam_.push_back(trail);
+}
+
+void Message::setBuffer(std::string buffer) {
+	buffer_ = buffer;
 }

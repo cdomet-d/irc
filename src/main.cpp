@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 18:00:09 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/13 10:17:23 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ int gSign = false;
 int gPort = 0;
 std::string gPassword = "";
 
-void SignalHandler(int signum) {
+void SignalHandler(int signum)
+{
 	(void)signum;
 	gSign = true;
 }
@@ -44,7 +45,7 @@ void SignalHandler(int signum) {
 // 		for (clientMapIt itCli =
 // 				 it->second->getCliInChan().begin();
 // 			 itCli != it->second->getCliInChan().end(); ++itCli) {
-// 			std::cout << "Client: " << itCli->second->getNick() << std::endl;
+// 			std::cout << "Client: " << itCli->second->cliInfo.getNick() << std::endl;
 // 		}
 // 	}
 // 	return (0);

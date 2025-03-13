@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/12 17:19:12 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/13 10:32:05 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,20 +43,22 @@ SERV_DIR:= $(SRC_DIR)server/
 
 # ----------------------------- SOURCES FILES -------------------------------- #
 
-SERV_SRC:=				Channel.cpp \
-						Server.cpp \
-						Reply.cpp \
+SERV_SRC:=			Channel.cpp \
+					Server.cpp \
+					Reply.cpp \
 
-DEBUG_SRC:=				Log.cpp \
+DEBUG_SRC:=			Log.cpp \
 
-CLI_SRC:=				Client.cpp \
+CLI_SRC:=			Client.cpp \
+					Message.cpp \
+					UserInfo.cpp \
 
-BUILD_EXE_SRC:=			Join.cpp \
-						NickUser.cpp \
-						Privmsg.cpp \
-						Topic.cpp \
-						Part.cpp \
-						Mode.cpp \
+BUILD_EXE_SRC:=		Join.cpp \
+					NickUser.cpp \
+					Privmsg.cpp \
+					Topic.cpp \
+					Part.cpp \
+					Mode.cpp \
 
 BUILD_VAL_SRC:=			InputClientParsing.cpp \
 						CmdManager.cpp \
@@ -66,7 +68,7 @@ BUILD_VAL_SRC:=			InputClientParsing.cpp \
 
 BUILD_MAN_SRC:=	\
 
-SRC_ROOT:=				main.cpp \
+SRC_ROOT:=			main.cpp \
 
 # ----------------------------- BUILDING PATH -------------------------------- #
 
@@ -139,6 +141,7 @@ fclean: clean
 # ----------------------------- MAKE RE -------------------------------------- #
 
 re: fclean all
+redebug: fclean debug
 
 # ----------------------------- MAKE INFO ------------------------------------ #
 
@@ -149,7 +152,19 @@ info:
 	@echo
 	@echo $(SRC)
 
-.PHONY: all clean info fclean re debug
+# ----------------------------- RUN ------------------------------------------ #
+
+run: all
+	./$(NAME) 4444 0
+
+VFLAGS:= --leak-check=full --show-leak-kinds=all
+drun: debug
+	valgrind ./$(DEBUG_NAME) 4444 0
+
+# $(VFLAGS)
+# ---------------------------------------------------------------------------- #
+
+.PHONY: all clean info fclean re debug redebug run drun
 
 # ----------------------------- FORMATTING ----------------------------------- #
 
