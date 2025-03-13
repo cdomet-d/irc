@@ -6,17 +6,14 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 17:16:51 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:41:07 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
 
-#include "Client.hpp"
-#include "Reply.hpp"
 #include "typedef.hpp"
-#include <iostream>
 
 class Client;
 

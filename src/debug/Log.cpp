@@ -6,14 +6,11 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:56:23 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 09:48:30 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:44:41 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include <ctime>
-#include <iostream>
-#include <string>
 
 std::string timeStamp()
 {
