@@ -23,6 +23,7 @@ class UserInfo {
 	/*                               METHODS                                  */
 
 	/*                               GETTERS                                  */
+	int getRegistration() const;
 	std::string getHostname() const;
 	std::string getIP() const;
 	std::string getName() const;
@@ -36,9 +37,11 @@ class UserInfo {
 	void setIP(std::string ip);
 	void setNick(const std::string &newNick);
 	void setPrefix();
+	void setRegistration(int stage);
 	void setUsername(const std::string &username);
 
   private:
+	int	registration_;
 	std::string hostname_;
 	std::string ip_;
 	std::string name_;

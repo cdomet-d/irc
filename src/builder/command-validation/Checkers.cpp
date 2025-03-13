@@ -40,7 +40,7 @@ int validChan(CmdSpec &cmd) {
 int joinChanRequest(CmdSpec &cmd) {
 	for (size_t i = 0; i < cmd[channel].getSize(); i++)
 		if (cmd[channel][i][0] != '#') {
-			std::cout << ERR_NOSUCHCHANNEL(cmd.getSender().getNick(),
+			std::cout << ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
 										cmd[channel][i]);
 	}
 	//supprimer chaque channel faux, (ainsi que toutes les keys ? peut etre pas necessaire)

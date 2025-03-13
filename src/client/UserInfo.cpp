@@ -59,6 +59,11 @@ std::string UserInfo::getHostname() const {
 std::string UserInfo::getPrefix() const {
 	return (prefix_);
 }
+
+int UserInfo::getRegistration() const {
+	return (registration_);
+}
+
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
@@ -84,4 +89,8 @@ void UserInfo::setHostname(std::string hostname) {
 
 void UserInfo::setPrefix() {
 	prefix_ = nick_ + "!" + username_ + "@" + hostname_;
+}
+
+void UserInfo::setRegistration(int stage) {
+	registration_ = stage;
 }

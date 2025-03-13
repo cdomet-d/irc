@@ -28,7 +28,7 @@ bool handlePart(std::string params, Client *curCli) {
 
 	//needMoreParams
 	if (chanName.empty() == true) {
-		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->cliInfo.getNick()));
+		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->cliInfo.getNick(), "PART"));
 		// log(DEBUG, "PART", "ERR_NEEDMOREPARAMS");
 		return (false);
 	}

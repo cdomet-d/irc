@@ -68,9 +68,9 @@ void CmdManager::generateCmds() {
 	log(CmdSpec::CmdBuilder()
 			.Name("JOIN")
 			.Registration(3)
-			.Parameters(channel, CmdParam::ParamBuilder().isList(",").build())
+			.Parameters(channel, CmdParam::ParamBuilder().isList(',').build())
 			.Parameters(
-				key, CmdParam::ParamBuilder().isOpt(true).isList(",").build())
+				key, CmdParam::ParamBuilder().isOpt(true).isList(',').build())
 			.addChecker(joinChanRequest)
 			// .CmExecutor()
 			.build());
@@ -94,7 +94,7 @@ void CmdManager::generateCmds() {
 			.Name("KICK")
 			.Registration(3)
 			.Parameters(channel, CmdParam::ParamBuilder().build())
-			.Parameters(target, CmdParam::ParamBuilder().isList(",").build())
+			.Parameters(target, CmdParam::ParamBuilder().isList(',').build())
 			.Parameters(message, CmdParam::ParamBuilder().isOpt(true).build())
 			.addChecker(validChan)
 			.addChecker(onChan)
@@ -109,10 +109,10 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.Parameters(channel, CmdParam::ParamBuilder().build())
 			.Parameters(
-				mode_, CmdParam::ParamBuilder().isList(" ").isOpt(true).build())
+				mode_, CmdParam::ParamBuilder().isList(' ').isOpt(true).build())
 			.Parameters(
 				modeArg,
-				CmdParam::ParamBuilder().isList(" ").isOpt(true).build())
+				CmdParam::ParamBuilder().isList(' ').isOpt(true).build())
 			.addChecker(validChan)
 			.addChecker(hasChanPriv)
 			.addChecker(validMode)
@@ -123,7 +123,7 @@ void CmdManager::generateCmds() {
 	log(CmdSpec::CmdBuilder()
 			.Name("PART")
 			.Registration(3)
-			.Parameters(channel, CmdParam::ParamBuilder().isList(",").build())
+			.Parameters(channel, CmdParam::ParamBuilder().isList(',').build())
 			.Parameters(message, CmdParam::ParamBuilder().isOpt(true).build())
 			.addChecker(validChan)
 			.addChecker(onChan)
@@ -134,7 +134,7 @@ void CmdManager::generateCmds() {
 	log(CmdSpec::CmdBuilder()
 			.Name("PRIVMSG")
 			.Registration(3)
-			.Parameters(target, CmdParam::ParamBuilder().isList(",").build())
+			.Parameters(target, CmdParam::ParamBuilder().isList(',').build())
 			.Parameters(message, CmdParam::ParamBuilder().build())
 			.addChecker(validMess)
 			.addChecker(validTarget)

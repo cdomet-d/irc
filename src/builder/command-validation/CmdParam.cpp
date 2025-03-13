@@ -15,7 +15,7 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdParam::CmdParam(stringVec &param, const bool opt, const std::string& delim)
+CmdParam::CmdParam(stringVec &param, const bool opt, const char delim)
 	: opt_(opt), delim_(delim), innerParam_(param) {}
 
 CmdParam::CmdParam(const CmdParam &rhs) {
@@ -73,7 +73,7 @@ bool CmdParam::getOpt(void) const {
 	return (opt_);
 }
 
-const std::string &CmdParam::getDelim(void) const {
+const char CmdParam::getDelim(void) const {
 	return (delim_);
 }
 
@@ -91,7 +91,7 @@ void CmdParam::setList(const stringVec &buffer) {
 /* ************************************************************************** */
 /*                               NESTED CLASS                                 */
 /* ************************************************************************** */
-CmdParam::ParamBuilder::ParamBuilder(void) : opt_(false), delim_("") {}
+CmdParam::ParamBuilder::ParamBuilder(void) : opt_(false), delim_('\0') {}
 
 CmdParam::ParamBuilder::~ParamBuilder(void) {}
 
@@ -101,7 +101,7 @@ CmdParam::ParamBuilder &CmdParam::ParamBuilder::isOpt(bool opt) {
 	return (*this);
 }
 
-CmdParam::ParamBuilder &CmdParam::ParamBuilder::isList(const std::string& delim) {
+CmdParam::ParamBuilder &CmdParam::ParamBuilder::isList(const char delim) {
 	delim_ = delim;
 	return (*this);
 }

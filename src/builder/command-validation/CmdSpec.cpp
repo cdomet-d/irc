@@ -54,7 +54,8 @@ bool CmdSpec::enoughParams() {
 		for (size_t i = 0; i < params_.size(); i++) {
 			CmdParam &param = *params_[i].second;
 			if (!param.getOpt() && param.getInnerParam().empty()) {
-				std::cout << ERR_NEEDMOREPARAMS((*sender_).getNick(), name_);
+				std::cout << ERR_NEEDMOREPARAMS((*sender_).cliInfo.getNick(),
+												name_);
 				valid_ = false;
 				return (false);
 			}
@@ -65,7 +66,7 @@ bool CmdSpec::enoughParams() {
 
 CmdSpec &CmdSpec::process(stringVec &buffer, Client &client) {
 	setSender(client);
-	if (registrationStage_ > (*sender_).getRegistration()) {
+	if (registrationStage_ > (*sender_).cliInfo.getRegistration()) {
 		valid_ = false;
 		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER")
 			std::cout << ERR_NOTREGISTERED;
@@ -78,9 +79,10 @@ CmdSpec &CmdSpec::process(stringVec &buffer, Client &client) {
 		return (*this);
 	for (size_t index = 0; index < params_.size(); index++) {
 		CmdParam &param = *params_[index].second;
-		if (!param.getDelim().empty()) {
+		if (!param.getDelim()) {
 			try {
-				param.setList(vectorSplit(param[0], param.getDelim()));
+				param.setList(
+					MessageValidator::vectorSplit(param[0], param.getDelim()));
 			} catch (const std::out_of_range &e) {};
 		}
 	}
@@ -122,9 +124,8 @@ void CmdSpec::displayParams(void) {
 	for (paramMap::iterator itt = params_.begin(); itt != params_.end();
 		 itt++) {
 		try {
-			for (size_t index = 0; index < (*itt->second).getSize();
-				 index++) {
-				std::cout << "param[" << enumToString(itt->first) << "]" 
+			for (size_t index = 0; index < (*itt->second).getSize(); index++) {
+				std::cout << "param[" << enumToString(itt->first) << "]"
 						  << "[" << index << "] : " << (*itt->second)[index]
 						  << std::endl;
 			}
@@ -154,7 +155,7 @@ const Client &CmdSpec::getSender(void) const {
 	return (*sender_);
 }
 
-const paramMap& CmdSpec::getParams(void) const {
+const paramMap &CmdSpec::getParams(void) const {
 	return (params_);
 }
 

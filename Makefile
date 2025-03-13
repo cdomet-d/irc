@@ -60,11 +60,11 @@ BUILD_EXE_SRC:=		Join.cpp \
 					Part.cpp \
 					Mode.cpp \
 
-BUILD_VAL_SRC:=			InputClientParsing.cpp \
-						CmdManager.cpp \
+BUILD_VAL_SRC:=			CmdManager.cpp \
 						CmdSpec.cpp \
 						CmdParam.cpp \
 						Checkers.cpp \
+						MessageValidator.cpp \
 
 BUILD_MAN_SRC:=	\
 
