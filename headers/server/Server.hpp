@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 15:19:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:53:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ bool handlePart(std::string params, Client *curCli);
 bool handleMode(std::string params, Client *currentlCli);
 //INVITE
 bool handleInvite(std::string params, Client *curCli);
+//KICK
+bool handleKick(std::string params, Client *curCli);
 
 /*                               DEBUG                                  */
 void log(logLevel level, std::string message);

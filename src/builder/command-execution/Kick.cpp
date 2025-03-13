@@ -1,0 +1,71 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Kick.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
+/*   Updated: 2025/03/13 17:03:32 by aljulien         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "Server.hpp"
+#include <sstream>
+#include "Reply.hpp"
+
+bool handleKick(std::string params, Client *curCli) {
+	static Server &server = Server::GetServerInstance(gPort, gPassword);
+	
+	std::istringstream iss(params);
+	std::string command = "KICK";
+	std::string target;
+	std::string channel;
+	std::string reason;
+
+	iss >> channel;
+	iss >> target;
+	getline(iss, reason);
+	
+	if (target.empty() == true || channel.empty() == true) {
+		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(command));
+		return (false);
+	}
+
+	//does channel exists
+	channelMapIt curChan = server.getAllChan().find(channel);
+	if (curChan == server.getAllChan().end()) {
+		sendReply(curCli->getFd(),
+				  ERR_NOSUCHCHANNEL(curCli->getNick(), target));
+		return (false);
+	}
+	//does client exist
+	//get the instance of the kicked client
+	Client *targetCli = NULL;
+	for (clientMapIt itTarget = server.getAllCli().begin();
+		 itTarget != server.getAllCli().end(); ++itTarget) {
+		if (itTarget->second->getNick() == target) {
+			targetCli = itTarget->second;
+		}
+	}
+	if (targetCli == NULL) {
+		sendReply(curCli->getFd(), ERR_NOSUCHNICK(target));
+		return (false);
+	}
+
+	//is client sending the invite on the channel
+	clientMapIt senderIt =
+	curChan->second->getCliInChan().find(curCli->getFd());
+	if (senderIt == curChan->second->getCliInChan().end()) {
+		sendReply(curCli->getFd(),
+				  ERR_NOTONCHANNEL(curCli->getNick(), channel));
+		return (false);
+	}
+	//is client sending the invite an OP on the channel
+	senderIt = curChan->second->getOpCli().find(curCli->getFd());
+	if (senderIt == curChan->second->getOpCli().end()) {
+		sendReply(curCli->getFd(),
+				  ERR_CHANOPRIVSNEEDED(curCli->getNick(), channel));
+		return (false);
+	}
+}

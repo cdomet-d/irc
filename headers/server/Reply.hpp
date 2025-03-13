@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 15:48:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:07:00 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 #define ERR_NOSUCHCHANNEL(nickname, channel) (": 403 " + nickname + " " + channel + " :No such channel" + "\r\n")
 #define ERR_NOSUCHNICK(nickname) (": 401 " + nickname + " :No such nick/channel\r\n")
 #define ERR_NOTEXTTOSEND()(": 412 :No text to send\r\n")
-// #define ERR_NOTONCHANNEL(channel) (":442 " + channel + " :You're not on that channel\r\n")
+//#define ERR_NOTONCHANNEL(channel) (":442 " + channel + " :You're not on that channel\r\n")
 #define ERR_NOTONCHANNEL(nickname, channel) (": 442 " + nickname + " " + channel + " :You're not on that channel" + "\r\n") 
 #define ERR_TOOMANYCHANNELS(channel) (": 405 " + channel + " :You have joined too many channels\r\n")
 // #define ERR_UNKNOWNMODE(char) (":472 " + char + " :is unknown mode char to me\r\n")
@@ -73,6 +73,7 @@
 #define RPL_PARTNOREASON(prefix, channel) (":" + prefix + " PART " + channel + "\r\n")
 #define RPL_CHANGEMODE(prefix, channel, mode) (":" + prefix + " MODE " + channel + " " + mode + "\r\n")
 #define RPL_INVITE(nickname, target, channel) (":" + nickname + " INVITE " + target + " :" + channel + "\r\n")
+#define RPL_KICK(prefix, channel, target, reason) (":" + prefix + " KICK " + channel + " " + target + " " + reason + "\r\n")
 
 void sendReply(int fd, std::string reply);
 
