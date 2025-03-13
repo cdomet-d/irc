@@ -45,14 +45,13 @@ CmdParam &CmdSpec::operator[](e_param type) {
 /*                               METHODS                                      */
 /* ************************************************************************** */
 bool CmdSpec::enoughParams() {
+	if (name_ == "INVITE" && (*this)[target].getParam().empty() &&
+		(*this)[channel].getParam().empty())
+		return (true);
 	if (name_ != "NICK" && name_ != "PRIVMSG") {
-		for (paramMap::iterator it = params_.begin(); it != params_.end();
-			 it++) {
-			CmdParam &param = *it->second;
+		for (size_t i = 0; i < params_.size(); i++) {
+			CmdParam &param = *params_[i].second;
 			if (!param.getOpt() && param.getParam().empty()) {
-				it++;
-				if (name_ == "INVITE" && param.getParam().empty())
-					return (true);
 				std::cout << ERR_NEEDMOREPARAMS((*sender_).getNick(), name_);
 				valid_ = false;
 				return (false);
@@ -70,18 +69,13 @@ CmdSpec &CmdSpec::process(stringVec &buffer, Client &client) {
 			std::cout << ERR_NOTREGISTERED;
 		return (*this);
 	}
-	size_t i = 0;
-	paramMap::iterator it = params_.begin(); //TODO: enlever iterator ?
-	while (it != params_.end() && i < buffer.size()) {
-		(*it->second).setOne(buffer[i]);
-		it++;
-		i++;
+	for (size_t i = 0; i < params_.size() && i < buffer.size(); i++) {
+		(*params_[i].second).setOne(buffer[i]);
 	}
 	if (!enoughParams())
 		return (*this);
-	for (paramMap::iterator ite = params_.begin(); ite != params_.end();
-		 ite++) {
-		CmdParam &param = *ite->second;
+	for (size_t index = 0; index < params_.size(); index++) {
+		CmdParam &param = *params_[index].second;
 		if (!param.getDelim().empty()) {
 			try {
 				param.setList(vectorSplit(param[0], param.getDelim()));
@@ -122,12 +116,12 @@ void CmdSpec::displayParams(void) {
 	size_t i = 0;
 	for (paramMap::iterator itt = params_.begin(); itt != params_.end();
 		 itt++) {
-		std::cout << "param[" << enumToString(itt->first) << "] :\n";
 		try {
-			for (size_t index = 0; index < (*itt->second).getParamSize();
+			for (size_t index = 0; index < (*itt->second).getSize();
 				 index++) {
-				std::cout << "\t\t[" << index
-						  << "] : " << (*itt->second)[index] << std::endl;
+				std::cout << "param[" << enumToString(itt->first) << "]" 
+						  << "[" << index << "] : " << (*itt->second)[index]
+						  << std::endl;
 			}
 		} catch (const std::out_of_range &e) {
 			std::cerr << e.what() << std::endl;

@@ -33,6 +33,14 @@ class CmdManager {
 	/*                               GETTERS                                  */
 	CmdSpec &getCmd(const std::string &cmName);
 
+	/*                               NESTED CLASS                             */
+	class CmdNotFoundException : std::exception {
+		public:
+		const char* what() const throw() {
+			return ("Command not found");
+		}
+	};
+
   private:
 	/*                               MEMBERS                                  */
 	cmdMap commandList_;

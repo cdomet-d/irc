@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
 	//execute command
 	try {
 		cmManager.executeCm(cmManager.getCmd(argv[1]).process(buffer, client));
-	} catch (const std::out_of_range &e) {
+	} catch (const CmdManager::CmdNotFoundException &e) {
 		std::cout << ERR_UNKNOWNCOMMAND(client.getNick(), argv[1]);
 	}
 }

@@ -172,8 +172,7 @@ CmdSpec &CmdManager::getCmd(const std::string &cmName) {
 
 	it = commandList_.find(cmName);
 	if (it == commandList_.end()) {
-		throw std::out_of_range("Command not found\n");
-		//TODO: faire des exception + specifique
+		throw CmdNotFoundException();
 	}
 	return (*it->second);
 }

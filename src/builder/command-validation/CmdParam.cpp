@@ -49,7 +49,7 @@ const stringVec &CmdParam::getParam(void) const {
 	return (param_);
 }
 
-size_t CmdParam::getParamSize(void) const {
+size_t CmdParam::getSize(void) const {
 	return (param_.size());
 }
 

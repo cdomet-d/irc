@@ -32,7 +32,7 @@ class CmdParam {
 	/*                               GETTERS                                  */
 	bool getOpt(void) const;
 	const std::string &getDelim() const;
-	size_t getParamSize(void) const;
+	size_t getSize(void) const;
 	const stringVec &getParam(void) const;
 
 	/*                               SETTERS                                  */
