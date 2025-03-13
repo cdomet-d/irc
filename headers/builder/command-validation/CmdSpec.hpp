@@ -16,7 +16,6 @@
 #include "Checkers.hpp"
 #include "CmdParam.hpp"
 #include "Server.hpp"
-#include "reply.h"
 #include <iostream>
 #include <map>
 #include <utility>

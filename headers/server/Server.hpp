@@ -14,7 +14,6 @@
 #define SERVER_HPP
 
 #include "Channel.hpp"
-#include "Client.hpp"
 #include "Reply.hpp"
 #include "typedef.hpp"
 #include <arpa/inet.h>

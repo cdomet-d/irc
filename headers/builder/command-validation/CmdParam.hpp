@@ -31,7 +31,7 @@ class CmdParam {
 
 	/*                               GETTERS                                  */
 	bool getOpt(void) const;
-	bool getList() const;
+	const std::string &getDelim() const;
 	size_t getParamSize(void) const;
 	const stringVec &getParam(void) const;
 
@@ -48,22 +48,22 @@ class CmdParam {
 		//methods
 		CmdParam *build();
 		ParamBuilder &isOpt(bool opt);
-		ParamBuilder &isList(bool list);
+		ParamBuilder &isList(const std::string& delim);
 
 	  private:
 		bool opt_;
-		bool list_;
+		std::string delim_;
 		stringVec param_;
 	};
 
   private:
 	/*                               MEMBERS                                  */
 	bool opt_;
-	bool list_;
+	std::string delim_;
 	stringVec param_;
 
 	// private constructor
-	CmdParam(stringVec &param, const bool opt, const bool list);
+	CmdParam(stringVec &param, const bool opt, const std::string& delim);
 	CmdParam(const CmdParam &rhs);
 };
 

@@ -27,7 +27,7 @@
 #define ERR_CHANOPRIVSNEEDED(nickname, channel) (": 482 " + nickname + " " + channel + " :You're not channel operator" + "\r\n")
 #define ERR_ERRONEUSNICKNAME(nick) (":432 " + nick + " :Erroneous nickname\r\n")
 #define ERR_INVITEONLYCHAN(channel) (":473 " + channel + " :Cannot join channel (+i)\r\n")
-#define ERR_NEEDMOREPARAMS(command) (":461 " + command + " :Not enough parameters\r\n")
+#define ERR_NEEDMOREPARAMS(nickname, command) (":461 " + nickname + " " + command + " :Not enough parameters\r\n")
 #define ERR_NICKNAMEINUSE(nick) (":433 " + nick + " :Nickname is already in use\r\n")
 #define ERR_NONICKNAMEGIVEN()(":431 :No nickname given\r\n")
 #define ERR_NORECIPIENT(command) (":411 :No recipient given (" + command + ")\r\n")

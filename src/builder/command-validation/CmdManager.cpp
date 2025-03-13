@@ -18,10 +18,10 @@
 CmdManager::CmdManager(void) {}
 
 CmdManager::~CmdManager(void) {
-	for (cmdMap::iterator it = commandList_.begin(); \
-		it != commandList_.end(); it++) {
-			delete it->second;
-		}
+	for (cmdMap::iterator it = commandList_.begin(); it != commandList_.end();
+		 it++) {
+		delete it->second;
+	}
 }
 
 /* ************************************************************************** */
@@ -68,9 +68,9 @@ void CmdManager::generateCmds() {
 	log(CmdSpec::CmdBuilder()
 			.Name("JOIN")
 			.Registration(3)
-			.Parameters(channel, CmdParam::ParamBuilder().isList(true).build())
+			.Parameters(channel, CmdParam::ParamBuilder().isList(",").build())
 			.Parameters(
-				key, CmdParam::ParamBuilder().isOpt(true).isList(true).build())
+				key, CmdParam::ParamBuilder().isOpt(true).isList(",").build())
 			.addChecker(joinChanRequest)
 			// .CmExecutor()
 			.build());
@@ -94,7 +94,7 @@ void CmdManager::generateCmds() {
 			.Name("KICK")
 			.Registration(3)
 			.Parameters(channel, CmdParam::ParamBuilder().build())
-			.Parameters(target, CmdParam::ParamBuilder().isList(true).build())
+			.Parameters(target, CmdParam::ParamBuilder().isList(",").build())
 			.Parameters(message, CmdParam::ParamBuilder().isOpt(true).build())
 			.addChecker(validChan)
 			.addChecker(onChan)
@@ -108,8 +108,11 @@ void CmdManager::generateCmds() {
 			.Name("MODE")
 			.Registration(3)
 			.Parameters(channel, CmdParam::ParamBuilder().build())
-			.Parameters(mode_, CmdParam::ParamBuilder().isOpt(true).build())
-			.Parameters(modeArg, CmdParam::ParamBuilder().isOpt(true).build())
+			.Parameters(
+				mode_, CmdParam::ParamBuilder().isList(" ").isOpt(true).build())
+			.Parameters(
+				modeArg,
+				CmdParam::ParamBuilder().isList(" ").isOpt(true).build())
 			.addChecker(validChan)
 			.addChecker(hasChanPriv)
 			.addChecker(validMode)
@@ -120,7 +123,7 @@ void CmdManager::generateCmds() {
 	log(CmdSpec::CmdBuilder()
 			.Name("PART")
 			.Registration(3)
-			.Parameters(channel, CmdParam::ParamBuilder().isList(true).build())
+			.Parameters(channel, CmdParam::ParamBuilder().isList(",").build())
 			.Parameters(message, CmdParam::ParamBuilder().isOpt(true).build())
 			.addChecker(validChan)
 			.addChecker(onChan)
@@ -131,7 +134,7 @@ void CmdManager::generateCmds() {
 	log(CmdSpec::CmdBuilder()
 			.Name("PRIVMSG")
 			.Registration(3)
-			.Parameters(target, CmdParam::ParamBuilder().isList(true).build())
+			.Parameters(target, CmdParam::ParamBuilder().isList(",").build())
 			.Parameters(message, CmdParam::ParamBuilder().build())
 			.addChecker(validMess)
 			.addChecker(validTarget)
@@ -169,7 +172,8 @@ CmdSpec &CmdManager::getCmd(const std::string &cmName) {
 
 	it = commandList_.find(cmName);
 	if (it == commandList_.end()) {
-		throw std::out_of_range("Command not found\n");//TODO: faire des exception + specifique
+		throw std::out_of_range("Command not found\n");
+		//TODO: faire des exception + specifique
 	}
 	return (*it->second);
 }

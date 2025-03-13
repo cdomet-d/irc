@@ -82,9 +82,9 @@ CmdSpec &CmdSpec::process(stringVec &buffer, Client &client) {
 	for (paramMap::iterator ite = params_.begin(); ite != params_.end();
 		 ite++) {
 		CmdParam &param = *ite->second;
-		if (param.getList()) {
+		if (!param.getDelim().empty()) {
 			try {
-				param.setList(vectorSplit(param[0], ","));
+				param.setList(vectorSplit(param[0], param.getDelim()));
 			} catch (const std::out_of_range &e) {};
 		}
 	}

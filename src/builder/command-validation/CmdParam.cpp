@@ -15,8 +15,8 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdParam::CmdParam(stringVec &param, const bool opt, const bool list)
-	: opt_(opt), list_(list), param_(param) {}
+CmdParam::CmdParam(stringVec &param, const bool opt, const std::string& delim)
+	: opt_(opt), delim_(delim), param_(param) {}
 
 CmdParam::CmdParam(const CmdParam &rhs) {
 	*this = rhs;
@@ -36,7 +36,7 @@ std::string &CmdParam::operator[](unsigned int i) {
 CmdParam &CmdParam::operator=(const CmdParam &rhs) {
 	if (this != &rhs) {
 		opt_ = rhs.getOpt();
-		list_ = rhs.getList();
+		delim_ = rhs.getDelim();
 		param_ = rhs.getParam();
 	}
 	return (*this);
@@ -57,8 +57,8 @@ bool CmdParam::getOpt(void) const {
 	return (opt_);
 }
 
-bool CmdParam::getList(void) const {
-	return (list_);
+const std::string &CmdParam::getDelim(void) const {
+	return (delim_);
 }
 
 /* ************************************************************************** */
@@ -75,7 +75,7 @@ void CmdParam::setList(const stringVec &buffer) {
 /* ************************************************************************** */
 /*                               NESTED CLASS                                 */
 /* ************************************************************************** */
-CmdParam::ParamBuilder::ParamBuilder(void) : opt_(false), list_(false) {}
+CmdParam::ParamBuilder::ParamBuilder(void) : opt_(false), delim_("") {}
 
 CmdParam::ParamBuilder::~ParamBuilder(void) {}
 
@@ -85,11 +85,11 @@ CmdParam::ParamBuilder &CmdParam::ParamBuilder::isOpt(bool opt) {
 	return (*this);
 }
 
-CmdParam::ParamBuilder &CmdParam::ParamBuilder::isList(bool list) {
-	list_ = list;
+CmdParam::ParamBuilder &CmdParam::ParamBuilder::isList(const std::string& delim) {
+	delim_ = delim;
 	return (*this);
 }
 
 CmdParam *CmdParam::ParamBuilder::build() {
-	return (new CmdParam(param_, opt_, list_));
+	return (new CmdParam(param_, opt_, delim_));
 }
