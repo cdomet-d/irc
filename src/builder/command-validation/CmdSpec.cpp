@@ -73,13 +73,15 @@ CmdSpec &CmdSpec::process(Client &sender) {
 		return (*this);
 	}
 	for (size_t i = 0; i < params_.size() && i < sender.mess.getSize(); i++) {
-		(*params_[i].second).setOne(sender.mess[i]);
+		try {
+			(*params_[i].second).setOne(sender.mess[i + 1]);
+		} catch (const std::out_of_range &e) {};
 	}
 	if (!enoughParams())
 		return (*this);
 	for (size_t index = 0; index < params_.size(); index++) {
 		CmdParam &param = *params_[index].second;
-		if (!param.getDelim()) {
+		if (param.getDelim()) {
 			try {
 				param.setList(
 					MessageValidator::vectorSplit(param[0], param.getDelim()));

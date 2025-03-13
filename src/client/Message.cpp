@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "Message.hpp"
+#include <iostream>
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
@@ -21,7 +22,8 @@ Message::Message(void) {}
 Message::~Message(void) {}
 
 std::string &Message::operator[](unsigned int i) {
-	//TODO: add exception if i out of range?
+	if (i >= cmdParam_.size())
+		throw std::out_of_range("Param not found");
 	return (cmdParam_[i]);
 }
 

@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "CmdManager.hpp"
 #include "MessageValidator.hpp"
+#include "CmdManager.hpp"
 #include "Reply.hpp"
 #include <algorithm>
 #include <sstream>
@@ -36,12 +36,13 @@ bool MessageValidator::assess(Client &sender) {
 		sender.mess.setTrailingParam(trailing);
 	if (sender.mess.getCmd() == "MODE")
 		formatMode(sender.mess.getCmdParam());
-	
-	CmdManager &manager = CmdManager::getManagerInstance();
-		try {
+
+	CmdManager &manager = CmdManager::getManagerInstance(); //TODO issue : cmd MODE is empty
+	try {
 		manager.executeCm(manager.getCmd(sender.mess.getCmd()).process(sender));
 	} catch (const CmdManager::CmdNotFoundException &e) {
-		std::cout << ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(), sender.mess.getCmd());
+		std::cout << ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
+										sender.mess.getCmd());
 	}
 	return true;
 }
