@@ -59,8 +59,9 @@ class CmdSpec {
 
 	/*                               GETTERS                                  */
 	bool getValid(void) const;
-	Client &getSender(void) const;
+	const Client &getSender(void) const;
 	const std::string &getName(void) const;
+	const paramMap &getParams(void) const;
 	void (*getExecutor(void) const)(CmdSpec &cmd);
 
 	/*                               SETTERS                                  */

@@ -18,8 +18,6 @@
 #include <iostream>
 #include <vector>
 
-//TODO: ajouter un rmParam ?
-
 class CmdParam {
   public:
 	/*                               CONSTRUCTORS                             */
@@ -28,6 +26,8 @@ class CmdParam {
 	/*                               METHODS                                  */
 	std::string &operator[](unsigned int i);
 	CmdParam &operator=(const CmdParam &rhs);
+	void rmParam(unsigned int pos);
+	void rmParam(stringVec::iterator begin, stringVec::iterator end);
 
 	/*                               GETTERS                                  */
 	bool getOpt(void) const;

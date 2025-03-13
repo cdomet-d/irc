@@ -42,6 +42,14 @@ CmdParam &CmdParam::operator=(const CmdParam &rhs) {
 	return (*this);
 }
 
+void CmdParam::rmParam(unsigned int pos) {
+	param_.erase(param_.begin() + pos);
+}
+
+void CmdParam::rmParam(stringVec::iterator begin, stringVec::iterator end) {
+	param_.erase(begin, end);
+}
+
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */

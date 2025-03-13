@@ -148,8 +148,12 @@ void (*CmdSpec::getExecutor(void) const)(CmdSpec &cmd) {
 	return (cmExecutor_);
 }
 
-Client &CmdSpec::getSender(void) const {
+const Client &CmdSpec::getSender(void) const {
 	return (*sender_);
+}
+
+const paramMap& CmdSpec::getParams(void) const {
+	return (params_);
 }
 
 /* ************************************************************************** */
