@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Checkers.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 15:49:12 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/11 17:19:53 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:06:34 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,18 @@
 
 class CmdSpec;
 
-int	hasChanPriv(CmdSpec& cmd);
-int	isRegistered(CmdSpec& cmd);
-int	joinChanRequest(CmdSpec& cmd);
-int	onChan(CmdSpec& cmd);
-int	pwMatch(CmdSpec& cmd);
-int	validChan(CmdSpec& cmd);
-int	validInvite(CmdSpec& cmd);
-int	validKick(CmdSpec& cmd);
-int	validMess(CmdSpec& cmd);
-int	validMode(CmdSpec& cmd);
-int	validNick(CmdSpec& cmd);
-int	validTarget(CmdSpec& cmd);
-int	validUser(CmdSpec& cmd);
+int	hasChanPriv(CmdSpec& cmd); // Charlotte
+int	isRegistered(CmdSpec& cmd); // Charlotte
+int	joinChanRequest(CmdSpec& cmd); // Charlotte
+int	onChan(CmdSpec& cmd); // Charlotte
+int	pwMatch(CmdSpec& cmd); // Charlotte
+int	validChan(CmdSpec& cmd); // Coralie
+int	validInvite(CmdSpec& cmd); // Coralie
+int	validKick(CmdSpec& cmd); // Coralie
+int	validMess(CmdSpec& cmd); // Coralie
+int	validMode(CmdSpec& cmd); // Coralie
+int	validNick(CmdSpec& cmd); // Coralie
+int	validTarget(CmdSpec& cmd); // Coralie
+int	validUser(CmdSpec& cmd); // Coralie
 
 #endif
