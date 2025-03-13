@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:54:21 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/12 17:15:32 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,9 @@
 #include <iostream>
 #include <netdb.h>
 #include <netinet/in.h>
-#include <string>
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <vector>
 
 class Client {
   public:

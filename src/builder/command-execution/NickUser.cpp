@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:46:19 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:35:45 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/12 17:17:37 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ bool nickInUse(std::string newNick, Client *curCli)
 		 it != server.getAllCli().end(); ++it) {
 		if (newNick == it->second->getNick()) {
 			sendReply(curCli->getFd(),
-					  ERR_NICKNAMEINUSE(it->second->getNick(), newNick));
+					  ERR_NICKNAMEINUSE(it->second->getNick()));
 			return (false);
 		}
 	}

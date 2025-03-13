@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/12 17:20:05 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,13 @@
 
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "Reply.hpp"
 #include "typedef.hpp"
 #include <arpa/inet.h>
 #include <cstring>
 #include <iostream>
-#include <map>
 #include <netinet/in.h>
 #include <poll.h>
-#include <string>
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -88,8 +87,7 @@ class Server {
 };
 
 /*                               PARSING                                  */
-stringVec vectorSplit(std::string &s,
-									   const std::string &del);
+stringVec vectorSplit(std::string &s, const std::string &del);
 void inputToken(std::string inputCli, Client *curCli);
 
 /*                               COMMAND                                  */

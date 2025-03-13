@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/12 17:18:57 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool handlePart(std::string params, Client *curCli) {
 
 	//needMoreParams
 	if (chanName.empty() == true) {
-		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->getNick(), "PART"));
+		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->getNick()));
 		log(DEBUG, "PART", "ERR_NEEDMOREPARAMS");
 		return (false);
 	}
