@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+         #
+#    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/11 16:25:18 by csweetin         ###   ########.fr        #
+#    Updated: 2025/03/12 17:19:12 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,7 @@ SERV_DIR:= $(SRC_DIR)server/
 
 SERV_SRC:=				Channel.cpp \
 						Server.cpp \
-						reply.cpp \
+						Reply.cpp \
 
 DEBUG_SRC:=				Log.cpp \
 

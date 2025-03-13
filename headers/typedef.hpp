@@ -6,15 +6,17 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 13:59:33 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/11 16:23:54 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:20:55 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TYPEDEF_HPP
 #define TYPEDEF_HPP
+
 #include <map>
 #include <string>
 #include <vector>
+
 class Client;
 class Channel;
 
