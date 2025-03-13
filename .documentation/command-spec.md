@@ -1,36 +1,90 @@
-## PASS :
-//parsing :
-there must be only one param <password>
-can there be spaces in a password ??
-<password>
+# Command specifications analysis
 
-//attributes
-command name : PASS
-state : done or not (could be used to know if we can execute the command NICK)
-client object
+- [Command specifications analysis](#command-specifications-analysis)
+  - [PASS](#pass)
+    - [Parsing rules](#parsing-rules)
+      - [Failure strategy](#failure-strategy)
+      - [Success strategy](#success-strategy)
+    - [Attributes](#attributes)
+    - [Methods](#methods)
+    - [Tests with libera.chat](#tests-with-liberachat)
+  - [NICK](#nick)
+  - [tests with libera.chat :](#tests-with-liberachat-)
+  - [USER](#user)
+  - [tests with libera.chat :](#tests-with-liberachat--1)
+  - [INVITE](#invite)
+  - [tests with libera.chat :](#tests-with-liberachat--2)
+  - [JOIN](#join)
+  - [tests with libera.chat :](#tests-with-liberachat--3)
+  - [KICK](#kick)
+  - [tests with libera.chat :](#tests-with-liberachat--4)
+  - [MODE](#mode)
+  - [tests with libera.chat :](#tests-with-liberachat--5)
+  - [PART](#part)
+  - [tests with libera.chat :](#tests-with-liberachat--6)
+  - [PRIVMSG](#privmsg)
+  - [QUIT](#quit)
+  - [TOPIC](#topic)
+  - [tests with libera.chat :](#tests-with-liberachat--7)
 
-//methods :
+## PASS
+
+```markdown
+PASS : <password>
+  -> ex : /pass my_password
+```
+
+### Parsing rules
+
+- MUST be used before sending NICK
+- MAY be used several times before sending NICK, but only the last pass will be registered
+- MUST have a parameter => 461 - ERR_NEEDMOREPARAM
+- Once set, CAN'T be modified => 462 - ERR_ALREADYREGISTERED
+
+#### Failure strategy
+
+- Returns the appropriate numeric reply to the client
+- Ignore the command
+- If the password doesn't match the registered one, the server SHOULD return 464 - ERR_PASSWDMISMATCH and close the connection with the client.
+
+#### Success strategy
+
+- Informs the clients that the client changed his NICK, using the old nick as a source
+
+### Attributes
+
+- command name : `PASS`
+- state : done or not (could be used to know if we can execute the command NICK)
+
+### Methods
+
+```cpp
 -- checkers -- :
 (1) enoughParam() -> checks if there are the right nb of params \
-				in case of failure display ERR_NEEDMOREPARAMS
+    in case of failure display ERR_NEEDMOREPARAMS
 
-(2) ERR_ALREADYREGISTERED
+(2) isRegistered -> check if the password is already set    
+    in case of failure displayERR_ALREADYREGISTERED
 
 (3) pwMatch() -> checks to see if the given password is correct \
-			in case of failure display ERR_PASSWDMISMATCH
+    in case of failure display ERR_PASSWDMISMATCH
 
 -- executors -- :
 setPw() -> sets clients password to given string
+```
 
-## tests with libera.chat :
+### Tests with libera.chat
+
+```text
 PASS
 :tantalum.libera.chat 461 * PASS :Not enough parameters
 
 PASS
 :copper.libera.chat 462 juliette :You are already connected and cannot handshake again
-
+```
 
 ## NICK
+
 //requirement
 password is set
 
@@ -47,14 +101,14 @@ channel object
 //methods
 -- checkers --
 validNick() -> checks if nickname characters are valid or not \
-				(1) if no nickname is given display ERR_NONICKNAMEGIVEN \
-				(2) if invalid characters display ERR_ERRONEUSNICKNAME \
-				(3)	if nickname is already in use display ERR_NICKNAMEINUSE
+                (1) if no nickname is given display ERR_NONICKNAMEGIVEN \
+                (2) if invalid characters display ERR_ERRONEUSNICKNAME \
+                (3)	if nickname is already in use display ERR_NICKNAMEINUSE
 
 -- executors --
 setNick() -> sets client nickname to given string \
-				send "<old nickname> [ ["!" user] "@"host ]" message \
-				to the concerned client	and if in a channel send to all the channel's clients
+                send "<old nickname> [ ["!" user] "@"host ]" message \
+                to the concerned client	and if in a channel send to all the channel's clients
 
 ## tests with libera.chat :
 NICK
@@ -101,12 +155,12 @@ client object
 //Methods
 -- checkers --
 (1) enoughParam() -> checks if there are the right nb of params \
-				in case of failure display ERR_NEEDMOREPARAMS
+                in case of failure display ERR_NEEDMOREPARAMS
 
 (2) ERR_ALREADYREGISTERED
 
 (3) validUser() -> checks if param characters are valid or not \
-				and if username has the right length (will be truncated if not)
+                and if username has the right length (will be truncated if not)
 
 -- executors --
 setUser() -> sets client's username, realname, (hostname, servername) \
@@ -139,26 +193,26 @@ list of all clients to find the target and send him the invite
 //methods
 -- checkers --
 (1) enoughParam() -> checks if there are the right nb of params \
-				in case of failure display ERR_NEEDMOREPARAMS
+                in case of failure display ERR_NEEDMOREPARAMS
 
 (2) validTarget() -> verifier si le target existe sinon ERR_NOSUCHNICK
 
 (3) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
 (4) onChan() -> checks if the client belongs to the channel \
-			if not display ERR_NOTONCHANNEL 
+            if not display ERR_NOTONCHANNEL 
 
 (5) validInvite() -> checks if the target user is already on the channel \
-					if so display ERR_USERONCHANNEL
+                    if so display ERR_USERONCHANNEL
 
 (6) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
-					if not display ERR_CHANOPRIVSNEEDED
+                    if not display ERR_CHANOPRIVSNEEDED
 
 
 -- executors --
 inviteUser() -> add the target user to the channel \
-				send a RPL_INVITING to the command issuer \
-				send an INVITE message with the issuer as <source> to the target user
+                send a RPL_INVITING to the command issuer \
+                send an INVITE message with the issuer as <source> to the target user
 
 ## tests with libera.chat :
 INVITE #chaaaa bobyy
@@ -207,33 +261,33 @@ channel object
 //methods
 -- checkers --
 (1) enoughParam() -> checks if there are the right nb of params \
-				in case of failure display ERR_NEEDMOREPARAMS
+                in case of failure display ERR_NEEDMOREPARAMS
 
 (2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL (si pas les bons charactere dans le nom ex : cha sans le #) \
-					different pour les autres commandes, qui elles regardent juste si le channel existe alors que pour join il regarde s'il est correcte
+                    different pour les autres commandes, qui elles regardent juste si le channel existe alors que pour join il regarde s'il est correcte
 
 (3) joinChanRequest() -> checks : 
-							- the nbr of channels the client is in, if > limit display ERR_TOOMANYCHANNELS \
-						(1) - if the key to access the channel (if it has one) is supplied and valid \
-							if not display ERR_BADCHANNELKEY \
-							- if client isn't banned from the channel \
-								if so display ERR_BANNEDFROMCHAN (we don't have to implement MODE +b so this is optionnal) \
-						(2) - if channel's client limit (if set) hasn't been reached if so display ERR_CHANNELISFULL \
-						(3) - if client was invited (if channel is invite-only mode) if not display ERR_INVITEONLYCHAN \
-							- ERR_BADCHANMASK (not sure of the purpose of this one) Indicates the supplied channel name is not a valid. \
-								 is similar to, but stronger than, ERR_NOSUCHCHANNEL (403), which indicates that the channel does not exist, but that it may be a valid name.
-						
+                            - the nbr of channels the client is in, if > limit display ERR_TOOMANYCHANNELS \
+                        (1) - if the key to access the channel (if it has one) is supplied and valid \
+                            if not display ERR_BADCHANNELKEY \
+                            - if client isn't banned from the channel \
+                                if so display ERR_BANNEDFROMCHAN (we don't have to implement MODE +b so this is optionnal) \
+                        (2) - if channel's client limit (if set) hasn't been reached if so display ERR_CHANNELISFULL \
+                        (3) - if client was invited (if channel is invite-only mode) if not display ERR_INVITEONLYCHAN \
+                            - ERR_BADCHANMASK (not sure of the purpose of this one) Indicates the supplied channel name is not a valid. \
+                                 is similar to, but stronger than, ERR_NOSUCHCHANNEL (403), which indicates that the channel does not exist, but that it may be a valid name.
+                        
 -- executors --
 addToChan() -> adds client to channel \
-				- send the 3 following messages to the client in this order : \
-					- client as the source and the joined channel as first param \
-					- channel's topic (if it has one) with RPL_TOPIC\
-					- a list of users in that channel with RPL_NAMREPLY and RPL_ENDOFNAMES \
-							(seems to be the job of the command NAME so not sure we'll do it) \
-				- send to client message about all commands which affect channel \
-					MODE, KICK, PART, QUIT, PRIVMSG (not sure when to send this message)
-				- send a JOIN message to channel to inform other clients
-				
+                - send the 3 following messages to the client in this order : \
+                    - client as the source and the joined channel as first param \
+                    - channel's topic (if it has one) with RPL_TOPIC\
+                    - a list of users in that channel with RPL_NAMREPLY and RPL_ENDOFNAMES \
+                            (seems to be the job of the command NAME so not sure we'll do it) \
+                - send to client message about all commands which affect channel \
+                    MODE, KICK, PART, QUIT, PRIVMSG (not sure when to send this message)
+                - send a JOIN message to channel to inform other clients
+                
 ## tests with libera.chat :
 JOIN
 :lithium.libera.chat 461 chacham JOIN :Not enough parameters
@@ -312,26 +366,26 @@ channel object
 //methods
 -- checkers --
 (1) enoughParam() -> checks if there are the right nb of params \
-				in case of failure display ERR_NEEDMOREPARAMS
+                in case of failure display ERR_NEEDMOREPARAMS
 
 (2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
 (3) onChan() -> checks if the client belongs to the channel \
-			if not display ERR_NOTONCHANNEL 
+            if not display ERR_NOTONCHANNEL 
 
 (4) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
-					if not display ERR_CHANOPRIVSNEEDED
+                    if not display ERR_CHANOPRIVSNEEDED
 
 (5) validTarget() -> verifier si le target existe sinon ERR_NOSUCHNICK
 
 (6) validKick() -> checks if target user is in the channel \
-				if not display ERR_USERNOTINCHANNEL
+                if not display ERR_USERNOTINCHANNEL
 
 
 -- executors --
 kickUser() -> remove target user from channel \
-				send KICK message to channel with <source> being the client who sent the kick, \
-				the channel and the comment (if given otherwise a default message)
+                send KICK message to channel with <source> being the client who sent the kick, \
+                the channel and the comment (if given otherwise a default message)
 
 ## tests with libera.chat :
 KICK #loli urghghri
@@ -392,12 +446,12 @@ command issuer client object
 //methods
 -- checkers --
 (1) enoughParam() -> checks if there are the right nb of params \
-				in case of failure display ERR_NEEDMOREPARAMS
+                in case of failure display ERR_NEEDMOREPARAMS
 
 (2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
 (3) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
-					if not display ERR_CHANOPRIVSNEEDED
+                    if not display ERR_CHANOPRIVSNEEDED
 
 (4) validMode() -> verifier que le mode existe sinon ERR_UNKNOWNMODE
 
@@ -410,8 +464,8 @@ pour -+l si on met pas le nombre limite ERR_NEEDMOREPARAMS. la limite doit au mo
 
 -- executors --
 changeMode() -> sets or removes given mode \
-					if <modestring> is not given display RPL_CHANNELMODEIS \
-					followed by RPL_CREATIONTIME
+                    if <modestring> is not given display RPL_CHANNELMODEIS \
+                    followed by RPL_CREATIONTIME
 
 ## tests with libera.chat :
 MODE #tosti +k key +i
@@ -437,18 +491,18 @@ channel object
 //methods
 -- checkers --
 (1) enoughParam() -> checks if there are the right nb of params \
-				in case of failure display ERR_NEEDMOREPARAMS
+                in case of failure display ERR_NEEDMOREPARAMS
 
 (2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
 (3) onChan() -> checks if the client belongs to the channel \
-			if not display ERR_NOTONCHANNEL 
+            if not display ERR_NOTONCHANNEL 
 
 -- executors --
 rmFromChan() -> removes client from channel \
-				send a PART message to the client, with the reason (if given) \
-				(optionnal?) send a message to the other clients of the channel \
-				saying that the client left
+                send a PART message to the client, with the reason (if given) \
+                (optionnal?) send a message to the other clients of the channel \
+                saying that the client left
 
 ## tests with libera.chat :
 PART #tosti bye bye (n'a pas pris le message entier car pas les deux points ":" devant)
@@ -483,23 +537,23 @@ command issuer client object
 //methods
 -- checkers --
 validMess() -> check : \
-				(1) - if there is a text to be sent, if not display ERR_NOTEXTTOSEND \
-				(2) - if there is a target, if not display ERR_NORECIPIENT
+                (1) - if there is a text to be sent, if not display ERR_NOTEXTTOSEND \
+                (2) - if there is a target, if not display ERR_NORECIPIENT
 (3)
 if target is a channel : \
-	- check channel modes because they can affect the message \ (we don't have modes that can affect a message)
-			if it cannot be delivered to channel display ERR_CANNOTSENDTOCHAN \
+    - check channel modes because they can affect the message \ (we don't have modes that can affect a message)
+            if it cannot be delivered to channel display ERR_CANNOTSENDTOCHAN \
 else if target is a user : \
-	- validTarget() -> check if nickname exists, if not display ERR_NOSUCHNICK \
+    - validTarget() -> check if nickname exists, if not display ERR_NOSUCHNICK \
 
 -- executors --
 sendMess() -> send <text to be sent> to target \
-				if target is a channel, check for a prefixe and send message only to clients with appropriate status \
-				else if it is a user, if user has been set as away display RPL_AWAY \ (don't need to do it, it's MODE -a)
-				if the target starts with a $, the message is a broadcast (sent to all clients on server)
-				if there is a @ in front of the channel name, send message only to operators on that channel (not mandatory)
-					ex : PRIVMSG @#tosti hey
-				(tips : on saura que c'est un channel grace au #)
+                if target is a channel, check for a prefixe and send message only to clients with appropriate status \
+                else if it is a user, if user has been set as away display RPL_AWAY \ (don't need to do it, it's MODE -a)
+                if the target starts with a $, the message is a broadcast (sent to all clients on server)
+                if there is a @ in front of the channel name, send message only to operators on that channel (not mandatory)
+                    ex : PRIVMSG @#tosti hey
+                (tips : on saura que c'est un channel grace au #)
 
 
 ## QUIT
@@ -515,11 +569,11 @@ command issuer client object
 
 //methods
 cutConnexion() -> send ERROR message to client then rm client from struct epoll \
-				send message to clients from same channel as the exiting client : \
-				if command QUIT was sent by the client \
-					<source> (the exiting client) + "Quit: " + <quit message> (if given) \
-				else \
-					message will explain why this connection broke
+                send message to clients from same channel as the exiting client : \
+                if command QUIT was sent by the client \
+                    <source> (the exiting client) + "Quit: " + <quit message> (if given) \
+                else \
+                    message will explain why this connection broke
 
 
 ## TOPIC
@@ -534,26 +588,26 @@ command issuer client object
 //methods
 -- checkers --
 (1) enoughParam() -> checks if there are the right nb of params \
-				in case of failure display ERR_NEEDMOREPARAMS
+                in case of failure display ERR_NEEDMOREPARAMS
 
 (2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
 (3) onChan() -> checks if the client belongs to the channel \
-			if not display ERR_NOTONCHANNEL
+            if not display ERR_NOTONCHANNEL
 
 (if MODE +t is set and client wants to change topic)
 (4) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
-					if not display ERR_CHANOPRIVSNEEDED
+                    if not display ERR_CHANOPRIVSNEEDED
 
 -- executors --
 changeTopic() -> if topic (can be NULL) is given change the channel's topic \
-					use displayTopic() to send message to each client in the channel \
-					including the author of the change. \
-					if the topic is changed to exacly the same as it was \
-					we can choose to notify the users or not
+                    use displayTopic() to send message to each client in the channel \
+                    including the author of the change. \
+                    if the topic is changed to exacly the same as it was \
+                    we can choose to notify the users or not
 
 displayTopic() -> display RPL_TOPIC followed by RPL_TOPICWHOTIME \
-					or RPL_NOTOPIC if channel lacks a topic
+                    or RPL_NOTOPIC if channel lacks a topic
 
 ## tests with libera.chat :
 TOPIC

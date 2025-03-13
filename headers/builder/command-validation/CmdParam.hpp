@@ -33,7 +33,7 @@ class CmdParam {
 
 	/*                               GETTERS                                  */
 	bool getOpt(void) const;
-	const char getDelim() const;
+	char getDelim() const;
 	size_t getSize(void) const;
 	const stringVec &getInnerParam(void) const;
 
