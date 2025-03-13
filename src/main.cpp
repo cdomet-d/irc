@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 11:16:44 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 10:17:23 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int main(int ac, char **av)
 		for (clientMapIt itCli =
 				 it->second->getCliInChan().begin();
 			 itCli != it->second->getCliInChan().end(); ++itCli) {
-			std::cout << "Client: " << itCli->second->getNick() << std::endl;
+			std::cout << "Client: " << itCli->second->cliInfo.getNick() << std::endl;
 		}
 	}
 	return (0);

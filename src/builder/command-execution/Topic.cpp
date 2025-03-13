@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 11:18:43 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 10:18:39 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@
 void checkTopic(Channel *curChan, Client *curCli)
 {
 	if (curChan->getTopic().empty() == true) {
-		sendReply(curCli->getFd(), RPL_NOTOPIC(curCli->getNick(),
+		sendReply(curCli->getFd(), RPL_NOTOPIC(curCli->cliInfo.getNick(),
 												   curChan->getName()));
 		return;
 	}
 	sendReply(curCli->getFd(),
-			  RPL_TOPIC(curCli->getNick(), curChan->getName(),
+			  RPL_TOPIC(curCli->cliInfo.getNick(), curChan->getName(),
 						curChan->getTopic()));
 	return;
 }
@@ -33,7 +33,7 @@ void clearTopic(Channel *curChan, Client *curCli)
 	for (clientMapIt it =
 			 curChan->getCliInChan().begin();
 		 it != curChan->getCliInChan().end(); ++it) {
-		sendReply(it->second->getFd(), RPL_NOTOPIC(curCli->getNick(),
+		sendReply(it->second->getFd(), RPL_NOTOPIC(curCli->cliInfo.getNick(),
 												   curChan->getName()));
 	}
 }
@@ -47,7 +47,7 @@ void changeTopic(Channel *curChan, Client *curCli, std::string topic)
 			 curChan->getCliInChan().begin();
 		 it != curChan->getCliInChan().end(); ++it) {
 		sendReply(it->second->getFd(),
-				  RPL_TOPICCHANGED(curCli->getPrefix(),
+				  RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(),
 								   curChan->getName(),
 								   curChan->getTopic()));
 	}
@@ -70,7 +70,7 @@ bool handleTopic(std::string params, Client *curCli)
 	if (curChan == server.getAllChan().end()) {
 		sendReply(curCli->getFd(),
 				  ERR_NOSUCHCHANNEL(
-					  server.getAllCli()[curCli->getFd()]->getNick(),
+					  server.getAllCli()[curCli->getFd()]->cliInfo.getNick(),
 					  chanName));
 		return (false);
 	}
@@ -81,7 +81,7 @@ bool handleTopic(std::string params, Client *curCli)
 	if (whatCli == curChan->second->getCliInChan().end()) {
 		sendReply(
 			curCli->getFd(),
-			ERR_NOTONCHANNEL(server.getAllCli()[curCli->getFd()]->getNick(),
+			ERR_NOTONCHANNEL(server.getAllCli()[curCli->getFd()]->cliInfo.getNick(),
 							 curChan->second->getName()));
 		return (false);
 	}

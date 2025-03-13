@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/12 16:47:48 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 10:18:35 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool MessageValidator::assess(Client &sender) {
 	std::cout << "[" + message + "]" << std::endl;
 	if (lenIsValid(message, sender) == false)
 		return false;
-	if (hasPrefix(message, sender.getPrefix()) == false)
+	if (hasPrefix(message, sender.cliInfo.getPrefix()) == false)
 		return false;
 	if (hasTrailing(message, trailing) == false)
 		return false;
@@ -71,7 +71,7 @@ bool MessageValidator::lenIsValid(const std::string &mess,
 	if (mess.empty())
 		return false;
 	if (mess.size() > 512) {
-		sendReply(sender.getFd(), sender.getNick());
+		sendReply(sender.getFd(), sender.cliInfo.getNick());
 		return false;
 	}
 	return true;

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 16:26:08 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 10:19:39 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ Server::Server(void) : port_(0), pass_("") {}
 Server::~Server(void) {
 	std::cout << "Calling destructor" << std::endl;
 	for (clientMapIt it = clients_.begin(); it != clients_.end(); ++it) {
-		it->second->getNick().clear();
-		it->second->getUsername().clear();
+		it->second->cliInfo.getNick().clear();
+		it->second->cliInfo.getUsername().clear();
 		close(it->first);
 		delete it->second;
 	}
@@ -108,15 +108,15 @@ void Server::acceptClient() {
 		char client_ip[INET_ADDRSTRLEN];
 		inet_ntop(AF_INET, &(newCli->cliAddr_.sin_addr), client_ip,
 				  INET_ADDRSTRLEN);
-		newCli->setIP(client_ip);
+		newCli->cliInfo.setIP(client_ip);
 
 		char hostname[NI_MAXHOST];
 		int result = getnameinfo((struct sockaddr *)&newCli->cliAddr_, cliLen,
 								 hostname, NI_MAXHOST, NULL, 0, 0);
 		if (result == 0) {
-			newCli->setHostname(hostname);
+			newCli->cliInfo.setHostname(hostname);
 		} else {
-			newCli->setHostname(client_ip); // Use IP as fallback
+			newCli->cliInfo.setHostname(client_ip); // Use IP as fallback
 		}
 		//TODO: not throw an expection when a client cannot connect: it can't kill the server.
 		if (fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK) == -1) {
@@ -136,7 +136,7 @@ void Server::acceptClient() {
 		}
 
 		clients_.insert(clientPair(newCli->getFd(), newCli));
-		usedNicks_.push_back(newCli->getNick());
+		usedNicks_.push_back(newCli->cliInfo.getNick());
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected";
 		// log(INFO, ss.str());

@@ -1,30 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
+/*   UserInfo.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 10:10:13 by cdomet-d         ###   ########.fr       */
+/*   Created: 2025/03/13 10:04:27 by cdomet-d          #+#    #+#             */
+/*   Updated: 2025/03/13 10:32:59 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Client.hpp"
-#include <arpa/inet.h>
-#include <string.h>
+#include "UserInfo.hpp"
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-Client::Client(void) {}
-Client::~Client() {}
 
-Client::Client(const Client &rhs) {
+UserInfo::UserInfo(void) : name_(""), nick_(""), pass_(""), realName_("") {}
+UserInfo::~UserInfo(void) {}
+
+UserInfo::UserInfo(const UserInfo &rhs) {
 	static_cast< void >(rhs);
 }
 
-Client &Client::operator=(const Client &rhs) {
+UserInfo &UserInfo::operator=(const UserInfo &rhs) {
 	static_cast< void >(rhs);
 	return *this;
 }
@@ -33,27 +32,56 @@ Client &Client::operator=(const Client &rhs) {
 /*                               GETTERS                                      */
 /* ************************************************************************** */
 
-int Client::getFd() const {
-	return cliFd_;
+std::string UserInfo::getName() const {
+	return name_;
 }
 
-stringVec &Client::getJoinedChans() {
-	return (joinedChans_);
+std::string UserInfo::getNick() const {
+	return nick_;
 }
 
-struct epoll_event *Client::getCliEpoll() {
-	return (&cliEpoll_);
+std::string UserInfo::getUsername() const {
+	return username_;
 }
 
+std::string UserInfo::getRealName() const {
+	return realName_;
+}
+
+std::string UserInfo::getIP() const {
+	return (ip_);
+}
+
+std::string UserInfo::getHostname() const {
+	return (hostname_);
+}
+
+std::string UserInfo::getPrefix() const {
+	return (prefix_);
+}
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
 
-void Client::setFd(int fd) {
-	cliFd_ = fd;
+void UserInfo::setNick(const std::string &newNick) {
+	nick_ = newNick;
 }
 
-void Client::setCliEpoll(struct epoll_event epoll) {
-	cliEpoll_.events = epoll.events;
-	cliEpoll_.data.fd = epoll.data.fd;
+void UserInfo::setUsername(const std::string &username) {
+	username_ = username;
+}
+
+void UserInfo::setIP(std::string ip) {
+	ip_ = ip;
+}
+
+void UserInfo::setHostname(std::string hostname) {
+	if (!hostname.empty())
+		hostname_ = hostname;
+	else
+		hostname_ = "NULL";
+}
+
+void UserInfo::setPrefix() {
+	prefix_ = nick_ + "!" + username_ + "@" + hostname_;
 }

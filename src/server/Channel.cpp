@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 17:00:51 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 10:17:23 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,14 @@ bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 	for (clientMapIt itCli = curChan->getCliInChan().begin();
 		 itCli != curChan->getCliInChan().end(); ++itCli) {
 		sendReply(itCli->second->getFd(),
-				  RPL_JOIN(curCli->getNick(), curChan->getName()));
+				  RPL_JOIN(curCli->cliInfo.getNick(), curChan->getName()));
 	}
 	if (curChan->getTopic().empty() == true)
 		sendReply(curCli->getFd(),
-				  RPL_NOTOPIC(curCli->getNick(), curChan->getName()));
+				  RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan->getName()));
 	else
 		sendReply(curCli->getFd(),
-				  RPL_TOPIC(curCli->getNick(), curChan->getName(),
+				  RPL_TOPIC(curCli->cliInfo.getNick(), curChan->getName(),
 							curChan->getTopic()));
 	return (true);
 }

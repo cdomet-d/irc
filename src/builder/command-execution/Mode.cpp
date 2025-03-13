@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 14:13:06 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 10:17:23 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ bool handleMode(std::string params, Client *curCli)
 	channelMapIt curChan = server.getAllChan().find(chanName);
 	if (curChan == server.getAllChan().end()) {
 		sendReply(curCli->getFd(),
-				  ERR_NOSUCHCHANNEL(curCli->getNick(), chanName));
+				  ERR_NOSUCHCHANNEL(curCli->cliInfo.getNick(), chanName));
 		// log(DEBUG, "PART", "ERR_NOSUCHCHANNEL");
 		return (false);
 	}
@@ -41,10 +41,10 @@ bool handleMode(std::string params, Client *curCli)
 	//returns the current mode of a channel : RPL_CHANNELMODEIS (324)
 	if (modes.empty() == true) {
 		sendReply(curCli->getFd(),
-				  RPL_CHANNELMODEIS(curCli->getNick(), chanName,
+				  RPL_CHANNELMODEIS(curCli->cliInfo.getNick(), chanName,
 									curChan->second->getModes()));
 		// log(DEBUG, "Checking the mode: ",
-			// RPL_CHANNELMODEIS(curCli->getNick(), chanName,
+			// RPL_CHANNELMODEIS(curCli->cliInfo.getNick(), chanName,
 			// 				  curChan->second->getModes()));
 		return (true);
 	}
@@ -55,7 +55,7 @@ bool handleMode(std::string params, Client *curCli)
 		curChan->second->getOpCli().find(curCli->getFd());
 	if (senderIt == curChan->second->getCliInChan().end()) {
 		sendReply(curCli->getFd(),
-				  ERR_CHANOPRIVSNEEDED(curCli->getNick(), chanName));
+				  ERR_CHANOPRIVSNEEDED(curCli->cliInfo.getNick(), chanName));
 		// log(DEBUG, "PART", "ERR_NOTONCHANNEL");
 		return (false);
 	}

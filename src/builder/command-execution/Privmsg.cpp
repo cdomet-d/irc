@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 14:10:58 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 10:18:39 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ bool handlePrivsmg(std::string params, Client *curCli)
 		 itCli != curChan->second->getCliInChan().end(); ++itCli) {
 		if (itCli->first != curCli->getFd())
 			sendReply(itCli->second->getFd(),
-					  RPL_PRIVMSG(curCli->getPrefix(),
+					  RPL_PRIVMSG(curCli->cliInfo.getPrefix(),
 								  curChan->second->getName(), message));
 	}
 	return (true);

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 14:12:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 10:17:23 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ bool handleJoin(std::string params, Client *curCli)
 	if (curChan->getIsPassMatch() == true)
 		if (curChan->getPassword() != password) {
 			sendReply(curCli->getFd(),
-					  ERR_BADCHANNELKEY(curCli->getNick(), curChan->getName()));
+					  ERR_BADCHANNELKEY(curCli->cliInfo.getNick(), curChan->getName()));
 			return (false);
 		}
 	curChan->addClientToChan(curChan, curCli);
