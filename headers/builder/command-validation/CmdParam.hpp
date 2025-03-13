@@ -28,6 +28,8 @@ class CmdParam {
 	CmdParam &operator=(const CmdParam &rhs);
 	void rmParam(unsigned int pos);
 	void rmParam(stringVec::iterator begin, stringVec::iterator end);
+	void addOne(unsigned int pos);
+	void clean(void);
 
 	/*                               GETTERS                                  */
 	bool getOpt(void) const;

@@ -50,6 +50,14 @@ void CmdParam::rmParam(stringVec::iterator begin, stringVec::iterator end) {
 	param_.erase(begin, end);
 }
 
+void CmdParam::addOne(unsigned int pos) {
+	param_.insert(param_.begin() + pos, "");
+}
+
+void CmdParam::clean(void) {
+	param_.clear();
+}
+
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */

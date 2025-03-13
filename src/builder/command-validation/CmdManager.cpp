@@ -30,7 +30,7 @@ CmdManager::~CmdManager(void) {
 void CmdManager::executeCm(CmdSpec &cm) {
 	// if (cm.getValid())
 	// 	cm.getExecutor()(cm);
-	cm.clean();
+	cm.cleanAll();
 }
 
 void CmdManager::generateCmds() {

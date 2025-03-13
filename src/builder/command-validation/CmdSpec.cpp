@@ -93,7 +93,11 @@ CmdSpec &CmdSpec::process(stringVec &buffer, Client &client) {
 	return (*this);
 }
 
-void CmdSpec::clean(void) {}
+void CmdSpec::cleanAll(void) {
+	for (size_t i = 0; i < params_.size(); i++) {
+		(*params_[i].second).clean();
+	}
+}
 
 static std::string enumToString(e_param color) {
 	switch (color) {

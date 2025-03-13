@@ -53,7 +53,7 @@ class CmdSpec {
 	CmdParam &operator[](e_param type);
 	CmdSpec &process(stringVec &buffer, Client &client);
 	bool enoughParams(void);
-	void clean(void);
+	void cleanAll(void);
 
 	void displayParams(void); //to be removed
 
