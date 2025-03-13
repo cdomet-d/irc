@@ -20,6 +20,11 @@ Message::Message(void) {}
 
 Message::~Message(void) {}
 
+std::string &Message::operator[](unsigned int i) {
+	//TODO: add exception if i out of range?
+	return (cmdParam_[i]);
+}
+
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
@@ -33,6 +38,10 @@ std::string Message::getCmd() const {
 
 std::string Message::getBuffer() const {
 	return buffer_;
+}
+
+size_t Message::getSize() const {
+	return (cmdParam_.size());
 }
 
 /* ************************************************************************** */

@@ -22,7 +22,7 @@ typedef	 std::map< std::string, CmdSpec * > cmdMap;
 class CmdManager {
   public:
 	/*                               CONSTRUCTORS                             */
-	CmdManager(void);
+	static CmdManager &getManagerInstance();
 	~CmdManager(void);
 
 	/*                               METHODS                                  */
@@ -44,6 +44,9 @@ class CmdManager {
   private:
 	/*                               MEMBERS                                  */
 	cmdMap commandList_;
+
+	// private constructor
+	CmdManager(void);
 };
 
 #endif

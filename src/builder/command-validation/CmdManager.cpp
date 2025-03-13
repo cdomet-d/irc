@@ -176,3 +176,8 @@ CmdSpec &CmdManager::getCmd(const std::string &cmName) {
 	}
 	return (*it->second);
 }
+
+CmdManager &CmdManager::getManagerInstance() {
+	static CmdManager instance;
+	return (instance);
+}

@@ -11,28 +11,29 @@
 /* ************************************************************************** */
 
 #ifndef MESSAGE_HPP
-# define MESSAGE_HPP
+#define MESSAGE_HPP
 
 #include "typedef.hpp"
 
-class Message
-{
-public:
+class Message {
+  public:
 	/*                               ORTHODOX CLASS                           */
 	Message(void);
 	~Message(void);
+	std::string &operator[](unsigned int i);
 
 	/*                               GETTERS                                  */
+	size_t getSize() const;
 	std::string getBuffer() const;
 	std::string getCmd() const;
 	stringVec &getCmdParam();
-	
+
 	/*                               SETTERS                                  */
 	void setBuffer(std::string buffer);
 	void setCmdParam(const stringVec &splitBuffer);
 	void setTrailingParam(const std::string &trail);
 
-private:
+  private:
 	Message(const Message &rhs);
 	Message &operator=(const Message &rhs);
 

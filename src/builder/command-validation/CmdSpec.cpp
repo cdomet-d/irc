@@ -64,16 +64,16 @@ bool CmdSpec::enoughParams() {
 	return (true);
 }
 
-CmdSpec &CmdSpec::process(stringVec &buffer, Client &client) {
-	setSender(client);
-	if (registrationStage_ > (*sender_).cliInfo.getRegistration()) {
+CmdSpec &CmdSpec::process(Client &sender) {
+	setSender(sender);
+	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
 		valid_ = false;
 		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER")
 			std::cout << ERR_NOTREGISTERED;
 		return (*this);
 	}
-	for (size_t i = 0; i < params_.size() && i < buffer.size(); i++) {
-		(*params_[i].second).setOne(buffer[i]);
+	for (size_t i = 0; i < params_.size() && i < sender.mess.getSize(); i++) {
+		(*params_[i].second).setOne(sender.mess[i]);
 	}
 	if (!enoughParams())
 		return (*this);

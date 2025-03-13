@@ -51,7 +51,7 @@ class CmdSpec {
 
 	/*                               METHODS                                  */
 	CmdParam &operator[](e_param type);
-	CmdSpec &process(stringVec &buffer, Client &client);
+	CmdSpec &process(Client &sender);
 	bool enoughParams(void);
 	void cleanAll(void);
 
