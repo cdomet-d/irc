@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 15:47:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:20:30 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ bool handlePart(std::string params, Client *curCli) {
     iss >> chanName;
     std::getline(iss, reason);
 
-    //needMoreParams
-    if (chanName.empty() == true) {
-        sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->getNick(), "PART"));
-        log(DEBUG, "PART", "ERR_NEEDMOREPARAMS");
-        return (false);
-    }
+	//needMoreParams
+	if (chanName.empty() == true) {
+		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->getNick()));
+		log(DEBUG, "PART", "ERR_NEEDMOREPARAMS");
+		return (false);
+	}
 
     //noSuchChannel
     channelMapIt curChan = server.getAllChan().find(chanName);

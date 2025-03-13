@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 10:03:08 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:19:47 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,9 @@
 #define CHANNEL_HPP
 
 #include "Client.hpp"
-#include "reply.h"
+#include "Reply.hpp"
 #include "typedef.hpp"
 #include <iostream>
-#include <map>
-#include <string>
 
 class Client;
 

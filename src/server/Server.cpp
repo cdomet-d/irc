@@ -6,17 +6,13 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 09:54:55 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:19:59 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include <algorithm>
 #include <cerrno>
 #include <sstream>
-#include <stdio.h>
-#include <unistd.h>
-#include <vector>
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
