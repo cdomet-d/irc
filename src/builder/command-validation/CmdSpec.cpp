@@ -47,13 +47,13 @@ CmdParam &CmdSpec::operator[](e_param type) {
 /*                               METHODS                                      */
 /* ************************************************************************** */
 bool CmdSpec::enoughParams() {
-	if (name_ == "INVITE" && (*this)[target].getInnerParam().empty() &&
-		(*this)[channel].getInnerParam().empty())
+	if (name_ == "INVITE" && !(*this)[target].getSize() &&
+		!(*this)[channel].getSize())
 		return (true);
 	if (name_ != "NICK" && name_ != "PRIVMSG") {
 		for (size_t i = 0; i < params_.size(); i++) {
-			CmdParam &param = *params_[i].second;
-			if (!param.getOpt() && param.getInnerParam().empty()) {
+			CmdParam &innerParam = *params_[i].second;
+			if (!innerParam.getOpt() && !innerParam.getSize()) {
 				std::cout << ERR_NEEDMOREPARAMS((*sender_).cliInfo.getNick(),
 												name_);
 				valid_ = false;
@@ -79,13 +79,9 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	}
 	if (!enoughParams())
 		return (*this);
-	for (size_t index = 0; index < params_.size(); index++) {
-		CmdParam &param = *params_[index].second;
-		if (param.getDelim()) {
-			try {
-				param.setList(
-					MessageValidator::vectorSplit(param[0], param.getDelim()));
-			} catch (const std::out_of_range &e) {};
+	for (size_t idx = 0; idx < params_.size(); idx++) {
+		if ((*params_[idx].second).getDelim()) {
+			(*params_[idx].second).setList();
 		}
 	}
 	displayParams();
