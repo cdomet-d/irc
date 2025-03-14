@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 17:03:32 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/14 10:12:25 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <sstream>
 #include "Reply.hpp"
 
+//TODO faire une fonction qui retire un client de toutes les maps d'un channel
 bool handleKick(std::string params, Client *curCli) {
 	static Server &server = Server::GetServerInstance(gPort, gPassword);
 	
@@ -41,18 +42,17 @@ bool handleKick(std::string params, Client *curCli) {
 	}
 	//does client exist
 	//get the instance of the kicked client
-	Client *targetCli = NULL;
-	for (clientMapIt itTarget = server.getAllCli().begin();
-		 itTarget != server.getAllCli().end(); ++itTarget) {
+	clientMapIt itTarget;
+	for (itTarget = curChan->second->getCliInChan().begin();
+		 itTarget != curChan->second->getCliInChan().end(); ++itTarget) {
 		if (itTarget->second->getNick() == target) {
-			targetCli = itTarget->second;
+			break ;
 		}
-	}
-	if (targetCli == NULL) {
+	} //target not on channel
+	if (itTarget == curChan->second->getCliInChan().end()) {
 		sendReply(curCli->getFd(), ERR_NOSUCHNICK(target));
-		return (false);
+		return (false);		
 	}
-
 	//is client sending the invite on the channel
 	clientMapIt senderIt =
 	curChan->second->getCliInChan().find(curCli->getFd());
@@ -68,4 +68,16 @@ bool handleKick(std::string params, Client *curCli) {
 				  ERR_CHANOPRIVSNEEDED(curCli->getNick(), channel));
 		return (false);
 	}
+
+	int fdTarget = itTarget->second->getFd();
+	sendMessageChannel(curChan->second->getCliInChan(), RPL_KICK(curCli->getPrefix(), channel, itTarget->second->getNick(), reason));
+	curChan->second->getCliInChan().erase(fdTarget);
+	itTarget = curChan->second->getOpCli().find(fdTarget);
+	if (itTarget != curChan->second->getOpCli().end())
+		curChan->second->getOpCli().erase(fdTarget);
+	itTarget = curChan->second->getInvitCli().find(fdTarget);
+	if (itTarget != curChan->second->getInvitCli().end())
+		curChan->second->getInvitCli().erase(fdTarget);
+	
+	return (true);
 }
