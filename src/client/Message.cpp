@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/13 13:05:25 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/14 14:46:33 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,17 @@ void Message::setTrailingParam(const std::string &trail) {
 
 void Message::setBuffer(std::string buffer) {
 	buffer_ = buffer;
+}
+
+/* ************************************************************************** */
+/*                               METHODS                                      */
+/* ************************************************************************** */
+void Message::clearCmdParam() {
+	for (stringVec::iterator i = cmdParam_.begin(); i != cmdParam_.end();) {
+		cmdParam_.erase(i);
+	}
+	// cmdParam_.clear();
+}
+void Message::clearBuffer() {
+	buffer_.clear();
 }
