@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 17:07:00 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/14 14:57:21 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,16 @@
 // #define RPL_CHANNELMODEIS(channel, mode, params) (":324 " + channel + " " + mode + " " + params + "\r\n")
 #define RPL_CHANNELMODEIS(nickname, channel, modes) (": 324 " + nickname + " " + channel + " :" + modes + "\r\n")
 #define RPL_CREATED(date) (": 003 :This server was created " + date + "\r\n")
-#define RPL_ENDOFNAMES(channel) (": 366 " + channel + " :End of /NAMES list\r\n")
 #define RPL_INVITING(channel, nick) (": 341 " + channel + " " + nick + "\r\n")
 #define RPL_MYINFO(servername, version, umodes, cmodes) (": 004 " + servername + " " + version + " " + umodes + " " + cmodes + "\r\n")
-#define RPL_NAMREPLY(symbol, channel, nicklist) (": 353 " + symbol + " " + channel + " :" + nicklist + "\r\n")
 // #define RPL_NOTOPIC(channel) (":331 " + channel + " :No topic is set\r\n")
 #define RPL_NOTOPIC(nickname, channel) (": 331 " + nickname + " " + channel + " :No topic is set" + "\r\n")
 // #define RPL_TOPIC(channel, topic) (":332 " + channel + " :" + topic + "\r\n")
 #define RPL_TOPIC(nickname, channel, topic) (": 332 " + nickname + " " + channel + topic + "\r\n")
 #define RPL_WELCOME(nick, user, host) (": 001 " + nick + " :Welcome to the Internet Relay Network " + nick + "!" + user + "@" + host + "\r\n")
 #define RPL_YOURHOST(servername, version) (": 002 :Your host is " + servername + ", running version " + version + "\r\n")
+#define RPL_NAMREPLY(client, channel_type, channel, nicks) (": 353 " + client + " " + channel_type + " " + channel + " :" + nicks + "\r\n")
+#define RPL_ENDOFNAMES(client, channel) (": 366 " + client + " " + channel + " :End of /NAMES list\r\n")
 
 // Message parsing-related replies
 #define ERR_TOOMANYTARGETS(nickname, target) (": 407 " + nickname + " " + target + " :Too many targets\r\n")

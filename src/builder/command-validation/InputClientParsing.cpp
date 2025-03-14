@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:23:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/14 09:50:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/14 14:55:13 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,10 @@ void inputToken(std::string inputCli, Client *curCli)
 	}
 	if (command == "KICK") {
 		handleKick(params, curCli);
+		return ;
+	}
+	if (command == "WHO") {
+		handleWho(params, curCli);
 		return ;
 	}
 

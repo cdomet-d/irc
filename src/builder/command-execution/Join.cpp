@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 15:57:00 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:42:15 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 Channel *createChan(const std::string &chanName)
 {
 	//log(DEBUG, "-----createChan-----");
-	static Server &server = Server::GetServerInstance(gPort, gPassword);
+	static Server &server = Server::GetServerInstance(0, "");
 
 	channelMapIt it = server.getAllChan().find(chanName);
 	if (it != server.getAllChan().end()) {

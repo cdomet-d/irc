@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 15:19:59 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:20:40 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 
-Server::Server(int port, std::string password) : port_(port), pass_(password) {}
+Server::Server(int port, std::string password) : port_(port), pass_(password) {
+	std::cout << "Constructor called" << std::endl;
+}
 Server::Server(void) : port_(0), pass_("") {}
 
 Server::~Server(void)

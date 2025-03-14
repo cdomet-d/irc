@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 15:56:51 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:42:45 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void addModes(Client * curCli, Channel *curChan, std::string modes) {
 }
 
 bool handleChannelMode(Client * curCli, std::string chanName, std::string modes) {
-	static Server &server = Server::GetServerInstance(gPort, gPassword);
+	static Server &server = Server::GetServerInstance(0, "");
 	
 	//does the channel exist ?
 	channelMapIt curChanIt = server.getAllChan().find(chanName);
@@ -90,7 +90,7 @@ bool handleMode(std::string params, Client *curCli)
 
 	iss >> temp;
 
-	static Server &server = Server::GetServerInstance(gPort, gPassword);
+	static Server &server = Server::GetServerInstance(0, "");
 
 	channelMapIt curChan = server.getAllChan().find("#test");
 

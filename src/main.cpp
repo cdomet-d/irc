@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 13:40:55 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:43:22 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int main(int ac, char **av) {
 
 	gPort = atoi(av[1]);
 	gPassword = av[2];
-	static Server &server = Server::GetServerInstance(gPort, gPassword);
+	static Server &server = Server::GetServerInstance(atoi(av[1]), av[2]);
 	server.servInit();
 	server.servRun();
 

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/14 10:12:25 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:42:29 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 //TODO faire une fonction qui retire un client de toutes les maps d'un channel
 bool handleKick(std::string params, Client *curCli) {
-	static Server &server = Server::GetServerInstance(gPort, gPassword);
+	static Server &server = Server::GetServerInstance(0, "");
 	
 	std::istringstream iss(params);
 	std::string command = "KICK";
