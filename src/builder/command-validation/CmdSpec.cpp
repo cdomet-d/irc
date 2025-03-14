@@ -12,15 +12,13 @@
 
 #include "CmdSpec.hpp"
 
-Server &CmdSpec::server_ = Server::GetServerInstance(gPort, gPassword);
-
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
 				 std::vector< int (*)(CmdSpec &) > checkers,
 				 void (*cmExecutor)(CmdSpec &cmd))
-	: valid_(true), sender_(NULL), name_(name),
+	: server_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL), name_(name),
 	  registrationStage_(registrationStage), params_(params),
 	  checkers_(checkers), cmExecutor_(cmExecutor) {}
 

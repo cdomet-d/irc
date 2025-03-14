@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 13:40:55 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/14 12:53:41 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 #include <cstdlib>
 
 int gSign = false;
-int gPort = 0;
-std::string gPassword = "";
 
 void SignalHandler(int signum) {
 	(void)signum;
@@ -24,28 +22,17 @@ void SignalHandler(int signum) {
 }
 
 int main(int ac, char **av) {
-	(void)av;
 	if (ac != 3)
 		return (std::cout << "Missing arguments (port and password)\n", 0);
 
 	signal(SIGINT, SignalHandler);
 	signal(SIGQUIT, SignalHandler);
 
-	gPort = atoi(av[1]);
-	gPassword = av[2];
-	static Server &server = Server::GetServerInstance(gPort, gPassword);
+	int port = atoi(av[1]);
+	std::string password = av[2];
+	std::cout << port << " | " << password << std::endl;
+	Server &server = Server::GetServerInstance(port, password);
 	server.servInit();
 	server.servRun();
-
-/* 	for (channelMapIt it =
-			 server.getAllChan().begin();
-		 it != server.getAllChan().end(); ++it) {
-		std::cout << "Channel: " << it->second->getName() << std::endl;
-		for (clientMapIt itCli =
-				 it->second->getCliInChan().begin();
-			 itCli != it->second->getCliInChan().end(); ++itCli) {
-			std::cout << "Client: " << itCli->second->getNick() << std::endl;
-		}
-	} */
 	return (0);
 }

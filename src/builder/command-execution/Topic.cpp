@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 10:18:39 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/14 12:34:46 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void changeTopic(Channel *curChan, Client *curCli, std::string topic)
 
 bool handleTopic(std::string params, Client *curCli)
 {
-	static Server &server = Server::GetServerInstance(gPort, gPassword);
+	static Server &server = Server::GetServerInstance(0, "");
 
 	std::istringstream iss(params);
 	std::string chanName;
