@@ -13,7 +13,7 @@
 #ifndef CMDPARAM_HPP
 #define CMDPARAM_HPP
 
-#include "../client/Client.hpp"
+#include "Client.hpp"
 #include "typedef.hpp"
 #include <iostream>
 #include <vector>
