@@ -64,7 +64,7 @@ PASS : <password>
     in case of failure display ERR_NEEDMOREPARAMS
 
 (2) isRegistered -> check if the password is already set    
-    in case of failure displayERR_ALREADYREGISTERED
+    in case of failure display ERR_ALREADYREGISTERED
 
 (3) pwMatch() -> checks to see if the given password is correct \
     in case of failure display ERR_PASSWDMISMATCH
@@ -276,6 +276,7 @@ channel object
                         (3) - if client was invited (if channel is invite-only mode) if not display ERR_INVITEONLYCHAN \
                             - ERR_BADCHANMASK (not sure of the purpose of this one) Indicates the supplied channel name is not a valid. \
                                  is similar to, but stronger than, ERR_NOSUCHCHANNEL (403), which indicates that the channel does not exist, but that it may be a valid name.
+                            - if client is already on channel
                         
 -- executors --
 addToChan() -> adds client to channel \
