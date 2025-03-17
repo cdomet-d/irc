@@ -80,8 +80,12 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	if (!enoughParams())
 		return (*this);
 	for (size_t idx = 0; idx < params_.size(); idx++) {
-		if ((*params_[idx].second).getDelim()) {
-			(*params_[idx].second).setList();
+		CmdParam &innerParam = *params_[idx].second;
+		if (innerParam.getDelim()) {
+			try {
+				innerParam.setList(MessageValidator::vectorSplit(
+					innerParam[0], innerParam.getDelim()));
+			} catch (const std::out_of_range &e) {};
 		}
 	}
 	displayParams();

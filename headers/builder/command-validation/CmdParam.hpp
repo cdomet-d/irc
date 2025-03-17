@@ -30,7 +30,6 @@ class CmdParam {
 	void rmParam(stringVec::iterator begin, stringVec::iterator end);
 	void addOne(unsigned int pos);
 	void clean(void);
-	// const stringVec &splitInnerParam(void);
 
 	/*                               GETTERS                                  */
 	bool getOpt(void) const;
@@ -40,7 +39,7 @@ class CmdParam {
 
 	/*                               SETTERS                                  */
 	void setOne(std::string &buffer);
-	void setList();
+	void setList(const stringVec &buffer);
 
 	/*                               NESTED CLASS                             */
 	class ParamBuilder {

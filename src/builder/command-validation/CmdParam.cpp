@@ -84,49 +84,8 @@ void CmdParam::setOne(std::string &buffer) {
 	innerParam_.push_back(buffer);
 }
 
-/*
-stringVec vectorSplit(std::string &s,
-									   const std::string &del) {
-	stringVec inputCli;
-	size_t pos = 0;
-	std::string token;
-
-	while ((pos = s.find(del)) != std::string::npos) {
-		token = s.substr(0, pos);
-		inputCli.push_back(token);
-		s.erase(0, pos + del.length());
-	}
-	return (inputCli);
-}
-*/
-
-static const stringVec splitInnerParam(std::string &s, char delim) {
-	stringVec buffer;
-	size_t pos = 0;
-	std::string del(1, delim);
-	std::string sub;
-
-	for (size_t i = 0; i < s.size(); i++) {
-		pos = s.find_first_of(del + ":");
-		if (pos != std::string::npos)
-			sub = s.substr(0, pos);
-		buffer.push_back(sub);
-		if (s[pos] == ':' && (pos != 0 && s[pos - 1] == ' ')) {
-			s.erase(0, pos);
-			sub = s.substr(pos, s.size());
-			buffer.push_back(sub);
-			return (buffer);
-		}
-		s.erase(0, pos + 1);
-	}
-	return (buffer);
-}
-
-void CmdParam::setList() {
-	try {
-		// const stringVec &buffer = splitInnerParam(innerParam_[0], delim_);
-		// innerParam_ = buffer;
-	} catch (const std::out_of_range &e) {};
+void CmdParam::setList(const stringVec &buffer) {
+	innerParam_ = buffer;
 }
 
 /* ************************************************************************** */
