@@ -66,11 +66,13 @@ CmdSpec &CmdSpec::process(Client &sender) {
 		std::cout << "Check registration state" << std::endl;
 		valid_ = false;
 		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER") {
+			std::cout << "Is not registration package" << std::endl;
 			sendReply(sender.getFd(), ERR_NOTREGISTERED);
 			std::cerr << ERR_NOTREGISTERED;
 		}
 		return (*this);
 	}
+	std::cout << "After checking registration state" << std::endl;
 	if (!enoughParams()) {
 		std::cout << "Check that we have enough parameters" << std::endl;
 		sendReply(sender.getFd(), ERR_NEEDMOREPARAMS(sender.cliInfo.getNick(),
