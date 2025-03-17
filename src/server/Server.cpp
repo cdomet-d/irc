@@ -6,17 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/12 17:21:00 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include <algorithm>
 #include <cerrno>
 #include <sstream>
-#include <stdio.h>
-#include <unistd.h>
-#include <vector>
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
