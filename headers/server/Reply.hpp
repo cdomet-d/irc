@@ -27,7 +27,7 @@
 #define ERR_CHANOPRIVSNEEDED(nickname, channel) (": 482 " + nickname + " " + channel + " :You're not channel operator" + "\r\n")
 #define ERR_ERRONEUSNICKNAME(nick) (":432 " + nick + " :Erroneous nickname\r\n")
 #define ERR_INVITEONLYCHAN(channel) (":473 " + channel + " :Cannot join channel (+i)\r\n")
-#define ERR_NEEDMOREPARAMS(command) (":461 " + command + " :Not enough parameters\r\n")
+#define ERR_NEEDMOREPARAMS(nickname, command) (":461 " + nickname + " " + command + " :Not enough parameters\r\n")
 #define ERR_NICKNAMEINUSE(nick) (":433 " + nick + " :Nickname is already in use\r\n")
 #define ERR_NONICKNAMEGIVEN()(":431 :No nickname given\r\n")
 #define ERR_NORECIPIENT(command) (":411 :No recipient given (" + command + ")\r\n")
@@ -56,6 +56,7 @@
 #define RPL_TOPIC(nickname, channel, topic) (": 332 " + nickname + " " + channel + topic + "\r\n")
 #define RPL_WELCOME(nick, user, host) (":001 " + nick + " :Welcome to the Internet Relay Network " + nick + "!" + user + "@" + host + "\r\n")
 #define RPL_YOURHOST(servername, version) (":002 :Your host is " + servername + ", running version " + version + "\r\n")
+#define ERR_NOTREGISTERED ": 451 * :You have not registered\r\n"
 
 // Message parsing-related replies
 #define ERR_TOOMANYTARGETS(nickname, target) (":407 " + nickname + " " + target + " :Too many targets\r\n")

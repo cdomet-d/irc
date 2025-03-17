@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/14 12:34:39 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 bool handleMode(std::string params, Client *curCli)
 {
-	log(DEBUG, "HandleMode");
-	static Server &server = Server::GetServerInstance(gPort, gPassword);
+	// log(DEBUG, "HandleMode");
+	static Server &server = Server::GetServerInstance(0, "");
 
 	std::istringstream iss(params);
 	std::string chanName;
@@ -24,41 +24,41 @@ bool handleMode(std::string params, Client *curCli)
 
 	iss >> chanName;
 	getline(iss, modes);
-	log(DEBUG, "chanName: ", chanName);
-	log(DEBUG, "modes: ", modes);
+	// log(DEBUG, "chanName: ", chanName);
+	// log(DEBUG, "modes: ", modes);
 
 	channelMapIt curChan = server.getAllChan().find(chanName);
 	if (curChan == server.getAllChan().end()) {
 		sendReply(curCli->getFd(),
-				  ERR_NOSUCHCHANNEL(curCli->getNick(), chanName));
-		log(DEBUG, "PART", "ERR_NOSUCHCHANNEL");
+				  ERR_NOSUCHCHANNEL(curCli->cliInfo.getNick(), chanName));
+		// log(DEBUG, "PART", "ERR_NOSUCHCHANNEL");
 		return (false);
 	}
 
-	log(DEBUG, "mode of channel:", curChan->second->getModes());
-	log(DEBUG, "channel exists");
+	// log(DEBUG, "mode of channel:", curChan->second->getModes());
+	// log(DEBUG, "channel exists");
 
 	//returns the current mode of a channel : RPL_CHANNELMODEIS (324)
 	if (modes.empty() == true) {
 		sendReply(curCli->getFd(),
-				  RPL_CHANNELMODEIS(curCli->getNick(), chanName,
+				  RPL_CHANNELMODEIS(curCli->cliInfo.getNick(), chanName,
 									curChan->second->getModes()));
-		log(DEBUG, "Checking the mode: ",
-			RPL_CHANNELMODEIS(curCli->getNick(), chanName,
-							  curChan->second->getModes()));
+		// log(DEBUG, "Checking the mode: ",
+			// RPL_CHANNELMODEIS(curCli->cliInfo.getNick(), chanName,
+			// 				  curChan->second->getModes()));
 		return (true);
 	}
-	log(DEBUG, "wants to change the mode of the channel");
+	// log(DEBUG, "wants to change the mode of the channel");
 
 	//notOperator
 	clientMapIt senderIt =
 		curChan->second->getOpCli().find(curCli->getFd());
 	if (senderIt == curChan->second->getCliInChan().end()) {
 		sendReply(curCli->getFd(),
-				  ERR_CHANOPRIVSNEEDED(curCli->getNick(), chanName));
-		log(DEBUG, "PART", "ERR_NOTONCHANNEL");
+				  ERR_CHANOPRIVSNEEDED(curCli->cliInfo.getNick(), chanName));
+		// log(DEBUG, "PART", "ERR_NOTONCHANNEL");
 		return (false);
 	}
-	log(DEBUG, "Client is opeator");
+	// log(DEBUG, "Client is opeator");
 	return (true);
 }

@@ -1,15 +1,15 @@
 # Commands structure, parsing rules and examples
 
 - [Commands structure, parsing rules and examples](#commands-structure-parsing-rules-and-examples)
-  - [PASS](#pass)
-    - [Parsing rules](#parsing-rules)
-      - [Failure strategy](#failure-strategy)
-      - [Success strategy](#success-strategy)
-  - [NICK](#nick)
-    - [Parsing rules](#parsing-rules-1)
-      - [Failure strategy](#failure-strategy-1)
-      - [Success strategy](#success-strategy-1)
-  - [USER](#user)
+	- [PASS](#pass)
+		- [Parsing rules](#parsing-rules)
+			- [Failure strategy](#failure-strategy)
+			- [Success strategy](#success-strategy)
+	- [NICK](#nick)
+		- [Parsing rules](#parsing-rules-1)
+			- [Failure strategy](#failure-strategy-1)
+			- [Success strategy](#success-strategy-1)
+	- [USER](#user)
 
 ## PASS
 

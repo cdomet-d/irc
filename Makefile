@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/12 17:19:12 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/14 12:43:19 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ H:=  -I headers/ \
 
 CC:=c++
 CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow
-DFLAGS:= -std=c++98 -Wshadow -g3
+DFLAGS:= -std=c++98 -Wextra -Wall -Wshadow -g3
 CXXFLAGS:=-MMD -MP $(H)
 MAKEFLAGS:=--no-print-directory
 
@@ -43,26 +43,32 @@ SERV_DIR:= $(SRC_DIR)server/
 
 # ----------------------------- SOURCES FILES -------------------------------- #
 
-SERV_SRC:=				Channel.cpp \
-						Server.cpp \
-						Reply.cpp \
+SERV_SRC:=			Channel.cpp \
+					Server.cpp \
+					Reply.cpp \
 
-DEBUG_SRC:=				Log.cpp \
+DEBUG_SRC:=			Log.cpp \
 
-CLI_SRC:=				Client.cpp \
+CLI_SRC:=			Client.cpp \
+					Message.cpp \
+					UserInfo.cpp \
 
-BUILD_EXE_SRC:=			Join.cpp \
-						NickUser.cpp \
-						Privmsg.cpp \
-						Topic.cpp \
-						Part.cpp \
-						Mode.cpp \
+BUILD_EXE_SRC:=		Join.cpp \
+					NickUser.cpp \
+					Privmsg.cpp \
+					Topic.cpp \
+					Part.cpp \
+					Mode.cpp \
 
-BUILD_VAL_SRC:=			InputClientParsing.cpp \
+BUILD_VAL_SRC:=			CmdManager.cpp \
+						CmdSpec.cpp \
+						CmdParam.cpp \
+						Checkers.cpp \
+						MessageValidator.cpp \
 
 BUILD_MAN_SRC:=	\
 
-SRC_ROOT:=				main.cpp \
+SRC_ROOT:=			main.cpp \
 
 # ----------------------------- BUILDING PATH -------------------------------- #
 
@@ -93,6 +99,9 @@ $(BDIR)%.o: %.cpp
 	@echo "$(CC) $(CFLAGS) $@"
 	@$(CC) $(CFLAGS) $(CXXFLAGS) -o $@ -c $<
 
+-include $(DEPS)
+
+
 # ----------------------------- MAKE DEBUG ----------------------------------- #
 
 debug: $(DEBUG_NAME)
@@ -112,7 +121,7 @@ $(DBDIR)%.o: %.cpp
 	@echo "$(CC) $(DFLAGS) $@"
 	@$(CC) $(DFLAGS) $(CXXFLAGS) -o $@ -c $<
 
--include $(DEPS)
+-include $(DDEPS)
 
 RM:= rm -rf
 
@@ -135,6 +144,7 @@ fclean: clean
 # ----------------------------- MAKE RE -------------------------------------- #
 
 re: fclean all
+redebug: fclean debug
 
 # ----------------------------- MAKE INFO ------------------------------------ #
 
@@ -145,7 +155,19 @@ info:
 	@echo
 	@echo $(SRC)
 
-.PHONY: all clean info fclean re debug
+# ----------------------------- RUN ------------------------------------------ #
+
+run: all
+	./$(NAME) 4444 0
+
+VFLAGS:= --leak-check=full --show-leak-kinds=all
+drun: debug
+	valgrind ./$(DEBUG_NAME) 4444 0
+
+# $(VFLAGS)
+# ---------------------------------------------------------------------------- #
+
+.PHONY: all clean info fclean re debug redebug run drun
 
 # ----------------------------- FORMATTING ----------------------------------- #
 
