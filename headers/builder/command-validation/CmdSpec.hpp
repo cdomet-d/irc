@@ -66,7 +66,7 @@ class CmdSpec {
 
 	/*                               SETTERS                                  */
 	void setSender(Client &sender);
-	//TODO : add setValid();
+	void setValid(bool valid);
 
 	/*                               NESTED CLASS                             */
 	class CmdBuilder {

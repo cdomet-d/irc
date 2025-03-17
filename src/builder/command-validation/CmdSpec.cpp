@@ -162,6 +162,10 @@ void CmdSpec::setSender(Client &sender) {
 	sender_ = &sender;
 }
 
+void CmdSpec::setValid(bool valid) {
+	valid_ = valid;
+}
+
 /* ************************************************************************** */
 /*                               NESTED CLASS                                 */
 /* ************************************************************************** */
