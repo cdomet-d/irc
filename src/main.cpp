@@ -37,3 +37,21 @@ int main(int ac, char **av) {
 	server.servRun();
 	return (0);
 }
+
+// int main(int argc, char **argv) {
+// 	Client client;
+// 	static CmdManager &cmManager = CmdManager::getManagerInstance();
+
+// 	if (argc < 2) {
+// 		std::cerr << "not enough params\n";
+// 		return (1);
+// 	}
+
+// 	client.cliInfo.setRegistration(3);
+// 	client.mess.setBuffer(argv[1]);
+
+// 	cmManager.generateCmds();
+
+// 	MessageValidator::assess(client);
+// 	return (0);
+// }

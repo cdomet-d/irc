@@ -34,7 +34,7 @@ bool MessageValidator::assess(Client &sender) {
 		formatMode(sender);
 	printCmdParam(sender.mess.getCmdParam(), "cmdParam");
 
-	CmdManager &manager = CmdManager::getManagerInstance(); //TODO issue : cmd MODE is empty
+	CmdManager &manager = CmdManager::getManagerInstance();
 	try {
 		manager.executeCm(manager.getCmd(sender.mess.getCmd()).process(sender));
 	} catch (const CmdManager::CmdNotFoundException &e) {
