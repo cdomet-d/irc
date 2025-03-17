@@ -130,6 +130,7 @@ static std::string enumToString(e_param color) {
 }
 
 void CmdSpec::displayParams(void) {
+	std::cout << "\nbuilder pattern :\n";
 	for (paramMap::iterator itt = params_.begin(); itt != params_.end();
 		 itt++) {
 		try {
