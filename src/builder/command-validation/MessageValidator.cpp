@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/17 17:12:44 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:16:06 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ bool messageValidator::assess(Client &sender) {
 		priv::formatMode(sender);
 	printCmdParam(sender.mess.getCmdParam(), "After assessing: cmdParam");
 
-	//FIXME: manager.getCmd and client.mess.getCmd are confusing
 	CmdManager &manager = CmdManager::getManagerInstance();
 	try {
 		manager.executeCm(manager.findCmd(sender.mess.getCmd()).process(sender));
@@ -141,7 +140,6 @@ bool messageValidator::priv::lenIsValid(const std::string &mess,
 	return true;
 }
 
-
 std::string messageValidator::priv::removeNewlines(const std::string &input) {
 	std::string result;
 	for (size_t i = 0; i < input.length(); ++i) {
@@ -150,15 +148,4 @@ std::string messageValidator::priv::removeNewlines(const std::string &input) {
 		}
 	}
 	return result;
-}
-
-void MessageValidator::printCmdParam(const stringVec &obj, std::string where) {
-	std::cout << "[" << std::endl;
-	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it) {
-		if ((*it).empty())
-			std::cout << "\t" + where + ":\t" << "[...]" << std::endl;
-		else
-			std::cout << "\t" + where + ":\t" << *it << std::endl;
-	}
-	std::cout << "]" << std::endl;
 }

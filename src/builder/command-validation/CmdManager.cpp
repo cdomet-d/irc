@@ -17,7 +17,6 @@
 /* ************************************************************************** */
 CmdManager::CmdManager(void) {
 	std::cout << "Cmd Manager instace created" << std::endl;
-
 }
 
 CmdManager::~CmdManager(void) {

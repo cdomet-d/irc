@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 16:25:38 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:08:29 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 #define ERR_ALREADYREGISTRED()(":462 :You may not reregister\r\n")
 // #define ERR_BADCHANNELKEY(channel) (":475 " + channel + " :Cannot join channel (+k)\r\n")
-#define ERR_BADCHANNELKEY(nickname, channel) (" 475 " + nickname + " " + channel + " :Cannot join channel (+k)" + "\r\n")
+#define ERR_BADCHANNELKEY(nickname, channel) (": 475 " + nickname + " " + channel + " :Cannot join channel (+k)" + "\r\n")
 #define ERR_BANNEDFROMCHAN(channel) (":474 " + channel + " :Cannot join channel (+b)\r\n")
 #define ERR_CANNOTSENDTOCHAN(channel) (":404 " + channel + " :Cannot send to channel\r\n")
 #define ERR_CHANNELISFULL(channel) (":471 " + channel + " :Cannot join channel (+l)\r\n")
