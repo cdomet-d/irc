@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:04 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/14 14:49:59 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/17 10:53:17 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ class MessageValidator {
   public:
 	/*                               METHODS                                  */
 	static bool assess(Client &sender);
+	static void printCmdParam(const stringVec &obj, std::string where);
 	static stringVec vectorSplit(std::string &s, char del);
 
   private:
@@ -29,7 +30,6 @@ class MessageValidator {
 	static bool lenIsValid(const std::string &mess, const Client &sender);
 	static void formatMode(Client &sender);
 	static std::string removeNewlines(const std::string &input);
-	static void printCmdParam(const stringVec &obj, std::string where);
 };
 
 #endif

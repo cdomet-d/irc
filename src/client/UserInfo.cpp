@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/13 10:32:59 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/17 11:16:54 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 
-UserInfo::UserInfo(void) : name_(""), nick_(""), pass_(""), realName_("") {}
+UserInfo::UserInfo(void)
+	: registration_(0), name_(""), nick_(""), pass_(""), realName_("") {}
 UserInfo::~UserInfo(void) {}
 
 UserInfo::UserInfo(const UserInfo &rhs) {

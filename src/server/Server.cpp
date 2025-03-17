@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/14 13:00:09 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/17 13:05:44 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,8 @@
 /* ************************************************************************** */
 
 Server::Server(int port, std::string password) : port_(port), pass_(password) {
-	std::cout << "Constructor called with " << port << " | " << password << std::endl;
-	std::cout << "Constructor called with " << port_ << " | " << pass_ << std::endl;
+	std::cout << "Server instance created" << std::endl;
 }
-// Server::Server(void) : port_(0), pass_("") {}
 
 Server::~Server(void) {
 	std::cout << "Calling destructor" << std::endl;
@@ -72,14 +70,12 @@ bool Server::servInit() {
 	servPoll_.events = POLLIN;
 	if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, servFd_, &servPoll_) == -1)
 		return 0;
-	// log(INFO, "IRC server initialized");
 	return (true);
 }
 
 bool Server::servRun() {
 	int nbFds;
 
-	// log(INFO, "Loop IRC server started");
 	std::cout << "Server listening on port " << port_
 			  << " | IP adress: " << inet_ntoa(servAddr_.sin_addr) << std::endl;
 	while (gSign == false) {
@@ -98,7 +94,6 @@ bool Server::servRun() {
 
 void Server::acceptClient() {
 	try {
-		// log(INFO, "Accepting new client");
 		Client *newCli = new Client();
 		struct epoll_event cliEpollTemp;
 		socklen_t cliLen = sizeof(newCli->cliAddr_);
@@ -143,13 +138,10 @@ void Server::acceptClient() {
 		usedNicks_.push_back(newCli->cliInfo.getNick());
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected";
-		// log(INFO, ss.str());
 	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
 }
 
 bool Server::handleData(int fd) {
-	// log(INFO, "-----handleData-----");
-
 	char tmpBuf[1024];
 	memset(tmpBuf, 0, sizeof(tmpBuf));
 	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, 0);
@@ -161,32 +153,33 @@ bool Server::handleData(int fd) {
 		return (disconnectCli(fd));
 	else {
 		curCli->mess.setBuffer(curCli->mess.getBuffer().append(tmpBuf, bytes));
-		processBuffer(curCli);
+		MessageValidator::assess(*curCli);
+		curCli->mess.clearBuffer();
+		curCli->mess.clearCmdParam();
 	}
 	return (true);
 }
 
-void Server::processBuffer(Client *curCli) {
-	size_t pos;
-	while ((pos = curCli->mess.getBuffer().find('\n')) != std::string::npos) {
-		if (!curCli->mess.getBuffer().find("QUIT")) {
-			std::cout << "Exit server" << std::endl;
-			disconnectCli(curCli->getFd());
-			return;
-		}
-		if (curCli->mess.getBuffer().find("CAP LS") != std::string::npos ||
-			curCli->mess.getBuffer().find("NICK") != std::string::npos ||
-			curCli->mess.getBuffer().find("USER") != std::string::npos) {
-			handleClientRegistration(curCli->mess.getBuffer(), curCli);
-			curCli->mess.setBuffer("");
-			return;
-		} else {
-			MessageValidator::assess(*curCli);
-			curCli->mess.setBuffer("");
-			return;
-		}
-	}
-}
+// void Server::processBuffer(Client *curCli) {
+// 	size_t pos;
+// 	while ((pos = curCli->mess.getBuffer().find('\n')) != std::string::npos) {
+// 		if (!curCli->mess.getBuffer().find("QUIT")) {
+// 			std::cout << "Exit server" << std::endl;
+// 			disconnectCli(curCli->getFd());
+// 			return;
+// 		}
+// 		if (curCli->mess.getBuffer().find("CAP LS") != std::string::npos ||
+// 			curCli->mess.getBuffer().find("NICK") != std::string::npos ||
+// 			curCli->mess.getBuffer().find("USER") != std::string::npos) {
+// 			handleClientRegistration(curCli->mess.getBuffer(), curCli);
+// 			curCli->mess.setBuffer("");
+// 			return;
+// 		} else {
+// 			curCli->mess.setBuffer("");
+// 			return;
+// 		}
+// 	}
+// }
 
 bool Server::disconnectCli(int fd) {
 	clientMapIt it = clients_.find(fd);

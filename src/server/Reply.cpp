@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:37:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 14:16:12 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/17 13:13:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,5 @@ void sendReply(int fd, std::string reply)
 {
 	size_t bytes = send(fd, reply.c_str(), strlen(reply.c_str()), MSG_EOR);
 	if (bytes == strlen(reply.c_str()))
-		log(INFO, "Message send in full\nmessage	", reply);
+		log(INFO, "Sent: \t", reply);
 }

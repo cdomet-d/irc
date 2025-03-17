@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/14 16:13:08 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/17 12:49:54 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
+//TODO: handle single buffer for CAP NICK USER
 bool MessageValidator::assess(Client &sender) {
 	sender.mess.setBuffer(removeNewlines(sender.mess.getBuffer()));
 	std::string message = sender.mess.getBuffer();
@@ -32,13 +33,17 @@ bool MessageValidator::assess(Client &sender) {
 	sender.mess.setCmdParam(vectorSplit(message, ' '));
 	if (sender.mess.getCmd() == "MODE")
 		formatMode(sender);
-	printCmdParam(sender.mess.getCmdParam(), "cmdParam");
+	printCmdParam(sender.mess.getCmdParam(), "After assessing: cmdParam");
 
+	//FIXME: manager.getCmd and client.mess.getCmd are confusing
 	CmdManager &manager = CmdManager::getManagerInstance();
 	try {
+		std::cout << "Before exec" << std::endl;
 		manager.executeCm(manager.getCmd(sender.mess.getCmd()).process(sender));
 	} catch (const CmdManager::CmdNotFoundException &e) {
-		std::cout << ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
+		sendReply(sender.getFd(), ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
+													 sender.mess.getCmd()));
+		std::cerr << ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
 										sender.mess.getCmd());
 	}
 	return true;
@@ -147,4 +152,4 @@ void MessageValidator::printCmdParam(const stringVec &obj, std::string where) {
 			std::cout << "\t" + where + ":\t" << *it << std::endl;
 	}
 	std::cout << "]" << std::endl;
-}	
+}

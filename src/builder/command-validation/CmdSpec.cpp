@@ -18,8 +18,8 @@
 CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
 				 std::vector< int (*)(CmdSpec &) > checkers,
 				 void (*cmExecutor)(CmdSpec &cmd))
-	: server_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL), name_(name),
-	  registrationStage_(registrationStage), params_(params),
+	: server_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
+	  name_(name), registrationStage_(registrationStage), params_(params),
 	  checkers_(checkers), cmExecutor_(cmExecutor) {}
 
 CmdSpec::~CmdSpec(void) {
@@ -58,22 +58,34 @@ bool CmdSpec::enoughParams() {
 }
 
 CmdSpec &CmdSpec::process(Client &sender) {
+	std::cout << "In process" << std::endl;
 	setSender(sender);
+
+	displayParams();
 	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
+		std::cout << "Check registration state" << std::endl;
 		valid_ = false;
-		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER")
-			std::cout << ERR_NOTREGISTERED;
+		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER") {
+			sendReply(sender.getFd(), ERR_NOTREGISTERED);
+			std::cerr << ERR_NOTREGISTERED;
+		}
+		return (*this);
+	}
+	if (!enoughParams()) {
+		std::cout << "Check that we have enough parameters" << std::endl;
+		sendReply(sender.getFd(), ERR_NEEDMOREPARAMS(sender.cliInfo.getNick(),
+													 sender.mess.getCmd()));
 		return (*this);
 	}
 	for (size_t i = 0; i < params_.size() && i < sender.mess.getSize(); i++) {
+		std::cout << "Set parameters within CmdParam" << std::endl;
 		try {
-			(*params_[i].second).setOne(sender.mess[i + 1]);
+			(*params_[i].second).setOne(sender.mess[i + 1]); 
 		} catch (const std::out_of_range &e) {};
 	}
-	if (!enoughParams())
-		return (*this);
 	for (size_t idx = 0; idx < params_.size(); idx++) {
 		CmdParam &innerParam = *params_[idx].second;
+		std::cout << "Recover subparameters" << std::endl;
 		if (innerParam.getDelim()) {
 			try {
 				innerParam.setList(MessageValidator::vectorSplit(
@@ -81,8 +93,8 @@ CmdSpec &CmdSpec::process(Client &sender) {
 			} catch (const std::out_of_range &e) {};
 		}
 	}
-	displayParams();
 	for (size_t j = 0; j < checkers_.size(); j++) {
+		std::cout << "Apply checkers" << std::endl;
 		checkers_[j](*this);
 		if (!valid_)
 			return (*this);

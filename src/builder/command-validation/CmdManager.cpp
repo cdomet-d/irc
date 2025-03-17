@@ -15,7 +15,10 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdManager::CmdManager(void) {}
+CmdManager::CmdManager(void) {
+	std::cout << "Cmd Manager instace created" << std::endl;
+
+}
 
 CmdManager::~CmdManager(void) {
 	for (cmdMap::iterator it = commandList_.begin(); it != commandList_.end();
@@ -28,8 +31,8 @@ CmdManager::~CmdManager(void) {
 /*                               METHODS                                      */
 /* ************************************************************************** */
 void CmdManager::executeCm(CmdSpec &cm) {
-	// if (cm.getValid())
-	// 	cm.getExecutor()(cm);
+	std::cout << "In execute cmd" << std::endl;
+	cm.getExecutor();
 	cm.cleanAll();
 }
 
@@ -40,7 +43,7 @@ void CmdManager::generateCmds() {
 			.Parameters(password, CmdParam::ParamBuilder().build())
 			.addChecker(isRegistered)
 			.addChecker(pwMatch)
-			// .CmExecutor()
+			// .CmExecutor(handleJoin());
 			.build());
 
 	//on veut pas afficher ERR_NEEDMOREPARAMS si nickname est pas donné
@@ -167,7 +170,7 @@ void CmdManager::log(CmdSpec *cm) {
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-CmdSpec &CmdManager::getCmd(const std::string &cmName) {
+CmdSpec &CmdManager::getCmd(const std::string &cmName) { //TODO: not a getter
 	cmdMap::iterator it;
 
 	it = commandList_.find(cmName);
