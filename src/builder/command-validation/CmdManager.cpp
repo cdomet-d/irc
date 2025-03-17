@@ -109,7 +109,7 @@ void CmdManager::generateCmds() {
 			.addParam(mode_, new CmdParam(true, ' '))
 			.addParam(modeArg, new CmdParam(true, ' '))
 			.addChecker(validChan)
-			.addChecker(onChan)
+			.addChecker(onChan) //TODO: verif if necessary
 			.addChecker(hasChanPriv)
 			.addChecker(validMode)
 			// .addChecker(validArg) ?

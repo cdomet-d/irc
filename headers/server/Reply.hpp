@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 16:50:33 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:58:47 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 #define ERR_BANNEDFROMCHAN(channel) (":474 " + channel + " :Cannot join channel (+b)\r\n")
 #define ERR_CANNOTSENDTOCHAN(channel) (":404 " + channel + " :Cannot send to channel\r\n")
 #define ERR_CHANNELISFULL(channel) (":471 " + channel + " :Cannot join channel (+l)\r\n")
-// #define ERR_CHANOPRIVSNEEDED(channel) (":482 " + channel + " :You're not channel operator\r\n")
 #define ERR_CHANOPRIVSNEEDED(nickname, channel) (": 482 " + nickname + " " + channel + " :You're not channel operator" + "\r\n")
 #define ERR_ERRONEUSNICKNAME(nick) (":432 " + nick + " :Erroneous nickname\r\n")
 #define ERR_INVITEONLYCHAN(channel) (":473 " + channel + " :Cannot join channel (+i)\r\n")

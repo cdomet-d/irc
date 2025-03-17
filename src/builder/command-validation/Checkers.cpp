@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/17 16:21:37 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:56:24 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,26 @@ bool onChan(CmdSpec &cmd) {
 }
 
 bool hasChanPriv(CmdSpec &cmd) {
-	(void)cmd;
+	channelMap::iterator itChan;
+
+	itChan = cmd.server_.getAllChan().find(cmd[channel][0]);
+	Channel chan = *itChan->second;
+
+	if (cmd.getName() == "TOPIC" &&
+		(!cmd[topic_].getInnerParam().empty() ||
+		 (chan.getModes().find('t') == std::string::npos))) {
+		return (0);
+	}
+
+	clientMap::iterator itCl;
+
+	itCl = chan.getOpCli().find(cmd.getSender().getFd());
+	if (itCl == chan.getOpCli().end()) {
+		sendReply(cmd.getSender().getFd(),
+				  ERR_CHANOPRIVSNEEDED(cmd.getSender().cliInfo.getNick(),
+									   chan.getName()));
+		return (1);
+	}
 	return (0);
 }
 
