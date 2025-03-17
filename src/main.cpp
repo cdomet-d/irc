@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:20:45 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:39:05 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,14 @@ int main(int ac, char **av)
 	signal(SIGINT, SignalHandler);
 	signal(SIGQUIT, SignalHandler);
 
-	CmdManager &cmManager = CmdManager::getManagerInstance();
-	cmManager.generateCmds();
-
+	
 	int port = atoi(av[1]);
 	std::string password = av[2];
 	std::cout << port << " | " << password << std::endl;
 	Server &server = Server::GetServerInstance(port, password);
 	server.servInit();
+	CmdManager &cmManager = CmdManager::getManagerInstance();
+	cmManager.generateCmds();
 	server.servRun();
 
 	/* 	for (channelMapIt it =

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:25:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:33:58 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,14 @@ bool handlePart(std::string params, Client *curCli)
 	std::istringstream iss(params);
 	std::string chanName;
 	std::string reason;
+	std::string command = "PART";
 
 	iss >> chanName;
 	std::getline(iss, reason);
 
 	//needMoreParams
 	if (chanName.empty() == true) {
-		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->cliInfo.getNick(), "PART"));
+		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(command));
 		// log(DEBUG, "PART", "ERR_NEEDMOREPARAMS");
 		return (false);
 	}
@@ -37,7 +38,7 @@ bool handlePart(std::string params, Client *curCli)
 	channelMapIt curChan = server.getAllChan().find(chanName);
 	if (curChan == server.getAllChan().end()) {
 		sendReply(curCli->getFd(),
-				  ERR_NOSUCHCHANNEL(curCli->getNick(), chanName));
+				  ERR_NOSUCHCHANNEL(curCli->cliInfo.getNick(), chanName));
 		log(DEBUG, "PART", "ERR_NOSUCHCHANNEL");
 		return (false);
 	}
@@ -46,18 +47,18 @@ bool handlePart(std::string params, Client *curCli)
 		curChan->second->getCliInChan().find(curCli->getFd());
 	if (senderIt == curChan->second->getCliInChan().end()) {
 		sendReply(curCli->getFd(),
-				  ERR_NOTONCHANNEL(curCli->getNick(), chanName));
+				  ERR_NOTONCHANNEL(curCli->cliInfo.getNick(), chanName));
 		log(DEBUG, "PART", "ERR_NOTONCHANNEL");
 		return (false);
 	}
 
 	if (reason.empty() == true)
 		sendMessageChannel(curChan->second->getCliInChan(),
-						   RPL_PARTNOREASON(curCli->getPrefix(), chanName));
+						   RPL_PARTNOREASON(curCli->cliInfo.getPrefix(), chanName));
 	else
 		sendMessageChannel(
 			curChan->second->getCliInChan(),
-			RPL_PARTREASON(curCli->getPrefix(), chanName, reason));
+			RPL_PARTREASON(curCli->cliInfo.getPrefix(), chanName, reason));
 
 	int targetFd = curCli->getFd();
 

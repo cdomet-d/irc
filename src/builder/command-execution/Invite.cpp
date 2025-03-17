@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 09:15:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:23:03 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ bool handleInvite(std::string params, Client *curCli)
 	channelMapIt curChan = server.getAllChan().find(channel);
 	if (curChan == server.getAllChan().end()) {
 		sendReply(curCli->getFd(),
-				  ERR_NOSUCHCHANNEL(curCli->getNick(), target));
+				  ERR_NOSUCHCHANNEL(curCli->cliInfo.getNick(), target));
 		return (false);
 	}
 	//does client exist
@@ -43,7 +43,7 @@ bool handleInvite(std::string params, Client *curCli)
 	Client *targetCli = NULL;
 	for (clientMapIt itTarget = server.getAllCli().begin();
 		 itTarget != server.getAllCli().end(); ++itTarget) {
-		if (itTarget->second->getNick() == target) {
+		if (itTarget->second->cliInfo.getNick() == target) {
 			targetCli = itTarget->second;
 		}
 	}
@@ -57,14 +57,14 @@ bool handleInvite(std::string params, Client *curCli)
 		curChan->second->getCliInChan().find(curCli->getFd());
 	if (senderIt == curChan->second->getCliInChan().end()) {
 		sendReply(curCli->getFd(),
-				  ERR_NOTONCHANNEL(curCli->getNick(), channel));
+				  ERR_NOTONCHANNEL(curCli->cliInfo.getNick(), channel));
 		return (false);
 	}
 	//is client sending the invite an OP on the channel
 	senderIt = curChan->second->getOpCli().find(curCli->getFd());
 	if (senderIt == curChan->second->getOpCli().end()) {
 		sendReply(curCli->getFd(),
-				  ERR_CHANOPRIVSNEEDED(curCli->getNick(), channel));
+				  ERR_CHANOPRIVSNEEDED(curCli->cliInfo.getNick(), channel));
 		return (false);
 	}
 
@@ -74,14 +74,14 @@ bool handleInvite(std::string params, Client *curCli)
 		curChan->second->getCliInChan().find(targetCli->getFd());
 	if (itTarget != curChan->second->getCliInChan().end()) {
 		sendReply(curCli->getFd(),
-				  ERR_USERONCHANNEL(targetCli->getNick(), channel));
+				  ERR_USERONCHANNEL(targetCli->cliInfo.getNick(), channel));
 		return (false);
 	}
 
 	//sendInvite to invited client and sending client
-	sendReply(curCli->getFd(), RPL_INVITING(targetCli->getNick(), channel));
+	sendReply(curCli->getFd(), RPL_INVITING(targetCli->cliInfo.getNick(), channel));
 	sendReply(targetCli->getFd(),
-			  RPL_INVITE(curCli->getNick(), targetCli->getNick(), channel));
+			  RPL_INVITE(curCli->cliInfo.getNick(), targetCli->cliInfo.getNick(), channel));
 	curChan->second->getInvitCli().insert(
 		clientPair(targetCli->getFd(), targetCli));
 

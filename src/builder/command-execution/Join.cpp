@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:23:44 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:30:43 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ Channel *createChan(const std::string &chanName)
 void partAllChans(Client *curCli)
 {
 
-	for (stringVec::iterator currChanName = curCli->getChans().begin();
-		 currChanName != curCli->getChans().end(); ++currChanName) {
+	for (stringVec::iterator currChanName = curCli->getJoinedChans().begin();
+		 currChanName != curCli->getJoinedChans().end(); ++currChanName) {
 		handlePart(*currChanName, curCli);
 	}
-	curCli->getChans().clear();
+	curCli->getJoinedChans().clear();
 }
 
 bool isCliInvited(Client *curCli, Channel *curChan)

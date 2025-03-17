@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:46:19 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:24:02 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:32:22 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ void handleClientRegistration(const std::string &input, Client *curCli)
 			// log(DEBUG, "username = ", username);
 		}
 	}
-	if (curCli->getNick().empty() == false &&
-		curCli->getUsername().empty() == false)
+	if (curCli->cliInfo.getNick().empty() == false &&
+		curCli->cliInfo.getUsername().empty() == false)
 		sendReply(curCli->getFd(), REG_COMPLETE());
 	curCli->cliInfo.setPrefix();
 	// log(DEBUG, "cliInfo.getPrefix = ", curCli->cliInfo.getPrefix());

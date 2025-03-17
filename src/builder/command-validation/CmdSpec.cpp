@@ -47,8 +47,7 @@ bool CmdSpec::enoughParams() {
 		for (size_t i = 0; i < params_.size(); i++) {
 			CmdParam &innerParam = *params_[i].second;
 			if (!innerParam.getOpt() && !innerParam.getSize()) {
-				std::cout << ERR_NEEDMOREPARAMS((*sender_).cliInfo.getNick(),
-												name_);
+				std::cout << ERR_NEEDMOREPARAMS(name_);
 				valid_ = false;
 				return (false);
 			}

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:29:02 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:38:01 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 
 Server::Server(int port, std::string password) : port_(port), pass_(password) {
 	std::cout << "Constructor called with " << port << " | " << password << std::endl;
-	std::cout << "Constructor called with " << port_ << " | " << pass_ << std::endl;
 }
 // Server::Server(void) : port_(0), pass_("") {}
 
@@ -194,20 +193,14 @@ void Server::processBuffer(Client *curCli)
 	}
 }
 
-Server &Server::GetServerInstance(int port, std::string password)
-{
-	static Server instance(port, password);
-	return (instance);
-}
-
 bool checkOnlyOperator(int fd)
 {
-	static Server &server = Server::GetServerInstance(gPort, gPassword);
+	static Server &server = Server::GetServerInstance(0, "");
 
-	clientMap::iterator currCli = server.getAllCli().find(fd);
-	handleJoin("0", currCli->second);
-	for (stringVec::iterator currChanName = currCli->second->getChans().begin();
-		 currChanName != currCli->second->getChans().end(); ++currChanName) {
+	clientMap::iterator curCli = server.getAllCli().find(fd);
+	handleJoin("0", curCli->second);
+	for (stringVec::iterator currChanName = curCli->second->getJoinedChans().begin();
+		 currChanName != curCli->second->getJoinedChans().end(); ++currChanName) {
 		channelMapIt currChan = server.getAllChan().find(*currChanName);
 		if (!currChan->second->getOpCli().size()) {
 			if (currChan->second->getCliInChan().size() >= 1) {

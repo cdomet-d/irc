@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:26:19 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:40:19 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ bool handlePrivsmg(std::string params, Client *curCli)
 	if (target.find("#") == target.npos) {
 		for (clientMapIt itTarget = server.getAllCli().begin();
 			 itTarget != server.getAllCli().end(); ++itTarget) {
-			if (itTarget->second->getNick() == target) {
+			if (itTarget->second->cliInfo.getNick() == target) {
 				sendReply(itTarget->first,
-						  RPL_PRIVMSG(curCli->getPrefix(), target, message));
+						  RPL_PRIVMSG(curCli->cliInfo.getPrefix(), target, message));
 				return (true);
 			}
 		}
@@ -41,7 +41,7 @@ bool handlePrivsmg(std::string params, Client *curCli)
 	channelMapIt curChan = server.getAllChan().find(target);
 	if (curChan == server.getAllChan().end()) {
 		sendReply(curCli->getFd(),
-				  ERR_NOSUCHCHANNEL(curCli->getNick(), target));
+				  ERR_NOSUCHCHANNEL(curCli->cliInfo.getNick(), target));
 		return (false);
 	}
 
@@ -52,7 +52,6 @@ bool handlePrivsmg(std::string params, Client *curCli)
 		sendReply(curCli->getFd(), ERR_CANNOTSENDTOCHAN(curChan->second->getName()));	
 		return (false);
 	}
-	Client *sender = senderIt->second;
 
 	for (clientMapIt itCli = curChan->second->getCliInChan().begin();
 		 itCli != curChan->second->getCliInChan().end(); ++itCli) {

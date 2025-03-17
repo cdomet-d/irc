@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:27:44 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:35:46 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void checkTopic(Channel *curChan, Client *curCli)
 {
 	if (curChan->getTopic().empty() == true) {
 		sendReply(curCli->getFd(),
-				  RPL_NOTOPIC(curCli->getNick(), curChan->getName()));
+				  RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan->getName()));
 		return;
 	}
 	sendReply(curCli->getFd(),
@@ -31,7 +31,7 @@ void clearTopic(Channel *curChan, Client *curCli)
 	curChan->setTopic("");
 	//messageToAllChannel
 	sendMessageChannel(curChan->getCliInChan(),
-					   RPL_NOTOPIC(curCli->getNick(), curChan->getName()));
+					   RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan->getName()));
 }
 
 void changeTopic(Channel *curChan, Client *curCli, std::string topic)
@@ -40,7 +40,7 @@ void changeTopic(Channel *curChan, Client *curCli, std::string topic)
 	curChan->getTopic().clear();
 	curChan->setTopic(topic);
 	sendMessageChannel(curChan->getCliInChan(),
-					   RPL_TOPICCHANGED(curCli->getPrefix(), curChan->getName(),
+					   RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(), curChan->getName(),
 										curChan->getTopic()));
 }
 
@@ -60,7 +60,7 @@ bool handleTopic(std::string params, Client *curCli)
 	if (curChan == server.getAllChan().end()) {
 		sendReply(
 			curCli->getFd(),
-			ERR_NOSUCHCHANNEL(server.getAllCli()[curCli->getFd()]->getNick(),
+			ERR_NOSUCHCHANNEL(server.getAllCli()[curCli->getFd()]->cliInfo.getNick(),
 							  chanName));
 		return (false);
 	}
@@ -85,7 +85,7 @@ bool handleTopic(std::string params, Client *curCli)
 	if (isOp == curChan->second->getOpCli().end() &&
 		curChan->second->getTopicRestrict() == true) {
 		sendReply(curCli->getFd(),
-				  ERR_CHANOPRIVSNEEDED(curCli->getNick(),
+				  ERR_CHANOPRIVSNEEDED(curCli->cliInfo.getNick(),
 									   curChan->second->getName()));
 		return (false);
 	}

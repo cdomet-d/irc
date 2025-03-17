@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:03:44 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:32:04 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ bool handleWho(std::string params, Client *curCli)
 	channelMapIt curChan = server.getAllChan().find(channel);
 	if (curChan == server.getAllChan().end()) {
 		sendReply(curCli->getFd(),
-				  ERR_NOSUCHCHANNEL(curCli->getNick(), channel));
+				  ERR_NOSUCHCHANNEL(curCli->cliInfo.getNick(), channel));
 		return (false);
 	}
 
@@ -43,7 +43,7 @@ bool handleWho(std::string params, Client *curCli)
 		curChan->second->getCliInChan().find(curCli->getFd());
 	if (senderIt == curChan->second->getCliInChan().end()) {
 		sendReply(curCli->getFd(),
-				  ERR_NOTONCHANNEL(curCli->getNick(), channel));
+				  ERR_NOTONCHANNEL(curCli->cliInfo.getNick(), channel));
 		return (false);
 	}
 
@@ -61,13 +61,13 @@ bool handleWho(std::string params, Client *curCli)
 		if (!nickList.empty()) {
 			nickList += " ";
 		}
-		nickList += prefix + it->second->getNick();
+		nickList += prefix + it->second->cliInfo.getNick();
 	}
 
 	// Send the full list
 	sendReply(curCli->getFd(),
-			  RPL_NAMREPLY(curCli->getNick(), "=", channel, nickList));
-	sendReply(curCli->getFd(), RPL_ENDOFNAMES(curCli->getNick(), channel));
+			  RPL_NAMREPLY(curCli->cliInfo.getNick(), "=", channel, nickList));
+	sendReply(curCli->getFd(), RPL_ENDOFNAMES(curCli->cliInfo.getNick(), channel));
 
 	return (true);
 }

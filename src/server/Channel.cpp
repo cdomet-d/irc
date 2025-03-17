@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:28:19 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:30:43 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 
 	//messageToAllChannel
 	sendMessageChannel(curChan->getCliInChan(),
-					   RPL_JOIN(curCli->getNick(), curChan->getName()));
+					   RPL_JOIN(curCli->cliInfo.getNick(), curChan->getName()));
 
 	if (curChan->getTopic().empty() == true)
 		sendReply(curCli->getFd(),
