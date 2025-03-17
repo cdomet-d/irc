@@ -6,17 +6,16 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:04:00 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:20:45 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "CmdManager.hpp"
 #include "Server.hpp"
 #include <csignal>
 #include <cstdlib>
 
 int gSign = false;
-int gPort = 0;
-std::string gPassword = "";
 
 void SignalHandler(int signum)
 {
@@ -33,9 +32,13 @@ int main(int ac, char **av)
 	signal(SIGINT, SignalHandler);
 	signal(SIGQUIT, SignalHandler);
 
-	gPort = atoi(av[1]);
-	gPassword = av[2];
-	static Server &server = Server::GetServerInstance(atoi(av[1]), av[2]);
+	CmdManager &cmManager = CmdManager::getManagerInstance();
+	cmManager.generateCmds();
+
+	int port = atoi(av[1]);
+	std::string password = av[2];
+	std::cout << port << " | " << password << std::endl;
+	Server &server = Server::GetServerInstance(port, password);
 	server.servInit();
 	server.servRun();
 
@@ -51,3 +54,21 @@ int main(int ac, char **av)
 	} */
 	return (0);
 }
+
+// int main(int argc, char **argv) {
+// 	Client client;
+// 	CmdManager &cmManager = CmdManager::getManagerInstance();
+
+// 	if (argc < 2) {
+// 		std::cerr << "not enough params\n";
+// 		return (1);
+// 	}
+
+// 	client.cliInfo.setRegistration(3);
+// 	client.mess.setBuffer(argv[1]);
+
+// 	cmManager.generateCmds();
+
+// 	MessageValidator::assess(client);
+// 	return (0);
+// }

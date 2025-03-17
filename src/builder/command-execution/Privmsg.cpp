@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:06:15 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:26:19 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ bool handlePrivsmg(std::string params, Client *curCli)
 		return (false);
 	}
 
+	//check if client is a channel
 	clientMapIt senderIt =
 		curChan->second->getCliInChan().find(curCli->getFd());
 	if (senderIt == curChan->second->getCliInChan().end()) {
@@ -57,7 +58,7 @@ bool handlePrivsmg(std::string params, Client *curCli)
 		 itCli != curChan->second->getCliInChan().end(); ++itCli) {
 		if (itCli->first != curCli->getFd())
 			sendReply(itCli->second->getFd(),
-					  RPL_PRIVMSG(sender->getPrefix(),
+					  RPL_PRIVMSG(curCli->cliInfo.getPrefix(),
 								  curChan->second->getName(), message));
 	}
 	return (true);

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:46:19 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:03:32 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:24:02 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,15 @@
 
 bool nickInUse(std::string newNick, Client *curCli)
 {
-	log(DEBUG, "nickInUse");
+	// log(DEBUG, "nickInUse");
 
 	static Server &server = Server::GetServerInstance(0, "");
 
 	for (clientMapIt it = server.getAllCli().begin();
 		 it != server.getAllCli().end(); ++it) {
-		if (newNick == it->second->getNick()) {
+		if (newNick == it->second->cliInfo.getNick()) {
 			sendReply(curCli->getFd(),
-					  ERR_NICKNAMEINUSE(it->second->getNick()));
+					  ERR_NICKNAMEINUSE(it->second->cliInfo.getNick()));
 			return (false);
 		}
 	}
@@ -48,20 +48,20 @@ void handleClientRegistration(const std::string &input, Client *curCli)
 			std::istringstream nickStream(line);
 			nickStream >> nick >> nick;
 			if (nickInUse(nick, curCli))
-				curCli->setNick(nick);
-			log(DEBUG, "nick = ", curCli->getNick());
+				curCli->cliInfo.setNick(nick);
+			// log(DEBUG, "nick = ", curCli->cliInfo.getNick());
 		} else if (line.find("USER") != std::string::npos) {
 			std::string username, mode, unused, realname;
 			std::istringstream userStream(line);
 			userStream >> username >> username >> mode >> unused;
 			std::getline(userStream, realname);
-			curCli->setUsername(username);
-			log(DEBUG, "username = ", username);
+			curCli->cliInfo.setUsername(username);
+			// log(DEBUG, "username = ", username);
 		}
 	}
 	if (curCli->getNick().empty() == false &&
 		curCli->getUsername().empty() == false)
 		sendReply(curCli->getFd(), REG_COMPLETE());
-	curCli->setPrefix();
-	log(DEBUG, "getPrefix = ", curCli->getPrefix());
+	curCli->cliInfo.setPrefix();
+	// log(DEBUG, "cliInfo.getPrefix = ", curCli->cliInfo.getPrefix());
 }

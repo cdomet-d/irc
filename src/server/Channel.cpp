@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 15:57:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:28:19 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ Channel::Channel(std::string name)
 
 Channel::~Channel(void)
 {
-	log(INFO, "Channel deleted:", this->getName());
+	// log(INFO, "Channel deleted:", this->getName());
 }
 
 /* ************************************************************************** */
@@ -43,18 +43,18 @@ void sendMessageChannel(clientMap allCliChannel, std::string message)
 
 bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 {
-	//log(DEBUG, "-----addClientToChan-----");
+	// log(DEBUG, "-----addClientToChan-----");
 
 	std::map< int, Client * > &clients = curChan->getCliInChan();
 	for (clientMapIt it = clients.begin(); it != clients.end(); ++it)
 		if (curCli == it->second) {
-			log(INFO, "Client already in channel");
+			// log(INFO, "Client already in channel");
 			return (false);
 		}
 	if (curChan->getCliInChan().empty())
 		curChan->getOpCli().insert(clientPair(curCli->getFd(), curCli));
 	curChan->getCliInChan().insert(clientPair(curCli->getFd(), curCli));
-	curCli->getChans().push_back(curChan->getName());
+	curCli->getJoinedChans().push_back(curChan->getName());
 
 	//messageToAllChannel
 	sendMessageChannel(curChan->getCliInChan(),
@@ -62,10 +62,10 @@ bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 
 	if (curChan->getTopic().empty() == true)
 		sendReply(curCli->getFd(),
-				  RPL_NOTOPIC(curCli->getNick(), curChan->getName()));
+				  RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan->getName()));
 	else
 		sendReply(curCli->getFd(),
-				  RPL_TOPIC(curCli->getNick(), curChan->getName(),
+				  RPL_TOPIC(curCli->cliInfo.getNick(), curChan->getName(),
 							curChan->getTopic()));
 	return (true);
 }

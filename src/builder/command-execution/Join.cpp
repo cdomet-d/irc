@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/14 13:42:15 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:23:44 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 Channel *createChan(const std::string &chanName)
 {
-	//log(DEBUG, "-----createChan-----");
+	// log(DEBUG, "-----createChan-----");
 	static Server &server = Server::GetServerInstance(0, "");
 
 	channelMapIt it = server.getAllChan().find(chanName);
@@ -28,7 +28,7 @@ Channel *createChan(const std::string &chanName)
 	newChan->setModes();
 	server.getAllChan().insert(
 		std::pair< std::string, Channel * >(newChan->getName(), newChan));
-	log(INFO, "Channel created: ", chanName);
+	// log(INFO, "Channel created: ", chanName);
 	return (newChan);
 }
 
@@ -54,12 +54,15 @@ bool isCliInvited(Client *curCli, Channel *curChan)
 //TODO :add check of password if mode  +k is enable
 bool handleJoin(std::string params, Client *curCli)
 {
+	// log(DEBUG, "-----handleJoin-----");
+
 	std::istringstream iss(params);
 	std::string chanName;
 	std::string password;
 
 	iss >> chanName;
 	getline(iss, password);
+	// log(DEBUG, "channel name = ", chanName);
 
 	if (chanName == "0") {
 		partAllChans(curCli);
@@ -70,7 +73,12 @@ bool handleJoin(std::string params, Client *curCli)
 	if (curChan->getIsPassMatch() == true)
 		if (curChan->getPassword() != password) {
 			sendReply(curCli->getFd(),
-					  ERR_BADCHANNELKEY(curCli->getNick(), curChan->getName()));
+			ERR_BADCHANNELKEY(curCli->cliInfo.getNick(), curChan->getName()));
+			return (false);
+		}
+	if (curChan->getInviteOnly() == true)
+		if (isCliInvited(curCli, curChan) == false) {
+			sendReply(curCli->getFd(), ERR_INVITEONLYCHAN(curChan->getName()));
 			return (false);
 		}
 	if (curChan->getInviteOnly() == true)

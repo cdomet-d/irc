@@ -6,11 +6,12 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/14 13:42:57 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:25:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "Reply.hpp"
 #include <sstream>
 
 //use the define for the map of client and channel
@@ -27,8 +28,8 @@ bool handlePart(std::string params, Client *curCli)
 
 	//needMoreParams
 	if (chanName.empty() == true) {
-		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->getNick()));
-		log(DEBUG, "PART", "ERR_NEEDMOREPARAMS");
+		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->cliInfo.getNick(), "PART"));
+		// log(DEBUG, "PART", "ERR_NEEDMOREPARAMS");
 		return (false);
 	}
 

@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/06 13:59:33 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/17 14:03:20 by aljulien         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/03/17 14:19:19 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef TYPEDEF_HPP
 #define TYPEDEF_HPP

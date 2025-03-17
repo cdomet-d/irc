@@ -6,11 +6,10 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/14 13:43:03 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:27:44 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Client.hpp"
 #include "Server.hpp"
 #include <sstream>
 
@@ -21,8 +20,9 @@ void checkTopic(Channel *curChan, Client *curCli)
 				  RPL_NOTOPIC(curCli->getNick(), curChan->getName()));
 		return;
 	}
-	sendReply(curCli->getFd(), RPL_TOPIC(curCli->getNick(), curChan->getName(),
-										 curChan->getTopic()));
+	sendReply(curCli->getFd(),
+			  RPL_TOPIC(curCli->cliInfo.getNick(), curChan->getName(),
+						curChan->getTopic()));
 	return;
 }
 
@@ -70,7 +70,7 @@ bool handleTopic(std::string params, Client *curCli)
 	if (whatCli == curChan->second->getCliInChan().end()) {
 		sendReply(
 			curCli->getFd(),
-			ERR_NOTONCHANNEL(server.getAllCli()[curCli->getFd()]->getNick(),
+			ERR_NOTONCHANNEL(server.getAllCli()[curCli->getFd()]->cliInfo.getNick(),
 							 curChan->second->getName()));
 		return (false);
 	}

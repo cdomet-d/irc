@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:05:30 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:19:55 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@
 #define RPL_YOURHOST(servername, version)                                      \
 	(": 002 :Your host is " + servername + ", running version " + version +    \
 	 "\r\n")
+#define ERR_NOTREGISTERED ": 451 * :You have not registered\r\n"
 #define RPL_NAMREPLY(client, channel_type, channel, nicks)                     \
 	(": 353 " + client + " " + channel_type + " " + channel + " :" + nicks +   \
 	 "\r\n")
