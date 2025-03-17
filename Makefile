@@ -6,7 +6,7 @@
 #    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/14 14:51:29 by aljulien         ###   ########.fr        #
+#    Updated: 2025/03/17 09:06:10 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,6 +60,7 @@ BUILD_EXE_SRC:=			Join.cpp \
 						Invite.cpp \
 						Kick.cpp \
 						Who.cpp \
+						Pass.cpp \
 
 BUILD_VAL_SRC:=			InputClientParsing.cpp \
 

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/14 14:54:48 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 09:32:15 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ class Server {
 	/*                               GETTERS                                  */
 	clientMap &getAllCli();
 	channelMap &getAllChan();
+	std::string getPass() const;
 
   private:
 	/*                               METHODS                                  */
@@ -111,6 +112,8 @@ bool handleInvite(std::string params, Client *curCli);
 bool handleKick(std::string params, Client *curCli);
 //WHO
 bool handleWho(std::string params, Client *curCli);
+//PASS
+bool handlePass(std::string params, Client *curCli);
 
 /*                               DEBUG                                  */
 void log(logLevel level, std::string message);

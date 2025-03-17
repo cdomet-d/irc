@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/14 13:42:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 09:15:06 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 
 bool handleInvite(std::string params, Client *curCli)
 {
-
 	log(DEBUG, "----handleInvite----");
 	static Server &server = Server::GetServerInstance(0, "");
 

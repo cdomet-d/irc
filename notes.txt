@@ -9,7 +9,6 @@ Fix historique (il apparait le nombre de fois qu'il y avait de clients sur le ch
 Execution de mode 
 Join avec password
 
-
 We don't have to develop a client 
 We don't have to handles server to server connection
 
@@ -26,8 +25,8 @@ Step to create a general-purpose server :
 	
 Commands :
 
-PASS, PART, INVITE, KICK, QUIT, MODE //need to do 
-PRIVMSG, USER, NICK, JOIN, TOPIC //currently working on
+PASS, MODE //need to do 
+PRIVMSG, USER, NICK, JOIN, TOPIC, WHO, PART, KICK, QUIT, INVITE //currently working on
 
 TRAME :
 

@@ -6,10 +6,11 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/14 13:20:40 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 09:41:53 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "Server.hpp"
 #include "Server.hpp"
 #include <cerrno>
 #include <sstream>
@@ -143,6 +144,7 @@ void Server::acceptClient()
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected";
 		log(INFO, ss.str());
+		sendReply(newCli->getFd(), NOTICE_REQUIRE_PASSWORD());
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
 	}
@@ -255,4 +257,7 @@ clientMap &Server::getAllCli()
 channelMap &Server::getAllChan()
 {
 	return (channels_);
+}
+std::string Server::getPass() const {
+	return (pass_);
 }

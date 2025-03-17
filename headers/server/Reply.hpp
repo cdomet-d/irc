@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/14 14:57:21 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 09:47:48 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 //standard replies
 
 #define ERR_ALREADYREGISTRED()(": 462 :You may not reregister\r\n")
+#define ERR_PASSWDMISMATCH(nickname) (": 464 " + nickname + " :Password incorrect\r\n")
 // #define ERR_BADCHANNELKEY(channel) (":475 " + channel + " :Cannot join channel (+k)\r\n")
 #define ERR_BADCHANNELKEY(nickname, channel) (": 475 " + nickname + " " + channel + " :Cannot join channel (+k)" + "\r\n")
 #define ERR_BANNEDFROMCHAN(channel) (": 474 " + channel + " :Cannot join channel (+b)\r\n")
@@ -74,7 +75,8 @@
 #define RPL_CHANGEMODE(prefix, channel, mode) (":" + prefix + " MODE " + channel + " " + mode + "\r\n")
 #define RPL_INVITE(nickname, target, channel) (":" + nickname + " INVITE " + target + " :" + channel + "\r\n")
 #define RPL_KICK(prefix, channel, target, reason) (":" + prefix + " KICK " + channel + " " + target + " " + reason + "\r\n")
-
+#define NOTICE_REQUIRE_PASSWORD()(": NOTICE : You must provide a password using the PASS command before registration\r\n")
+#define PASS_SUCCESS()(": NOTICE : Valid password ! You may register\r\n")
 void sendReply(int fd, std::string reply);
 
 #endif //REPLY_H
