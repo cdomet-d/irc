@@ -98,34 +98,20 @@ void CmdSpec::cleanAll(void) {
 
 static std::string enumToString(e_param color) {
 	switch (color) {
-	case 0:
-		return "channel";
-	case 1:
-		return "hostname";
-	case 2:
-		return "key";
-	case 3:
-		return "message";
-	case 4:
-		return "mode";
-	case 5:
-		return "modeArg";
-	case 6:
-		return "nickname";
-	case 7:
-		return "password";
-	case 8:
-		return "realname";
-	case 9:
-		return "servername";
-	case 10:
-		return "target";
-	case 11:
-		return "topic";
-	case 12:
-		return "username";
-	default:
-		return "Unknown";
+	case 0:	return "channel";
+	case 1:	return "hostname";
+	case 2:	return "key";
+	case 3:	return "message";
+	case 4:	return "mode";
+	case 5:	return "modeArg";
+	case 6:	return "nickname";
+	case 7:	return "password";
+	case 8:	return "realname";
+	case 9:	return "servername";
+	case 10: return "target";
+	case 11: return "topic";
+	case 12: return "username";
+	default: return "Unknown";
 	}
 }
 

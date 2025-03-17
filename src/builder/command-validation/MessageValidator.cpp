@@ -97,7 +97,7 @@ bool MessageValidator::hasTrailing(std::string &mess, std::string &trailing) {
 	std::string::size_type trail = mess.find(" :");
 
 	if (trail != std::string::npos) {
-		trailing = mess.substr((trail + 1), mess.size());
+		trailing = mess.substr((trail), mess.size());
 		mess.erase(trail);
 		return true;
 	}
@@ -147,4 +147,4 @@ void MessageValidator::printCmdParam(const stringVec &obj, std::string where) {
 			std::cout << "\t" + where + ":\t" << *it << std::endl;
 	}
 	std::cout << "]" << std::endl;
-}	
+}
