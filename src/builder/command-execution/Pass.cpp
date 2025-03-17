@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 09:04:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 10:31:42 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:03:36 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #include "typedef.hpp"
 #include <sstream>
 
-bool handlePass(std::string params, Client *curCli) {
+bool handlePass(std::string params, Client *curCli)
+{
 	log(DEBUG, "----handlePass----");
 	static Server &server = Server::GetServerInstance(0, "");
 
@@ -31,7 +32,8 @@ bool handlePass(std::string params, Client *curCli) {
 	}
 
 	clientMapIt senderIt = server.getAllCli().find(curCli->getFd());
-	if (server.getAllCli().size() == 0 && senderIt != server.getAllCli().end()) {
+	if (server.getAllCli().size() == 0 &&
+		senderIt != server.getAllCli().end()) {
 		sendReply(curCli->getFd(), ERR_ALREADYREGISTRED());
 		return (false);
 	}

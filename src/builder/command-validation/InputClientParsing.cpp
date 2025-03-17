@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 15:23:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 09:53:25 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:03:46 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ std::string removeNewlines(const std::string &input)
 	return (result);
 }
 
-stringVec vectorSplit(std::string &s,
-									   const std::string &del) {
+stringVec vectorSplit(std::string &s, const std::string &del)
+{
 	stringVec inputCli;
 	size_t pos = 0;
 	std::string token;
@@ -66,27 +66,27 @@ void inputToken(std::string inputCli, Client *curCli)
 	}
 	if (command == "TOPIC") {
 		handleTopic(params, curCli);
-		return ;
+		return;
 	}
 	if (command == "MODE") {
 		handleMode(params, curCli);
-		return ;
+		return;
 	}
 	if (command == "PART") {
 		handlePart(params, curCli);
-		return ;
+		return;
 	}
 	if (command == "INVITE") {
 		handleInvite(params, curCli);
-		return ;
+		return;
 	}
 	if (command == "KICK") {
 		handleKick(params, curCli);
-		return ;
+		return;
 	}
 	if (command == "WHO") {
 		handleWho(params, curCli);
-		return ;
+		return;
 	}
 
 	//clean the istringstream

@@ -6,11 +6,10 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 12:30:17 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:03:58 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
 #include "Server.hpp"
 #include <cerrno>
 #include <sstream>
@@ -19,7 +18,8 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 
-Server::Server(int port, std::string password) : port_(port), pass_(password) {
+Server::Server(int port, std::string password) : port_(port), pass_(password)
+{
 	std::cout << "Constructor called" << std::endl;
 }
 Server::Server(void) : port_(0), pass_("") {}
@@ -33,8 +33,7 @@ Server::~Server(void)
 		close(it->first);
 		delete it->second;
 	}
-	for (channelMapIt it = channels_.begin(); it != channels_.end();
-		 ++it)
+	for (channelMapIt it = channels_.begin(); it != channels_.end(); ++it)
 		delete it->second;
 
 	close(epollFd_);
@@ -204,36 +203,40 @@ Server &Server::GetServerInstance(int port, std::string password)
 	return (instance);
 }
 
-bool checkOnlyOperator(int fd) {
-    static Server &server = Server::GetServerInstance(gPort, gPassword);
+bool checkOnlyOperator(int fd)
+{
+	static Server &server = Server::GetServerInstance(gPort, gPassword);
 
-    clientMap::iterator currCli = server.getAllCli().find(fd);
-    handleJoin("0", currCli->second);
-    for(stringVec::iterator currChanName = currCli->second->getChans().begin(); currChanName != currCli->second->getChans().end(); ++currChanName)
-    {
-    	channelMapIt currChan = server.getAllChan().find(*currChanName);
-        if (!currChan->second->getOpCli().size()) {
-            if (currChan->second->getCliInChan().size() >= 1) {
-                currChan->second->getOpCli().insert(clientPair(currChan->second->getCliInChan().begin()->second->getFd(), currChan->second->getCliInChan().begin()->second));
-                return (true);
-            }
-        }
-    }
-    return (false);
+	clientMap::iterator currCli = server.getAllCli().find(fd);
+	handleJoin("0", currCli->second);
+	for (stringVec::iterator currChanName = currCli->second->getChans().begin();
+		 currChanName != currCli->second->getChans().end(); ++currChanName) {
+		channelMapIt currChan = server.getAllChan().find(*currChanName);
+		if (!currChan->second->getOpCli().size()) {
+			if (currChan->second->getCliInChan().size() >= 1) {
+				currChan->second->getOpCli().insert(clientPair(
+					currChan->second->getCliInChan().begin()->second->getFd(),
+					currChan->second->getCliInChan().begin()->second));
+				return (true);
+			}
+		}
+	}
+	return (false);
 }
 
-bool Server::disconnectCli(int fd) {
+bool Server::disconnectCli(int fd)
+{
 	log(INFO, "-----disconnectCli-----");
 	checkOnlyOperator(fd);
-    clientMapIt it = clients_.find(fd);
-    if (it != clients_.end()) {
-        std::cout << "Client [" << fd << "] disconnected" << std::endl;
-        delete it->second;
-        clients_.erase(fd);
-        close(fd);
-        return true;
-    }
-    return false;
+	clientMapIt it = clients_.find(fd);
+	if (it != clients_.end()) {
+		std::cout << "Client [" << fd << "] disconnected" << std::endl;
+		delete it->second;
+		clients_.erase(fd);
+		close(fd);
+		return true;
+	}
+	return false;
 }
 
 /* ************************************************************************** */
@@ -259,6 +262,7 @@ channelMap &Server::getAllChan()
 {
 	return (channels_);
 }
-std::string Server::getPass() const {
+std::string Server::getPass() const
+{
 	return (pass_);
 }

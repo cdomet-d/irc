@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 15:19:47 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:03:12 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ class Channel {
 	/*                               METHODS                                  */
 	bool addClientToChan(Channel *curChan, Client *curCli);
 	void printMapValues();
-
 
 	/*                               GETTERS                                  */
 	bool getInviteOnly() const;
