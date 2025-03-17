@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageValidator.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/14 16:13:08 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:32:42 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ bool MessageValidator::assess(Client &sender) {
 
 	CmdManager &manager = CmdManager::getManagerInstance();
 	try {
-		manager.executeCm(manager.getCmd(sender.mess.getCmd()).process(sender));
+		manager.executeCm(manager.findCmd(sender.mess.getCmd()).process(sender));
 	} catch (const CmdManager::CmdNotFoundException &e) {
-		std::cout << ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
-										sender.mess.getCmd());
+		sendReply(sender.getFd(), ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
+													 sender.mess.getCmd()));
 	}
 	return true;
 }
