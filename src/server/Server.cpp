@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 10:19:39 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:00:09 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,11 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 
-Server::Server(int port, std::string password) : port_(port), pass_(password) {}
-Server::Server(void) : port_(0), pass_("") {}
+Server::Server(int port, std::string password) : port_(port), pass_(password) {
+	std::cout << "Constructor called with " << port << " | " << password << std::endl;
+	std::cout << "Constructor called with " << port_ << " | " << pass_ << std::endl;
+}
+// Server::Server(void) : port_(0), pass_("") {}
 
 Server::~Server(void) {
 	std::cout << "Calling destructor" << std::endl;
@@ -34,6 +37,11 @@ Server::~Server(void) {
 
 	close(epollFd_);
 	close(servFd_);
+}
+
+Server &Server::GetServerInstance(int port, std::string password) {
+	static Server instance(port, password);
+	return (instance);
 }
 
 /* ************************************************************************** */
@@ -178,11 +186,6 @@ void Server::processBuffer(Client *curCli) {
 			return;
 		}
 	}
-}
-
-Server &Server::GetServerInstance(int port, std::string password) {
-	static Server instance(port, password);
-	return (instance);
 }
 
 bool Server::disconnectCli(int fd) {

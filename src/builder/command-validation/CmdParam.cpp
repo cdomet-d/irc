@@ -73,7 +73,7 @@ bool CmdParam::getOpt(void) const {
 	return (opt_);
 }
 
-const char CmdParam::getDelim(void) const {
+char CmdParam::getDelim(void) const {
 	return (delim_);
 }
 

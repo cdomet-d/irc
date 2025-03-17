@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/13 10:58:49 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/14 14:33:50 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,11 @@ class Message {
 	void setCmdParam(const stringVec &splitBuffer);
 	void setTrailingParam(const std::string &trail);
 
-  private:
+	/*                               METHODS                                  */
+	void clearCmdParam();
+	void clearBuffer();
+
+private:
 	Message(const Message &rhs);
 	Message &operator=(const Message &rhs);
 
