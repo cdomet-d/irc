@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:46:19 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 09:55:20 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 10:34:46 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,13 @@ void handleClientRegistration(const std::string &input, Client *curCli)
 	std::string line;
 
 	while (std::getline(iss, line)) {
-		if (line.find("PASS" != std::string::npos)) {
-			handlePass(params, curCli);
-			return ;
-		}
 		if (line.find("CAP LS") != std::string::npos) {
 			continue;
+		} else if (line.find("PASS") != std::string::npos) {
+			std::string pass;
+			std::istringstream passStream(line);
+			passStream >> pass >> pass;
+			handlePass(pass, curCli);
 		} else if (line.find("NICK") != std::string::npos) {
 			std::string nick;
 			std::istringstream nickStream(line);
@@ -58,6 +59,8 @@ void handleClientRegistration(const std::string &input, Client *curCli)
 			log(DEBUG, "username = ", username);
 		}
 	}
+	if (curCli->getNick().empty() == false && curCli->getUsername().empty() == false)
+		sendReply(curCli->getFd(), REG_COMPLETE());
 	curCli->setPrefix();
 	log(DEBUG, "getPrefix = ", curCli->getPrefix());
 }

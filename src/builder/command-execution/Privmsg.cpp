@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/14 13:40:14 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 10:40:16 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 bool handlePrivsmg(std::string params, Client *curCli)
 {
+	log(DEBUG, "HANDLEPRIVMSG");
 	static Server &server = Server::GetServerInstance(0, "");
 
 	std::istringstream iss(params);

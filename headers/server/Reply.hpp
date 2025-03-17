@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 09:47:48 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 10:34:57 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@
 #define RPL_KICK(prefix, channel, target, reason) (":" + prefix + " KICK " + channel + " " + target + " " + reason + "\r\n")
 #define NOTICE_REQUIRE_PASSWORD()(": NOTICE : You must provide a password using the PASS command before registration\r\n")
 #define PASS_SUCCESS()(": NOTICE : Valid password ! You may register\r\n")
+#define REG_COMPLETE()(": NOTICE : Registration complete\r\n")
 void sendReply(int fd, std::string reply);
 
 #endif //REPLY_H

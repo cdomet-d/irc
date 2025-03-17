@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 09:41:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 10:36:18 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,8 @@ void Server::processBuffer(Client *curCli)
 		}
 		if (curCli->getBuffer().find("CAP LS") != std::string::npos ||
 			curCli->getBuffer().find("NICK") != std::string::npos ||
-			curCli->getBuffer().find("USER") != std::string::npos) {
+			curCli->getBuffer().find("USER") != std::string::npos ||
+			curCli->getBuffer().find("PASS") != std::string::npos) {
 			handleClientRegistration(curCli->getBuffer(), curCli);
 			curCli->setBuffer("");
 			return;

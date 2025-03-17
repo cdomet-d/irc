@@ -25,8 +25,8 @@ Step to create a general-purpose server :
 	
 Commands :
 
-PASS, MODE //need to do 
-PRIVMSG, USER, NICK, JOIN, TOPIC, WHO, PART, KICK, QUIT, INVITE //currently working on
+ MODE //need to do 
+PRIVMSG, USER, NICK, JOIN, TOPIC, WHO, PART, KICK, QUIT, INVITE, PASS //currently working on
 
 TRAME :
 
