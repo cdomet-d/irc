@@ -6,81 +6,13 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 13:21:36 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:02:26 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <sstream>
 
-/* void removeModes(Client * curCli, Channel *curChan, std::string modes) {
-	for (size_t i = 0; modes.c_str()[i] != '+'; i++) {
-		if (modes.c_str()[i] == 'i')
-			curChan->setInviteOnly(true);
-	//	if (modes.c_str()[i] == 'i')
-	}
-}
-
-void addModes(Client * curCli, Channel *curChan, std::string modes) {
-	
-}
-
-bool handleChannelMode(Client * curCli, std::string chanName, std::string modes) {
-	static Server &server = Server::GetServerInstance(0, "");
-	
-	//does the channel exist ?
-	channelMapIt curChanIt = server.getAllChan().find(chanName);
-	if (curChanIt == server.getAllChan().end()) {
-		sendReply(curCli->getFd(),
-				  ERR_NOSUCHCHANNEL(curCli->getNick(), chanName));
-		log(DEBUG, "PART", "ERR_NOSUCHCHANNEL");
-		return (false);
-	}
-	Channel *curChan = curChanIt->second;
-
-	//returns the current mode of a channel : RPL_CHANNELMODEIS (324)
-	if (modes == " ") {
-		sendReply(curCli->getFd(), RPL_CHANNELMODEIS(curCli->getNick(), chanName));
-		log(DEBUG, "Checking the mode: ",
-			RPL_CHANNELMODEIS(curCli->getNick(), chanName));
-		return (true);
-	}
-
-	//isCliOp ?
-	clientMapIt senderIt =
-		curChanIt->second->getOpCli().find(curCli->getFd());
-	if (senderIt == curChanIt->second->getCliInChan().end()) {
-		sendReply(curCli->getFd(),
-				  ERR_CHANOPRIVSNEEDED(curCli->getNick(), chanName));
-		log(DEBUG, "PART", "ERR_CHANOPRIVSNEEDED");
-		return (false);
-	}
-	log(DEBUG, "Client is operator");
-
-	for(size_t i = 0; i <  modes.size(); i++) {
-		if (modes.c_str()[i] == '-') {
-			modes.erase(i, 1);
-			removeModes(curCli, curChan, modes);
-		}
-		if (modes.c_str()[i] == '+') {
-			modes.erase(i, 1);
-			addModes(curCli, curChan, modes);
-		}
-	}
-	
-	return (false);
-	//change the modes
-}
-
-bool handleUserMode(Client *curCli, std::string userName, std::string modes) {
-	(void)curCli;
-	(void)userName;
-	(void)modes;
-	return (false);
-}
-*/
-
-// Helper function to check if a flag requires parameters
 static bool requiresParameter(const std::string& flag) {
     return flag != "+i" && flag != "+t";
 }
@@ -88,11 +20,9 @@ static bool requiresParameter(const std::string& flag) {
 void parseInput(const std::string& input, 
                 std::vector<std::string>& flags, 
                 std::vector<std::string>& params) {
-    // Clear output vectors
     flags.clear();
     params.clear();
     
-    // Split input into tokens
     std::istringstream iss(input);
     std::vector<std::string> tokens;
     std::string token;
@@ -100,7 +30,6 @@ void parseInput(const std::string& input,
         tokens.push_back(token);
     }
     
-    // Separate flags and parameters
     std::vector<std::string> parameters_tokens;
     bool in_flags_section = true;
     
@@ -113,11 +42,8 @@ void parseInput(const std::string& input,
             parameters_tokens.push_back(*it);
         }
     }
-    
-    // Initialize parameters with empty strings
     params.resize(flags.size());
     
-    // Assign parameters to flags that require them
     size_t param_index = 0;
     for (size_t i = 0; i < flags.size(); ++i) {
         if (requiresParameter(flags[i])) {
@@ -136,25 +62,35 @@ void printVector(const std::vector<std::string>& vec) {
 }
 
 void executeO(std::string flag, std::string param) {
-	if (flag.find("+") != std::string::npos) {
-		
-	} else {
-		
-	}
+	(void)flag;
+	(void)param;
+	//if (flag.find("+") != std::string::npos) {
+	//	
+	//} else {
+	//	
+	//}
 }
 
 void executeI(std::string flag, std::string param) {
-	
+	(void)flag;
+	(void)param;
+
 }
 void executeT (std::string flag, std::string param) {
+	(void)flag;
+	(void)param;
 
 }
 
 void executeK(std::string flag, std::string param) {
+	(void)flag;
+	(void)param;
 	
 }
 
 void executeL(std::string flag, std::string param) {
+	(void)flag;
+	(void)param;
 	
 }
 
@@ -178,6 +114,7 @@ void executeFlag(std::string flag, std::string param) {
 }
 
 //the modes of a channel need to be empty if no moe is activated and +<modes> if any
+//TODO the first params will be the nam of the channel
 bool handleMode(std::string params, Client *curCli)
 {
 	log(DEBUG, "HandleMode");
@@ -196,6 +133,3 @@ bool handleMode(std::string params, Client *curCli)
 		executeFlag(flags[nbFlag], param[nbFlag]);
 	return (true);
 }
-
-
-//
