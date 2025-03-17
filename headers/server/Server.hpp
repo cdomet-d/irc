@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 17:20:05 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/14 12:53:46 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,10 @@
 #define SERVER_HPP
 
 #include "Channel.hpp"
-#include "Client.hpp"
-#include "Reply.hpp"
+#include "MessageValidator.hpp"
 #include "typedef.hpp"
 #include <arpa/inet.h>
 #include <cstring>
-#include <iostream>
 #include <netinet/in.h>
 #include <poll.h>
 #include <sys/epoll.h>
@@ -29,8 +27,6 @@
 enum logLevel { INFO, ERROR, DEBUG };
 
 extern int gSign;
-extern int gPort;
-extern std::string gPassword;
 
 class Client;
 
@@ -86,9 +82,6 @@ class Server {
 	Server(int port, std::string password);
 };
 
-/*                               PARSING                                  */
-stringVec vectorSplit(std::string &s, const std::string &del);
-void inputToken(std::string inputCli, Client *curCli);
 
 /*                               COMMAND                                  */
 //NICK--USER

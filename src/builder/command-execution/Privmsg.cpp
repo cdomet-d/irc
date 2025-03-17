@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/11 10:57:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/14 12:34:44 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 //only works for channel usage
 bool handlePrivsmg(std::string params, Client *curCli)
 {
-	static Server &server = Server::GetServerInstance(gPort, gPassword);
+	static Server &server = Server::GetServerInstance(0, "");
 
 	std::istringstream iss(params);
 	std::string chanName;
@@ -29,20 +29,21 @@ bool handlePrivsmg(std::string params, Client *curCli)
 
 	channelMapIt curChan = server.getAllChan().find(chanName);
 	if (curChan->second == NULL) {
-		log(DEBUG, "did not found channel");
+		// log(DEBUG, "did not found channel");
 		return (false);
 	}
 
+	//check if client is a channel
 	clientMapIt senderIt =
 		curChan->second->getCliInChan().find(curCli->getFd());
 	if (senderIt == curChan->second->getCliInChan().end())
 		return (false);
-	Client *sender = senderIt->second;
+	// Client *sender = senderIt->second;
 	for (clientMapIt itCli = curChan->second->getCliInChan().begin();
 		 itCli != curChan->second->getCliInChan().end(); ++itCli) {
 		if (itCli->first != curCli->getFd())
 			sendReply(itCli->second->getFd(),
-					  RPL_PRIVMSG(sender->getPrefix(),
+					  RPL_PRIVMSG(curCli->cliInfo.getPrefix(),
 								  curChan->second->getName(), message));
 	}
 	return (true);

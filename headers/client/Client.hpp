@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 17:15:32 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/13 10:11:29 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
-#include "typedef.hpp"
+#include "Message.hpp"
+#include "UserInfo.hpp"
 #include <fcntl.h>
 #include <iostream>
 #include <netdb.h>
@@ -30,54 +31,27 @@ class Client {
 
 	/*                               GETTERS                                  */
 	int getFd() const;
-	std::string getBuffer() const;
-	std::string getHostname() const;
-	std::string getIP() const;
-	std::string getName() const;
-	std::string getNick() const;
-	std::string getPrefix() const;
-	std::string getRealName() const;
-	std::string getUsername() const;
-	stringVec &getRPL_JOINChans();
+	stringVec &getJoinedChans();
 	struct epoll_event *getCliEpoll();
 
 	/*                               SETTERS                                  */
-	void setBuffer(std::string buffer);
 	void setCliEpoll(struct epoll_event epoll);
 	void setFd(int fd);
-	void setHostname(std::string hostname);
-	void setIP(std::string ip);
-	void setNick(const std::string &newNick);
-	void setPrefix();
-	void setUsername(const std::string &username);
 
 	/*                               MEMBERS                                  */
+	Message mess;
 	struct sockaddr_in cliAddr_;
+	UserInfo cliInfo;
 
   private:
 	/*                               MEMBERS                                  */
-	// user info
-	std::string hostname_;
-	std::string ip_;
-	std::string name_;
-	std::string nick_;
-	std::string pass_;
-	std::string prefix_;
-	std::string realName_;
-	std::string username_;
-
-	//attributes
-	//int	registration;
-
-	// socket infos
+	// sockets
 	int cliFd_;
-	std::string buffer_;
 	struct epoll_event cliEpoll_;
 
 	// channels
-	stringVec _RPL_JOINChans;
+	stringVec joinedChans_;
 
-	/*                               METHODS                                  */
 	// private constructors
 	Client &operator=(const Client &rhs);
 	Client(const Client &rhs);

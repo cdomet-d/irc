@@ -5,7 +5,7 @@ git fetch --all --prune
 
 # If some remote branches were deleted, delete their local counterparts
 if git branch -vv | grep ': gone]'; then
-    git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -d
+    git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D
 fi
 
 # Save the branch on which the script is run
