@@ -74,7 +74,6 @@ void CmdManager::generateCmds() {
 			// .CmExecutor()
 			.build());
 
-	//can have 0 params or 2
 	log(CmdSpec::CmdBuilder()
 			.Name("INVITE")
 			.Registration(3)

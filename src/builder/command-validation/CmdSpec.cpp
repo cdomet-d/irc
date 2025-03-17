@@ -94,7 +94,7 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	for (size_t i = 0; i < checkers_.size(); i++) {
 		if (!checkers_[i](*this))
 			valid_ = false;
-			return (*this);
+		return (*this);
 	}
 	return (*this);
 }
