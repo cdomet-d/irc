@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 15:38:01 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:39:05 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ void Server::acceptClient() {
 	try {
 		// log(INFO, "Accepting new client");
 		Client *newCli = new Client();
+		newCli->cliInfo.setRegistration(3);
+
 		struct epoll_event cliEpollTemp;
 		socklen_t cliLen = sizeof(newCli->cliAddr_);
 		newCli->setFd(
@@ -198,7 +200,7 @@ bool checkOnlyOperator(int fd)
 	static Server &server = Server::GetServerInstance(0, "");
 
 	clientMap::iterator curCli = server.getAllCli().find(fd);
-	handleJoin("0", curCli->second);
+	//handleJoin("0", curCli->second);
 	for (stringVec::iterator currChanName = curCli->second->getJoinedChans().begin();
 		 currChanName != curCli->second->getJoinedChans().end(); ++currChanName) {
 		channelMapIt currChan = server.getAllChan().find(*currChanName);

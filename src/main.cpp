@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 15:39:05 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:02:35 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,8 @@ int main(int ac, char **av)
 	(void)av;
 	if (ac != 3)
 		return (std::cout << "Missing arguments (port and password)\n", 0);
-
 	signal(SIGINT, SignalHandler);
 	signal(SIGQUIT, SignalHandler);
-
-	
 	int port = atoi(av[1]);
 	std::string password = av[2];
 	std::cout << port << " | " << password << std::endl;
@@ -41,7 +38,6 @@ int main(int ac, char **av)
 	CmdManager &cmManager = CmdManager::getManagerInstance();
 	cmManager.generateCmds();
 	server.servRun();
-
 	/* 	for (channelMapIt it =
 			 server.getAllChan().begin();
 		 it != server.getAllChan().end(); ++it) {
@@ -55,20 +51,20 @@ int main(int ac, char **av)
 	return (0);
 }
 
-// int main(int argc, char **argv) {
-// 	Client client;
-// 	CmdManager &cmManager = CmdManager::getManagerInstance();
+/* int main(int argc, char **argv) {
+	Client client;
+	CmdManager &cmManager = CmdManager::getManagerInstance();
 
-// 	if (argc < 2) {
-// 		std::cerr << "not enough params\n";
-// 		return (1);
-// 	}
+	if (argc < 2) {
+		std::cerr << "not enough params\n";
+		return (1);
+	}
 
-// 	client.cliInfo.setRegistration(3);
-// 	client.mess.setBuffer(argv[1]);
+	client.cliInfo.setRegistration(3);
+	client.mess.setBuffer(argv[1]);
 
-// 	cmManager.generateCmds();
+	cmManager.generateCmds();
 
-// 	MessageValidator::assess(client);
-// 	return (0);
-// }
+	MessageValidator::assess(client);
+	return (0);
+} */

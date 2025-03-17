@@ -28,6 +28,9 @@ Commands :
  MODE //need to do 
 PRIVMSG, USER, NICK, JOIN, TOPIC, WHO, PART, KICK, QUIT, INVITE, PASS //currently working on
 
+
+TODOOOOO : toutes les funcitons d'exec prennent reference d'une instance de CmdSpec
+
 TRAME :
 
 1. Create classes and methods

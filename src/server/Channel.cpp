@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 15:30:43 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:31:29 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void sendMessageChannel(clientMap allCliChannel, std::string message)
 bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 {
 	// log(DEBUG, "-----addClientToChan-----");
-
 	std::map< int, Client * > &clients = curChan->getCliInChan();
 	for (clientMapIt it = clients.begin(); it != clients.end(); ++it)
 		if (curCli == it->second) {

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:20:03 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:25:06 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,6 @@ class Server {
 //NICK--USER
 void handleClientRegistration(const std::string &input, Client *curCli);
 
-//JOIN
-bool handleJoin(std::string params, Client *curCli);
-Channel *createChan(const std::string &chanName);
 //TOPIC
 bool handleTopic(std::string params, Client *curCli);
 //PRIVMSG

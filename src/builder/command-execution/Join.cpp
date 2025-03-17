@@ -6,10 +6,11 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 15:30:43 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:31:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "CmdSpec.hpp"
 #include "Server.hpp"
 #include <sstream>
 
@@ -42,50 +43,20 @@ void partAllChans(Client *curCli)
 	curCli->getJoinedChans().clear();
 }
 
-bool isCliInvited(Client *curCli, Channel *curChan)
-{
-	clientMapIt isOp = curChan->getInvitCli().find(curCli->getFd());
-	if (isOp == curChan->getInvitCli().end())
-		return (false);
-	return (true);
-}
-
 //TODO :add invite only mode if mode +i is enable
 //TODO :add check of password if mode  +k is enable
-bool handleJoin(std::string params, Client *curCli)
+void handleJoin(CmdSpec &cmd)
 {
-	// log(DEBUG, "-----handleJoin-----");
-
-	std::istringstream iss(params);
-	std::string chanName;
-	std::string password;
-
-	iss >> chanName;
-	getline(iss, password);
-	// log(DEBUG, "channel name = ", chanName);
-
-	if (chanName == "0") {
-		partAllChans(curCli);
-		return (true);
+ 	log(DEBUG, "-----handleJoin-----");
+	Client *sender = &cmd.getSender();
+	if (cmd[channel][0] == "0") {
+		partAllChans(sender);
+		return ;
 	}
 
-	Channel *curChan = createChan(chanName);
-	if (curChan->getIsPassMatch() == true)
-		if (curChan->getPassword() != password) {
-			sendReply(curCli->getFd(),
-			ERR_BADCHANNELKEY(curCli->cliInfo.getNick(), curChan->getName()));
-			return (false);
-		}
-	if (curChan->getInviteOnly() == true)
-		if (isCliInvited(curCli, curChan) == false) {
-			sendReply(curCli->getFd(), ERR_INVITEONLYCHAN(curChan->getName()));
-			return (false);
-		}
-	if (curChan->getInviteOnly() == true)
-		if (isCliInvited(curCli, curChan) == false) {
-			sendReply(curCli->getFd(), ERR_INVITEONLYCHAN(curChan->getName()));
-			return (false);
-		}
-	curChan->addClientToChan(curChan, curCli);
-	return (false);
+	for (size_t nbChan = 0; nbChan < cmd[channel].getSize(); nbChan++) {
+		Channel *curChan = createChan(cmd[channel][nbChan]);
+		curChan->addClientToChan(curChan, sender);		
+	}
+	return ; 
 }

@@ -59,7 +59,7 @@ class CmdSpec {
 
 	/*                               GETTERS                                  */
 	bool getValid(void) const;
-	const Client &getSender(void) const;
+	Client &getSender(void) const;
 	const std::string &getName(void) const;
 	const paramMap &getParams(void) const;
 	void (*getExecutor(void) const)(CmdSpec &cmd);
@@ -105,5 +105,8 @@ class CmdSpec {
 			std::vector< int (*)(CmdSpec &) > checkers,
 			void (*cmExecutor)(CmdSpec &cmd));
 };
+//JOIN
+void handleJoin(CmdSpec &cmd);
+Channel *createChan(const std::string &chanName);
 
 #endif

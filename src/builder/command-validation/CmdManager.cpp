@@ -28,8 +28,9 @@ CmdManager::~CmdManager(void) {
 /*                               METHODS                                      */
 /* ************************************************************************** */
 void CmdManager::executeCm(CmdSpec &cm) {
-	// if (cm.getValid())
-	// 	cm.getExecutor()(cm);
+std::cout << "in execute funcntion" << std::endl;
+	if (cm.getValid())
+		cm.getExecutor()(cm);
 	cm.cleanAll();
 }
 
@@ -40,7 +41,7 @@ void CmdManager::generateCmds() {
 			.Parameters(password, new CmdParam())
 			.addChecker(isRegistered)
 			.addChecker(pwMatch)
-			// .CmExecutor()
+			//.CmExecutor()
 			.build());
 
 	//on veut pas afficher ERR_NEEDMOREPARAMS si nickname est pas donné
@@ -71,7 +72,7 @@ void CmdManager::generateCmds() {
 			.Parameters(channel, new CmdParam(false, ','))
 			.Parameters(key, new CmdParam(true, ','))
 			.addChecker(joinChanRequest)
-			// .CmExecutor()
+			.CmExecutor(handleJoin)
 			.build());
 
 	//can have 0 params or 2
