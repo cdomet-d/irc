@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/17 16:55:18 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:12:44 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,10 @@ bool messageValidator::assess(Client &sender) {
 	//FIXME: manager.getCmd and client.mess.getCmd are confusing
 	CmdManager &manager = CmdManager::getManagerInstance();
 	try {
-		std::cout << "Before exec" << std::endl;
-		manager.executeCm(manager.getCmd(sender.mess.getCmd()).process(sender));
+		manager.executeCm(manager.findCmd(sender.mess.getCmd()).process(sender));
 	} catch (const CmdManager::CmdNotFoundException &e) {
 		sendReply(sender.getFd(), ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
 													 sender.mess.getCmd()));
-		std::cerr << ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
-										sender.mess.getCmd());
 	}
 	return true;
 }
@@ -126,7 +123,7 @@ bool messageValidator::priv::hasTrailing(std::string &mess, std::string &trailin
 	std::string::size_type trail = mess.find(" :");
 
 	if (trail != std::string::npos) {
-		trailing = mess.substr((trail + 1), mess.size());
+		trailing = mess.substr((trail), mess.size());
 		mess.erase(trail);
 		return true;
 	}
@@ -153,4 +150,15 @@ std::string messageValidator::priv::removeNewlines(const std::string &input) {
 		}
 	}
 	return result;
+}
+
+void MessageValidator::printCmdParam(const stringVec &obj, std::string where) {
+	std::cout << "[" << std::endl;
+	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it) {
+		if ((*it).empty())
+			std::cout << "\t" + where + ":\t" << "[...]" << std::endl;
+		else
+			std::cout << "\t" + where + ":\t" << *it << std::endl;
+	}
+	std::cout << "]" << std::endl;
 }

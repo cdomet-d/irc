@@ -16,7 +16,7 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
-				 std::vector< int (*)(CmdSpec &) > checkers,
+				 std::vector< bool (*)(CmdSpec &) > checkers,
 				 void (*cmExecutor)(CmdSpec &cmd))
 	: server_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
 	  name_(name), registrationStage_(registrationStage), params_(params),
@@ -47,8 +47,9 @@ bool CmdSpec::enoughParams() {
 		for (size_t i = 0; i < params_.size(); i++) {
 			CmdParam &innerParam = *params_[i].second;
 			if (!innerParam.getOpt() && !innerParam.getSize()) {
-				std::cout << ERR_NEEDMOREPARAMS((*sender_).cliInfo.getNick(),
-												name_);
+				sendReply(
+					(*sender_).getFd(),
+					ERR_NEEDMOREPARAMS(sender_->cliInfo.getNick(), name_));
 				valid_ = false;
 				return (false);
 			}
@@ -57,37 +58,17 @@ bool CmdSpec::enoughParams() {
 	return (true);
 }
 
-CmdSpec &CmdSpec::process(Client &sender) {
-	std::cout << "In process" << std::endl;
-	setSender(sender);
-
-	displayParams();
-	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
-		std::cout << "Check registration state" << std::endl;
-		valid_ = false;
-		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER") {
-			std::cout << "Is not registration package" << std::endl;
-			sendReply(sender.getFd(), ERR_NOTREGISTERED);
-			std::cerr << ERR_NOTREGISTERED;
-		}
-		return (*this);
-	}
-	std::cout << "After checking registration state" << std::endl;
-	if (!enoughParams()) {
-		std::cout << "Check that we have enough parameters" << std::endl;
-		sendReply(sender.getFd(), ERR_NEEDMOREPARAMS(sender.cliInfo.getNick(),
-													 sender.mess.getCmd()));
-		return (*this);
-	}
-	for (size_t i = 0; i < params_.size() && i < sender.mess.getSize(); i++) {
-		std::cout << "Set parameters within CmdParam" << std::endl;
+void CmdSpec::setParam(void) {
+	for (size_t i = 0; i < params_.size() && i < sender_->mess.getSize(); i++) {
 		try {
-			(*params_[i].second).setOne(sender.mess[i + 1]); 
+			(*params_[i].second).setOne(sender_->mess[i + 1]);
 		} catch (const std::out_of_range &e) {};
 	}
-	for (size_t idx = 0; idx < params_.size(); idx++) {
-		CmdParam &innerParam = *params_[idx].second;
-		std::cout << "Recover subparameters" << std::endl;
+}
+
+void CmdSpec::hasParamList(void) {
+	for (size_t i = 0; i < params_.size(); i++) {
+		CmdParam &innerParam = *params_[i].second;
 		if (innerParam.getDelim()) {
 			try {
 				innerParam.setList(messageValidator::vectorSplit(
@@ -95,11 +76,25 @@ CmdSpec &CmdSpec::process(Client &sender) {
 			} catch (const std::out_of_range &e) {};
 		}
 	}
-	for (size_t j = 0; j < checkers_.size(); j++) {
-		std::cout << "Apply checkers" << std::endl;
-		checkers_[j](*this);
-		if (!valid_)
-			return (*this);
+}
+
+CmdSpec &CmdSpec::process(Client &sender) {
+	setSender(sender);
+	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
+		valid_ = false;
+		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER")
+			sendReply(sender_->getFd(), ERR_NOTREGISTERED);
+		return (*this);
+	}
+	setParam();
+	if (!enoughParams())
+		return (*this);
+	hasParamList();
+	displayParams();
+	for (size_t i = 0; i < checkers_.size(); i++) {
+		if (!checkers_[i](*this))
+			valid_ = false;
+		return (*this);
 	}
 	return (*this);
 }
@@ -144,6 +139,7 @@ static std::string enumToString(e_param color) {
 }
 
 void CmdSpec::displayParams(void) {
+	std::cout << "\nbuilder pattern :\n";
 	for (paramMap::iterator itt = params_.begin(); itt != params_.end();
 		 itt++) {
 		try {
@@ -189,6 +185,10 @@ void CmdSpec::setSender(Client &sender) {
 	sender_ = &sender;
 }
 
+void CmdSpec::setValid(bool valid) {
+	valid_ = valid;
+}
+
 /* ************************************************************************** */
 /*                               NESTED CLASS                                 */
 /* ************************************************************************** */
@@ -211,13 +211,13 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Registration(int stage) {
 	return (*this);
 }
 
-CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Parameters(e_param type,
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addParam(e_param type,
 													 CmdParam *param) {
 	params_.push_back(std::make_pair(type, param));
 	return (*this);
 }
 
-CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(int (*ft)(CmdSpec &cmd)) {
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(bool (*ft)(CmdSpec &cmd)) {
 	checkers_.push_back(ft);
 	return (*this);
 }

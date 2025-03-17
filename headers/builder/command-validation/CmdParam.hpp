@@ -21,6 +21,8 @@
 class CmdParam {
   public:
 	/*                               CONSTRUCTORS                             */
+	CmdParam(void);
+	CmdParam(const bool opt, const char delim);
 	~CmdParam(void);
 
 	/*                               METHODS                                  */
@@ -41,23 +43,6 @@ class CmdParam {
 	void setOne(std::string &buffer);
 	void setList(const stringVec &buffer);
 
-	/*                               NESTED CLASS                             */
-	class ParamBuilder {
-	  public:
-		ParamBuilder(void);
-		~ParamBuilder(void);
-
-		//methods
-		CmdParam *build();
-		ParamBuilder &isOpt(bool opt);
-		ParamBuilder &isList(const char delim);
-
-	  private:
-		bool opt_;
-		char delim_;
-		stringVec innerParam_;
-	};
-
   private:
 	/*                               MEMBERS                                  */
 	bool opt_;
@@ -65,7 +50,6 @@ class CmdParam {
 	stringVec innerParam_;
 
 	// private constructor
-	CmdParam(stringVec &param, const bool opt, const char delim);
 	CmdParam(const CmdParam &rhs);
 };
 

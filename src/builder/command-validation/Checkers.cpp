@@ -6,18 +6,18 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/17 16:47:51 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:10:18 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Checkers.hpp"
 
-int pwMatch(CmdSpec &cmd) {
+bool pwMatch(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int isRegistered(CmdSpec &cmd) {
+bool isRegistered(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
@@ -28,59 +28,59 @@ int validNick(CmdSpec &cmd) {
 	return (0);
 }
 
-int validUser(CmdSpec &cmd) {
+bool validUser(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int validChan(CmdSpec &cmd) {
+bool validChan(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int joinChanRequest(CmdSpec &cmd) {
+bool joinChanRequest(CmdSpec &cmd) {
 	for (size_t i = 0; i < cmd[channel].getSize(); i++)
 		if (cmd[channel][i][0] != '#') {
-			std::cout << ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
-										cmd[channel][i]);
-	}
+			ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
+							  cmd[channel][i]);
+		}
 	//supprimer chaque channel faux, (ainsi que toutes les keys ? peut etre pas necessaire)
 	//pour qu'il reste que les channel valide a join pour l'exec
 	//s'ils ont tous ete supprimes mettre valid a false
 	return (0);
 }
 
-int validTarget(CmdSpec &cmd) {
+bool validTarget(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int validInvite(CmdSpec &cmd) {
+bool validInvite(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int onChan(CmdSpec &cmd) {
+bool onChan(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int hasChanPriv(CmdSpec &cmd) {
+bool hasChanPriv(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int validKick(CmdSpec &cmd) {
+bool validKick(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int validMode(CmdSpec &cmd) {
+bool validMode(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int validMess(CmdSpec &cmd) {
+bool validMess(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }

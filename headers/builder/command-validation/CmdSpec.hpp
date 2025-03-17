@@ -66,7 +66,9 @@ class CmdSpec {
 
 	/*                               SETTERS                                  */
 	void setSender(Client &sender);
-	//TODO : add setValid();
+	void setValid(bool valid);
+	void setParam(void);
+	void hasParamList(void);
 
 	/*                               NESTED CLASS                             */
 	class CmdBuilder {
@@ -75,10 +77,10 @@ class CmdSpec {
 		~CmdBuilder(void);
 
 		//methods
-		CmdBuilder &addChecker(int (*ft)(CmdSpec &cmd));
+		CmdBuilder &addChecker(bool (*ft)(CmdSpec &cmd));
 		CmdBuilder &CmExecutor(void (*ft)(CmdSpec &cmd));
 		CmdBuilder &Name(const std::string &name);
-		CmdBuilder &Parameters(e_param type, CmdParam *param);
+		CmdBuilder &addParam(e_param type, CmdParam *param);
 		CmdBuilder &Registration(int stage);
 		CmdSpec *build();
 
@@ -86,7 +88,7 @@ class CmdSpec {
 		int registrationStage_;
 		paramMap params_;
 		std::string name_;
-		std::vector< int (*)(CmdSpec &cmd) > checkers_;
+		std::vector< bool (*)(CmdSpec &cmd) > checkers_;
 		void (*cmExecutor_)(CmdSpec &cmd);
 	};
 
@@ -97,12 +99,12 @@ class CmdSpec {
 	const std::string name_;
 	int registrationStage_;
 	paramMap params_;
-	std::vector< int (*)(CmdSpec &cmd) > checkers_;
+	std::vector< bool (*)(CmdSpec &cmd) > checkers_;
 	void (*cmExecutor_)(CmdSpec &cmd);
 
 	// private constructor
 	CmdSpec(const std::string name, int registrationStage, paramMap params,
-			std::vector< int (*)(CmdSpec &) > checkers,
+			std::vector< bool (*)(CmdSpec &) > checkers,
 			void (*cmExecutor)(CmdSpec &cmd));
 };
 
