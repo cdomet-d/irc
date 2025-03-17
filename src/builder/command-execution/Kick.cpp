@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:03:28 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:09:41 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,19 @@
 #include "Server.hpp"
 #include <sstream>
 
-//TODO faire une fonction qui retire un client de toutes les maps d'un channel
+void kickFromAllMap(Client *target, Channel *curChan) {
+	int fdTarget = target->getFd();
+	
+	curChan->getCliInChan().erase(fdTarget);
+	clientMapIt itTarget;
+	itTarget = curChan->getOpCli().find(fdTarget);
+	if (itTarget != curChan->getOpCli().end())
+		curChan->getOpCli().erase(fdTarget);
+	itTarget = curChan->getInvitCli().find(fdTarget);
+	if (itTarget != curChan->getInvitCli().end())
+		curChan->getInvitCli().erase(fdTarget);
+}
+
 bool handleKick(std::string params, Client *curCli)
 {
 	static Server &server = Server::GetServerInstance(0, "");
@@ -70,17 +82,10 @@ bool handleKick(std::string params, Client *curCli)
 		return (false);
 	}
 
-	int fdTarget = itTarget->second->getFd();
 	sendMessageChannel(curChan->second->getCliInChan(),
 					   RPL_KICK(curCli->getPrefix(), channel,
 								itTarget->second->getNick(), reason));
-	curChan->second->getCliInChan().erase(fdTarget);
-	itTarget = curChan->second->getOpCli().find(fdTarget);
-	if (itTarget != curChan->second->getOpCli().end())
-		curChan->second->getOpCli().erase(fdTarget);
-	itTarget = curChan->second->getInvitCli().find(fdTarget);
-	if (itTarget != curChan->second->getInvitCli().end())
-		curChan->second->getInvitCli().erase(fdTarget);
+	kickFromAllMap(itTarget->second, curChan->second);
 
 	return (true);
 }

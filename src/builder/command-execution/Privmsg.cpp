@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 10:40:16 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:06:15 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,12 @@ bool handlePrivsmg(std::string params, Client *curCli)
 		return (false);
 	}
 
-	//TODO : sendReply if client tries to send message to channel he's not a part of
 	clientMapIt senderIt =
 		curChan->second->getCliInChan().find(curCli->getFd());
-	if (senderIt == curChan->second->getCliInChan().end())
+	if (senderIt == curChan->second->getCliInChan().end()) {
+		sendReply(curCli->getFd(), ERR_CANNOTSENDTOCHAN(curChan->second->getName()));	
 		return (false);
+	}
 	Client *sender = senderIt->second;
 
 	for (clientMapIt itCli = curChan->second->getCliInChan().begin();
