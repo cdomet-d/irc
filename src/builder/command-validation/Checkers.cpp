@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/17 10:53:32 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:47:51 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int isRegistered(CmdSpec &cmd) {
 
 int validNick(CmdSpec &cmd) {
 	stringVec param = cmd[nickname].getInnerParam();
-	MessageValidator::printCmdParam(param, "innerParam");
+	messageValidator::printCmdParam(param, "innerParam");
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 10:45:39 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:47:41 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,6 @@ int main(int ac, char **av) {
 // 	client.mess.setBuffer(argv[1]);
 
 
-// 	MessageValidator::assess(client);
+// 	messageValidator::assess(client);
 // 	return (0);
 // }

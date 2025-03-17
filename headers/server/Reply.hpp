@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 16:50:33 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:25:38 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 # define REPLY_H
 # include <string>
 # include <cstring>
+
+//TODO: will need to add server Name at some point:
+// Formatting for replies is: 
+// :servername ERRCODE :errmessage
 
 //standard replies
 

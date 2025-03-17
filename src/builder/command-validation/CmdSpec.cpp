@@ -90,7 +90,7 @@ CmdSpec &CmdSpec::process(Client &sender) {
 		std::cout << "Recover subparameters" << std::endl;
 		if (innerParam.getDelim()) {
 			try {
-				innerParam.setList(MessageValidator::vectorSplit(
+				innerParam.setList(messageValidator::vectorSplit(
 					innerParam[0], innerParam.getDelim()));
 			} catch (const std::out_of_range &e) {};
 		}

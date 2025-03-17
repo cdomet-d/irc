@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 13:05:44 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:48:00 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ bool Server::handleData(int fd) {
 		return (disconnectCli(fd));
 	else {
 		curCli->mess.setBuffer(curCli->mess.getBuffer().append(tmpBuf, bytes));
-		MessageValidator::assess(*curCli);
+		messageValidator::assess(*curCli);
 		curCli->mess.clearBuffer();
 		curCli->mess.clearCmdParam();
 	}
