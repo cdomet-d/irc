@@ -56,7 +56,7 @@
 #define RPL_WELCOME(nick, user, host) (":001 " + nick + " :Welcome to the Internet Relay Network " + nick + "!" + user + "@" + host + "\r\n")
 #define RPL_YOURHOST(servername, version) (":002 :Your host is " + servername + ", running version " + version + "\r\n")
 #define ERR_NOTREGISTERED ": 451 * :You have not registered\r\n"
-
+#define ERR_PASSWDMISMATCH(nickname) (": 464 " + nickname + " :Password incorrect\r\n")
 // Message parsing-related replies
 #define ERR_TOOMANYTARGETS(nickname, target) (":407 " + nickname + " " + target + " :Too many targets\r\n")
 #define ERR_INPUTTOOLONG(nickname) (":417 " + nickname + " :Input line was too long\r\n")
