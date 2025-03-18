@@ -106,8 +106,8 @@ void CmdManager::generateCmds() {
 			.Name("MODE")
 			.Registration(3)
 			.addParam(channel_, new CmdParam())
-			.addParam(mode_, new CmdParam(true, ' '))
-			.addParam(modeArg_, new CmdParam(true, ' '))
+			.addParam(flag_, new CmdParam(true, ' '))
+			.addParam(flagArg_, new CmdParam(true, ' '))
 			.addChecker(validChan)
 			.addChecker(onChan) //TODO: verif if necessary
 			.addChecker(hasChanPriv)
