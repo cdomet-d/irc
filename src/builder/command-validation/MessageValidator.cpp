@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/17 17:16:06 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/18 16:08:49 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ bool messageValidator::assess(Client &sender) {
 
 	CmdManager &manager = CmdManager::getManagerInstance();
 	try {
-		manager.executeCm(manager.findCmd(sender.mess.getCmd()).process(sender));
+		manager.executeCm(
+			manager.findCmd(sender.mess.getCmd()).process(sender));
 	} catch (const CmdManager::CmdNotFoundException &e) {
 		sendReply(sender.getFd(), ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
 													 sender.mess.getCmd()));
@@ -104,7 +105,7 @@ void messageValidator::priv::formatMode(Client &sender) {
 }
 
 bool messageValidator::priv::hasPrefix(std::string &mess,
-								 const std::string &cliPrefix) {
+									   const std::string &cliPrefix) {
 	if (mess.at(0) == ':') {
 		std::string::size_type sep = mess.find(" ");
 		if (sep != std::string::npos) {
@@ -118,7 +119,8 @@ bool messageValidator::priv::hasPrefix(std::string &mess,
 	return true;
 }
 
-bool messageValidator::priv::hasTrailing(std::string &mess, std::string &trailing) {
+bool messageValidator::priv::hasTrailing(std::string &mess,
+										 std::string &trailing) {
 	std::string::size_type trail = mess.find(" :");
 
 	if (trail != std::string::npos) {
@@ -130,7 +132,7 @@ bool messageValidator::priv::hasTrailing(std::string &mess, std::string &trailin
 }
 
 bool messageValidator::priv::lenIsValid(const std::string &mess,
-								  const Client &sender) {
+										const Client &sender) {
 	if (mess.empty())
 		return false;
 	if (mess.size() > 512) {

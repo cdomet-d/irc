@@ -43,16 +43,25 @@ bool CmdSpec::enoughParams() {
 	if (name_ == "INVITE" && !(*this)[target].getSize() &&
 		!(*this)[channel].getSize())
 		return (true);
-	if (name_ != "NICK" && name_ != "PRIVMSG") {
-		for (size_t i = 0; i < params_.size(); i++) {
-			CmdParam &innerParam = *params_[i].second;
-			if (!innerParam.getOpt() && !innerParam.getSize()) {
+	for (size_t i = 0; i < params_.size(); i++) {
+		CmdParam &innerParam = *params_[i].second;
+		if (!innerParam.getOpt() && !innerParam.getSize()) {
+			if (name_ == "NICK") {
+				std::cerr << ERR_NONICKNAMEGIVEN() << std::endl;
+				sendReply((*sender_).getFd(), ERR_NONICKNAMEGIVEN());
+			} else if (name_ == "PRIVMSG") {
+				std::cerr << ERR_NOTEXTTOSEND() << std::endl;
+				sendReply((*sender_).getFd(), ERR_NOTEXTTOSEND());
+			} else {
+				std::cerr << ERR_NEEDMOREPARAMS(sender_->cliInfo.getNick(),
+												name_)
+						  << std::endl;
 				sendReply(
 					(*sender_).getFd(),
 					ERR_NEEDMOREPARAMS(sender_->cliInfo.getNick(), name_));
-				valid_ = false;
-				return (false);
 			}
+			valid_ = false;
+			return (false);
 		}
 	}
 	return (true);
@@ -61,8 +70,8 @@ bool CmdSpec::enoughParams() {
 void CmdSpec::setParam(void) {
 	for (size_t i = 0; i < params_.size() && i < sender_->mess.getSize(); i++) {
 		try {
-			(*params_[i].second).setOne(sender_->mess[i + 1]);
-		} catch (const std::out_of_range &e) {};
+			(*params_[i].second).setOneParam(sender_->mess[i + 1]);
+		} catch (const std::out_of_range &e) {}
 	}
 }
 
@@ -71,30 +80,32 @@ void CmdSpec::hasParamList(void) {
 		CmdParam &innerParam = *params_[i].second;
 		if (innerParam.getDelim()) {
 			try {
-				innerParam.setList(messageValidator::vectorSplit(
+				innerParam.setParamList(messageValidator::vectorSplit(
 					innerParam[0], innerParam.getDelim()));
-			} catch (const std::out_of_range &e) {};
+			} catch (const std::out_of_range &e) {}
 		}
 	}
 }
-
 CmdSpec &CmdSpec::process(Client &sender) {
 	setSender(sender);
+	std::cout << registrationStage_ << " | "
+			  << sender_->cliInfo.getRegistration() << std::endl;
+	setParam();
 	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
+		std::cout << "Registration stage is mismatched" << std::endl;
 		valid_ = false;
 		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER")
 			sendReply(sender_->getFd(), ERR_NOTREGISTERED);
 		return (*this);
 	}
-	setParam();
 	if (!enoughParams())
 		return (*this);
 	hasParamList();
-	displayParams();
 	for (size_t i = 0; i < checkers_.size(); i++) {
-		if (!checkers_[i](*this))
+		if (!checkers_[i](*this)) {
 			valid_ = false;
-		return (*this);
+			return (*this);
+		}
 	}
 	return (*this);
 }
@@ -139,13 +150,12 @@ static std::string enumToString(e_param color) {
 }
 
 void CmdSpec::displayParams(void) {
-	std::cout << "\nbuilder pattern :\n";
-	for (paramMap::iterator itt = params_.begin(); itt != params_.end();
-		 itt++) {
+	std::cout << "Params in BuilderPattern :\n";
+	for (paramMap::iterator i = params_.begin(); i != params_.end(); i++) {
 		try {
-			for (size_t index = 0; index < (*itt->second).getSize(); index++) {
-				std::cout << "param[" << enumToString(itt->first) << "]"
-						  << "[" << index << "] : " << (*itt->second)[index]
+			for (size_t index = 0; index < (*i->second).getSize(); index++) {
+				std::cout << "param[" << enumToString(i->first) << "]"
+						  << "[" << index << "] : " << (*i->second)[index]
 						  << std::endl;
 			}
 		} catch (const std::out_of_range &e) {
@@ -212,7 +222,7 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Registration(int stage) {
 }
 
 CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addParam(e_param type,
-													 CmdParam *param) {
+												   CmdParam *param) {
 	params_.push_back(std::make_pair(type, param));
 	return (*this);
 }

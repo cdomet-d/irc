@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:04 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/17 16:55:22 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/18 16:07:43 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ namespace priv {
 bool hasPrefix(std::string &mess, const std::string &cliPrefix);
 bool hasTrailing(std::string &mess, std::string &trailing);
 bool lenIsValid(const std::string &mess, const Client &sender);
-void formatMode(Client &sender);
 std::string removeNewlines(const std::string &input);
+void formatMode(Client &sender);
 } // namespace priv
 }; // namespace messageValidator
 
