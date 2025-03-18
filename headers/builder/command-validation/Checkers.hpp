@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 15:49:12 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/17 16:21:15 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/18 18:51:08 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,12 @@ bool validMode(CmdSpec &cmd);		// Coralie
 bool validNick(CmdSpec &cmd);		// Coralie
 bool validTarget(CmdSpec &cmd);		// Coralie
 bool validUser(CmdSpec &cmd);		// Coralie
+
+namespace joinChecker {
+	bool reachedChanLimit(Channel &chan);
+	bool hasInvite(Channel &chan, Client &sender);
+	bool hasKey(Channel &chan, CmdParam &keys, size_t i);
+	bool reachedCliChanLimit(Client &sender);
+};
 
 #endif
