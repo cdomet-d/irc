@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 11:39:05 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:04:11 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int main(int ac, char **av)
 	signal(SIGQUIT, SignalHandler);
 	int port = atoi(av[1]);
 	std::string password = av[2];
-	std::cout << port << " | " << password << std::endl;
 	Server &server = Server::GetServerInstance(port, password);
 	server.servInit();
 	CmdManager &cmManager = CmdManager::getManagerInstance();

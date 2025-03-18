@@ -45,10 +45,6 @@ nc -C 0.0.0.0 4444 :
 		4444 Port
 
 
-Hi ! Can you write me a bash script that will launch nc with the following parameters: 
-0.0.0.0 4444
-And will then, send to the server, one by one the following command :
-
 NICK alex
 USER alexie
 JOIN #test

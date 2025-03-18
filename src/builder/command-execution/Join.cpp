@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 17:00:24 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:04:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void handleJoin(CmdSpec &cmd)
 	logLevel(DEBUG, "-----handleJoin-----");
 	Client *sender = &cmd.getSender();
 	if (cmd[channel][0] == "0") {
-		partAllChans(sender);
+		//partAllChans(sender);
 		return;
 	}
 

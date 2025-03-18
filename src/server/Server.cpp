@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 17:01:14 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:07:34 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,7 @@
 /* ************************************************************************** */
 
 Server::Server(int port, std::string password) : port_(port), pass_(password)
-{
-	std::cout << "Constructor called with " << port << " | " << password
-			  << std::endl;
-}
+{}
 // Server::Server(void) : port_(0), pass_("") {}
 
 Server::~Server(void)
@@ -232,7 +229,9 @@ bool Server::disconnectCli(int fd)
 	checkOnlyOperator(fd);
 	clientMapIt it = clients_.find(fd);
 	if (it != clients_.end()) {
-		std::cout << "Client [" << fd << "] disconnected" << std::endl;
+		std::stringstream ss;
+		ss << "Client [" << it->second->getFd() << "] connected";
+		logLevel(INFO, ss.str());
 		delete it->second;
 		clients_.erase(fd);
 		close(fd);
