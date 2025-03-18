@@ -71,7 +71,7 @@ bool onChan(CmdSpec &cmd) {
 	itChan = cmd.server_.getAllChan().find(cmd[channel][0]);
 	Channel chan = *itChan->second;
 	itCl = chan.getCliInChan().find(cmd.getSender().getFd());
-	if (itCl == chan.getOpCli().end()) {
+	if (itCl == chan.getCliInChan().end()) {
 		sendReply(cmd.getSender().getFd(),
 				  ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
 								   chan.getName()));
