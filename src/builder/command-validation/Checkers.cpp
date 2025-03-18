@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/17 18:25:00 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/18 18:41:46 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@ bool pwMatch(CmdSpec &cmd) {
 }
 
 bool isRegistered(CmdSpec &cmd) {
-	//TODO : si PASS a deja ete fait mais que la registration n'est pas fini que faire ?
+	//TODO : if NICK, USER et PASS ont deja ete fait
+	//		et que la commande est refaite pendant le registration stage
+	//		mettre message custom
 	if (cmd.getSender().cliInfo.getRegistration() == 3) {
 		// sendReply(cmd.getSender().getFd(),
 		// 		  ERR_ALREADYREGISTRED(cmd.getSender().cliInfo.getNick()));
@@ -49,15 +51,47 @@ bool validChan(CmdSpec &cmd) {
 }
 
 bool joinChanRequest(CmdSpec &cmd) {
-	for (size_t i = 0; i < cmd[channel_].getSize(); i++)
-		if (cmd[channel_][i][0] != '#') {
-			// sendReply(cmd.getSender().getFd(),
-			// 		  ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
-			// cmd[channel_][i]));
+	channelMap::iterator itChan;
+
+	for (size_t i = 0; i < cmd[channel_].getSize(); i++) {
+		//TODO: call coralie's function to check syntax of channel
+		itChan = cmd.server_.getAllChan().find(cmd[channel_][i]);
+		if (itChan == cmd.server_.getAllChan().end())
+			continue;
+		Channel chan = *itChan->second;
+		//TODO: faire un tableau de pointeur sur fonction. chaque fonction est un des if ci-dessous
+		//faire un namespace
+		//boucler sur le tableau et si une fonction renvoie false faire rmParam et continue;
+		if (!onChan(cmd)) {
+			if (chan.getCliInChan().size() < chan.getMaxCli()) {
+				if (chan.getModes().find('i') == std::string::npos ||
+					(chan.getModes().find('i') != std::string::npos
+					 /*&& sender has an invite*/)) {
+					if (chan.getModes().find('k') == std::string::npos ||
+						(chan.getModes().find('k') != std::string::npos &&
+						 i < cmd[key_].getSize()) &&
+							chan.getPassword() == cmd[key_][i]) {
+						//TODO: faire un define pour client chan limit
+						if (cmd.getSender().getJoinedChans().size() < 50)
+							continue;
+						sendReply(cmd.getSender().getFd(),
+								  ERR_TOOMANYCHANNELS(chan.getName()));
+					}
+					sendReply(
+						cmd.getSender().getFd(),
+						ERR_BADCHANNELKEY(cmd.getSender().cliInfo.getNick(),
+										  chan.getName()));
+				}
+				sendReply(cmd.getSender().getFd(),
+						  ERR_INVITEONLYCHAN(chan.getName()));
+			}
+			sendReply(cmd.getSender().getFd(),
+					  ERR_CHANNELISFULL(chan.getName()));
 		}
-	//supprimer chaque channel faux, (ainsi que toutes les keys ? peut etre pas necessaire)
-	//pour qu'il reste que les channel valide a join pour l'exec
-	//s'ils ont tous ete supprimes mettre valid a false
+		cmd[channel_].rmParam(i);
+	}
+	if (!cmd[channel_].getSize())
+		return (false);
 	return (true);
 }
 
@@ -72,21 +106,18 @@ bool validInvite(CmdSpec &cmd) {
 }
 
 bool onChan(CmdSpec &cmd) {
-	channelMap::iterator itChan;
-	clientMap::iterator itCl;
-
-	itChan = cmd.server_.getAllChan().find(cmd[channel_][0]);
-	Channel chan = *itChan->second;
-	itCl = chan.getCliInChan().find(cmd.getSender().getFd());
-	if (itCl == chan.getCliInChan().end()) {
-		// sendReply(cmd.getSender().getFd(),
-		// 		  ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
-		//    chan.getName()));
-		std::cout << ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
-									  chan.getName());
-		return (false);
+	const stringVec &joinedChans = cmd.getSender().getJoinedChans();
+	for (size_t i = 0; i < joinedChans.size(); i++) {
+		if (joinedChans[i] == cmd[channel_][0])
+			return (true);
 	}
-	return (true);
+	// sendReply(cmd.getSender().getFd(),
+	// 		  ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
+	//    chan.getName()));
+	if (cmd.getName() != "JOIN")
+		std::cout << ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
+									  cmd[channel_][0]);
+	return (false);
 }
 
 bool hasChanPriv(CmdSpec &cmd) {
