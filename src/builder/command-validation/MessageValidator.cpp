@@ -36,10 +36,13 @@ bool MessageValidator::assess(Client &sender) {
 
 	CmdManager &manager = CmdManager::getManagerInstance();
 	try {
-		manager.executeCm(manager.findCmd(sender.mess.getCmd()).process(sender));
+		manager.executeCm(
+			manager.findCmd(sender.mess.getCmd()).process(sender));
 	} catch (const CmdManager::CmdNotFoundException &e) {
-		sendReply(sender.getFd(), ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
-													 sender.mess.getCmd()));
+		// sendReply(sender.getFd(), ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
+		// 											 sender.mess.getCmd()));
+		std::cout << ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
+										sender.mess.getCmd());
 	}
 	return true;
 }

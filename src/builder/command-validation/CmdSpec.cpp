@@ -40,16 +40,18 @@ CmdParam &CmdSpec::operator[](e_param type) {
 /*                               METHODS                                      */
 /* ************************************************************************** */
 bool CmdSpec::enoughParams() {
-	if (name_ == "INVITE" && !(*this)[target].getSize() &&
-		!(*this)[channel].getSize())
+	if (name_ == "INVITE" && !(*this)[target_].getSize() &&
+		!(*this)[channel_].getSize())
 		return (true);
 	if (name_ != "NICK" && name_ != "PRIVMSG") {
 		for (size_t i = 0; i < params_.size(); i++) {
 			CmdParam &innerParam = *params_[i].second;
 			if (!innerParam.getOpt() && !innerParam.getSize()) {
-				sendReply(
-					(*sender_).getFd(),
-					ERR_NEEDMOREPARAMS(sender_->cliInfo.getNick(), name_));
+				// sendReply(
+				// 	(*sender_).getFd(),
+				// 	ERR_NEEDMOREPARAMS(sender_->cliInfo.getNick(), name_));
+				std::cout << ERR_NEEDMOREPARAMS(sender_->cliInfo.getNick(),
+												name_);
 				valid_ = false;
 				return (false);
 			}
@@ -83,7 +85,8 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
 		valid_ = false;
 		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER")
-			sendReply(sender_->getFd(), ERR_NOTREGISTERED);
+			std::cout << ERR_NOTREGISTERED;
+		// sendReply(sender_->getFd(), ERR_NOTREGISTERED);
 		return (*this);
 	}
 	setParam();
@@ -92,9 +95,10 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	hasParamList();
 	displayParams();
 	for (size_t i = 0; i < checkers_.size(); i++) {
-		if (!checkers_[i](*this))
+		if (!checkers_[i](*this)) {
 			valid_ = false;
-		return (*this);
+			return (*this);
+		}
 	}
 	return (*this);
 }
@@ -212,7 +216,7 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Registration(int stage) {
 }
 
 CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addParam(e_param type,
-													 CmdParam *param) {
+												   CmdParam *param) {
 	params_.push_back(std::make_pair(type, param));
 	return (*this);
 }
