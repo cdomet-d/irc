@@ -82,10 +82,10 @@ char CmdParam::getDelim(void) const {
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
-void CmdParam::setOne(std::string &buffer) {
+void CmdParam::setOneParam(std::string &buffer) {
 	innerParam_.push_back(buffer);
 }
 
-void CmdParam::setList(const stringVec &buffer) {
+void CmdParam::setParamList(const stringVec &buffer) {
 	innerParam_ = buffer;
 }
