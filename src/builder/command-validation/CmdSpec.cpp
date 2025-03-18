@@ -174,7 +174,7 @@ void (*CmdSpec::getExecutor(void) const)(CmdSpec &cmd) {
 	return (cmExecutor_);
 }
 
-const Client &CmdSpec::getSender(void) const {
+ Client &CmdSpec::getSender(void)  {
 	return (*sender_);
 }
 
