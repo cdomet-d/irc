@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/14 12:43:19 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/18 16:41:48 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,6 +65,7 @@ BUILD_VAL_SRC:=			CmdManager.cpp \
 						CmdParam.cpp \
 						Checkers.cpp \
 						MessageValidator.cpp \
+						syntaxCheck.cpp \
 
 BUILD_MAN_SRC:=	\
 
@@ -88,6 +89,7 @@ OBJ:=$(addprefix $(BDIR), $(SRC:%.cpp=%.o))
 DEPS:=$(OBJ:%.o=%.d)
 
 $(NAME): $(OBJ)
+	$(RM) rawlog.log
 	@echo
 	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(NAME)... --------------------"
 	$(CC) $(OBJ) -o $(NAME)
@@ -110,6 +112,7 @@ DOBJ:=$(addprefix $(DBDIR), $(SRC:%.cpp=%.o))
 DDEPS:=$(DOBJ:%.o=%.d)
 
 $(DEBUG_NAME): $(DOBJ)
+	$(RM) rawlog.log
 	@echo
 	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(DEBUG_NAME)... --------------"
 	$(CC) $(DFLAGS) $(DOBJ) -o $(DEBUG_NAME)
@@ -137,6 +140,7 @@ clean:
 # ----------------------------- MAKE FCLEAN  --------------------------------- #
 
 fclean: clean
+	$(RM) rawlog.log
 	$(RM) $(NAME)
 	$(RM) $(DEBUG_NAME)
 	@echo
