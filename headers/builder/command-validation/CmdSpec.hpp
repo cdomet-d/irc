@@ -105,6 +105,7 @@ class CmdSpec {
 			std::vector< int (*)(CmdSpec &) > checkers,
 			void (*cmExecutor)(CmdSpec &cmd));
 };
+
 //JOIN
 void handleJoin(CmdSpec &cmd);
 Channel *createChan(const std::string &chanName);
@@ -130,4 +131,5 @@ void handlePrivsmg(CmdSpec &cmd);
 
 //UTILS
 Channel *findCurChan(std::string chanName);
+
 #endif

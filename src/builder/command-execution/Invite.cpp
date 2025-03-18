@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 14:16:46 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:00:22 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@ void handleInvite(CmdSpec &cmd)
 		}
 	}
 
-	sendReply(sender->getFd(), RPL_INVITING(targetCli->cliInfo.getNick(), cmd[channel][0]));
+	sendReply(sender->getFd(),
+			  RPL_INVITING(targetCli->cliInfo.getNick(), cmd[channel][0]));
 	sendReply(targetCli->getFd(),
-			  RPL_INVITE(sender->cliInfo.getNick(), targetCli->cliInfo.getNick(), cmd[channel][0]));
+			  RPL_INVITE(sender->cliInfo.getNick(),
+						 targetCli->cliInfo.getNick(), cmd[channel][0]));
 	curChan->getInvitCli().insert(clientPair(targetCli->getFd(), targetCli));
 }

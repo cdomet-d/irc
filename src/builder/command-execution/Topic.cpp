@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 14:10:29 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:00:45 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,9 @@ void clearTopic(Channel *curChan, Client *curCli)
 {
 	curChan->setTopic("");
 	//messageToAllChannel
-	sendMessageChannel(curChan->getCliInChan(),
-					   RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan->getName()));
+	sendMessageChannel(
+		curChan->getCliInChan(),
+		RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan->getName()));
 }
 
 void changeTopic(Channel *curChan, Client *curCli, std::string topic)
@@ -40,7 +41,8 @@ void changeTopic(Channel *curChan, Client *curCli, std::string topic)
 	//curChan->getTopic().clear();
 	curChan->setTopic(topic);
 	sendMessageChannel(curChan->getCliInChan(),
-					   RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(), curChan->getName(),
+					   RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(),
+										curChan->getName(),
 										curChan->getTopic()));
 }
 
@@ -52,18 +54,18 @@ void handleTopic(CmdSpec &cmd)
 	//if no params (= topic is empty) after chanName, client only checks the topic
 	if (!cmd[topic_].getSize()) {
 		checkTopic(curChan, sender);
-		return ;
+		return;
 	}
 	//if topic is = ":", the client clears the topic for the channel
 	//sends the notification to all clients of the channel
 	if (cmd[topic_][0] == ":") {
 		clearTopic(curChan, sender);
-		return ;
+		return;
 	}
 
 	//if topic is :[other_topic], client changes the topic of the channel
 	if (cmd[topic_][0].empty() == false) {
 		changeTopic(curChan, sender, cmd[topic_][0]);
-		return ;
+		return;
 	}
 }

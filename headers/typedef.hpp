@@ -6,10 +6,9 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/03/18 10:29:02 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:00:19 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef TYPEDEF_HPP
 #define TYPEDEF_HPP

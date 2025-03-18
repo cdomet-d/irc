@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 15:47:34 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:00:24 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ void handleJoin(CmdSpec &cmd)
 	logLevel(DEBUG, "-----handleJoin-----");
 	Client *sender = &cmd.getSender();
 	if (cmd[channel][0] == "0") {
-		//partAllChans(sender);
-		return ;
+		partAllChans(sender);
+		return;
 	}
 
 	for (size_t nbChan = 0; nbChan < cmd[channel].getSize(); nbChan++) {
 		Channel *curChan = createChan(cmd[channel][nbChan]);
-		curChan->addClientToChan(curChan, sender);		
+		curChan->addClientToChan(curChan, sender);
 	}
-	return ; 
+	return;
 }

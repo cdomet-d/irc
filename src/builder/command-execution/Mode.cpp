@@ -6,30 +6,32 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 14:10:33 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:00:29 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
 #include "CmdSpec.hpp"
-#include <sstream>
+#include "Server.hpp"
 #include <cstdlib>
+#include <sstream>
 
 void executeO(std::string flag, std::string param, Channel *curChan)
 {
 	Client *target;
 
 	//find instance of target
-	for (clientMapIt targetIt = curChan->getCliInChan().begin(); targetIt != curChan->getCliInChan().end(); ++targetIt) {
+	for (clientMapIt targetIt = curChan->getCliInChan().begin();
+		 targetIt != curChan->getCliInChan().end(); ++targetIt) {
 		if (targetIt->second->cliInfo.getNick() == param) {
 			target = targetIt->second;
-			break ;
+			break;
 		}
 	}
 	if (flag == "+o")
-		curChan->getOpCli().insert(std::pair <int, Client *>(target->getFd(), target)); 
+		curChan->getOpCli().insert(
+			std::pair< int, Client * >(target->getFd(), target));
 	if (flag == "-o")
-		curChan->getOpCli().erase(target->getFd()); 	
+		curChan->getOpCli().erase(target->getFd());
 }
 
 void executeI(std::string flag, std::string param, Channel *curChan)
@@ -66,7 +68,7 @@ void executeK(std::string flag, std::string param, Channel *curChan)
 		curChan->setIsPassMatch(true);
 		curChan->setModes();
 	}
-	
+
 	if (flag == "-k" && curChan->getIsPassMatch() == true) {
 		curChan->setPassword("");
 		curChan->setIsPassMatch(false);
@@ -81,7 +83,7 @@ void executeL(std::string flag, std::string param, Channel *curChan)
 		curChan->setIsPassMatch(true);
 		curChan->setModes();
 	}
-	
+
 	if (flag == "-l" && curChan->getMaxCli() == 0) {
 		curChan->setMaxCli(0);
 		curChan->setIsPassMatch(false);
@@ -102,7 +104,7 @@ int findFlagLevel(std::string level)
 void executeFlag(std::string flag, std::string param, Channel *curChan)
 {
 	modesFunc flagExecutor[5] = {&executeO, &executeI, &executeT, &executeK,
-							  &executeL};
+								 &executeL};
 	int flagLevel = findFlagLevel(flag);
 
 	if (flagLevel != -1)
@@ -111,10 +113,11 @@ void executeFlag(std::string flag, std::string param, Channel *curChan)
 		logLevel(DEBUG, "Invalid flag");
 }
 
-Channel *findCurChan(std::string chanName) {
+Channel *findCurChan(std::string chanName)
+{
 	static Server &server = Server::GetServerInstance(0, "");
 	channelMapIt curChanIt = server.getAllChan().find(chanName);
-	
+
 	return (curChanIt->second);
 }
 
@@ -130,8 +133,9 @@ void handleMode(CmdSpec &cmd)
 
 	if (!cmd[mode_].getSize()) {
 		std::cout << "hEREEE!" << std::endl;
-		sendReply(sender->getFd(), RPL_UMODEIS(sender->cliInfo.getNick(), curChan->getModes()));
-		return ;
+		sendReply(sender->getFd(),
+				  RPL_UMODEIS(sender->cliInfo.getNick(), curChan->getModes()));
+		return;
 	}
 	for (size_t nbFlag = 0; nbFlag < cmd[mode_].getSize(); ++nbFlag) {
 		if (cmd[mode_][nbFlag] == "+l")
@@ -139,6 +143,8 @@ void handleMode(CmdSpec &cmd)
 		executeFlag(cmd[mode_][nbFlag], cmd[modeArg][nbFlag], curChan);
 		newModes.append(cmd[mode_][nbFlag]);
 	}
-	newModes.append(newMaxCli);			
-	sendMessageChannel(curChan->getCliInChan(), RPL_CHANNELMODEIS(sender->cliInfo.getNick(), curChan->getName(), newModes));
+	newModes.append(newMaxCli);
+	sendMessageChannel(curChan->getCliInChan(),
+					   RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
+										 curChan->getName(), newModes));
 }

@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 09:11:34 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:01:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,15 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 
-Server::Server(int port, std::string password) : port_(port), pass_(password) {
-	std::cout << "Constructor called with " << port << " | " << password << std::endl;
+Server::Server(int port, std::string password) : port_(port), pass_(password)
+{
+	std::cout << "Constructor called with " << port << " | " << password
+			  << std::endl;
 }
 // Server::Server(void) : port_(0), pass_("") {}
 
-Server::~Server(void) {
+Server::~Server(void)
+{
 	std::cout << "Calling destructor" << std::endl;
 	for (clientMapIt it = clients_.begin(); it != clients_.end(); ++it) {
 		it->second->cliInfo.getNick().clear();
@@ -38,7 +41,8 @@ Server::~Server(void) {
 	close(servFd_);
 }
 
-Server &Server::GetServerInstance(int port, std::string password) {
+Server &Server::GetServerInstance(int port, std::string password)
+{
 	static Server instance(port, password);
 	return (instance);
 }
@@ -47,7 +51,8 @@ Server &Server::GetServerInstance(int port, std::string password) {
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
-bool Server::servInit() {
+bool Server::servInit()
+{
 	int en = 1;
 
 	epollFd_ = epoll_create1(0);
@@ -75,7 +80,8 @@ bool Server::servInit() {
 	return (true);
 }
 
-bool Server::servRun() {
+bool Server::servRun()
+{
 	int nbFds;
 
 	// logLevel(INFO, "Loop IRC server started");
@@ -95,7 +101,8 @@ bool Server::servRun() {
 	return (true);
 }
 
-void Server::acceptClient() {
+void Server::acceptClient()
+{
 	try {
 		// logLevel(INFO, "Accepting new client");
 		Client *newCli = new Client();
@@ -151,7 +158,8 @@ void Server::acceptClient() {
 	}
 }
 
-bool Server::handleData(int fd) {
+bool Server::handleData(int fd)
+{
 	// logLevel(INFO, "-----handleData-----");
 
 	char tmpBuf[1024];
@@ -201,8 +209,10 @@ bool checkOnlyOperator(int fd)
 
 	clientMap::iterator curCli = server.getAllCli().find(fd);
 	//handleJoin("0", curCli->second);
-	for (stringVec::iterator currChanName = curCli->second->getJoinedChans().begin();
-		 currChanName != curCli->second->getJoinedChans().end(); ++currChanName) {
+	for (stringVec::iterator currChanName =
+			 curCli->second->getJoinedChans().begin();
+		 currChanName != curCli->second->getJoinedChans().end();
+		 ++currChanName) {
 		channelMapIt currChan = server.getAllChan().find(*currChanName);
 		if (!currChan->second->getOpCli().size()) {
 			if (currChan->second->getCliInChan().size() >= 1) {
@@ -235,7 +245,8 @@ bool Server::disconnectCli(int fd)
 /*                               EXCEPTIONS                                   */
 /* ************************************************************************** */
 
-const char *Server::InitFailed::what() const throw() {
+const char *Server::InitFailed::what() const throw()
+{
 	std::cerr << "irc: ";
 	return errMessage;
 }
@@ -245,10 +256,12 @@ Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-clientMap &Server::getAllCli() {
+clientMap &Server::getAllCli()
+{
 	return (clients_);
 }
-channelMap &Server::getAllChan() {
+channelMap &Server::getAllChan()
+{
 	return (channels_);
 }
 std::string Server::getPass() const

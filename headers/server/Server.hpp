@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 15:20:13 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:00:17 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ class Server {
 	Server(void);
 	Server(int port, std::string password);
 };
-
 
 /*                               COMMAND                                  */
 //NICK--USER

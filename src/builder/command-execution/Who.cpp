@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 15:32:04 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:00:47 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ bool handleWho(std::string params, Client *curCli)
 	// Send the full list
 	sendReply(curCli->getFd(),
 			  RPL_NAMREPLY(curCli->cliInfo.getNick(), "=", channel, nickList));
-	sendReply(curCli->getFd(), RPL_ENDOFNAMES(curCli->cliInfo.getNick(), channel));
+	sendReply(curCli->getFd(),
+			  RPL_ENDOFNAMES(curCli->cliInfo.getNick(), channel));
 
 	return (true);
 }
