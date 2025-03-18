@@ -49,7 +49,8 @@ int main(int argc, char **argv) {
 		return (1);
 	}
 
-	client.cliInfo.setRegistration(3);
+	Server &server = Server::GetServerInstance(6667, "hello");
+	client.cliInfo.setRegistration(0);
 	client.mess.setBuffer(argv[1]);
 
 	cmManager.generateCmds();
