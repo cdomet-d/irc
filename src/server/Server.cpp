@@ -217,6 +217,11 @@ Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
 clientMap &Server::getAllCli() {
 	return (clients_);
 }
+
 channelMap &Server::getAllChan() {
 	return (channels_);
+}
+
+const std::string Server::getPass() const {
+	return (pass_);
 }

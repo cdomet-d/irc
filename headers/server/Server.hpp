@@ -58,6 +58,7 @@ class Server {
 	/*                               GETTERS                                  */
 	clientMap &getAllCli();
 	channelMap &getAllChan();
+	const std::string getPass() const;
 
   private:
 	/*                               METHODS                                  */
