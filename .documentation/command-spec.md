@@ -540,12 +540,12 @@ command issuer client object
 validMess() -> check : \
                 (1) - if there is a text to be sent, if not display ERR_NOTEXTTOSEND \
                 (2) - if there is a target, if not display ERR_NORECIPIENT
-(3)
+                (3) - validTarget() -> check if nickname exists, if not display     ERR_NOSUCHNICK \
+
 if target is a channel : \
     - check channel modes because they can affect the message \ (we don't have modes that can affect a message)
             if it cannot be delivered to channel display ERR_CANNOTSENDTOCHAN \
-else if target is a user : \
-    - validTarget() -> check if nickname exists, if not display ERR_NOSUCHNICK \
+
 
 -- executors --
 sendMess() -> send <text to be sent> to target \
