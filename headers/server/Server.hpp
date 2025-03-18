@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/14 12:53:46 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/18 18:00:18 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-enum logLevel { INFO, ERROR, DEBUG };
+// enum logLevel { INFO, ERROR, DEBUG };
 
 extern int gSign;
 
@@ -58,6 +58,8 @@ class Server {
 	/*                               GETTERS                                  */
 	clientMap &getAllCli();
 	channelMap &getAllChan();
+	const nickMap &getUsedNick() const;
+	int getFdFromNick(const std::string &nick) const;
 
   private:
 	/*                               METHODS                                  */
@@ -75,7 +77,7 @@ class Server {
 
 	clientMap clients_;
 	channelMap channels_;
-	stringVec usedNicks_;
+	nickMap usedNicks_;
 
 	// private constructor
 	Server(void);
@@ -100,7 +102,7 @@ bool handlePart(std::string params, Client *curCli);
 bool handleMode(std::string params, Client *currentlCli);
 
 /*                               DEBUG                                  */
-void log(logLevel level, std::string message);
-void log(logLevel level, std::string message, std::string additionalInfo);
+// void logger(logLevel level, std::string message);
+// void logger(logLevel level, std::string message, std::string additionalInfo);
 
 #endif //SERVER_HPP

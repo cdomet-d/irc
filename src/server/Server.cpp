@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 16:48:00 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/18 18:25:41 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void Server::acceptClient() {
 		} else {
 			newCli->cliInfo.setHostname(client_ip); // Use IP as fallback
 		}
-		//TODO: not throw an expection when a client cannot connect: it can't kill the server.
+		//TODO: not throw an exeption when a client cannot connect: it can't kill the server.
 		if (fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK) == -1) {
 			close(newCli->getFd());
 			throw Server::InitFailed(
@@ -135,7 +135,7 @@ void Server::acceptClient() {
 		}
 
 		clients_.insert(clientPair(newCli->getFd(), newCli));
-		usedNicks_.push_back(newCli->cliInfo.getNick());
+		usedNicks_.insert(nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected";
 	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
@@ -212,4 +212,15 @@ clientMap &Server::getAllCli() {
 }
 channelMap &Server::getAllChan() {
 	return (channels_);
+}
+
+const nickMap &Server::getUsedNick() const {
+	return (usedNicks_);
+}
+
+int Server::getFdFromNick(const std::string &nick) const {
+	nickMap::const_iterator nickInMap = usedNicks_.find(nick);
+	if (nickInMap != usedNicks_.end())
+		return nickInMap->second;
+	return -1;
 }
