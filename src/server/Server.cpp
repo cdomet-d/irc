@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 17:39:05 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 09:11:34 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,14 @@ bool Server::servInit() {
 	servPoll_.events = POLLIN;
 	if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, servFd_, &servPoll_) == -1)
 		return 0;
-	// log(INFO, "IRC server initialized");
+	// logLevel(INFO, "IRC server initialized");
 	return (true);
 }
 
 bool Server::servRun() {
 	int nbFds;
 
-	// log(INFO, "Loop IRC server started");
+	// logLevel(INFO, "Loop IRC server started");
 	std::cout << "Server listening on port " << port_
 			  << " | IP adress: " << inet_ntoa(servAddr_.sin_addr) << std::endl;
 	while (gSign == false) {
@@ -97,7 +97,7 @@ bool Server::servRun() {
 
 void Server::acceptClient() {
 	try {
-		// log(INFO, "Accepting new client");
+		// logLevel(INFO, "Accepting new client");
 		Client *newCli = new Client();
 		newCli->cliInfo.setRegistration(3);
 
@@ -144,7 +144,7 @@ void Server::acceptClient() {
 		usedNicks_.push_back(newCli->cliInfo.getNick());
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected";
-		log(INFO, ss.str());
+		logLevel(INFO, ss.str());
 		sendReply(newCli->getFd(), NOTICE_REQUIRE_PASSWORD());
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
@@ -152,7 +152,7 @@ void Server::acceptClient() {
 }
 
 bool Server::handleData(int fd) {
-	// log(INFO, "-----handleData-----");
+	// logLevel(INFO, "-----handleData-----");
 
 	char tmpBuf[1024];
 	memset(tmpBuf, 0, sizeof(tmpBuf));
@@ -172,7 +172,7 @@ bool Server::handleData(int fd) {
 
 void Server::processBuffer(Client *curCli)
 {
-	log(INFO, "-----processBuffer-----");
+	logLevel(INFO, "-----processBuffer-----");
 
 	size_t pos;
 	while ((pos = curCli->mess.getBuffer().find('\n')) != std::string::npos) {
@@ -218,7 +218,7 @@ bool checkOnlyOperator(int fd)
 
 bool Server::disconnectCli(int fd)
 {
-	log(INFO, "-----disconnectCli-----");
+	logLevel(INFO, "-----disconnectCli-----");
 	checkOnlyOperator(fd);
 	clientMapIt it = clients_.find(fd);
 	if (it != clients_.end()) {

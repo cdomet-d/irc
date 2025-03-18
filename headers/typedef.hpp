@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/03/17 14:19:19 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 10:29:02 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ typedef std::map< std::string, Channel * > channelMap;
 typedef std::map< std::string, Channel * >::iterator channelMapIt;
 typedef std::pair< int, Client * > clientPair;
 typedef std::vector< std::string > stringVec;
-
-typedef void (*p_to_f)(std::string flag, std::string param);
 
 // -------------------------------- IRC UTILS ------------------------------- //
 

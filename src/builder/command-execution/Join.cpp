@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 17:31:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 15:47:34 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 
 Channel *createChan(const std::string &chanName)
 {
-	// log(DEBUG, "-----createChan-----");
 	static Server &server = Server::GetServerInstance(0, "");
 
 	channelMapIt it = server.getAllChan().find(chanName);
@@ -29,28 +28,24 @@ Channel *createChan(const std::string &chanName)
 	newChan->setModes();
 	server.getAllChan().insert(
 		std::pair< std::string, Channel * >(newChan->getName(), newChan));
-	// log(INFO, "Channel created: ", chanName);
 	return (newChan);
 }
 
-void partAllChans(Client *curCli)
+/* void partAllChans(Client *curCli)
 {
-
 	for (stringVec::iterator currChanName = curCli->getJoinedChans().begin();
 		 currChanName != curCli->getJoinedChans().end(); ++currChanName) {
 		handlePart(*currChanName, curCli);
 	}
 	curCli->getJoinedChans().clear();
-}
+} */
 
-//TODO :add invite only mode if mode +i is enable
-//TODO :add check of password if mode  +k is enable
 void handleJoin(CmdSpec &cmd)
 {
- 	log(DEBUG, "-----handleJoin-----");
+	logLevel(DEBUG, "-----handleJoin-----");
 	Client *sender = &cmd.getSender();
 	if (cmd[channel][0] == "0") {
-		partAllChans(sender);
+		//partAllChans(sender);
 		return ;
 	}
 

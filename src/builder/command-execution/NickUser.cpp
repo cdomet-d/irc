@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:46:19 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 15:32:22 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 09:10:35 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 bool nickInUse(std::string newNick, Client *curCli)
 {
-	// log(DEBUG, "nickInUse");
+	// logLevel(DEBUG, "nickInUse");
 
 	static Server &server = Server::GetServerInstance(0, "");
 
@@ -49,19 +49,19 @@ void handleClientRegistration(const std::string &input, Client *curCli)
 			nickStream >> nick >> nick;
 			if (nickInUse(nick, curCli))
 				curCli->cliInfo.setNick(nick);
-			// log(DEBUG, "nick = ", curCli->cliInfo.getNick());
+			// logLevel(DEBUG, "nick = ", curCli->cliInfo.getNick());
 		} else if (line.find("USER") != std::string::npos) {
 			std::string username, mode, unused, realname;
 			std::istringstream userStream(line);
 			userStream >> username >> username >> mode >> unused;
 			std::getline(userStream, realname);
 			curCli->cliInfo.setUsername(username);
-			// log(DEBUG, "username = ", username);
+			// logLevel(DEBUG, "username = ", username);
 		}
 	}
 	if (curCli->cliInfo.getNick().empty() == false &&
 		curCli->cliInfo.getUsername().empty() == false)
 		sendReply(curCli->getFd(), REG_COMPLETE());
 	curCli->cliInfo.setPrefix();
-	// log(DEBUG, "cliInfo.getPrefix = ", curCli->cliInfo.getPrefix());
+	// logLevel(DEBUG, "cliInfo.getPrefix = ", curCli->cliInfo.getPrefix());
 }

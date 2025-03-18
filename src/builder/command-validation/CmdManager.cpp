@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "CmdManager.hpp"
+#include "typedef.hpp"
+#include "Server.hpp"
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
@@ -28,9 +30,9 @@ CmdManager::~CmdManager(void) {
 /*                               METHODS                                      */
 /* ************************************************************************** */
 void CmdManager::executeCm(CmdSpec &cm) {
-std::cout << "in execute funcntion" << std::endl;
-	if (cm.getValid())
+	if (cm.getValid()) {
 		cm.getExecutor()(cm);
+	}
 	cm.cleanAll();
 }
 
@@ -86,7 +88,7 @@ void CmdManager::generateCmds() {
 			.addChecker(onChan)
 			.addChecker(validInvite)
 			.addChecker(hasChanPriv)
-			// .CmExecutor()
+			.CmExecutor(handleInvite)
 			.build());
 
 	//si un target est faux on fait pas ceux qui suivent
@@ -101,7 +103,7 @@ void CmdManager::generateCmds() {
 			.addChecker(hasChanPriv)
 			.addChecker(validTarget)
 			.addChecker(validKick)
-			// .CmExecutor()
+			.CmExecutor(handleKick)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -114,7 +116,7 @@ void CmdManager::generateCmds() {
 			.addChecker(hasChanPriv)
 			.addChecker(validMode)
 			// .addChecker(validArg) ?
-			// .CmExecutor()
+			.CmExecutor(handleMode)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -124,7 +126,7 @@ void CmdManager::generateCmds() {
 			.Parameters(message, new CmdParam(true, '\0'))
 			.addChecker(validChan)
 			.addChecker(onChan)
-			// .CmExecutor()
+			.CmExecutor(handlePart)
 			.build());
 
 	//we want ERR_NORECIPIENT not ERR_NEEDMOREPARAMS
@@ -135,14 +137,14 @@ void CmdManager::generateCmds() {
 			.Parameters(message, new CmdParam())
 			.addChecker(validMess)
 			.addChecker(validTarget)
-			// .CmExecutor()
+			.CmExecutor(handlePrivsmg)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
 			.Name("QUIT")
 			.Registration(0)
 			.Parameters(message, new CmdParam(true, '\0'))
-			// .CmExecutor()
+			//.CmExecutor()
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -153,7 +155,7 @@ void CmdManager::generateCmds() {
 			.addChecker(validChan)
 			.addChecker(onChan)
 			.addChecker(hasChanPriv) //(only if mode +t is set)
-			// .CmExecutor()
+			.CmExecutor(handleTopic)
 			.build());
 }
 

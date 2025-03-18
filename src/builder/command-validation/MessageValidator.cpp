@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/17 17:34:19 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 10:11:07 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 /* ************************************************************************** */
 
 bool MessageValidator::assess(Client &sender) {
-	log(DEBUG, "ASSESS");
 	sender.mess.setBuffer(removeNewlines(sender.mess.getBuffer()));
 	std::string message = sender.mess.getBuffer();
 
@@ -37,8 +36,9 @@ bool MessageValidator::assess(Client &sender) {
 
 	CmdManager &manager = CmdManager::getManagerInstance();
 	try {
-		log(DEBUG, "about to execute");
+		
 		manager.executeCm(manager.getCmd(sender.mess.getCmd()).process(sender));
+		
 	} catch (const CmdManager::CmdNotFoundException &e) {
 		std::cout << ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
 										sender.mess.getCmd());

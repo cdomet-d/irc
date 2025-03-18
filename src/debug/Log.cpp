@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Log.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 12:56:23 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/12 16:48:06 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/18 09:13:19 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ std::string timeStamp()
 	return (time_buf);
 }
 
-void log(logLevel level, std::string message)
+void logLevel(logEnum level, std::string message)
 {
 	switch (level) {
 	case INFO:
@@ -39,7 +39,7 @@ void log(logLevel level, std::string message)
 	}
 }
 
-void log(logLevel level, std::string message, std::string additionalInfo)
+void logLevel(logEnum level, std::string message, std::string additionalInfo)
 {
 	switch (level) {
 	case (INFO):

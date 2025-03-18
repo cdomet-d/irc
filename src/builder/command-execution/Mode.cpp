@@ -6,96 +6,87 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 14:22:55 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 14:10:33 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "CmdSpec.hpp"
 #include <sstream>
+#include <cstdlib>
 
-static bool requiresParameter(const std::string &flag)
+void executeO(std::string flag, std::string param, Channel *curChan)
 {
-	return flag != "+i" && flag != "+t";
-}
+	Client *target;
 
-void parseInput(const std::string &input, std::vector< std::string > &flags,
-				std::vector< std::string > &params)
-{
-	flags.clear();
-	params.clear();
-
-	std::istringstream iss(input);
-	std::vector< std::string > tokens;
-	std::string token;
-	while (iss >> token) {
-		tokens.push_back(token);
-	}
-
-	std::vector< std::string > parameters_tokens;
-	bool in_flags_section = true;
-
-	for (std::vector< std::string >::const_iterator it = tokens.begin();
-		 it != tokens.end(); ++it) {
-		if (in_flags_section && !it->empty() && (*it)[0] == '+') {
-			flags.push_back(*it);
-		} else {
-			in_flags_section = false;
-			parameters_tokens.push_back(*it);
+	//find instance of target
+	for (clientMapIt targetIt = curChan->getCliInChan().begin(); targetIt != curChan->getCliInChan().end(); ++targetIt) {
+		if (targetIt->second->cliInfo.getNick() == param) {
+			target = targetIt->second;
+			break ;
 		}
 	}
-	params.resize(flags.size());
+	if (flag == "+o")
+		curChan->getOpCli().insert(std::pair <int, Client *>(target->getFd(), target)); 
+	if (flag == "-o")
+		curChan->getOpCli().erase(target->getFd()); 	
+}
 
-	size_t param_index = 0;
-	for (size_t i = 0; i < flags.size(); ++i) {
-		if (requiresParameter(flags[i])) {
-			if (param_index < parameters_tokens.size()) {
-				params[i] = parameters_tokens[param_index];
-				++param_index;
-			}
-		}
+void executeI(std::string flag, std::string param, Channel *curChan)
+{
+	(void)param;
+
+	if (flag == "+i" && curChan->getInviteOnly() == false) {
+		curChan->setInviteOnly(true);
+		curChan->setModes();
+	}
+	if (flag == "-i" && curChan->getInviteOnly() == true) {
+		curChan->setInviteOnly(false);
+		curChan->setModes();
+	}
+}
+void executeT(std::string flag, std::string param, Channel *curChan)
+{
+	(void)param;
+
+	if (flag == "+t" && curChan->getTopicRestrict() == false) {
+		curChan->setTopicRestrict(true);
+		curChan->setModes();
+	}
+	if (flag == "-t" && curChan->getTopicRestrict() == true) {
+		curChan->setTopicRestrict(false);
+		curChan->setModes();
 	}
 }
 
-void printVector(const std::vector< std::string > &vec)
+void executeK(std::string flag, std::string param, Channel *curChan)
 {
-	for (std::vector< std::string >::const_iterator it = vec.begin();
-		 it != vec.end(); ++it) {
-		std::cout << *it << std::endl;
+	if (flag == "+k") {
+		curChan->setPassword(param);
+		curChan->setIsPassMatch(true);
+		curChan->setModes();
+	}
+	
+	if (flag == "-k" && curChan->getIsPassMatch() == true) {
+		curChan->setPassword("");
+		curChan->setIsPassMatch(false);
+		curChan->setModes();
 	}
 }
 
-void executeO(std::string flag, std::string param)
+void executeL(std::string flag, std::string param, Channel *curChan)
 {
-	(void)flag;
-	(void)param;
-	//if (flag.find("+") != std::string::npos) {
-	//
-	//} else {
-	//
-	//}
-}
-
-void executeI(std::string flag, std::string param)
-{
-	(void)flag;
-	(void)param;
-}
-void executeT(std::string flag, std::string param)
-{
-	(void)flag;
-	(void)param;
-}
-
-void executeK(std::string flag, std::string param)
-{
-	(void)flag;
-	(void)param;
-}
-
-void executeL(std::string flag, std::string param)
-{
-	(void)flag;
-	(void)param;
+	if (flag == "+l") {
+		curChan->setMaxCli(atoi(param.c_str()));
+		curChan->setIsPassMatch(true);
+		curChan->setModes();
+	}
+	
+	if (flag == "-l" && curChan->getMaxCli() == 0) {
+		curChan->setMaxCli(0);
+		curChan->setIsPassMatch(false);
+		curChan->setModes();
+	}
 }
 
 int findFlagLevel(std::string level)
@@ -108,35 +99,46 @@ int findFlagLevel(std::string level)
 	return (-1);
 }
 
-void executeFlag(std::string flag, std::string param)
+void executeFlag(std::string flag, std::string param, Channel *curChan)
 {
-	p_to_f flagExecutor[5] = {&executeO, &executeI, &executeT, &executeK,
+	modesFunc flagExecutor[5] = {&executeO, &executeI, &executeT, &executeK,
 							  &executeL};
 	int flagLevel = findFlagLevel(flag);
 
 	if (flagLevel != -1)
-		flagExecutor[flagLevel](flag, param);
+		flagExecutor[flagLevel](flag, param, curChan);
 	else
-		log(DEBUG, "Invalid flag");
+		logLevel(DEBUG, "Invalid flag");
+}
+
+Channel *findCurChan(std::string chanName) {
+	static Server &server = Server::GetServerInstance(0, "");
+	channelMapIt curChanIt = server.getAllChan().find(chanName);
+	
+	return (curChanIt->second);
 }
 
 //the modes of a channel need to be empty if no moe is activated and +<modes> if any
 //TODO the first params will be the nam of the channel
-bool handleMode(std::string params, Client *curCli)
+void handleMode(CmdSpec &cmd)
 {
-	log(DEBUG, "HandleMode");
-	(void)curCli;
+	logLevel(DEBUG, "-----handleMode-----");
+	Client *sender = &cmd.getSender();
+	Channel *curChan = findCurChan(cmd[channel][0]);
+	std::string newModes;
+	std::string newMaxCli = "";
 
-	std::vector< std::string > flags, param;
-
-	parseInput(params, flags, param);
-
-	std::cout << "FLAGS :" << std::endl;
-	printVector(flags);
-	std::cout << std::endl << "PARAMS :" << std::endl;
-	printVector(param);
-
-	for (size_t nbFlag = 0; nbFlag < flags.size(); nbFlag++)
-		executeFlag(flags[nbFlag], param[nbFlag]);
-	return (true);
+	if (!cmd[mode_].getSize()) {
+		std::cout << "hEREEE!" << std::endl;
+		sendReply(sender->getFd(), RPL_UMODEIS(sender->cliInfo.getNick(), curChan->getModes()));
+		return ;
+	}
+	for (size_t nbFlag = 0; nbFlag < cmd[mode_].getSize(); ++nbFlag) {
+		if (cmd[mode_][nbFlag] == "+l")
+			newMaxCli = cmd[modeArg][nbFlag];
+		executeFlag(cmd[mode_][nbFlag], cmd[modeArg][nbFlag], curChan);
+		newModes.append(cmd[mode_][nbFlag]);
+	}
+	newModes.append(newMaxCli);			
+	sendMessageChannel(curChan->getCliInChan(), RPL_CHANNELMODEIS(sender->cliInfo.getNick(), curChan->getName(), newModes));
 }

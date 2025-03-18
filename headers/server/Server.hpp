@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 16:25:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 15:20:13 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-enum logLevel { INFO, ERROR, DEBUG };
+enum logEnum { INFO, ERROR, DEBUG };
 
 extern int gSign;
 
@@ -88,25 +88,15 @@ class Server {
 //NICK--USER
 void handleClientRegistration(const std::string &input, Client *curCli);
 
-//TOPIC
-bool handleTopic(std::string params, Client *curCli);
 //PRIVMSG
 bool handlePrivsmg(std::string params, Client *curCli);
-//PART
-bool handlePart(std::string params, Client *curCli);
-//MODE
-bool handleMode(std::string params, Client *currentlCli);
-//INVITE
-bool handleInvite(std::string params, Client *curCli);
-//KICK
-bool handleKick(std::string params, Client *curCli);
 //WHO
 bool handleWho(std::string params, Client *curCli);
 //PASS
 bool handlePass(std::string params, Client *curCli);
 
 /*                               DEBUG                                  */
-void log(logLevel level, std::string message);
-void log(logLevel level, std::string message, std::string additionalInfo);
+void logLevel(logEnum level, std::string message);
+void logLevel(logEnum level, std::string message, std::string additionalInfo);
 
 #endif //SERVER_HPP

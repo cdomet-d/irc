@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 17:02:35 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 11:39:05 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,20 +51,20 @@ int main(int ac, char **av)
 	return (0);
 }
 
-/* int main(int argc, char **argv) {
-	Client client;
-	CmdManager &cmManager = CmdManager::getManagerInstance();
-
-	if (argc < 2) {
-		std::cerr << "not enough params\n";
-		return (1);
-	}
-
-	client.cliInfo.setRegistration(3);
-	client.mess.setBuffer(argv[1]);
-
-	cmManager.generateCmds();
-
-	MessageValidator::assess(client);
-	return (0);
-} */
+//int main(int argc, char **argv) {
+//	Client client;
+//	CmdManager &cmManager = CmdManager::getManagerInstance();
+//
+//	if (argc < 2) {
+//		std::cerr << "not enough params\n";
+//		return (1);
+//	}
+//
+//	client.cliInfo.setRegistration(3);
+//	client.mess.setBuffer(argv[1]);
+//
+//	cmManager.generateCmds();
+//
+//	MessageValidator::assess(client);
+//	return (0);
+//}

@@ -6,70 +6,33 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/17 15:33:58 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/18 15:53:11 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "Reply.hpp"
-#include <sstream>
+#include "CmdSpec.hpp"
 
-//use the define for the map of client and channel
-bool handlePart(std::string params, Client *curCli)
+void handlePart(CmdSpec &cmd)
 {
-	static Server &server = Server::GetServerInstance(0, "");
+	Client *sender = &cmd.getSender();
+	Channel *curChan = findCurChan(cmd[channel][0]);
 
-	std::istringstream iss(params);
-	std::string chanName;
-	std::string reason;
-	std::string command = "PART";
-
-	iss >> chanName;
-	std::getline(iss, reason);
-
-	//needMoreParams
-	if (chanName.empty() == true) {
-		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(command));
-		// log(DEBUG, "PART", "ERR_NEEDMOREPARAMS");
-		return (false);
-	}
-
-	//noSuchChannel
-	channelMapIt curChan = server.getAllChan().find(chanName);
-	if (curChan == server.getAllChan().end()) {
-		sendReply(curCli->getFd(),
-				  ERR_NOSUCHCHANNEL(curCli->cliInfo.getNick(), chanName));
-		log(DEBUG, "PART", "ERR_NOSUCHCHANNEL");
-		return (false);
-	}
-	//notOnChannel
-	clientMap::iterator senderIt =
-		curChan->second->getCliInChan().find(curCli->getFd());
-	if (senderIt == curChan->second->getCliInChan().end()) {
-		sendReply(curCli->getFd(),
-				  ERR_NOTONCHANNEL(curCli->cliInfo.getNick(), chanName));
-		log(DEBUG, "PART", "ERR_NOTONCHANNEL");
-		return (false);
-	}
-
-	if (reason.empty() == true)
-		sendMessageChannel(curChan->second->getCliInChan(),
-						   RPL_PARTNOREASON(curCli->cliInfo.getPrefix(), chanName));
+	if (!cmd[message].getSize())
+		sendMessageChannel(curChan->getCliInChan(),
+						   RPL_PARTNOREASON(sender->cliInfo.getPrefix(), curChan->getName()));
 	else
-		sendMessageChannel(
-			curChan->second->getCliInChan(),
-			RPL_PARTREASON(curCli->cliInfo.getPrefix(), chanName, reason));
+		sendMessageChannel(curChan->getCliInChan(),
+			RPL_PARTREASON(sender->cliInfo.getPrefix(), curChan->getName(), cmd[message][0]));
 
-	int targetFd = curCli->getFd();
+	int targetFd = sender->getFd();
 
-	curChan->second->getCliInChan().erase(targetFd);
-	log(DEBUG, "erase client from channel");
+	curChan->getCliInChan().erase(targetFd);
+	logLevel(DEBUG, "erase client from channel");
 
-	//is Client op on channel ?
-	if (curChan->second->getOpCli().find(targetFd) !=
-		curChan->second->getOpCli().end()) {
-		curChan->second->getOpCli().erase(targetFd);
-		log(DEBUG, "erase client from op");
+	if (curChan->getOpCli().find(targetFd) != curChan->getOpCli().end()) {
+		curChan->getOpCli().erase(targetFd);
+		logLevel(DEBUG, "erase client from op");
 	}
-	return (true);
 }

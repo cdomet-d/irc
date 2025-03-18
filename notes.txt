@@ -1,35 +1,14 @@
 
 TODO :
-Add election d'un operateur en cas de deco du suel operateur d'un channel
-Add a function that sends a reply to an entire channel
-Faire une fonction qui trouve le currClient ou le currChannel
-Add join with a password
-Mettre les replies dans une classe
-Fix historique (il apparait le nombre de fois qu'il y avait de clients sur le channel au moment ou le message a ete envoye)
-Execution de mode 
-Join avec password
+Brancher commandes : WHO, QUIT, PASS, USER, NICK
+CURRENTLY : MODE, KICK
+TO TEST : INVITE, PART
+DO DID DONE : TOPIC, JOIN, PRIVMSG
 
-We don't have to develop a client 
-We don't have to handles server to server connection
-
-The server has to handle multiple client at a time without blocking
-All in/out operations (?) need to be none blocking
-We need to choose one IRC client, we'll use said client as a reference
-Said client we'll need to be able to connect to our server
-Communication between client and server will use TCP/IP (v4 or v6)
-
-To start we need to create a general-purpose server and then configure it as an IRC server.
-Step to create a general-purpose server :
-		*choose a hosting provider or use own hardware
-		*Install a server operating system
-	
 Commands :
+PRIVMSG, USER, NICK, JOIN, TOPIC, WHO, PART, KICK, QUIT, INVITE, PASS, MODE //currently working on
 
- MODE //need to do 
-PRIVMSG, USER, NICK, JOIN, TOPIC, WHO, PART, KICK, QUIT, INVITE, PASS //currently working on
-
-
-TODOOOOO : toutes les funcitons d'exec prennent reference d'une instance de CmdSpec
+toutes les functions d'exec prennent reference d'une instance de CmdSpec
 
 TRAME :
 
@@ -66,10 +45,11 @@ nc -C 0.0.0.0 4444 :
 		4444 Port
 
 
-SendMessageToChannel :
--PRIVMSG : getCliInChan, std::map<int, std::string>
--PART : getCliInChan, std::map<int, std::string>
--TOPIC : getCliInChan, std::map<int, std::string> x2
--addClientToChannel : getCliInChan, std::map<int, std::string>
+Hi ! Can you write me a bash script that will launch nc with the following parameters: 
+0.0.0.0 4444
+And will then, send to the server, one by one the following command :
 
-donc parametre de fonction : map et message 
+NICK alex
+USER alexie
+JOIN #test
+TOPIC #test
