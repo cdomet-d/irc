@@ -24,19 +24,19 @@
 class Client;
 
 typedef enum {
-	channel,
-	hostname,
-	key,
-	message,
+	channel_,
+	hostname_,
+	key_,
+	message_,
 	mode_,
-	modeArg,
-	nickname,
-	password,
-	realname,
-	servername,
-	target,
+	modeArg_,
+	nickname_,
+	password_,
+	realname_,
+	servername_,
+	target_,
 	topic_,
-	username,
+	username_,
 } e_param;
 
 typedef std::vector< std::pair< e_param, CmdParam * > > paramMap;
