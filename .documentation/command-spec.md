@@ -267,16 +267,15 @@ channel object
                     different pour les autres commandes, qui elles regardent juste si le channel existe alors que pour join il regarde s'il est correcte
 
 (3) joinChanRequest() -> checks : 
-                            - the nbr of channels the client is in, if > limit display ERR_TOOMANYCHANNELS \
-                        (1) - if the key to access the channel (if it has one) is supplied and valid \
-                            if not display ERR_BADCHANNELKEY \
+                        (5) - the nbr of channels the client is in, if > limit display ERR_TOOMANYCHANNELS \
+                        (4) - if the key to access the channel (if it has one) is supplied  and valid if not display ERR_BADCHANNELKEY \
                             - if client isn't banned from the channel \
                                 if so display ERR_BANNEDFROMCHAN (we don't have to implement MODE +b so this is optionnal) \
-                        (2) - if channel's client limit (if set) hasn't been reached if so display ERR_CHANNELISFULL \
+                        (2) - if channel's client limit (if set) has been reached if so display ERR_CHANNELISFULL \
                         (3) - if client was invited (if channel is invite-only mode) if not display ERR_INVITEONLYCHAN \
                             - ERR_BADCHANMASK (not sure of the purpose of this one) Indicates the supplied channel name is not a valid. \
                                  is similar to, but stronger than, ERR_NOSUCHCHANNEL (403), which indicates that the channel does not exist, but that it may be a valid name.
-                            - if client is already on channel
+                        (1)- if client is already on channel
                         
 -- executors --
 addToChan() -> adds client to channel \
@@ -540,7 +539,7 @@ command issuer client object
 validMess() -> check : \
                 (1) - if there is a text to be sent, if not display ERR_NOTEXTTOSEND \
                 (2) - if there is a target, if not display ERR_NORECIPIENT
-                (3) - validTarget() -> check if nickname exists, if not display     ERR_NOSUCHNICK \
+                (3) - validTarget() -> check if nickname exists, if not display     ERR_NOSUCHNICK. si le target est un channel appeler onChan pour verifier si le client est dans le channel
 
 if target is a channel : \
     - check channel modes because they can affect the message \ (we don't have modes that can affect a message)
