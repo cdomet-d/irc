@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 12:49:49 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:34:03 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ void kickFromAllMap(Client *target, Channel &curChan)
 {
 	int fdTarget = target->getFd();
 
-	curChan.getCliInChan().erase(fdTarget);
+	curChan.removeCli(ALLCLI, fdTarget);
 	clientMapIt itTarget;
 	itTarget = curChan.getOpCli().find(fdTarget);
 	if (itTarget != curChan.getOpCli().end())
-		curChan.getOpCli().erase(fdTarget);
+		curChan.removeCli(OPCLI, fdTarget);
 	itTarget = curChan.getInvitCli().find(fdTarget);
 	if (itTarget != curChan.getInvitCli().end())
-		curChan.getInvitCli().erase(fdTarget);
+		curChan.removeCli(INVITECLI, fdTarget);
 }
 
 void handleKick(CmdSpec &cmd)

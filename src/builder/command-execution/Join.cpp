@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 17:04:20 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:42:37 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ Channel *createChan(const std::string &chanName)
 	Channel *newChan = new Channel(chanName);
 	newChan->setName(chanName);
 	newChan->setModes();
-	server.getAllChan().insert(
-		std::pair< std::string, Channel * >(newChan->getName(), newChan));
+	server.addChan(newChan);
 	return (newChan);
 }
 

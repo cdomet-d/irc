@@ -12,6 +12,7 @@ PRIVMSG, USER, NICK, JOIN, TOPIC, WHO, PART, KICK, QUIT, INVITE, PASS, MODE //cu
 toutes les functions d'exec prennent reference d'une instance de CmdSpec
 Faire headers exec pour function 
 Faire message reply modes`
+Erase Channel if nobody there (delete empty channel)
 
 TRAME :
 

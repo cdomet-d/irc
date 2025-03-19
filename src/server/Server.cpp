@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 15:45:20 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:44:49 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,13 +200,14 @@ void Server::processBuffer(Client *curCli)
 	}
 }
 
-void Server::addCli(int fdCli) {}
+void Server::addChan(Channel *curChan) {
+	channels_.insert(std::pair<std::string, Channel *>(curChan->getName(), curChan));
+}
 
-void Server::removeCli(int fdCli) {}
+void Server::removeChan(Channel *curChan) {
+	channels_.erase(curChan->getName());
+}
 
-void Server::addChan(std::string nameChan) {}
-
-void Server::removeChan(std::string nameChan) {}
 
 bool checkOnlyOperator(int fd)
 {
@@ -214,16 +215,14 @@ bool checkOnlyOperator(int fd)
 
 	clientMap::iterator curCli = server.getAllCli().find(fd);
 	//handleJoin("0", curCli->second);
-	for (stringVec::iterator currChanName =
+	for (stringVec::iterator curChanName =
 			 curCli->second->getJoinedChans().begin();
-		 currChanName != curCli->second->getJoinedChans().end();
-		 ++currChanName) {
-		channelMapIt currChan = server.getAllChan().find(*currChanName);
-		if (!currChan->second->getOpCli().size()) {
-			if (currChan->second->getCliInChan().size() >= 1) {
-				currChan->second->getOpCli().insert(clientPair(
-					currChan->second->getCliInChan().begin()->second->getFd(),
-					currChan->second->getCliInChan().begin()->second));
+		 curChanName != curCli->second->getJoinedChans().end();
+		 ++curChanName) {
+		channelMapIt curChan = server.getAllChan().find(*curChanName);
+		if (!curChan->second->getOpCli().size()) {
+			if (curChan->second->getCliInChan().size() >= 1) {
+				curChan->second->addCli(OPCLI, curChan->second->getCliInChan().begin()->second);
 				return (true);
 			}
 		}
@@ -237,6 +236,7 @@ bool Server::disconnectCli(int fd)
 	checkOnlyOperator(fd);
 	clientMapIt it = clients_.find(fd);
 	if (it != clients_.end()) {
+		//TODO deleteEmptyChan 
 		std::stringstream ss;
 		ss << "Client [" << it->second->getFd() << "] connected";
 		logLevel(INFO, ss.str());
@@ -247,7 +247,6 @@ bool Server::disconnectCli(int fd)
 	}
 	return false;
 }
-
 /* ************************************************************************** */
 /*                               EXCEPTIONS                                   */
 /* ************************************************************************** */

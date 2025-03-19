@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 13:07:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:36:19 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,20 @@
 
 void executeO(std::string flag, std::string param, Channel &curChan)
 {
-	Client *target;
+	Client *targetCli;
 
 	//find instance of target
 	for (clientMapIt targetIt = curChan.getCliInChan().begin();
 		 targetIt != curChan.getCliInChan().end(); ++targetIt) {
 		if (targetIt->second->cliInfo.getNick() == param) {
-			target = targetIt->second;
+			targetCli = targetIt->second;
 			break;
 		}
 	}
 	if (flag == "+o")
-		curChan.getOpCli().insert(
-			std::pair< int, Client * >(target->getFd(), target));
+		curChan.addCli(OPCLI, targetCli);
 	if (flag == "-o")
-		curChan.getOpCli().erase(target->getFd());
+		curChan.removeCli(OPCLI, targetCli->getFd());
 }
 
 void executeI(std::string flag, std::string param, Channel &curChan)

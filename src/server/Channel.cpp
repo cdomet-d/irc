@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 16:16:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:23:58 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,9 @@ bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 			return (false);
 		}
 	if (curChan->getCliInChan().empty())
-		curChan->getOpCli().insert(clientPair(curCli->getFd(), curCli));
-	curChan->getCliInChan().insert(clientPair(curCli->getFd(), curCli));
+		curChan->addCli(OPCLI, curCli);
+	curChan->addCli(ALLCLI, curCli);
+
 	curCli->getJoinedChans().push_back(curChan->getName());
 
 	//messageToAllChannel
@@ -188,5 +189,3 @@ void Channel::setTopicRestrict(bool topicRestrict)
 {
 	topicRestrict_ = topicRestrict;
 }
-
-"C_Cpp.clang_format_style": "{BasedOn: GNU, UseTab: Always, IndentWidth: 4, TabWidth: 4, ReflowComments: false, AllowShortBlocksOnASingleLine: true, AllowShortFunctionsOnASingleLine: Empty, SplitEmptyFunction: false, AlwaysBreakTemplateDeclarations: Yes, BraceWrapping: {AfterControlStatement: false, BeforeCatch: false, AfterFunction: false}, BreakBeforeBraces: Custom, MaxEmptyLinesToKeep: 1, SpacesInAngles: true, ColumnLimit: 80, NamespaceIndentation: All}",

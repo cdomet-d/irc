@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 12:48:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:44:58 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,9 @@ void handlePart(CmdSpec &cmd)
 						   RPL_PARTREASON(sender->cliInfo.getPrefix(),
 										  curChan.getName(), cmd[message][0]));
 
+	//TODO deleteEmptyChan 
 	int targetFd = sender->getFd();
-
-	curChan.getCliInChan().erase(targetFd);
-	logLevel(DEBUG, "erase client from channel");
-
-	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end()) {
-		curChan.getOpCli().erase(targetFd);
-		logLevel(DEBUG, "erase client from op");
-	}
+	curChan.removeCli(ALLCLI, targetFd);
+	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end())
+		curChan.removeCli(OPCLI, targetFd);
 }
