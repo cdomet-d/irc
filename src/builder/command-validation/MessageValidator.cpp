@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/19 14:06:40 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:03:36 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ bool messageValidator::assess(Client &sender) {
 
 	while (!message.empty()) {
 		std::string cmd = priv::removeNewlines(message);
+		if (cmd.find("CAP") != std::string::npos)
+			continue;
 		std::cout << "Extracted	[" + cmd + "]" << std::endl;
 		std::cout << "Remainder	" + message << std::endl;
 		if (priv::lenIsValid(cmd, sender) == false)
@@ -148,8 +150,11 @@ bool messageValidator::priv::lenIsValid(const std::string &mess,
 std::string messageValidator::priv::removeNewlines(std::string &input) {
 
 	std::string::size_type newline = input.find(MESSAGE_TERMINATION);
+	if (newline == std::string::npos) {
+		input.erase(input.begin(), input.end());
+		return (input);
+	}
 	std::string result = input.substr(0, newline);
-
 	input.erase(input.begin(), (input.begin() + newline + 2));
 	return result;
 }
