@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 17:00:17 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:45:01 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,10 @@ class Server {
 	bool servRun();
 	void acceptClient();
 	void processBuffer(Client *curCli);
+	void addCli(int fdCli);
+	void removeCli(int fdCli);
+	void addChan(std::string nameChan);
+	void removeChan(std::string nameChan);
 
 	/*                               GETTERS                                  */
 	clientMap &getAllCli();

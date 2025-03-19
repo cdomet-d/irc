@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 17:07:34 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:45:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,6 +199,14 @@ void Server::processBuffer(Client *curCli)
 		}
 	}
 }
+
+void Server::addCli(int fdCli) {}
+
+void Server::removeCli(int fdCli) {}
+
+void Server::addChan(std::string nameChan) {}
+
+void Server::removeChan(std::string nameChan) {}
 
 bool checkOnlyOperator(int fd)
 {

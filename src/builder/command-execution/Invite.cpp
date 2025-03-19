@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 12:49:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:13:44 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,5 @@ void handleInvite(CmdSpec &cmd)
 	sendReply(targetCli->getFd(),
 			  RPL_INVITE(sender->cliInfo.getNick(),
 						 targetCli->cliInfo.getNick(), cmd[channel][0]));
-	curChan.getInvitCli().insert(clientPair(targetCli->getFd(), targetCli));
+	curChan.addCli(INVITECLI, targetCli);
 }

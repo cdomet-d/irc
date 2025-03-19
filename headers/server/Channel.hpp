@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 17:00:10 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:14:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "Client.hpp"
 #include "Reply.hpp"
 #include "typedef.hpp"
+
+enum mapChan { ALLCLI, OPCLI, INVITECLI };
 
 class Client;
 
@@ -28,6 +30,8 @@ class Channel {
 	/*                               METHODS                                  */
 	bool addClientToChan(Channel *curChan, Client *curCli);
 	void printMapValues();
+	void addCli(mapChan curMap, Client *curCli);
+	void removeCli(mapChan curMap, int fdCli);
 
 	/*                               GETTERS                                  */
 	bool getInviteOnly() const;

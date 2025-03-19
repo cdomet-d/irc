@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 09:11:17 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:16:12 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,32 @@ bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 				  RPL_TOPIC(curCli->cliInfo.getNick(), curChan->getName(),
 							curChan->getTopic()));
 	return (true);
+}
+
+void Channel::addCli(mapChan curMap, Client *curCli) {
+	switch (curMap) {
+		case ALLCLI:
+			cliInChan_.insert(clientPair(curCli->getFd(), curCli));
+			break ;
+		case OPCLI:
+			cliIsOperator_.insert(clientPair(curCli->getFd(), curCli));
+			break ;
+		case INVITECLI:
+			cliInvited_.insert(clientPair(curCli->getFd(), curCli));
+	}
+}
+
+void Channel::removeCli(mapChan curMap, int fdCli) {
+	switch (curMap) {
+		case ALLCLI:
+			cliInChan_.erase(fdCli);
+			break ;
+		case OPCLI:
+			cliIsOperator_.erase(fdCli);
+			break ;
+		case INVITECLI:
+			cliInvited_.erase(fdCli);
+	}
 }
 
 /* ************************************************************************** */
@@ -162,3 +188,5 @@ void Channel::setTopicRestrict(bool topicRestrict)
 {
 	topicRestrict_ = topicRestrict;
 }
+
+"C_Cpp.clang_format_style": "{BasedOn: GNU, UseTab: Always, IndentWidth: 4, TabWidth: 4, ReflowComments: false, AllowShortBlocksOnASingleLine: true, AllowShortFunctionsOnASingleLine: Empty, SplitEmptyFunction: false, AlwaysBreakTemplateDeclarations: Yes, BraceWrapping: {AfterControlStatement: false, BeforeCatch: false, AfterFunction: false}, BreakBeforeBraces: Custom, MaxEmptyLinesToKeep: 1, SpacesInAngles: true, ColumnLimit: 80, NamespaceIndentation: All}",
