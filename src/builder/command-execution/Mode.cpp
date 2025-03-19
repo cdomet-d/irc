@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 13:07:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:47:01 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,20 +135,20 @@ void handleMode(CmdSpec &cmd)
 {
 	logLevel(DEBUG, "-----handleMode-----");
 	Client *sender = &cmd.getSender();
-	Channel &curChan = findCurChan(cmd[channel][0]);
+	Channel &curChan = findCurChan(cmd[channel_][0]);
 	std::string newModes;
 	std::string newMaxCli = "";
 
-	if (!cmd[mode_].getSize()) {
+	if (!cmd[flag_].getSize()) {
 		sendReply(sender->getFd(),
 				  RPL_UMODEIS(sender->cliInfo.getNick(), curChan.getModes()));
 		return;
 	}
-	for (size_t nbFlag = 0; nbFlag < cmd[mode_].getSize(); ++nbFlag) {
-		if (cmd[mode_][nbFlag] == "+l")
-			newMaxCli = cmd[modeArg][nbFlag];
-		executeFlag(cmd[mode_][nbFlag], cmd[modeArg][nbFlag], curChan);
-		newModes.append(cmd[mode_][nbFlag]);
+	for (size_t nbFlag = 0; nbFlag < cmd[flag_].getSize(); ++nbFlag) {
+		if (cmd[flag_][nbFlag] == "+l")
+			newMaxCli = cmd[flagArg_][nbFlag];
+		executeFlag(cmd[flag_][nbFlag], cmd[flagArg_][nbFlag], curChan);
+		newModes.append(cmd[flag_][nbFlag]);
 	}
 	newModes.append(newMaxCli);
 	sendMessageChannel(curChan.getCliInChan(),

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Pass.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 09:04:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 12:52:41 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:47:37 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ bool handlePass(std::string params, Client *curCli)
 	clientMapIt senderIt = server.getAllCli().find(curCli->getFd());
 	if (server.getAllCli().size() == 0 &&
 		senderIt != server.getAllCli().end()) {
-		sendReply(curCli->getFd(), ERR_ALREADYREGISTRED());
+		sendReply(curCli->getFd(), ERR_ALREADYREGISTRED(curCli->cliInfo.getNick()));
 		return (false);
 	}
 

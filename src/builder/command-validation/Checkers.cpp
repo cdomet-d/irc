@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/19 15:05:13 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:55:41 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 
 bool pwMatch(CmdSpec &cmd) {
 	if (cmd[password_][0] != cmd.server_.getPass()) {
-		// sendReply(cmd.getSender().getFd(),
-		// 		  ERR_PASSWDMISMATCH(cmd.getSender().cliInfo.getNick()));
-		std::cout << ERR_PASSWDMISMATCH(cmd.getSender().cliInfo.getNick());
+		sendReply(cmd.getSender().getFd(),
+				  ERR_PASSWDMISMATCH(cmd.getSender().cliInfo.getNick()));
 		return (false);
 	}
 	return (true);
@@ -27,9 +26,8 @@ bool isRegistered(CmdSpec &cmd) {
 	//		et que la commande est refaite pendant le registration stage
 	//		mettre message custom
 	if (cmd.getSender().cliInfo.getRegistration() == 3) {
-		// sendReply(cmd.getSender().getFd(),
-		// 		  ERR_ALREADYREGISTRED(cmd.getSender().cliInfo.getNick()));
-		std::cout << ERR_ALREADYREGISTRED(cmd.getSender().cliInfo.getNick());
+		sendReply(cmd.getSender().getFd(),
+				  ERR_ALREADYREGISTRED(cmd.getSender().cliInfo.getNick()));
 		return (false);
 	}
 	return (true);
@@ -69,8 +67,8 @@ bool joinChanRequest(CmdSpec &cmd) {
 					 /*&& sender has an invite*/)) {
 					if (chan.getModes().find('k') == std::string::npos ||
 						(chan.getModes().find('k') != std::string::npos &&
-						 i < cmd[key_].getSize()) &&
-							chan.getPassword() == cmd[key_][i]) {
+						 i < cmd[key_].getSize() &&
+							chan.getPassword() == cmd[key_][i])) {
 						//TODO: faire un define pour client chan limit
 						if (cmd.getSender().getJoinedChans().size() < 50)
 							continue;
@@ -111,12 +109,10 @@ bool onChan(CmdSpec &cmd) {
 		if (joinedChans[i] == cmd[channel_][0])
 			return (true);
 	}
-	// sendReply(cmd.getSender().getFd(),
-	// 		  ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
-	//    chan.getName()));
 	if (cmd.getName() != "JOIN")
-		std::cout << ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
-									  cmd[channel_][0]);
+		sendReply(cmd.getSender().getFd(),
+				  ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
+								   cmd[channel_][0]));
 	return (false);
 }
 
@@ -136,11 +132,9 @@ bool hasChanPriv(CmdSpec &cmd) {
 
 	itCl = chan.getOpCli().find(cmd.getSender().getFd());
 	if (itCl == chan.getOpCli().end()) {
-		// sendReply(cmd.getSender().getFd(),
-		// 		  ERR_CHANOPRIVSNEEDED(cmd.getSender().cliInfo.getNick(),
-		//    chan.getName()));
-		std::cout << ERR_CHANOPRIVSNEEDED(cmd.getSender().cliInfo.getNick(),
-										  chan.getName());
+		sendReply(cmd.getSender().getFd(),
+				  ERR_CHANOPRIVSNEEDED(cmd.getSender().cliInfo.getNick(),
+									   chan.getName()));
 		return (false);
 	}
 	return (true);

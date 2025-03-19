@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 12:48:16 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:44:33 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void changeTopic(Channel &curChan, Client *curCli, std::string topic)
 void handleTopic(CmdSpec &cmd)
 {
 	Client *sender = &cmd.getSender();
-	Channel &curChan = findCurChan(cmd[channel][0]);
+	Channel &curChan = findCurChan(cmd[channel_][0]);
 
 	//if no params (= topic is empty) after chanName, client only checks the topic
 	if (!cmd[topic_].getSize()) {

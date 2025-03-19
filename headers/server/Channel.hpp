@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 17:00:10 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:56:30 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ class Channel {
 	clientMap &getCliInChan();
 	clientMap &getOpCli();
 	clientMap &getInvitCli();
-	int getMaxCli() const;
+	size_t getMaxCli() const;
 	std::string getName() const;
 	std::string getTopic() const;
 	std::string getModes() const;
@@ -59,7 +59,7 @@ class Channel {
 	clientMap cliInChan_;
 	clientMap cliIsOperator_;
 	clientMap cliInvited_;
-	int maxCli_;
+	size_t maxCli_;
 	std::string modes_;
 	std::string name_;
 	std::string pass_;
