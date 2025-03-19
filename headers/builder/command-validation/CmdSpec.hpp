@@ -24,19 +24,19 @@
 class Client;
 
 typedef enum {
-	channel,
-	hostname,
-	key,
-	message,
-	mode_,
-	modeArg,
-	nickname,
-	password,
-	realname,
-	servername,
-	target,
+	channel_,
+	hostname_,
+	key_,
+	message_,
+	flag_,
+	flagArg_,
+	nickname_,
+	password_,
+	realname_,
+	servername_,
+	target_,
 	topic_,
-	username,
+	username_,
 } e_param;
 
 typedef std::vector< std::pair< e_param, CmdParam * > > paramMap;
@@ -59,6 +59,7 @@ class CmdSpec {
 
 	/*                               GETTERS                                  */
 	bool getValid(void) const;
+	//TODO: remettre en const et ajouter une fonction addChan dans Client pour pouvoir mettre getJoinedChan en const
 	Client &getSender(void) const;
 	const std::string &getName(void) const;
 	const paramMap &getParams(void) const;
@@ -114,7 +115,8 @@ Channel *createChan(const std::string &chanName);
 
 //MODE
 void handleMode(CmdSpec &cmd);
-typedef void (*modesFunc)(std::string flag, std::string param, Channel &curChan);
+typedef void (*modesFunc)(std::string flag, std::string param,
+						  Channel &curChan);
 
 //TOPIC
 void handleTopic(CmdSpec &cmd);

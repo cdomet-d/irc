@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 14:27:39 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:51:14 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 
 //standard replies
 
-#define ERR_ALREADYREGISTRED() (": 462 :You may not reregister\r\n")
+#define ERR_ALREADYREGISTRED(nickname) (": 462 " + nickname + " :You may not reregister\r\n")
+// #define ERR_BADCHANNELKEY(channel) (":475 " + channel + " :Cannot join channel (+k)\r\n")
 #define ERR_BADCHANNELKEY(nickname, channel) (": 475 " + nickname + " " + channel + " :Cannot join channel (+k)" + "\r\n")
 #define ERR_BANNEDFROMCHAN(channel) (": 474 " + channel + " :Cannot join channel (+b)\r\n")
 #define ERR_CANNOTSENDTOCHAN(channel) (": 404 " + channel + " :Cannot send to channel\r\n")
@@ -51,7 +52,11 @@
 #define RPL_UMODEIS(client, modes) (": 221 " + client + " " + modes + "\r\n")
 #define RPL_WELCOME(nick, user, host) (": 001 " + nick + " :Welcome to the Internet Relay Network " + nick + "!" + user + "@" + host + "\r\n")
 #define RPL_YOURHOST(servername, version) (": 002 :Your host is " + servername + ", running version " + version + "\r\n")
-
+#define ERR_NOTREGISTERED ": 451 * :You have not registered\r\n"
+#define RPL_NAMREPLY(client, channel_type, channel, nicks) (": 353 " + client + " " + channel_type + " " + channel + " :" + nicks + "\r\n")
+#define RPL_ENDOFNAMES(client, channel) (": 366 " + client + " " + channel + " :End of /NAMES list\r\n")
+#define RPL_UMODEIS(client, modes) (": 221 " + client + " " + modes + "\r\n")
+#define ERR_PASSWDMISMATCH(nickname) (": 464 " + nickname + " :Password incorrect\r\n")
 // Message parsing-related replies
 #define ERR_INPUTTOOLONG(nickname) (": 417 " + nickname + " :Input line was too long\r\n")
 #define ERR_TOOMANYTARGETS(nickname, target) (": 407 " + nickname + " " + target + " :Too many targets\r\n")

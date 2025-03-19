@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 14:20:42 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:52:19 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ class Server {
 	clientMap &getAllCli();
 	const nickMap &getUsedNick() const;
 	int getFdFromNick(const std::string &nick) const;
-	std::string getPass() const;
+	const std::string getPass() const;
 
 	/*                               MEMBERS                                  */
 	std::ofstream logfile;

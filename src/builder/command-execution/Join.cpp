@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 14:19:06 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:55:58 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,13 @@ Channel *createChan(const std::string &chanName)
 void handleJoin(CmdSpec &cmd)
 {
 	Client *sender = &cmd.getSender();
-	if (cmd[channel][0] == "0") {
+	if (cmd[channel_][0] == "0") {
 		//partAllChans(sender);
 		return;
 	}
 
-	for (size_t nbChan = 0; nbChan < cmd[channel].getSize(); nbChan++) {
-		Channel *curChan = createChan(cmd[channel][nbChan]);
+	for (size_t nbChan = 0; nbChan < cmd[channel_].getSize(); nbChan++) {
+		Channel *curChan = createChan(cmd[channel_][nbChan]);
 		curChan->addClientToChan(curChan, sender);
 	}
 	return;

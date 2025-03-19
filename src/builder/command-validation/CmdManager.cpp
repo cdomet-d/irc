@@ -21,8 +21,7 @@ CmdManager::CmdManager(void) {
 	std::cout << "Cmd Manager instace created" << std::endl;
 }
 
-CmdManager::~CmdManager(void)
-{
+CmdManager::~CmdManager(void) {
 	for (cmdMap::iterator it = commandList_.begin(); it != commandList_.end();
 		 it++) {
 		delete it->second;
@@ -32,20 +31,18 @@ CmdManager::~CmdManager(void)
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-void CmdManager::executeCm(CmdSpec &cm)
-{
+void CmdManager::executeCm(CmdSpec &cm) {
 	if (cm.getValid()) {
 		cm.getExecutor()(cm);
 	}
 	cm.cleanAll();
 }
 
-void CmdManager::generateCmds()
-{
+void CmdManager::generateCmds() {
 	log(CmdSpec::CmdBuilder()
 			.Name("PASS")
 			.Registration(0)
-			.addParam(password, new CmdParam())
+			.addParam(password_, new CmdParam())
 			.addChecker(isRegistered)
 			.addChecker(pwMatch)
 			//.CmExecutor()
@@ -55,7 +52,7 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("NICK")
 			.Registration(1)
-			.addParam(nickname, new CmdParam())
+			.addParam(nickname_, new CmdParam())
 			.addChecker(validNick)
 			// .CmExecutor()
 			.build());
@@ -63,10 +60,10 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("USER")
 			.Registration(2)
-			.addParam(username, new CmdParam())
-			.addParam(hostname, new CmdParam())
-			.addParam(servername, new CmdParam())
-			.addParam(realname, new CmdParam())
+			.addParam(username_, new CmdParam())
+			.addParam(hostname_, new CmdParam())
+			.addParam(servername_, new CmdParam())
+			.addParam(realname_, new CmdParam())
 			.addChecker(isRegistered)
 			.addChecker(validUser)
 			// .CmExecutor()
@@ -76,8 +73,8 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("JOIN")
 			.Registration(3)
-			.addParam(channel, new CmdParam(false, ','))
-			.addParam(key, new CmdParam(true, ',')) //TODO : TRUE = OPTIONNEL
+			.addParam(channel_, new CmdParam(false, ','))
+			.addParam(key_, new CmdParam(true, ','))
 			.addChecker(joinChanRequest)
 			.CmExecutor(handleJoin)
 			.build());
@@ -85,8 +82,8 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("INVITE")
 			.Registration(3)
-			.addParam(target, new CmdParam())
-			.addParam(channel, new CmdParam())
+			.addParam(target_, new CmdParam())
+			.addParam(channel_, new CmdParam())
 			.addChecker(validTarget)
 			.addChecker(validChan)
 			.addChecker(onChan)
@@ -99,9 +96,9 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("KICK")
 			.Registration(3)
-			.addParam(channel, new CmdParam())
-			.addParam(target, new CmdParam(false, ','))
-			.addParam(message, new CmdParam(true, '\0'))
+			.addParam(channel_, new CmdParam())
+			.addParam(target_, new CmdParam(false, ','))
+			.addParam(message_, new CmdParam(true, '\0'))
 			.addChecker(validChan)
 			.addChecker(onChan)
 			.addChecker(hasChanPriv)
@@ -113,11 +110,11 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("MODE")
 			.Registration(3)
-			.addParam(channel, new CmdParam())
-			.addParam(mode_, new CmdParam(true, ' '))
-			.addParam(modeArg, new CmdParam(true, ' '))
+			.addParam(channel_, new CmdParam())
+			.addParam(flag_, new CmdParam(true, ' '))
+			.addParam(flagArg_, new CmdParam(true, ' '))
 			.addChecker(validChan)
-			.addChecker(onChan)
+			.addChecker(onChan) //TODO: verif if necessary
 			.addChecker(hasChanPriv)
 			.addChecker(validMode)
 			// .addChecker(validArg) ?
@@ -127,8 +124,8 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("PART")
 			.Registration(3)
-			.addParam(channel, new CmdParam(false, ','))
-			.addParam(message, new CmdParam(true, '\0'))
+			.addParam(channel_, new CmdParam(false, ','))
+			.addParam(message_, new CmdParam(true, '\0'))
 			.addChecker(validChan)
 			.addChecker(onChan)
 			.CmExecutor(handlePart)
@@ -138,8 +135,8 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("PRIVMSG")
 			.Registration(3)
-			.addParam(target, new CmdParam(false, ','))
-			.addParam(message, new CmdParam())
+			.addParam(target_, new CmdParam(false, ','))
+			.addParam(message_, new CmdParam())
 			.addChecker(validMess)
 			.addChecker(validTarget)
 			.CmExecutor(handlePrivsmg)
@@ -148,14 +145,14 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("QUIT")
 			.Registration(0)
-			.addParam(message, new CmdParam(true, '\0'))
-			// .CmExecutor()
+			.addParam(message_, new CmdParam(true, '\0'))
+			//.CmExecutor()
 			.build());
 
 	log(CmdSpec::CmdBuilder()
 			.Name("TOPIC")
 			.Registration(3)
-			.addParam(channel, new CmdParam())
+			.addParam(channel_, new CmdParam())
 			.addParam(topic_, new CmdParam(true, '\0'))
 			.addChecker(validChan)
 			.addChecker(onChan)
@@ -164,8 +161,7 @@ void CmdManager::generateCmds()
 			.build());
 }
 
-void CmdManager::log(CmdSpec *cm)
-{
+void CmdManager::log(CmdSpec *cm) {
 	commandList_[cm->getName()] = cm;
 }
 
@@ -182,8 +178,7 @@ CmdSpec &CmdManager::findCmd(const std::string &cmName) {
 	return (*it->second);
 }
 
-CmdManager &CmdManager::getManagerInstance()
-{
+CmdManager &CmdManager::getManagerInstance() {
 	static CmdManager instance;
 	return (instance);
 }

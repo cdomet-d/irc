@@ -34,8 +34,7 @@ class CmdManager {
 	/*                               NESTED CLASS                             */
 	class CmdNotFoundException : std::exception {
 	  public:
-		const char *what() const throw()
-		{
+		const char *what() const throw() {
 			return ("Command not found");
 		}
 	};

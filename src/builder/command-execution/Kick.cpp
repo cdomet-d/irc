@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 12:49:49 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:49:35 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,28 +30,28 @@ void kickFromAllMap(Client *target, Channel &curChan)
 
 void handleKick(CmdSpec &cmd)
 {
-	Channel &curChan = findCurChan(cmd[channel][0]);
+	Channel &curChan = findCurChan(cmd[channel_][0]);
 	Client *sender = &cmd.getSender();
-	Client *target_ = NULL;
+	Client *target = NULL;
 
-	for (size_t nbTarget = 0; nbTarget < cmd[target].getSize(); nbTarget++) {
+	for (size_t nbTarget = 0; nbTarget < cmd[target_].getSize(); nbTarget++) {
 		for (clientMapIt targetIt = curChan.getCliInChan().begin();
 			 targetIt != curChan.getCliInChan().end(); ++targetIt) {
-			if (targetIt->second->cliInfo.getNick() == cmd[target][nbTarget]) {
-				target_ = targetIt->second;
+			if (targetIt->second->cliInfo.getNick() == cmd[target_][nbTarget]) {
+				target = targetIt->second;
 				break;
 			}
 		}
-		if (cmd[message].getSize())
+		if (cmd[message_].getSize())
 			sendMessageChannel(
 				curChan.getCliInChan(),
 				RPL_KICK(sender->cliInfo.getPrefix(), curChan.getName(),
-						 target_->cliInfo.getNick(), cmd[message][nbTarget]));
+						 target->cliInfo.getNick(), cmd[message_][nbTarget]));
 		else
 			sendMessageChannel(curChan.getCliInChan(),
 							   RPL_KICK(sender->cliInfo.getPrefix(),
 										curChan.getName(),
-										target_->cliInfo.getNick(), ""));
-		kickFromAllMap(target_, curChan);
+										target->cliInfo.getNick(), ""));
+		kickFromAllMap(target, curChan);
 	}
 }
