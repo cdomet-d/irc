@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/14 14:33:50 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:36:44 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ class Message {
 
 	/*                               GETTERS                                  */
 	size_t getSize() const;
-	std::string getBuffer() const;
-	std::string getCmd() const;
-	stringVec &getCmdParam();
+	const std::string getBuffer() const;
+	const std::string getCmd() const;
+	const stringVec &getCmdParam();
 
 	/*                               SETTERS                                  */
 	void setBuffer(std::string buffer);
@@ -37,7 +37,7 @@ class Message {
 	void clearCmdParam();
 	void clearBuffer();
 
-private:
+  private:
 	Message(const Message &rhs);
 	Message &operator=(const Message &rhs);
 

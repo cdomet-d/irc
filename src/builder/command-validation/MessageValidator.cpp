@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/19 09:45:30 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:06:40 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ bool messageValidator::assess(Client &sender) {
 		sender.mess.setCmdParam(vectorSplit(cmd, ' '));
 		if (sender.mess.getCmd() == "MODE")
 			priv::formatMode(sender);
-		// printCmdParam(sender.mess.getCmdParam(), "After assessing: cmdParam");
 
 		CmdManager &manager = CmdManager::getManagerInstance();
 		try {

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 13:05:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:33:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ bool Server::servRun() {
 void Server::acceptClient() {
 	try {
 		Client *newCli = new Client();
+		newCli->cliInfo.setRegistration(3);
+
 		struct epoll_event cliEpollTemp;
 		socklen_t cliLen = sizeof(newCli->cliAddr_);
 		newCli->setFd(
@@ -148,14 +150,14 @@ bool Server::handleData(int fd) {
 	char tmpBuf[1024];
 	memset(tmpBuf, 0, sizeof(tmpBuf));
 	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, 0);
-	std::string inputCli;
-	inputCli.append(tmpBuf);
 
 	Client *curCli = clients_.find(fd)->second;
 	if (bytes <= 0)
 		return (disconnectCli(fd));
 	else {
-		curCli->mess.setBuffer(curCli->mess.getBuffer().append(tmpBuf, bytes));
+		std::string inputCli = curCli->mess.getBuffer();
+		inputCli.append(tmpBuf);
+		curCli->mess.setBuffer(inputCli);
 		messageValidator::assess(*curCli);
 		curCli->mess.clearBuffer();
 		curCli->mess.clearCmdParam();
@@ -184,10 +186,35 @@ bool Server::handleData(int fd) {
 // 	}
 // }
 
+bool checkOnlyOperator(int fd) {
+	static Server &server = Server::GetServerInstance(0, "");
+
+	clientMap::iterator curCli = server.getAllCli().find(fd);
+	//handleJoin("0", curCli->second);
+	for (stringVec::iterator currChanName =
+			 curCli->second->getJoinedChans().begin();
+		 currChanName != curCli->second->getJoinedChans().end();
+		 ++currChanName) {
+		channelMapIt currChan = server.getAllChan().find(*currChanName);
+		if (!currChan->second->getOpCli().size()) {
+			if (currChan->second->getCliInChan().size() >= 1) {
+				currChan->second->getOpCli().insert(clientPair(
+					currChan->second->getCliInChan().begin()->second->getFd(),
+					currChan->second->getCliInChan().begin()->second));
+				return (true);
+			}
+		}
+	}
+	return (false);
+}
+
 bool Server::disconnectCli(int fd) {
+	checkOnlyOperator(fd);
 	clientMapIt it = clients_.find(fd);
 	if (it != clients_.end()) {
-		std::cout << "Client [" << fd << "] disconnected" << std::endl;
+		std::stringstream ss;
+		ss << "Client [" << it->second->getFd() << "] connected";
+		reply::log(reply::INFO, ss.str());
 		delete it->second;
 		clients_.erase(fd);
 		close(fd);
@@ -213,6 +240,7 @@ Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
 clientMap &Server::getAllCli() {
 	return (clients_);
 }
+
 channelMap &Server::getAllChan() {
 	return (channels_);
 }
@@ -226,4 +254,8 @@ int Server::getFdFromNick(const std::string &nick) const {
 	if (nickInMap != usedNicks_.end())
 		return nickInMap->second;
 	return -1;
+}
+
+std::string Server::getPass() const {
+	return (pass_);
 }

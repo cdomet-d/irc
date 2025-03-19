@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:37:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 13:07:03 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:27:30 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ static std::string timeStamp() {
 }
 
 void reply::send(int fd, std::string reply) {
-	reply::log(INFO, reply);
+	reply::log(reply::INFO, reply);
 	size_t bytes = send(fd, reply.c_str(), strlen(reply.c_str()), MSG_EOR);
 	if (bytes != strlen(reply.c_str()))
 		reply::log(ERROR, "Not send in full: \t", reply);
 }
 
-void reply::log(logLevel level, std::string message) {
+void reply::log(e_level level, std::string message) {
 	Server& serv = Server::GetServerInstance(0, "");
 	if (serv.logfile.is_open()) {
 		switch (level) {
@@ -46,7 +46,7 @@ void reply::log(logLevel level, std::string message) {
 	}
 }
 
-void reply::log(logLevel level, std::string message, std::string verbose) {
+void reply::log(e_level level, std::string message, std::string verbose) {
 	Server& serv = Server::GetServerInstance(0, "");
 	if (serv.logfile.is_open()) {
 		switch (level) {

@@ -6,11 +6,12 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/14 14:46:33 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:41:53 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Message.hpp"
+#include "Server.hpp"
 #include <iostream>
 
 /* ************************************************************************** */
@@ -30,20 +31,20 @@ std::string &Message::operator[](unsigned int i) {
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-stringVec &Message::getCmdParam() {
+const stringVec &Message::getCmdParam() {
 	return cmdParam_;
 }
 
-std::string Message::getCmd() const {
+const std::string Message::getCmd() const {
 	return cmdParam_.at(0);
 }
 
-std::string Message::getBuffer() const {
+const std::string Message::getBuffer() const {
 	return buffer_;
 }
 
 size_t Message::getSize() const {
-	return (cmdParam_.size());
+	return cmdParam_.size();
 }
 
 /* ************************************************************************** */

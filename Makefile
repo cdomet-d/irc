@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/19 09:45:53 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/19 15:43:23 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,12 +53,16 @@ CLI_SRC:=			Client.cpp \
 					Message.cpp \
 					UserInfo.cpp \
 
-BUILD_EXE_SRC:=		Join.cpp \
-					NickUser.cpp \
-					Privmsg.cpp \
-					Topic.cpp \
-					Part.cpp \
-					Mode.cpp \
+BUILD_EXE_SRC:=			Join.cpp \
+						NickUser.cpp \
+						Privmsg.cpp \
+						Topic.cpp \
+						Part.cpp \
+						Mode.cpp \
+						Invite.cpp \
+						Kick.cpp \
+						Who.cpp \
+						Pass.cpp \
 
 BUILD_VAL_SRC:=			CmdManager.cpp \
 						CmdSpec.cpp \
@@ -89,7 +93,7 @@ OBJ:=$(addprefix $(BDIR), $(SRC:%.cpp=%.o))
 DEPS:=$(OBJ:%.o=%.d)
 
 $(NAME): $(OBJ)
-	$(RM) rawlog.log
+	$(RM) raw.log
 	@echo
 	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(NAME)... --------------------"
 	$(CC) $(OBJ) -o $(NAME)
@@ -112,7 +116,7 @@ DOBJ:=$(addprefix $(DBDIR), $(SRC:%.cpp=%.o))
 DDEPS:=$(DOBJ:%.o=%.d)
 
 $(DEBUG_NAME): $(DOBJ)
-	$(RM) rawlog.log
+	$(RM) raw.log
 	@echo
 	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(DEBUG_NAME)... --------------"
 	$(CC) $(DFLAGS) $(DOBJ) -o $(DEBUG_NAME)
@@ -140,7 +144,7 @@ clean:
 # ----------------------------- MAKE FCLEAN  --------------------------------- #
 
 fclean: clean
-	$(RM) rawlog.log
+	$(RM) raw.log
 	$(RM) $(NAME)
 	$(RM) $(DEBUG_NAME)
 	@echo
@@ -162,11 +166,11 @@ info:
 # ----------------------------- RUN ------------------------------------------ #
 
 run: all
-	./$(NAME) 6667 0
+	./$(NAME) 4444 0
 
 VFLAGS:= --leak-check=full --show-leak-kinds=all
 drun: debug
-	valgrind ./$(DEBUG_NAME) 6667 0
+	valgrind ./$(DEBUG_NAME) 4444 0
 
 # $(VFLAGS)
 # ---------------------------------------------------------------------------- #

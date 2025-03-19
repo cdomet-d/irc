@@ -22,13 +22,15 @@ CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
 	  name_(name), registrationStage_(registrationStage), params_(params),
 	  checkers_(checkers), cmExecutor_(cmExecutor) {}
 
-CmdSpec::~CmdSpec(void) {
+CmdSpec::~CmdSpec(void)
+{
 	for (paramMap::iterator it = params_.begin(); it != params_.end(); it++) {
 		delete it->second;
 	}
 }
 
-CmdParam &CmdSpec::operator[](e_param type) {
+CmdParam &CmdSpec::operator[](e_param type)
+{
 	for (size_t i = 0; i < params_.size(); i++) {
 		if (params_[i].first == type)
 			return ((*params_[i].second));
@@ -39,7 +41,8 @@ CmdParam &CmdSpec::operator[](e_param type) {
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-bool CmdSpec::enoughParams() {
+bool CmdSpec::enoughParams()
+{
 	if (name_ == "INVITE" && !(*this)[target].getSize() &&
 		!(*this)[channel].getSize())
 		return (true);
@@ -110,13 +113,15 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	return (*this);
 }
 
-void CmdSpec::cleanAll(void) {
+void CmdSpec::cleanAll(void)
+{
 	for (size_t i = 0; i < params_.size(); i++) {
 		(*params_[i].second).clean();
 	}
 }
 
-static std::string enumToString(e_param color) {
+static std::string enumToString(e_param color)
+{
 	switch (color) {
 	case 0:
 		return "channel";
@@ -168,41 +173,49 @@ void CmdSpec::displayParams(void) {
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-const std::string &CmdSpec::getName(void) const {
+const std::string &CmdSpec::getName(void) const
+{
 	return (name_);
 }
 
-bool CmdSpec::getValid(void) const {
+bool CmdSpec::getValid(void) const
+{
 	return (valid_);
 }
 
-void (*CmdSpec::getExecutor(void) const)(CmdSpec &cmd) {
+void (*CmdSpec::getExecutor(void) const)(CmdSpec &cmd)
+{
 	return (cmExecutor_);
 }
 
-const Client &CmdSpec::getSender(void) const {
+Client &CmdSpec::getSender(void) const
+{
 	return (*sender_);
 }
 
-const paramMap &CmdSpec::getParams(void) const {
+const paramMap &CmdSpec::getParams(void) const
+{
 	return (params_);
 }
 
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
-void CmdSpec::setSender(Client &sender) {
+void CmdSpec::setSender(Client &sender)
+{
 	sender_ = &sender;
 }
 
-void CmdSpec::setValid(bool valid) {
+void CmdSpec::setValid(bool valid)
+{
 	valid_ = valid;
 }
 
 /* ************************************************************************** */
 /*                               NESTED CLASS                                 */
 /* ************************************************************************** */
-CmdSpec::CmdBuilder::CmdBuilder(void) {
+CmdSpec::CmdBuilder::CmdBuilder(void)
+{
 	name_ = "";
 	registrationStage_ = 0;
 	cmExecutor_ = NULL;
@@ -211,12 +224,14 @@ CmdSpec::CmdBuilder::CmdBuilder(void) {
 CmdSpec::CmdBuilder::~CmdBuilder(void) {}
 
 /* methods */
-CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Name(const std::string &name) {
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Name(const std::string &name)
+{
 	name_ = name;
 	return (*this);
 }
 
-CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Registration(int stage) {
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Registration(int stage)
+{
 	registrationStage_ = stage;
 	return (*this);
 }
@@ -232,12 +247,14 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(bool (*ft)(CmdSpec &cmd)) {
 	return (*this);
 }
 
-CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::CmExecutor(void (*ft)(CmdSpec &cmd)) {
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::CmExecutor(void (*ft)(CmdSpec &cmd))
+{
 	cmExecutor_ = ft;
 	return (*this);
 }
 
-CmdSpec *CmdSpec::CmdBuilder::build() {
+CmdSpec *CmdSpec::CmdBuilder::build()
+{
 	return (new CmdSpec(name_, registrationStage_, params_, checkers_,
 						cmExecutor_));
 }

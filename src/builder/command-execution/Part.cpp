@@ -6,58 +6,35 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 09:40:47 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:19:39 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#include "CmdSpec.hpp"
 #include "Reply.hpp"
-#include <sstream>
+#include "Server.hpp"
 
-//use the define for the map of client and channel
-bool handlePart(std::string params, Client *curCli) {
-	
-	static Server &server = Server::GetServerInstance(0, "");
+void handlePart(CmdSpec &cmd)
+{
+	Client *sender = &cmd.getSender();
+	Channel &curChan = findCurChan(cmd[channel][0]);
 
-	std::istringstream iss(params);
-	std::string chanName;
-	std::string reason;
+	if (!cmd[message].getSize())
+		sendMessageChannel(
+			curChan.getCliInChan(),
+			RPL_PARTNOREASON(sender->cliInfo.getPrefix(), curChan.getName()));
+	else
+		sendMessageChannel(curChan.getCliInChan(),
+						   RPL_PARTREASON(sender->cliInfo.getPrefix(),
+										  curChan.getName(), cmd[message][0]));
 
-	iss >> chanName;
-	std::getline(iss, reason);
+	int targetFd = sender->getFd();
 
-	//needMoreParams
-	if (chanName.empty() == true) {
-		reply::send(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->cliInfo.getNick(), "PART"));
-		// log(DEBUG, "PART", "ERR_NEEDMOREPARAMS");
-		return (false);
+	curChan.getCliInChan().erase(targetFd);
+	reply::log(reply::DEBUG, "erase client from channel");
+
+	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end()) {
+		curChan.getOpCli().erase(targetFd);
+		reply::log(reply::DEBUG, "erase client from op");
 	}
-
-	//noSuchChannel
-	channelMapIt curChan = server.getAllChan().find(chanName);
-	if (curChan== server.getAllChan().end()) {
-		reply::send(curCli->getFd(), ERR_NOSUCHCHANNEL(curCli->cliInfo.getNick(), chanName));
-		// log(DEBUG, "PART", "ERR_NOSUCHCHANNEL");
-		return (false);
-	}
-
-	//notOnChannel
-	clientMapIt senderIt = curChan->second->getCliInChan().find(curCli->getFd());
-	if (senderIt == curChan->second->getCliInChan().end()) {
-		reply::send(curCli->getFd(), ERR_NOTONCHANNEL(curCli->cliInfo.getNick(), chanName));
-		// log(DEBUG, "PART", "ERR_NOTONCHANNEL");
-		return (false);
-	}
-	
-	for (clientMapIt itCli =
-			curChan->second->getCliInChan().begin();
-		itCli != curChan->second->getCliInChan().end(); ++itCli) {
-		if (reason.empty() == true)
-			reply::send(itCli->second->getFd(), RPL_PARTNOREASON(curCli->cliInfo.getPrefix(), chanName));
-		else
-			reply::send(itCli->second->getFd(), RPL_PARTREASON(curCli->cliInfo.getPrefix(), chanName, reason));
-	}
-
-	curChan->second->getCliInChan().erase(senderIt);
-	return (true);
 }
