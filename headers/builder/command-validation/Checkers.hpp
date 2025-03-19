@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 15:49:12 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/19 16:50:18 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:52:44 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #define CHECKERS_HPP
 #define CHECKERS_HPP
 
-#include "Channel.hpp"
 #include "CmdSpec.hpp"
 class CmdSpec;
 
@@ -31,12 +30,5 @@ bool validMode(CmdSpec &cmd);		// Coralie
 bool validNick(CmdSpec &cmd);		// Coralie
 bool validTarget(CmdSpec &cmd);		// Coralie
 bool validUser(CmdSpec &cmd);		// Coralie
-
-// namespace joinChecker {
-// 	bool reachedChanLimit(Channel &chan);
-// 	bool hasInvite(Channel &chan, Client &sender);
-// 	bool hasKey(Channel &chan, CmdParam &keys, size_t i);
-// 	bool reachedCliChanLimit(Client &sender);
-// };
 
 #endif

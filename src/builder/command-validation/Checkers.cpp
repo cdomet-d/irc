@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/19 17:07:10 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/19 18:37:13 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,21 @@ bool validChan(CmdSpec &cmd) {
 	return (0);
 }
 
+bool validRequest(Channel chan, CmdSpec &cmd) {
+	Server &serv = Server::GetServerInstance(0, "");
+	
+	//TODO: faire un tableau de pointeur sur fonction. ou appeler chaque fonction dans des if
+	if (onChan(cmd))
+		return (false);
+	if (chan.getModes().find('i') != std::string::npos) {
+		//faire hasInvite
+	}
+	else if (chan.getModes().find('k') != std::string::npos) {
+		//faire valid key
+	}
+	return (true);
+}
+
 bool joinChanRequest(CmdSpec &cmd) {
 	channelMap::iterator itChan;
 
@@ -70,37 +85,8 @@ bool joinChanRequest(CmdSpec &cmd) {
 		itChan = cmd.server_.getAllChan().find(cmd[channel_][i]);
 		if (itChan == cmd.server_.getAllChan().end())
 			continue;
-		Channel chan = *itChan->second;
-		//TODO: faire un tableau de pointeur sur fonction. chaque fonction est un des if ci-dessous
-		//faire un namespace
-		//boucler sur le tableau et si une fonction renvoie false faire rmParam et continue;
-		if (!onChan(cmd)) {
-			if (chan.getCliInChan().size() < chan.getMaxCli()) {
-				if (chan.getModes().find('i') == std::string::npos ||
-					(chan.getModes().find('i') != std::string::npos
-					 /*&& sender has an invite*/)) {
-					if (chan.getModes().find('k') == std::string::npos ||
-						(chan.getModes().find('k') != std::string::npos &&
-						 i < cmd[key_].getSize() &&
-						 chan.getPassword() == cmd[key_][i])) {
-						//TODO: faire un define pour client chan limit
-						if (cmd.getSender().getJoinedChans().size() < 50)
-							continue;
-						reply::send(cmd.getSender().getFd(),
-								  ERR_TOOMANYCHANNELS(chan.getName()));
-					}
-					reply::send(
-						cmd.getSender().getFd(),
-						ERR_BADCHANNELKEY(cmd.getSender().cliInfo.getNick(),
-										  chan.getName()));
-				}
-				reply::send(cmd.getSender().getFd(),
-						  ERR_INVITEONLYCHAN(chan.getName()));
-			}
-			reply::send(cmd.getSender().getFd(),
-					  ERR_CHANNELISFULL(chan.getName()));
-		}
-		cmd[channel_].rmParam(i);
+		if (!validRequest(*itChan->second, cmd))
+			cmd[channel_].rmParam(i);
 	}
 	if (!cmd[channel_].getSize())
 		return (false);
