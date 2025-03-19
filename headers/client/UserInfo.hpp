@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserInfo.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/13 10:32:37 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:00:05 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ class UserInfo {
 	void setUsername(const std::string &username);
 
   private:
-	int	registration_;
+	int registration_;
 	std::string hostname_;
 	std::string ip_;
 	std::string name_;

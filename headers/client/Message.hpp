@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/14 14:33:50 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:00:03 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ class Message {
 	void clearCmdParam();
 	void clearBuffer();
 
-private:
+  private:
 	Message(const Message &rhs);
 	Message &operator=(const Message &rhs);
 

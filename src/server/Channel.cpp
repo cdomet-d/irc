@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 10:17:23 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/18 09:11:17 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,42 +18,47 @@
 /* ************************************************************************** */
 
 Channel::Channel(std::string name)
-	: inviteOnly_(false), isPassMatch_(false), topicRestrict_(false),
-	  maxCli_(0), name_(name), topic_("")
+	: inviteOnly_(false), isPassMatch_(false), topicRestrict_(true), maxCli_(0),
+	  name_(name), topic_("")
 {
 	setModes();
 }
 
 Channel::~Channel(void)
 {
-	// log(INFO, "Channel deleted:", this->getName());
+	// logLevel(INFO, "Channel deleted:", this->getName());
 }
 
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
+void sendMessageChannel(clientMap allCliChannel, std::string message)
+{
+	for (clientMapIt it = allCliChannel.begin(); it != allCliChannel.end();
+		 ++it) {
+		sendReply(it->second->getFd(), message);
+	}
+}
+
 bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 {
-	// log(DEBUG, "-----addClientToChan-----");
-
+	// logLevel(DEBUG, "-----addClientToChan-----");
 	std::map< int, Client * > &clients = curChan->getCliInChan();
 	for (clientMapIt it = clients.begin(); it != clients.end(); ++it)
 		if (curCli == it->second) {
-			// log(INFO, "Client already in channel");
+			// logLevel(INFO, "Client already in channel");
 			return (false);
 		}
-
 	if (curChan->getCliInChan().empty())
 		curChan->getOpCli().insert(clientPair(curCli->getFd(), curCli));
 	curChan->getCliInChan().insert(clientPair(curCli->getFd(), curCli));
 	curCli->getJoinedChans().push_back(curChan->getName());
 
-	for (clientMapIt itCli = curChan->getCliInChan().begin();
-		 itCli != curChan->getCliInChan().end(); ++itCli) {
-		sendReply(itCli->second->getFd(),
-				  RPL_JOIN(curCli->cliInfo.getNick(), curChan->getName()));
-	}
+	//messageToAllChannel
+	sendMessageChannel(curChan->getCliInChan(),
+					   RPL_JOIN(curCli->cliInfo.getNick(), curChan->getName()));
+
 	if (curChan->getTopic().empty() == true)
 		sendReply(curCli->getFd(),
 				  RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan->getName()));
@@ -99,6 +104,10 @@ clientMap &Channel::getCliInChan()
 clientMap &Channel::getOpCli()
 {
 	return (cliIsOperator_);
+}
+clientMap &Channel::getInvitCli()
+{
+	return (cliInvited_);
 }
 std::string Channel::getPassword() const
 {
