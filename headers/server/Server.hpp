@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 10:13:27 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 12:57:44 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ class Server {
 
 	/*                               MEMBERS                                  */
 	std::ofstream logfile;
+	
 
   private:
 	/*                               METHODS                                  */

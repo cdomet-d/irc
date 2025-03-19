@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 10:18:12 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 13:05:01 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 /* ************************************************************************** */
 
 Server::Server(int port, std::string password)
-	: logfile("rawlog.log", std::ios::out | std::ios::app), port_(port),
+	: logfile("raw.log", std::ios::out | std::ios::app), port_(port),
 	  pass_(password) {
 	std::cout << "Server instance created" << std::endl;
 }

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 09:22:17 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 13:07:40 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@ void SignalHandler(int signum) {
 }
 
 int main(int ac, char *av[]) {
-	if (ac < 3)
+	if (ac < 3) {
 		std::cerr << "Expected <port> <password>" << std::endl;
+		return 1;
+	}
 
 	signal(SIGINT, SignalHandler);
 	signal(SIGQUIT, SignalHandler);
