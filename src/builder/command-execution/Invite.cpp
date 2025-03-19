@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/03/19 16:54:44 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:06:13 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void handleInvite(CmdSpec &cmd)
 	}
 
 	reply::send(sender->getFd(),
-			  RPL_INVITING(targetCli->cliInfo.getNick(), cmd[channel][0]));
+			  RPL_INVITING(targetCli->cliInfo.getNick(), cmd[channel_][0]));
 	reply::send(targetCli->getFd(),
 			  RPL_INVITE(sender->cliInfo.getNick(),
 						 targetCli->cliInfo.getNick(), cmd[channel_][0]));
