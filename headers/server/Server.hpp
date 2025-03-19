@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 17:00:17 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:20:42 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,12 @@
 #include "typedef.hpp"
 #include <arpa/inet.h>
 #include <cstring>
+#include <fstream>
 #include <netinet/in.h>
 #include <poll.h>
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
-
-enum logEnum { INFO, ERROR, DEBUG };
 
 extern int gSign;
 
@@ -53,12 +52,17 @@ class Server {
 	bool servInit();
 	bool servRun();
 	void acceptClient();
-	void processBuffer(Client *curCli);
 
 	/*                               GETTERS                                  */
-	clientMap &getAllCli();
 	channelMap &getAllChan();
+	clientMap &getAllCli();
+	const nickMap &getUsedNick() const;
+	int getFdFromNick(const std::string &nick) const;
 	std::string getPass() const;
+
+	/*                               MEMBERS                                  */
+	std::ofstream logfile;
+	
 
   private:
 	/*                               METHODS                                  */
@@ -76,7 +80,7 @@ class Server {
 
 	clientMap clients_;
 	channelMap channels_;
-	stringVec usedNicks_;
+	nickMap usedNicks_;
 
 	// private constructor
 	Server(void);
@@ -93,9 +97,5 @@ bool handlePrivsmg(std::string params, Client *curCli);
 bool handleWho(std::string params, Client *curCli);
 //PASS
 bool handlePass(std::string params, Client *curCli);
-
-/*                               DEBUG                                  */
-void logLevel(logEnum level, std::string message);
-void logLevel(logEnum level, std::string message, std::string additionalInfo);
 
 #endif //SERVER_HPP

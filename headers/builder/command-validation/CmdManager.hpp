@@ -26,12 +26,10 @@ class CmdManager {
 	~CmdManager(void);
 
 	/*                               METHODS                                  */
+	CmdSpec &findCmd(const std::string &cmName);
 	void executeCm(CmdSpec &cm);
 	void generateCmds();
 	void log(CmdSpec *cm);
-
-	/*                               GETTERS                                  */
-	CmdSpec &getCmd(const std::string &cmName);
 
 	/*                               NESTED CLASS                             */
 	class CmdNotFoundException : std::exception {

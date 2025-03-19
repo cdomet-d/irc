@@ -3,96 +3,99 @@
 /*                                                        :::      ::::::::   */
 /*   Checkers.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/18 17:00:49 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:01:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Checkers.hpp"
+#include "Reply.hpp"
+#include "syntaxCheck.hpp"
 
-int pwMatch(CmdSpec &cmd)
-{
+bool pwMatch(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int isRegistered(CmdSpec &cmd)
-{
+bool isRegistered(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int validNick(CmdSpec &cmd)
-{
+bool validNick(CmdSpec &cmd) {
+	std::string nick = cmd[nickname][0];
+	if (nick.size() > 9) {
+		nick = syntaxCheck::nick::trim(nick);
+		cmd[nickname].rmParam(0);
+		cmd[nickname].setOneParam(nick);
+
+	}
+	if (!syntaxCheck::nick::isValid(nick, cmd))
+		return false;
+	if (conflictCheck::nick::inUse(nick, cmd.server_.getUsedNick(), cmd.getSender().getFd()))
+		return false;
+	reply::send(reply::INFO, cmd[nickname][0] + " is valid nickname\n");
+	return true;
+}
+
+bool validUser(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int validUser(CmdSpec &cmd)
-{
-	(void)cmd;
+bool validChan(CmdSpec &cmd) {
+	stringVec param = cmd[channel].getInnerParam();
+	messageValidator::printCmdParam(param, "innerParam");
 	return (0);
 }
 
-int validChan(CmdSpec &cmd)
-{
-	(void)cmd;
-	return (0);
-}
-
-int joinChanRequest(CmdSpec &cmd)
-{
-	for (size_t i = 0; i < cmd[channel].getSize(); i++)
-		if (cmd[channel][i][0] != '#') {
-			std::cout << ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
-										   cmd[channel][i]);
-		}
+bool joinChanRequest(CmdSpec &cmd) {
+	if (validChan(cmd)) {
+		for (size_t i = 0; i < cmd[channel].getSize(); i++)
+			if (cmd[channel][i][0] != '#') {
+				ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
+								  cmd[channel][i]);
+			}
+	}
 	//supprimer chaque channel faux, (ainsi que toutes les keys ? peut etre pas necessaire)
 	//pour qu'il reste que les channel valide a join pour l'exec
 	//s'ils ont tous ete supprimes mettre valid a false
 	return (0);
 }
 
-int validTarget(CmdSpec &cmd)
-{
+bool validTarget(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int validInvite(CmdSpec &cmd)
-{
+bool validInvite(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int onChan(CmdSpec &cmd)
-{
+bool onChan(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int hasChanPriv(CmdSpec &cmd)
-{
+bool hasChanPriv(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int validKick(CmdSpec &cmd)
-{
+bool validKick(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int validMode(CmdSpec &cmd)
-{
+bool validMode(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }
 
-int validMess(CmdSpec &cmd)
-{
+bool validMess(CmdSpec &cmd) {
 	(void)cmd;
 	return (0);
 }

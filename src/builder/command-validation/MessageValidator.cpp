@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageValidator.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/18 17:00:59 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:03:36 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,35 +20,62 @@
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
-bool MessageValidator::assess(Client &sender)
-{
-	sender.mess.setBuffer(removeNewlines(sender.mess.getBuffer()));
+//TODO: handle single buffer for CAP NICK USER
+bool messageValidator::assess(Client &sender) {
 	std::string message = sender.mess.getBuffer();
 
-	std::cout << "Message	[" + message + "]" << std::endl;
-	if (lenIsValid(message, sender) == false)
-		return false;
-	if (hasPrefix(message, sender.cliInfo.getPrefix()) == false)
-		return false;
-	sender.mess.setCmdParam(vectorSplit(message, ' '));
-	if (sender.mess.getCmd() == "MODE")
-		formatMode(sender);
-	printCmdParam(sender.mess.getCmdParam(), "cmdParam");
+	while (!message.empty()) {
+		std::string cmd = priv::removeNewlines(message);
+		if (cmd.find("CAP") != std::string::npos)
+			continue;
+		std::cout << "Extracted	[" + cmd + "]" << std::endl;
+		std::cout << "Remainder	" + message << std::endl;
+		if (priv::lenIsValid(cmd, sender) == false)
+			return false;
+		if (priv::hasPrefix(cmd, sender.cliInfo.getPrefix()) == false)
+			return false;
+		sender.mess.setCmdParam(vectorSplit(cmd, ' '));
+		if (sender.mess.getCmd() == "MODE")
+			priv::formatMode(sender);
 
-	CmdManager &manager = CmdManager::getManagerInstance();
-	try {
-
-		manager.executeCm(manager.getCmd(sender.mess.getCmd()).process(sender));
-
-	} catch (const CmdManager::CmdNotFoundException &e) {
-		std::cout << ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
-										sender.mess.getCmd());
+		CmdManager &manager = CmdManager::getManagerInstance();
+		try {
+			manager.executeCm(
+				manager.findCmd(sender.mess.getCmd()).process(sender));
+		} catch (const CmdManager::CmdNotFoundException &e) {
+			reply::send(sender.getFd(),
+					  ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
+										 sender.mess.getCmd()));
+		}
 	}
 	return true;
 }
 
-void MessageValidator::formatMode(Client &sender)
-{
+stringVec messageValidator::vectorSplit(std::string &s, char del) {
+	stringVec result;
+	std::string token, trailing;
+
+	priv::hasTrailing(s, trailing);
+	std::istringstream stream(s);
+	while (std::getline(stream, token, del))
+		result.push_back(token);
+	if (!trailing.empty())
+		result.push_back(trailing);
+	return (result);
+}
+
+void messageValidator::printCmdParam(const stringVec &obj, std::string where) {
+	std::cout << "[" << std::endl;
+	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it) {
+		if ((*it).empty())
+			std::cout << "\t" + where + ":\t" << "[...]" << std::endl;
+		else
+			std::cout << "\t" + where + ":\t" << *it << std::endl;
+	}
+	std::cout << "]" << std::endl;
+}
+
+void messageValidator::priv::formatMode(Client &sender) {
 	stringVec mode = sender.mess.getCmdParam();
 	if (mode.size() < 2)
 		return;
@@ -82,9 +109,8 @@ void MessageValidator::formatMode(Client &sender)
 	sender.mess.setCmdParam(modeFormat);
 }
 
-bool MessageValidator::hasPrefix(std::string &mess,
-								 const std::string &cliPrefix)
-{
+bool messageValidator::priv::hasPrefix(std::string &mess,
+									   const std::string &cliPrefix) {
 	if (mess.at(0) == ':') {
 		std::string::size_type sep = mess.find(" ");
 		if (sep != std::string::npos) {
@@ -98,8 +124,8 @@ bool MessageValidator::hasPrefix(std::string &mess,
 	return true;
 }
 
-bool MessageValidator::hasTrailing(std::string &mess, std::string &trailing)
-{
+bool messageValidator::priv::hasTrailing(std::string &mess,
+										 std::string &trailing) {
 	std::string::size_type trail = mess.find(" :");
 
 	if (trail != std::string::npos) {
@@ -110,50 +136,25 @@ bool MessageValidator::hasTrailing(std::string &mess, std::string &trailing)
 	return false;
 }
 
-bool MessageValidator::lenIsValid(const std::string &mess, const Client &sender)
-{
+bool messageValidator::priv::lenIsValid(const std::string &mess,
+										const Client &sender) {
 	if (mess.empty())
 		return false;
 	if (mess.size() > 512) {
-		sendReply(sender.getFd(), sender.cliInfo.getNick());
+		reply::send(sender.getFd(), ERR_INPUTTOOLONG(sender.cliInfo.getNick()));
 		return false;
 	}
 	return true;
 }
 
-stringVec MessageValidator::vectorSplit(std::string &s, char del)
-{
-	stringVec result;
-	std::string token, trailing;
+std::string messageValidator::priv::removeNewlines(std::string &input) {
 
-	hasTrailing(s, trailing);
-	std::istringstream stream(s);
-	while (std::getline(stream, token, del))
-		result.push_back(token);
-	if (!trailing.empty())
-		result.push_back(trailing);
-	return (result);
-}
-
-std::string MessageValidator::removeNewlines(const std::string &input)
-{
-	std::string result;
-	for (size_t i = 0; i < input.length(); ++i) {
-		if (input[i] != '\r' && input[i] != '\n') {
-			result += input[i];
-		}
+	std::string::size_type newline = input.find(MESSAGE_TERMINATION);
+	if (newline == std::string::npos) {
+		input.erase(input.begin(), input.end());
+		return (input);
 	}
+	std::string result = input.substr(0, newline);
+	input.erase(input.begin(), (input.begin() + newline + 2));
 	return result;
-}
-
-void MessageValidator::printCmdParam(const stringVec &obj, std::string where)
-{
-	std::cout << "[" << std::endl;
-	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it) {
-		if ((*it).empty())
-			std::cout << "\t" + where + ":\t" << "[...]" << std::endl;
-		else
-			std::cout << "\t" + where + ":\t" << *it << std::endl;
-	}
-	std::cout << "]" << std::endl;
 }

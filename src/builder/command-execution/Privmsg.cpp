@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 12:46:43 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:14:24 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void handlePrivsmg(CmdSpec &cmd)
 		for (clientMapIt itTarget = server.getAllCli().begin();
 			 itTarget != server.getAllCli().end(); ++itTarget) {
 			if (itTarget->second->cliInfo.getNick() == cmd[target][0]) {
-				sendReply(itTarget->first,
+				reply::send(itTarget->first,
 						  RPL_PRIVMSG(sender->cliInfo.getPrefix(),
 									  itTarget->second->cliInfo.getNick(),
 									  cmd[message][0]));
@@ -35,7 +35,7 @@ void handlePrivsmg(CmdSpec &cmd)
 	for (clientMapIt itCli = curChan.getCliInChan().begin();
 		 itCli != curChan.getCliInChan().end(); ++itCli) {
 		if (itCli->first != sender->getFd())
-			sendReply(itCli->second->getFd(),
+			reply::send(itCli->second->getFd(),
 					  RPL_PRIVMSG(sender->cliInfo.getPrefix(),
 								  curChan.getName(), cmd[message][0]));
 	}

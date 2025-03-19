@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Who.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 17:00:47 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:26:14 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ bool handleWho(std::string params, Client *curCli)
 
 	//is there enough params
 	if (channel.empty() == true) {
-		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(command));
+		reply::send(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->cliInfo.getNick(), command));
 		return (false);
 	}
 
 	//does channel exists
 	channelMapIt curChan = server.getAllChan().find(channel);
 	if (curChan == server.getAllChan().end()) {
-		sendReply(curCli->getFd(),
+		reply::send(curCli->getFd(),
 				  ERR_NOSUCHCHANNEL(curCli->cliInfo.getNick(), channel));
 		return (false);
 	}
@@ -42,7 +42,7 @@ bool handleWho(std::string params, Client *curCli)
 	clientMapIt senderIt =
 		curChan->second->getCliInChan().find(curCli->getFd());
 	if (senderIt == curChan->second->getCliInChan().end()) {
-		sendReply(curCli->getFd(),
+		reply::send(curCli->getFd(),
 				  ERR_NOTONCHANNEL(curCli->cliInfo.getNick(), channel));
 		return (false);
 	}
@@ -65,9 +65,9 @@ bool handleWho(std::string params, Client *curCli)
 	}
 
 	// Send the full list
-	sendReply(curCli->getFd(),
+	reply::send(curCli->getFd(),
 			  RPL_NAMREPLY(curCli->cliInfo.getNick(), "=", channel, nickList));
-	sendReply(curCli->getFd(),
+	reply::send(curCli->getFd(),
 			  RPL_ENDOFNAMES(curCli->cliInfo.getNick(), channel));
 
 	return (true);

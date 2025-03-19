@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 17:07:34 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:33:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,15 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 
-Server::Server(int port, std::string password) : port_(port), pass_(password)
-{}
-// Server::Server(void) : port_(0), pass_("") {}
+Server::Server(int port, std::string password)
+	: logfile("raw.log", std::ios::out | std::ios::app), port_(port),
+	  pass_(password) {
+	std::cout << "Server instance created" << std::endl;
+}
 
-Server::~Server(void)
-{
+Server::~Server(void) {
 	std::cout << "Calling destructor" << std::endl;
+	logfile.close();
 	for (clientMapIt it = clients_.begin(); it != clients_.end(); ++it) {
 		it->second->cliInfo.getNick().clear();
 		it->second->cliInfo.getUsername().clear();
@@ -38,8 +40,7 @@ Server::~Server(void)
 	close(servFd_);
 }
 
-Server &Server::GetServerInstance(int port, std::string password)
-{
+Server &Server::GetServerInstance(int port, std::string password) {
 	static Server instance(port, password);
 	return (instance);
 }
@@ -48,8 +49,7 @@ Server &Server::GetServerInstance(int port, std::string password)
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
-bool Server::servInit()
-{
+bool Server::servInit() {
 	int en = 1;
 
 	epollFd_ = epoll_create1(0);
@@ -73,15 +73,12 @@ bool Server::servInit()
 	servPoll_.events = POLLIN;
 	if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, servFd_, &servPoll_) == -1)
 		return 0;
-	// logLevel(INFO, "IRC server initialized");
 	return (true);
 }
 
-bool Server::servRun()
-{
+bool Server::servRun() {
 	int nbFds;
 
-	// logLevel(INFO, "Loop IRC server started");
 	std::cout << "Server listening on port " << port_
 			  << " | IP adress: " << inet_ntoa(servAddr_.sin_addr) << std::endl;
 	while (gSign == false) {
@@ -98,10 +95,8 @@ bool Server::servRun()
 	return (true);
 }
 
-void Server::acceptClient()
-{
+void Server::acceptClient() {
 	try {
-		// logLevel(INFO, "Accepting new client");
 		Client *newCli = new Client();
 		newCli->cliInfo.setRegistration(3);
 
@@ -127,7 +122,7 @@ void Server::acceptClient()
 		} else {
 			newCli->cliInfo.setHostname(client_ip); // Use IP as fallback
 		}
-		//TODO: not throw an expection when a client cannot connect: it can't kill the server.
+		//TODO: not throw an exeption when a client cannot connect: it can't kill the server.
 		if (fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK) == -1) {
 			close(newCli->getFd());
 			throw Server::InitFailed(
@@ -145,63 +140,53 @@ void Server::acceptClient()
 		}
 
 		clients_.insert(clientPair(newCli->getFd(), newCli));
-		usedNicks_.push_back(newCli->cliInfo.getNick());
+		usedNicks_.insert(nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected";
-		logLevel(INFO, ss.str());
-		sendReply(newCli->getFd(), NOTICE_REQUIRE_PASSWORD());
-	} catch (std::exception &e) {
-		std::cerr << e.what() << std::endl;
-	}
+	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
 }
 
-bool Server::handleData(int fd)
-{
-	// logLevel(INFO, "-----handleData-----");
-
+bool Server::handleData(int fd) {
 	char tmpBuf[1024];
 	memset(tmpBuf, 0, sizeof(tmpBuf));
 	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, 0);
-	std::string inputCli;
-	inputCli.append(tmpBuf);
 
 	Client *curCli = clients_.find(fd)->second;
 	if (bytes <= 0)
 		return (disconnectCli(fd));
 	else {
-		curCli->mess.setBuffer(curCli->mess.getBuffer().append(tmpBuf, bytes));
-		processBuffer(curCli);
+		std::string inputCli = curCli->mess.getBuffer();
+		inputCli.append(tmpBuf);
+		curCli->mess.setBuffer(inputCli);
+		messageValidator::assess(*curCli);
+		curCli->mess.clearBuffer();
+		curCli->mess.clearCmdParam();
 	}
 	return (true);
 }
 
-void Server::processBuffer(Client *curCli)
-{
-	logLevel(INFO, "-----processBuffer-----");
+// void Server::processBuffer(Client *curCli) {
+// 	size_t pos;
+// 	while ((pos = curCli->mess.getBuffer().find('\n')) != std::string::npos) {
+// 		if (!curCli->mess.getBuffer().find("QUIT")) {
+// 			std::cout << "Exit server" << std::endl;
+// 			disconnectCli(curCli->getFd());
+// 			return;
+// 		}
+// 		if (curCli->mess.getBuffer().find("CAP LS") != std::string::npos ||
+// 			curCli->mess.getBuffer().find("NICK") != std::string::npos ||
+// 			curCli->mess.getBuffer().find("USER") != std::string::npos) {
+// 			handleClientRegistration(curCli->mess.getBuffer(), curCli);
+// 			curCli->mess.setBuffer("");
+// 			return;
+// 		} else {
+// 			curCli->mess.setBuffer("");
+// 			return;
+// 		}
+// 	}
+// }
 
-	size_t pos;
-	while ((pos = curCli->mess.getBuffer().find('\n')) != std::string::npos) {
-		if (!curCli->mess.getBuffer().find("QUIT")) {
-			std::cout << "Exit server" << std::endl;
-			disconnectCli(curCli->getFd());
-			return;
-		}
-		if (curCli->mess.getBuffer().find("CAP LS") != std::string::npos ||
-			curCli->mess.getBuffer().find("NICK") != std::string::npos ||
-			curCli->mess.getBuffer().find("USER") != std::string::npos) {
-			handleClientRegistration(curCli->mess.getBuffer(), curCli);
-			curCli->mess.setBuffer("");
-			return;
-		} else {
-			MessageValidator::assess(*curCli);
-			curCli->mess.setBuffer("");
-			return;
-		}
-	}
-}
-
-bool checkOnlyOperator(int fd)
-{
+bool checkOnlyOperator(int fd) {
 	static Server &server = Server::GetServerInstance(0, "");
 
 	clientMap::iterator curCli = server.getAllCli().find(fd);
@@ -223,15 +208,13 @@ bool checkOnlyOperator(int fd)
 	return (false);
 }
 
-bool Server::disconnectCli(int fd)
-{
-	logLevel(INFO, "-----disconnectCli-----");
+bool Server::disconnectCli(int fd) {
 	checkOnlyOperator(fd);
 	clientMapIt it = clients_.find(fd);
 	if (it != clients_.end()) {
 		std::stringstream ss;
 		ss << "Client [" << it->second->getFd() << "] connected";
-		logLevel(INFO, ss.str());
+		reply::log(reply::INFO, ss.str());
 		delete it->second;
 		clients_.erase(fd);
 		close(fd);
@@ -244,8 +227,7 @@ bool Server::disconnectCli(int fd)
 /*                               EXCEPTIONS                                   */
 /* ************************************************************************** */
 
-const char *Server::InitFailed::what() const throw()
-{
+const char *Server::InitFailed::what() const throw() {
 	std::cerr << "irc: ";
 	return errMessage;
 }
@@ -255,15 +237,25 @@ Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-clientMap &Server::getAllCli()
-{
+clientMap &Server::getAllCli() {
 	return (clients_);
 }
-channelMap &Server::getAllChan()
-{
+
+channelMap &Server::getAllChan() {
 	return (channels_);
 }
-std::string Server::getPass() const
-{
+
+const nickMap &Server::getUsedNick() const {
+	return (usedNicks_);
+}
+
+int Server::getFdFromNick(const std::string &nick) const {
+	nickMap::const_iterator nickInMap = usedNicks_.find(nick);
+	if (nickInMap != usedNicks_.end())
+		return nickInMap->second;
+	return -1;
+}
+
+std::string Server::getPass() const {
 	return (pass_);
 }

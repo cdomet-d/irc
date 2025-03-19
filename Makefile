@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
+#    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/17 14:18:44 by aljulien         ###   ########.fr        #
+#    Updated: 2025/03/19 15:45:34 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,6 @@ H:=  -I headers/ \
 	-I headers/builder/command-validation/ \
 	-I headers/builder/manager/ \
 	-I headers/client/ \
-	-I headers/debug/ \
 
 CC:=c++
 CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow
@@ -47,8 +46,6 @@ SERV_SRC:=			Channel.cpp \
 					Server.cpp \
 					Reply.cpp \
 
-DEBUG_SRC:=			Log.cpp \
-
 CLI_SRC:=			Client.cpp \
 					Message.cpp \
 					UserInfo.cpp \
@@ -69,6 +66,7 @@ BUILD_VAL_SRC:=			CmdManager.cpp \
 						CmdParam.cpp \
 						Checkers.cpp \
 						MessageValidator.cpp \
+						syntaxCheck.cpp \
 
 BUILD_MAN_SRC:=	\
 
@@ -92,6 +90,7 @@ OBJ:=$(addprefix $(BDIR), $(SRC:%.cpp=%.o))
 DEPS:=$(OBJ:%.o=%.d)
 
 $(NAME): $(OBJ)
+	$(RM) raw.log
 	@echo
 	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(NAME)... --------------------"
 	$(CC) $(OBJ) -o $(NAME)
@@ -114,6 +113,7 @@ DOBJ:=$(addprefix $(DBDIR), $(SRC:%.cpp=%.o))
 DDEPS:=$(DOBJ:%.o=%.d)
 
 $(DEBUG_NAME): $(DOBJ)
+	$(RM) raw.log
 	@echo
 	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(DEBUG_NAME)... --------------"
 	$(CC) $(DFLAGS) $(DOBJ) -o $(DEBUG_NAME)
@@ -141,6 +141,7 @@ clean:
 # ----------------------------- MAKE FCLEAN  --------------------------------- #
 
 fclean: clean
+	$(RM) raw.log
 	$(RM) $(NAME)
 	$(RM) $(DEBUG_NAME)
 	@echo

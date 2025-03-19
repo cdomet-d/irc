@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 12:48:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:19:39 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ void handlePart(CmdSpec &cmd)
 	int targetFd = sender->getFd();
 
 	curChan.getCliInChan().erase(targetFd);
-	logLevel(DEBUG, "erase client from channel");
+	reply::log(reply::DEBUG, "erase client from channel");
 
 	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end()) {
 		curChan.getOpCli().erase(targetFd);
-		logLevel(DEBUG, "erase client from op");
+		reply::log(reply::DEBUG, "erase client from op");
 	}
 }
