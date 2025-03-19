@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 18:00:18 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 10:13:27 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "typedef.hpp"
 #include <arpa/inet.h>
 #include <cstring>
+#include <fstream>
 #include <netinet/in.h>
 #include <poll.h>
 #include <sys/epoll.h>
@@ -53,13 +54,15 @@ class Server {
 	bool servInit();
 	bool servRun();
 	void acceptClient();
-	void processBuffer(Client *curCli);
 
 	/*                               GETTERS                                  */
 	clientMap &getAllCli();
 	channelMap &getAllChan();
 	const nickMap &getUsedNick() const;
 	int getFdFromNick(const std::string &nick) const;
+
+	/*                               MEMBERS                                  */
+	std::ofstream logfile;
 
   private:
 	/*                               METHODS                                  */
@@ -102,7 +105,7 @@ bool handlePart(std::string params, Client *curCli);
 bool handleMode(std::string params, Client *currentlCli);
 
 /*                               DEBUG                                  */
-// void logger(logLevel level, std::string message);
-// void logger(logLevel level, std::string message, std::string additionalInfo);
+// void reply::log(logLevel level, std::string message);
+// void reply::log(logLevel level, std::string message, std::string verbose);
 
 #endif //SERVER_HPP

@@ -48,15 +48,15 @@ bool CmdSpec::enoughParams() {
 		if (!innerParam.getOpt() && !innerParam.getSize()) {
 			if (name_ == "NICK") {
 				std::cerr << ERR_NONICKNAMEGIVEN() << std::endl;
-				sendReply((*sender_).getFd(), ERR_NONICKNAMEGIVEN());
+				reply::send((*sender_).getFd(), ERR_NONICKNAMEGIVEN());
 			} else if (name_ == "PRIVMSG") {
 				std::cerr << ERR_NOTEXTTOSEND() << std::endl;
-				sendReply((*sender_).getFd(), ERR_NOTEXTTOSEND());
+				reply::send((*sender_).getFd(), ERR_NOTEXTTOSEND());
 			} else {
 				std::cerr << ERR_NEEDMOREPARAMS(sender_->cliInfo.getNick(),
 												name_)
 						  << std::endl;
-				sendReply(
+				reply::send(
 					(*sender_).getFd(),
 					ERR_NEEDMOREPARAMS(sender_->cliInfo.getNick(), name_));
 			}
@@ -95,7 +95,7 @@ CmdSpec &CmdSpec::process(Client &sender) {
 		std::cout << "Registration stage is mismatched" << std::endl;
 		valid_ = false;
 		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER")
-			sendReply(sender_->getFd(), ERR_NOTREGISTERED);
+			reply::send(sender_->getFd(), ERR_NOTREGISTERED);
 		return (*this);
 	}
 	if (!enoughParams())

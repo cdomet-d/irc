@@ -6,12 +6,12 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/18 18:05:45 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 09:43:07 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Checkers.hpp"
-#include "Log.h"
+#include "Reply.hpp"
 #include "syntaxCheck.hpp"
 
 bool pwMatch(CmdSpec &cmd) {
@@ -36,7 +36,7 @@ bool validNick(CmdSpec &cmd) {
 		return false;
 	if (conflictCheck::nick::inUse(nick, cmd.server_.getUsedNick(), cmd.getSender().getFd()))
 		return false;
-	logger(INFO, cmd[nickname][0] + " is valid nickname\n");
+	reply::send(reply::INFO, cmd[nickname][0] + " is valid nickname\n");
 	return true;
 }
 

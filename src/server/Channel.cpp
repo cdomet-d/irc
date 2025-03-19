@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/13 10:17:23 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 09:42:08 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ Channel::Channel(std::string name)
 
 Channel::~Channel(void)
 {
-	// log(INFO, "Channel deleted:", this->getName());
+	// reply::INFO, "Channel deleted:", this->getName());
 }
 
 /* ************************************************************************** */
@@ -40,7 +40,7 @@ bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 	std::map< int, Client * > &clients = curChan->getCliInChan();
 	for (clientMapIt it = clients.begin(); it != clients.end(); ++it)
 		if (curCli == it->second) {
-			// log(INFO, "Client already in channel");
+			// reply::INFO, "Client already in channel");
 			return (false);
 		}
 
@@ -51,14 +51,14 @@ bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 
 	for (clientMapIt itCli = curChan->getCliInChan().begin();
 		 itCli != curChan->getCliInChan().end(); ++itCli) {
-		sendReply(itCli->second->getFd(),
+		reply::send(itCli->second->getFd(),
 				  RPL_JOIN(curCli->cliInfo.getNick(), curChan->getName()));
 	}
 	if (curChan->getTopic().empty() == true)
-		sendReply(curCli->getFd(),
+		reply::send(curCli->getFd(),
 				  RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan->getName()));
 	else
-		sendReply(curCli->getFd(),
+		reply::send(curCli->getFd(),
 				  RPL_TOPIC(curCli->cliInfo.getNick(), curChan->getName(),
 							curChan->getTopic()));
 	return (true);

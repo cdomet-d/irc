@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/19 09:25:22 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/19 09:45:53 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ SERV_SRC:=			Channel.cpp \
 					Server.cpp \
 					Reply.cpp \
 
-DEBUG_SRC:=			Log.cpp \
+# DEBUG_SRC:=			Log.cpp \
 
 CLI_SRC:=			Client.cpp \
 					Message.cpp \
