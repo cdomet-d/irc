@@ -6,15 +6,15 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 12:45:11 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 13:07:12 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdSpec.hpp"
 #include "Server.hpp"
-#include <limits>
-#include <cstdlib>
 #include <cerrno>
+#include <cstdlib>
+#include <limits>
 
 void executeO(std::string flag, std::string param, Channel &curChan)
 {
@@ -80,22 +80,20 @@ void executeK(std::string flag, std::string param, Channel &curChan)
 void executeL(std::string flag, std::string param, Channel &curChan)
 {
 	if (flag == "+l") {
-		char* endptr;
+		char *endptr;
 		errno = 0;
 		double result = strtod(param.c_str(), &endptr);
-		
+
 		//if err of strtod, the maxCli of the channel will be set to the maxCi of the server so 50
-		if (errno == ERANGE || *endptr != '\0' || result < 0 || 
-			result > std::numeric_limits<int>::max()) {
-				curChan.setMaxCli(50);
-				curChan.setModes();
-				
+		if (errno == ERANGE || *endptr != '\0' || result < 0 ||
+			result > std::numeric_limits< int >::max()) {
+			curChan.setMaxCli(50);
+			curChan.setModes();
 		} else {
-			curChan.setMaxCli(static_cast<int>(result));
+			curChan.setMaxCli(static_cast< int >(result));
 			curChan.setModes();
 		}
 	}
-
 	if (flag == "-l" && curChan.getMaxCli() == 0) {
 		curChan.setMaxCli(0);
 		curChan.setModes();
