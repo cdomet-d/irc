@@ -17,7 +17,9 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdManager::CmdManager(void) {}
+CmdManager::CmdManager(void) {
+	std::cout << "Cmd Manager instace created" << std::endl;
+}
 
 CmdManager::~CmdManager(void) {
 	for (cmdMap::iterator it = commandList_.begin(); it != commandList_.end();

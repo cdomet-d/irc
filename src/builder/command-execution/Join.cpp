@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 15:43:41 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:55:58 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ Channel *createChan(const std::string &chanName)
 
 void handleJoin(CmdSpec &cmd)
 {
-	logLevel(DEBUG, "-----handleJoin-----");
 	Client *sender = &cmd.getSender();
 	if (cmd[channel_][0] == "0") {
 		//partAllChans(sender);

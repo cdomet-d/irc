@@ -40,8 +40,8 @@ class CmdParam {
 	const stringVec &getInnerParam(void) const;
 
 	/*                               SETTERS                                  */
-	void setOne(std::string &buffer);
-	void setList(const stringVec &buffer);
+	void setOneParam(std::string &buffer);
+	void setParamList(const stringVec &buffer);
 
   private:
 	/*                               MEMBERS                                  */

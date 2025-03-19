@@ -6,11 +6,13 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/19 16:03:54 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:59:48 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Checkers.hpp"
+#include "Reply.hpp"
+#include "syntaxCheck.hpp"
 
 bool pwMatch(CmdSpec &cmd) {
 	if (cmd[password_][0] != cmd.server_.getPass()) {
@@ -34,8 +36,19 @@ bool isRegistered(CmdSpec &cmd) {
 }
 
 bool validNick(CmdSpec &cmd) {
-	(void)cmd;
-	return (true);
+	std::string nick = cmd[nickname][0];
+	if (nick.size() > 9) {
+		nick = syntaxCheck::nick::trim(nick);
+		cmd[nickname].rmParam(0);
+		cmd[nickname].setOneParam(nick);
+
+	}
+	if (!syntaxCheck::nick::isValid(nick, cmd))
+		return false;
+	if (conflictCheck::nick::inUse(nick, cmd.server_.getUsedNick(), cmd.getSender().getFd()))
+		return false;
+	reply::send(reply::INFO, cmd[nickname][0] + " is valid nickname\n");
+	return true;
 }
 
 bool validUser(CmdSpec &cmd) {
@@ -44,8 +57,9 @@ bool validUser(CmdSpec &cmd) {
 }
 
 bool validChan(CmdSpec &cmd) {
-	(void)cmd;
-	return (true);
+	stringVec param = cmd[channel].getInnerParam();
+	messageValidator::printCmdParam(param, "innerParam");
+	return (0);
 }
 
 bool joinChanRequest(CmdSpec &cmd) {

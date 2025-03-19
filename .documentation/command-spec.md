@@ -1,31 +1,34 @@
 # Command specifications analysis
 
 - [Command specifications analysis](#command-specifications-analysis)
-  - [PASS](#pass)
-    - [Parsing rules](#parsing-rules)
-      - [Failure strategy](#failure-strategy)
-      - [Success strategy](#success-strategy)
-    - [Attributes](#attributes)
-    - [Methods](#methods)
-    - [Tests with libera.chat](#tests-with-liberachat)
-  - [NICK](#nick)
-  - [tests with libera.chat :](#tests-with-liberachat-)
-  - [USER](#user)
-  - [tests with libera.chat :](#tests-with-liberachat--1)
-  - [INVITE](#invite)
-  - [tests with libera.chat :](#tests-with-liberachat--2)
-  - [JOIN](#join)
-  - [tests with libera.chat :](#tests-with-liberachat--3)
-  - [KICK](#kick)
-  - [tests with libera.chat :](#tests-with-liberachat--4)
-  - [MODE](#mode)
-  - [tests with libera.chat :](#tests-with-liberachat--5)
-  - [PART](#part)
-  - [tests with libera.chat :](#tests-with-liberachat--6)
-  - [PRIVMSG](#privmsg)
-  - [QUIT](#quit)
-  - [TOPIC](#topic)
-  - [tests with libera.chat :](#tests-with-liberachat--7)
+	- [PASS](#pass)
+		- [Parsing rules](#parsing-rules)
+			- [Failure strategy](#failure-strategy)
+			- [Success strategy](#success-strategy)
+		- [Attributes](#attributes)
+		- [Methods](#methods)
+		- [Tests with libera.chat](#tests-with-liberachat)
+	- [NICK](#nick)
+		- [Parsing rules](#parsing-rules-1)
+			- [Failure strategy](#failure-strategy-1)
+			- [Success strategy](#success-strategy-1)
+	- [tests with libera.chat :](#tests-with-liberachat-)
+	- [USER](#user)
+	- [tests with libera.chat :](#tests-with-liberachat--1)
+	- [INVITE](#invite)
+	- [tests with libera.chat :](#tests-with-liberachat--2)
+	- [JOIN](#join)
+	- [tests with libera.chat :](#tests-with-liberachat--3)
+	- [KICK](#kick)
+	- [tests with libera.chat :](#tests-with-liberachat--4)
+	- [MODE](#mode)
+	- [tests with libera.chat :](#tests-with-liberachat--5)
+	- [PART](#part)
+	- [tests with libera.chat :](#tests-with-liberachat--6)
+	- [PRIVMSG](#privmsg)
+	- [QUIT](#quit)
+	- [TOPIC](#topic)
+	- [tests with libera.chat :](#tests-with-liberachat--7)
 
 ## PASS
 
@@ -85,6 +88,43 @@ PASS
 
 ## NICK
 
+```markdown
+NICK : <nickname>
+  -> ex : /nick my_nickname
+```
+
+### Parsing rules
+
+- MUST NOT contain any of the following characters:
+  - space (`' '`, 0x20),
+  - comma (`','`, 0x2C),
+  - asterisk (`'*'`, 0x2A),
+  - question mark (`'?'`, 0x3F),
+  - exclamation mark (`'!'`, 0x21),
+  - at sign (`'@'`, 0x40)
+- MUST NOT start with any of the following characters:
+  - dollar (`'$'`, 0x24),
+  - colon (`':'`, 0x3A),
+  - hash (`'#'`, 0x23 ),
+  - ampersand (`'&'`, 0x26)
+  - Those result in => ERR_ERRONEUSNICKNAME
+- SHOULD NOT contain any dot character (`'.'`, 0x2E)
+- MUST NOT already be in use => ERR_NICKNAMEINUSE
+- SHOULD NOT be ambiguous with implemented commands.
+
+#### Failure strategy
+
+- Returns the appropriate numeric reply to the client
+- Ignore the command
+
+#### Success strategy
+
+- Informs the clients that the client changed his NICK, using the old nick as a source.
+
+```markdown
+    NICK amelie
+    REPLY: amelie38 changed their nickname to amelie
+```
 //requirement
 password is set
 

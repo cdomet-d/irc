@@ -53,7 +53,8 @@
 		"optional": "cpp",
 		"ranges": "cpp",
 		"span": "cpp",
-		"cinttypes": "cpp"
+		"cinttypes": "cpp",
+		"fstream": "cpp"
 	},
 	"explorer.excludeGitIgnore": false
 }

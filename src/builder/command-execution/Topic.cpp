@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 15:44:33 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:57:55 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 void checkTopic(Channel &curChan, Client *curCli)
 {
 	if (curChan.getTopic().empty() == true) {
-		sendReply(curCli->getFd(),
+		reply::send(curCli->getFd(),
 				  RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan.getName()));
 		return;
 	}
-	sendReply(curCli->getFd(),
+	reply::send(curCli->getFd(),
 			  RPL_TOPIC(curCli->cliInfo.getNick(), curChan.getName(),
 						curChan.getTopic()));
 	return;
@@ -29,7 +29,6 @@ void checkTopic(Channel &curChan, Client *curCli)
 void clearTopic(Channel &curChan, Client *curCli)
 {
 	curChan.setTopic("");
-	//messageToAllChannel
 	sendMessageChannel(
 		curChan.getCliInChan(),
 		RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan.getName()));
@@ -38,7 +37,6 @@ void clearTopic(Channel &curChan, Client *curCli)
 void changeTopic(Channel &curChan, Client *curCli, std::string topic)
 {
 	topic.erase(1, 0); //remove the ':'
-	//curChan->getTopic().clear();
 	curChan.setTopic(topic);
 	sendMessageChannel(curChan.getCliInChan(),
 					   RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(),

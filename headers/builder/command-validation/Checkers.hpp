@@ -6,11 +6,12 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 15:49:12 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/19 16:02:34 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:50:18 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHECKERS_HPP
+#define CHECKERS_HPP
 #define CHECKERS_HPP
 
 #include "Channel.hpp"

@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 15:47:01 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:56:13 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void executeFlag(std::string flag, std::string param, Channel &curChan)
 	if (flagLevel != -1)
 		flagExecutor[flagLevel](flag, param, curChan);
 	else
-		logLevel(DEBUG, "Invalid flag");
+		reply::log(reply::DEBUG, "Invalid flag");
 }
 
 Channel &findCurChan(std::string chanName)
@@ -133,14 +133,14 @@ Channel &findCurChan(std::string chanName)
 //the modes of a channel need to be empty if no moe is activated and +<modes> if any
 void handleMode(CmdSpec &cmd)
 {
-	logLevel(DEBUG, "-----handleMode-----");
+	reply::log(reply::DEBUG, "-----handleMode-----");
 	Client *sender = &cmd.getSender();
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 	std::string newModes;
 	std::string newMaxCli = "";
 
 	if (!cmd[flag_].getSize()) {
-		sendReply(sender->getFd(),
+		reply::send(sender->getFd(),
 				  RPL_UMODEIS(sender->cliInfo.getNick(), curChan.getModes()));
 		return;
 	}

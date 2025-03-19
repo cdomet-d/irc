@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 15:45:03 by csweetin         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/03/19 16:54:44 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "CmdSpec.hpp"
 #include "Reply.hpp"
@@ -28,9 +29,9 @@ void handleInvite(CmdSpec &cmd)
 		}
 	}
 
-	sendReply(sender->getFd(),
-			  RPL_INVITING(targetCli->cliInfo.getNick(), cmd[channel_][0]));
-	sendReply(targetCli->getFd(),
+	reply::send(sender->getFd(),
+			  RPL_INVITING(targetCli->cliInfo.getNick(), cmd[channel][0]));
+	reply::send(targetCli->getFd(),
 			  RPL_INVITE(sender->cliInfo.getNick(),
 						 targetCli->cliInfo.getNick(), cmd[channel_][0]));
 	curChan.getInvitCli().insert(clientPair(targetCli->getFd(), targetCli));

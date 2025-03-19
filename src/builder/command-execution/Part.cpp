@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 15:44:53 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:56:23 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ void handlePart(CmdSpec &cmd)
 	int targetFd = sender->getFd();
 
 	curChan.getCliInChan().erase(targetFd);
-	logLevel(DEBUG, "erase client from channel");
+	reply::log(reply::DEBUG, "erase client from channel");
 
 	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end()) {
 		curChan.getOpCli().erase(targetFd);
-		logLevel(DEBUG, "erase client from op");
+		reply::log(reply::DEBUG, "erase client from op");
 	}
 }
