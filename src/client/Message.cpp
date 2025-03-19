@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/14 14:46:33 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:01:04 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Message.hpp"
+#include "Server.hpp"
 #include <iostream>
 
 /* ************************************************************************** */
@@ -21,7 +22,8 @@ Message::Message(void) {}
 
 Message::~Message(void) {}
 
-std::string &Message::operator[](unsigned int i) {
+std::string &Message::operator[](unsigned int i)
+{
 	if (i >= cmdParam_.size())
 		throw std::out_of_range("Param not found");
 	return (cmdParam_[i]);
@@ -30,19 +32,23 @@ std::string &Message::operator[](unsigned int i) {
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-stringVec &Message::getCmdParam() {
+stringVec &Message::getCmdParam()
+{
 	return cmdParam_;
 }
 
-std::string Message::getCmd() const {
+std::string Message::getCmd() const
+{
 	return cmdParam_.at(0);
 }
 
-std::string Message::getBuffer() const {
+std::string Message::getBuffer() const
+{
 	return buffer_;
 }
 
-size_t Message::getSize() const {
+size_t Message::getSize() const
+{
 	return (cmdParam_.size());
 }
 
@@ -50,27 +56,32 @@ size_t Message::getSize() const {
 /*                               SETTERS                                      */
 /* ************************************************************************** */
 
-void Message::setCmdParam(const stringVec &splitBuffer) {
+void Message::setCmdParam(const stringVec &splitBuffer)
+{
 	cmdParam_ = splitBuffer;
 }
 
-void Message::setTrailingParam(const std::string &trail) {
+void Message::setTrailingParam(const std::string &trail)
+{
 	cmdParam_.push_back(trail);
 }
 
-void Message::setBuffer(std::string buffer) {
+void Message::setBuffer(std::string buffer)
+{
 	buffer_ = buffer;
 }
 
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-void Message::clearCmdParam() {
+void Message::clearCmdParam()
+{
 	for (stringVec::iterator i = cmdParam_.begin(); i != cmdParam_.end();) {
 		cmdParam_.erase(i);
 	}
 	// cmdParam_.clear();
 }
-void Message::clearBuffer() {
+void Message::clearBuffer()
+{
 	buffer_.clear();
 }

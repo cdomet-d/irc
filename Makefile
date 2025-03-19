@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
+#    By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/14 12:43:19 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/17 14:18:44 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,12 +53,16 @@ CLI_SRC:=			Client.cpp \
 					Message.cpp \
 					UserInfo.cpp \
 
-BUILD_EXE_SRC:=		Join.cpp \
-					NickUser.cpp \
-					Privmsg.cpp \
-					Topic.cpp \
-					Part.cpp \
-					Mode.cpp \
+BUILD_EXE_SRC:=			Join.cpp \
+						NickUser.cpp \
+						Privmsg.cpp \
+						Topic.cpp \
+						Part.cpp \
+						Mode.cpp \
+						Invite.cpp \
+						Kick.cpp \
+						Who.cpp \
+						Pass.cpp \
 
 BUILD_VAL_SRC:=			CmdManager.cpp \
 						CmdSpec.cpp \

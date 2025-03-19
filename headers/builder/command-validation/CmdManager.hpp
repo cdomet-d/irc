@@ -17,7 +17,7 @@
 #include <iostream>
 #include <map>
 
-typedef	 std::map< std::string, CmdSpec * > cmdMap;
+typedef std::map< std::string, CmdSpec * > cmdMap;
 
 class CmdManager {
   public:
@@ -33,8 +33,9 @@ class CmdManager {
 
 	/*                               NESTED CLASS                             */
 	class CmdNotFoundException : std::exception {
-		public:
-		const char* what() const throw() {
+	  public:
+		const char *what() const throw()
+		{
 			return ("Command not found");
 		}
 	};

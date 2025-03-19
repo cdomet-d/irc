@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   typedef.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/06 13:59:33 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/12 16:20:55 by cdomet-d         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/03/18 17:00:19 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

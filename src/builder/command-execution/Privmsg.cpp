@@ -3,48 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   Privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/14 12:34:44 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 12:46:43 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "CmdSpec.hpp"
 #include "Server.hpp"
-#include <sstream>
 
-//TODO need to add reply when client not a channel
-//TODO need to add reply when channel not found
-//only works for channel usage
-bool handlePrivsmg(std::string params, Client *curCli)
+void handlePrivsmg(CmdSpec &cmd)
 {
 	static Server &server = Server::GetServerInstance(0, "");
+	Client *sender = &cmd.getSender();
 
-	std::istringstream iss(params);
-	std::string chanName;
-	std::string message;
-
-	iss >> chanName;
-	std::getline(iss, message);
-
-	channelMapIt curChan = server.getAllChan().find(chanName);
-	if (curChan->second == NULL) {
-		// log(DEBUG, "did not found channel");
-		return (false);
+	if (cmd[target][0].find("#") == cmd[target][0].npos) {
+		for (clientMapIt itTarget = server.getAllCli().begin();
+			 itTarget != server.getAllCli().end(); ++itTarget) {
+			if (itTarget->second->cliInfo.getNick() == cmd[target][0]) {
+				sendReply(itTarget->first,
+						  RPL_PRIVMSG(sender->cliInfo.getPrefix(),
+									  itTarget->second->cliInfo.getNick(),
+									  cmd[message][0]));
+				return;
+			}
+		}
 	}
+	Channel &curChan = findCurChan(cmd[target][0]);
 
-	//check if client is a channel
-	clientMapIt senderIt =
-		curChan->second->getCliInChan().find(curCli->getFd());
-	if (senderIt == curChan->second->getCliInChan().end())
-		return (false);
-	// Client *sender = senderIt->second;
-	for (clientMapIt itCli = curChan->second->getCliInChan().begin();
-		 itCli != curChan->second->getCliInChan().end(); ++itCli) {
-		if (itCli->first != curCli->getFd())
+	for (clientMapIt itCli = curChan.getCliInChan().begin();
+		 itCli != curChan.getCliInChan().end(); ++itCli) {
+		if (itCli->first != sender->getFd())
 			sendReply(itCli->second->getFd(),
-					  RPL_PRIVMSG(curCli->cliInfo.getPrefix(),
-								  curChan->second->getName(), message));
+					  RPL_PRIVMSG(sender->cliInfo.getPrefix(),
+								  curChan.getName(), cmd[message][0]));
 	}
-	return (true);
 }

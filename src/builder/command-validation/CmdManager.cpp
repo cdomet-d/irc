@@ -11,13 +11,16 @@
 /* ************************************************************************** */
 
 #include "CmdManager.hpp"
+#include "Server.hpp"
+#include "typedef.hpp"
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 CmdManager::CmdManager(void) {}
 
-CmdManager::~CmdManager(void) {
+CmdManager::~CmdManager(void)
+{
 	for (cmdMap::iterator it = commandList_.begin(); it != commandList_.end();
 		 it++) {
 		delete it->second;
@@ -27,20 +30,23 @@ CmdManager::~CmdManager(void) {
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-void CmdManager::executeCm(CmdSpec &cm) {
-	// if (cm.getValid())
-	// 	cm.getExecutor()(cm);
+void CmdManager::executeCm(CmdSpec &cm)
+{
+	if (cm.getValid()) {
+		cm.getExecutor()(cm);
+	}
 	cm.cleanAll();
 }
 
-void CmdManager::generateCmds() {
+void CmdManager::generateCmds()
+{
 	log(CmdSpec::CmdBuilder()
 			.Name("PASS")
 			.Registration(0)
 			.addParam(password_, new CmdParam())
 			.addChecker(isRegistered)
 			.addChecker(pwMatch)
-			// .CmExecutor()
+			//.CmExecutor()
 			.build());
 
 	//on veut pas afficher ERR_NEEDMOREPARAMS si nickname est pas donné
@@ -71,7 +77,7 @@ void CmdManager::generateCmds() {
 			.addParam(channel_, new CmdParam(false, ','))
 			.addParam(key_, new CmdParam(true, ','))
 			.addChecker(joinChanRequest)
-			// .CmExecutor()
+			.CmExecutor(handleJoin)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -84,7 +90,7 @@ void CmdManager::generateCmds() {
 			.addChecker(onChan)
 			.addChecker(validInvite)
 			.addChecker(hasChanPriv)
-			// .CmExecutor()
+			.CmExecutor(handleInvite)
 			.build());
 
 	//si un target est faux on fait pas ceux qui suivent
@@ -99,7 +105,7 @@ void CmdManager::generateCmds() {
 			.addChecker(hasChanPriv)
 			.addChecker(validTarget)
 			.addChecker(validKick)
-			// .CmExecutor()
+			.CmExecutor(handleKick)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -113,7 +119,7 @@ void CmdManager::generateCmds() {
 			.addChecker(hasChanPriv)
 			.addChecker(validMode)
 			// .addChecker(validArg) ?
-			// .CmExecutor()
+			.CmExecutor(handleMode)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -123,7 +129,7 @@ void CmdManager::generateCmds() {
 			.addParam(message_, new CmdParam(true, '\0'))
 			.addChecker(validChan)
 			.addChecker(onChan)
-			// .CmExecutor()
+			.CmExecutor(handlePart)
 			.build());
 
 	//we want ERR_NORECIPIENT not ERR_NEEDMOREPARAMS
@@ -134,14 +140,14 @@ void CmdManager::generateCmds() {
 			.addParam(message_, new CmdParam())
 			.addChecker(validMess)
 			.addChecker(validTarget)
-			// .CmExecutor()
+			.CmExecutor(handlePrivsmg)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
 			.Name("QUIT")
 			.Registration(0)
 			.addParam(message_, new CmdParam(true, '\0'))
-			// .CmExecutor()
+			//.CmExecutor()
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -152,11 +158,12 @@ void CmdManager::generateCmds() {
 			.addChecker(validChan)
 			.addChecker(onChan)
 			.addChecker(hasChanPriv) //(only if mode +t is set)
-			// .CmExecutor()
+			.CmExecutor(handleTopic)
 			.build());
 }
 
-void CmdManager::log(CmdSpec *cm) {
+void CmdManager::log(CmdSpec *cm)
+{
 	commandList_[cm->getName()] = cm;
 }
 
@@ -173,7 +180,8 @@ CmdSpec &CmdManager::findCmd(const std::string &cmName) {
 	return (*it->second);
 }
 
-CmdManager &CmdManager::getManagerInstance() {
+CmdManager &CmdManager::getManagerInstance()
+{
 	static CmdManager instance;
 	return (instance);
 }

@@ -1,39 +1,17 @@
 
 TODO :
-Obliger le client nc a utiliser les commandes dans cet ordre :
-			-NICK
-			-USER
-			-JOIN
-Add election d'un operateur en cas de deco du suel operateur d'un channel
-Add a function that sends a reply to an entire channel
-Faire une fonction qui trouve le currClient ou le currChannel
-Add join with a password
-Mettre les replies dans une classe
-Fix historique (il apparait le nombre de fois qu'il y avait de clients sur le channel au moment ou le message a ete envoye)
+Brancher commandes : WHO, QUIT, PASS, USER, NICK
+CURRENTLY : MODE, KICK
+TO TEST : INVITE, PART
+DO DID DONE : TOPIC, JOIN, PRIVMSG
+Mettre des try catch quand acces en [] a des aprams optionnels
 
-Execution de mode 
-Join avec password
-
-REPLY into a class
-
-We don't have to develop a client 
-We don't have to handles server to server connection
-
-The server has to handle multiple client at a time without blocking
-All in/out operations (?) need to be none blocking
-We need to choose one IRC client, we'll use said client as a reference
-Said client we'll need to be able to connect to our server
-Communication between client and server will use TCP/IP (v4 or v6)
-
-To start we need to create a general-purpose server and then configure it as an IRC server.
-Step to create a general-purpose server :
-		*choose a hosting provider or use own hardware
-		*Install a server operating system
-	
 Commands :
+PRIVMSG, USER, NICK, JOIN, TOPIC, WHO, PART, KICK, QUIT, INVITE, PASS, MODE //currently working on
 
-PASS, PART, INVITE, KICK, QUIT, MODE //need to do 
-PRIVMSG, USER, NICK, JOIN, TOPIC //currently working on
+toutes les functions d'exec prennent reference d'une instance de CmdSpec
+Faire headers exec pour function 
+Faire message reply modes`
 
 TRAME :
 
@@ -69,19 +47,8 @@ nc -C 0.0.0.0 4444 :
 		0.0.0.0 IP 
 		4444 Port
 
-handleJoin :
-	clears the input client to get the name of the channels
-	checks if the channel already exists
-		-if doesn't : creates the channel and add the first user in it
-		-if does : adds the client to said channel
-	sends a responds to the client
 
-PRIVMSG :
-:senderNick!senderUser@senderHostname PRIVMSG #chanName :Message content here\r\n
-
-add : we check if a nickname is available before setting it.
-		Files for organizing the commands and better clarity
-refractor : Join, privmsg, nick, user now use the istringstream for parsing which is way better.
-
-
-JOIN 0 = part donc ca te retire de tout les channels
+NICK alex
+USER alexie
+JOIN #test
+TOPIC #test
