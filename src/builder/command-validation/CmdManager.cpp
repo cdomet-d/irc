@@ -75,7 +75,7 @@ void CmdManager::generateCmds()
 			.Name("JOIN")
 			.Registration(3)
 			.Parameters(channel, new CmdParam(false, ','))
-			.Parameters(key, new CmdParam(true, ','))
+			.Parameters(key, new CmdParam(true, ',')) //TODO : TRUE = OPTIONNEL
 			.addChecker(joinChanRequest)
 			.CmExecutor(handleJoin)
 			.build());

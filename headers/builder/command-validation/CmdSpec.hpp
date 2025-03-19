@@ -112,7 +112,7 @@ Channel *createChan(const std::string &chanName);
 
 //MODE
 void handleMode(CmdSpec &cmd);
-typedef void (*modesFunc)(std::string flag, std::string param, Channel *curChan);
+typedef void (*modesFunc)(std::string flag, std::string param, Channel &curChan);
 
 //TOPIC
 void handleTopic(CmdSpec &cmd);
@@ -130,6 +130,6 @@ void handlePart(CmdSpec &cmd);
 void handlePrivsmg(CmdSpec &cmd);
 
 //UTILS
-Channel *findCurChan(std::string chanName);
+Channel &findCurChan(std::string chanName);
 
 #endif

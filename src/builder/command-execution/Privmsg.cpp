@@ -6,7 +6,7 @@
 /*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 17:00:43 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 12:46:43 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ void handlePrivsmg(CmdSpec &cmd)
 			}
 		}
 	}
-	Channel *curChan = findCurChan(cmd[target][0]);
+	Channel &curChan = findCurChan(cmd[target][0]);
 
-	for (clientMapIt itCli = curChan->getCliInChan().begin();
-		 itCli != curChan->getCliInChan().end(); ++itCli) {
+	for (clientMapIt itCli = curChan.getCliInChan().begin();
+		 itCli != curChan.getCliInChan().end(); ++itCli) {
 		if (itCli->first != sender->getFd())
 			sendReply(itCli->second->getFd(),
 					  RPL_PRIVMSG(sender->cliInfo.getPrefix(),
-								  curChan->getName(), cmd[message][0]));
+								  curChan.getName(), cmd[message][0]));
 	}
 }
