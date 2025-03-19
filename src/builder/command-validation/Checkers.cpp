@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/19 15:55:41 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:03:54 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ bool joinChanRequest(CmdSpec &cmd) {
 					if (chan.getModes().find('k') == std::string::npos ||
 						(chan.getModes().find('k') != std::string::npos &&
 						 i < cmd[key_].getSize() &&
-							chan.getPassword() == cmd[key_][i])) {
+						 chan.getPassword() == cmd[key_][i])) {
 						//TODO: faire un define pour client chan limit
 						if (cmd.getSender().getJoinedChans().size() < 50)
 							continue;

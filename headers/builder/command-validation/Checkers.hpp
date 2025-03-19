@@ -6,15 +6,15 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 15:49:12 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/19 15:43:09 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:02:34 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHECKERS_HPP
 #define CHECKERS_HPP
 
-#include "CmdSpec.hpp"
 #include "Channel.hpp"
+#include "CmdSpec.hpp"
 class CmdSpec;
 
 bool hasChanPriv(CmdSpec &cmd);		// Charlotte

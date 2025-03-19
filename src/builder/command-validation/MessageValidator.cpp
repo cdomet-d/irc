@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/19 15:32:18 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:04:35 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
-bool MessageValidator::assess(Client &sender)
-{
+bool MessageValidator::assess(Client &sender) {
 	sender.mess.setBuffer(removeNewlines(sender.mess.getBuffer()));
 	std::string message = sender.mess.getBuffer();
 
@@ -40,16 +39,13 @@ bool MessageValidator::assess(Client &sender)
 		manager.executeCm(
 			manager.findCmd(sender.mess.getCmd()).process(sender));
 	} catch (const CmdManager::CmdNotFoundException &e) {
-		// sendReply(sender.getFd(), ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
-		// 											 sender.mess.getCmd()));
-		std::cout << ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
-										sender.mess.getCmd());
+		sendReply(sender.getFd(), ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
+													 sender.mess.getCmd()));
 	}
 	return true;
 }
 
-void MessageValidator::formatMode(Client &sender)
-{
+void MessageValidator::formatMode(Client &sender) {
 	stringVec mode = sender.mess.getCmdParam();
 	if (mode.size() < 2)
 		return;
@@ -84,8 +80,7 @@ void MessageValidator::formatMode(Client &sender)
 }
 
 bool MessageValidator::hasPrefix(std::string &mess,
-								 const std::string &cliPrefix)
-{
+								 const std::string &cliPrefix) {
 	if (mess.at(0) == ':') {
 		std::string::size_type sep = mess.find(" ");
 		if (sep != std::string::npos) {
@@ -99,8 +94,7 @@ bool MessageValidator::hasPrefix(std::string &mess,
 	return true;
 }
 
-bool MessageValidator::hasTrailing(std::string &mess, std::string &trailing)
-{
+bool MessageValidator::hasTrailing(std::string &mess, std::string &trailing) {
 	std::string::size_type trail = mess.find(" :");
 
 	if (trail != std::string::npos) {
@@ -111,8 +105,8 @@ bool MessageValidator::hasTrailing(std::string &mess, std::string &trailing)
 	return false;
 }
 
-bool MessageValidator::lenIsValid(const std::string &mess, const Client &sender)
-{
+bool MessageValidator::lenIsValid(const std::string &mess,
+								  const Client &sender) {
 	if (mess.empty())
 		return false;
 	if (mess.size() > 512) {
@@ -122,8 +116,7 @@ bool MessageValidator::lenIsValid(const std::string &mess, const Client &sender)
 	return true;
 }
 
-stringVec MessageValidator::vectorSplit(std::string &s, char del)
-{
+stringVec MessageValidator::vectorSplit(std::string &s, char del) {
 	stringVec result;
 	std::string token, trailing;
 
@@ -136,8 +129,7 @@ stringVec MessageValidator::vectorSplit(std::string &s, char del)
 	return (result);
 }
 
-std::string MessageValidator::removeNewlines(const std::string &input)
-{
+std::string MessageValidator::removeNewlines(const std::string &input) {
 	std::string result;
 	for (size_t i = 0; i < input.length(); ++i) {
 		if (input[i] != '\r' && input[i] != '\n') {
@@ -147,8 +139,7 @@ std::string MessageValidator::removeNewlines(const std::string &input)
 	return result;
 }
 
-void MessageValidator::printCmdParam(const stringVec &obj, std::string where)
-{
+void MessageValidator::printCmdParam(const stringVec &obj, std::string where) {
 	std::cout << "[" << std::endl;
 	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it) {
 		if ((*it).empty())

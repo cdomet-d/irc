@@ -59,7 +59,8 @@ class CmdSpec {
 
 	/*                               GETTERS                                  */
 	bool getValid(void) const;
-	Client &getSender(void); //TODO: remettre en const et ajouter une fonction addChan dans Client pour pouvoir mettre getJoinedChan en const
+	//TODO: remettre en const et ajouter une fonction addChan dans Client pour pouvoir mettre getJoinedChan en const
+	Client &getSender(void);
 	const std::string &getName(void) const;
 	const paramMap &getParams(void) const;
 	void (*getExecutor(void) const)(CmdSpec &cmd);
@@ -114,7 +115,8 @@ Channel *createChan(const std::string &chanName);
 
 //MODE
 void handleMode(CmdSpec &cmd);
-typedef void (*modesFunc)(std::string flag, std::string param, Channel &curChan);
+typedef void (*modesFunc)(std::string flag, std::string param,
+						  Channel &curChan);
 
 //TOPIC
 void handleTopic(CmdSpec &cmd);

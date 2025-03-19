@@ -19,8 +19,7 @@
 /* ************************************************************************** */
 CmdManager::CmdManager(void) {}
 
-CmdManager::~CmdManager(void)
-{
+CmdManager::~CmdManager(void) {
 	for (cmdMap::iterator it = commandList_.begin(); it != commandList_.end();
 		 it++) {
 		delete it->second;
@@ -30,16 +29,14 @@ CmdManager::~CmdManager(void)
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-void CmdManager::executeCm(CmdSpec &cm)
-{
+void CmdManager::executeCm(CmdSpec &cm) {
 	if (cm.getValid()) {
 		cm.getExecutor()(cm);
 	}
 	cm.cleanAll();
 }
 
-void CmdManager::generateCmds()
-{
+void CmdManager::generateCmds() {
 	log(CmdSpec::CmdBuilder()
 			.Name("PASS")
 			.Registration(0)
@@ -162,8 +159,7 @@ void CmdManager::generateCmds()
 			.build());
 }
 
-void CmdManager::log(CmdSpec *cm)
-{
+void CmdManager::log(CmdSpec *cm) {
 	commandList_[cm->getName()] = cm;
 }
 
@@ -180,8 +176,7 @@ CmdSpec &CmdManager::findCmd(const std::string &cmName) {
 	return (*it->second);
 }
 
-CmdManager &CmdManager::getManagerInstance()
-{
+CmdManager &CmdManager::getManagerInstance() {
 	static CmdManager instance;
 	return (instance);
 }
