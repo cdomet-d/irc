@@ -30,8 +30,7 @@ CmdManager::~CmdManager(void) {
 /*                               METHODS                                      */
 /* ************************************************************************** */
 void CmdManager::executeCm(CmdSpec &cm) {
-	std::cout << "In execute cmd" << std::endl;
-	cm.getExecutor();
+	// cm.getExecutor();
 	cm.cleanAll();
 }
 

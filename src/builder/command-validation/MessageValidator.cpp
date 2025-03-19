@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/18 16:08:49 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/19 09:27:49 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,26 +22,30 @@
 
 //TODO: handle single buffer for CAP NICK USER
 bool messageValidator::assess(Client &sender) {
-	sender.mess.setBuffer(priv::removeNewlines(sender.mess.getBuffer()));
 	std::string message = sender.mess.getBuffer();
 
-	std::cout << "Message	[" + message + "]" << std::endl;
-	if (priv::lenIsValid(message, sender) == false)
-		return false;
-	if (priv::hasPrefix(message, sender.cliInfo.getPrefix()) == false)
-		return false;
-	sender.mess.setCmdParam(vectorSplit(message, ' '));
-	if (sender.mess.getCmd() == "MODE")
-		priv::formatMode(sender);
-	printCmdParam(sender.mess.getCmdParam(), "After assessing: cmdParam");
+	while (!message.empty()) {
+		std::string cmd = priv::removeNewlines(message);
+		std::cout << "Extracted	[" + cmd + "]" << std::endl;
+		std::cout << "Remainder	" + message << std::endl;
+		if (priv::lenIsValid(cmd, sender) == false)
+			return false;
+		if (priv::hasPrefix(cmd, sender.cliInfo.getPrefix()) == false)
+			return false;
+		sender.mess.setCmdParam(vectorSplit(cmd, ' '));
+		if (sender.mess.getCmd() == "MODE")
+			priv::formatMode(sender);
+		// printCmdParam(sender.mess.getCmdParam(), "After assessing: cmdParam");
 
-	CmdManager &manager = CmdManager::getManagerInstance();
-	try {
-		manager.executeCm(
-			manager.findCmd(sender.mess.getCmd()).process(sender));
-	} catch (const CmdManager::CmdNotFoundException &e) {
-		sendReply(sender.getFd(), ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
-													 sender.mess.getCmd()));
+		CmdManager &manager = CmdManager::getManagerInstance();
+		try {
+			manager.executeCm(
+				manager.findCmd(sender.mess.getCmd()).process(sender));
+		} catch (const CmdManager::CmdNotFoundException &e) {
+			sendReply(sender.getFd(),
+					  ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
+										 sender.mess.getCmd()));
+		}
 	}
 	return true;
 }
@@ -142,12 +146,11 @@ bool messageValidator::priv::lenIsValid(const std::string &mess,
 	return true;
 }
 
-std::string messageValidator::priv::removeNewlines(const std::string &input) {
-	std::string result;
-	for (size_t i = 0; i < input.length(); ++i) {
-		if (input[i] != '\r' && input[i] != '\n') {
-			result += input[i];
-		}
-	}
+std::string messageValidator::priv::removeNewlines(std::string &input) {
+
+	std::string::size_type newline = input.find(MESSAGE_TERMINATION);
+	std::string result = input.substr(0, newline);
+
+	input.erase(input.begin(), (input.begin() + newline + 2));
 	return result;
 }
