@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 14:00:19 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:14:05 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ Channel::Channel(std::string name)
 }
 
 Channel::~Channel(void)
-{}
+{
+	// reply::INFO, "Channel deleted:", this->getName());
+}
 
 /* ************************************************************************** */
 /*                               METHODS                                      */
@@ -41,7 +43,9 @@ void sendMessageChannel(clientMap allCliChannel, std::string message)
 
 bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 {
+
 	// reply::log(reply::DEBUG, "-----addClientToChan-----");
+
 	std::map< int, Client * > clients = curChan->getCliInChan();
 	for (clientMapIt it = clients.begin(); it != clients.end(); ++it)
 		if (curCli == it->second) {

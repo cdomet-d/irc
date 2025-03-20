@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 13:17:10 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:13:11 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,6 +247,7 @@ Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
+
 const clientMap &Server::getAllCli() const
 {
 	return (clients_);

@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/03/20 12:45:55 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:09:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ class Channel;
 // -------------------------------- DATA TYPES ------------------------------ //
 
 typedef std::map< int, Client * > clientMap;
-typedef std::map< std::string, int > nickMap;
 typedef std::map< int, Client * >::const_iterator clientMapIt;
+typedef std::map< std::string, int > nickMap;
 typedef std::map< std::string, Channel * > channelMap;
 typedef std::map< std::string, Channel * >::const_iterator channelMapIt;
 typedef std::pair< int, Client * > clientPair;
