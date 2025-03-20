@@ -83,6 +83,7 @@ void CmdSpec::hasParamList(void) {
 }
 CmdSpec &CmdSpec::process(Client &sender) {
 	setSender(sender);
+	// std::cout << "sender registration stage: " << sender.cliInfo.getRegistration() << std::endl;
 	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
 		valid_ = false;
 		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER")
@@ -106,6 +107,7 @@ void CmdSpec::cleanAll(void) {
 	for (size_t i = 0; i < params_.size(); i++) {
 		(*params_[i].second).clean();
 	}
+	valid_ = true;
 }
 
 static std::string enumToString(e_param color) {
