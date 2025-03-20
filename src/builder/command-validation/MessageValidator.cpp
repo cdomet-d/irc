@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageValidator.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/19 17:04:46 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:38:21 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ bool messageValidator::assess(Client &sender) {
 		std::string cmd = priv::removeNewlines(message);
 		if (cmd.find("CAP") != std::string::npos)
 			continue;
-		std::cout << "Extracted	[" + cmd + "]" << std::endl;
-		std::cout << "Remainder	" + message << std::endl;
+		// std::cout << "Extracted	[" + cmd + "]" << std::endl;
+		// std::cout << "Remainder	" + message << std::endl;
 		if (priv::lenIsValid(cmd, sender) == false)
 			return false;
 		if (priv::hasPrefix(cmd, sender.cliInfo.getPrefix()) == false)
@@ -148,13 +148,14 @@ bool messageValidator::priv::lenIsValid(const std::string &mess,
 }
 
 std::string messageValidator::priv::removeNewlines(std::string &input) {
-
+	std::string result;
 	std::string::size_type newline = input.find(MESSAGE_TERMINATION);
 	if (newline == std::string::npos) {
+		result = input;
 		input.erase(input.begin(), input.end());
-		return (input);
+		return (result);
 	}
-	std::string result = input.substr(0, newline);
+	result = input.substr(0, newline);
 	input.erase(input.begin(), (input.begin() + newline + 2));
 	return result;
 }
