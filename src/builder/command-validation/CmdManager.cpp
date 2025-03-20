@@ -17,10 +17,11 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdManager::CmdManager(void) {}
+CmdManager::CmdManager(void) {
+	std::cout << "Cmd Manager instace created" << std::endl;
+}
 
-CmdManager::~CmdManager(void)
-{
+CmdManager::~CmdManager(void) {
 	for (cmdMap::iterator it = commandList_.begin(); it != commandList_.end();
 		 it++) {
 		delete it->second;
@@ -30,20 +31,18 @@ CmdManager::~CmdManager(void)
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-void CmdManager::executeCm(CmdSpec &cm)
-{
+void CmdManager::executeCm(CmdSpec &cm) {
 	if (cm.getValid()) {
 		cm.getExecutor()(cm);
 	}
 	cm.cleanAll();
 }
 
-void CmdManager::generateCmds()
-{
+void CmdManager::generateCmds() {
 	log(CmdSpec::CmdBuilder()
 			.Name("PASS")
 			.Registration(0)
-			.Parameters(password, new CmdParam())
+			.addParam(password_, new CmdParam())
 			.addChecker(isRegistered)
 			.addChecker(pwMatch)
 			//.CmExecutor()
@@ -53,7 +52,7 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("NICK")
 			.Registration(1)
-			.Parameters(nickname, new CmdParam())
+			.addParam(nickname_, new CmdParam())
 			.addChecker(validNick)
 			// .CmExecutor()
 			.build());
@@ -61,10 +60,10 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("USER")
 			.Registration(2)
-			.Parameters(username, new CmdParam())
-			.Parameters(hostname, new CmdParam())
-			.Parameters(servername, new CmdParam())
-			.Parameters(realname, new CmdParam())
+			.addParam(username_, new CmdParam())
+			.addParam(hostname_, new CmdParam())
+			.addParam(servername_, new CmdParam())
+			.addParam(realname_, new CmdParam())
 			.addChecker(isRegistered)
 			.addChecker(validUser)
 			// .CmExecutor()
@@ -74,18 +73,17 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("JOIN")
 			.Registration(3)
-			.Parameters(channel, new CmdParam(false, ','))
-			.Parameters(key, new CmdParam(true, ',')) //TODO : TRUE = OPTIONNEL
+			.addParam(channel_, new CmdParam(false, ','))
+			.addParam(key_, new CmdParam(true, ','))
 			.addChecker(joinChanRequest)
 			.CmExecutor(joinExec)
 			.build());
 
-	//can have 0 params or 2
 	log(CmdSpec::CmdBuilder()
 			.Name("INVITE")
 			.Registration(3)
-			.Parameters(target, new CmdParam())
-			.Parameters(channel, new CmdParam())
+			.addParam(target_, new CmdParam())
+			.addParam(channel_, new CmdParam())
 			.addChecker(validTarget)
 			.addChecker(validChan)
 			.addChecker(onChan)
@@ -98,9 +96,9 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("KICK")
 			.Registration(3)
-			.Parameters(channel, new CmdParam())
-			.Parameters(target, new CmdParam(false, ','))
-			.Parameters(message, new CmdParam(true, '\0'))
+			.addParam(channel_, new CmdParam())
+			.addParam(target_, new CmdParam(false, ','))
+			.addParam(message_, new CmdParam(true, '\0'))
 			.addChecker(validChan)
 			.addChecker(onChan)
 			.addChecker(hasChanPriv)
@@ -112,10 +110,11 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("MODE")
 			.Registration(3)
-			.Parameters(channel, new CmdParam())
-			.Parameters(mode_, new CmdParam(true, ' '))
-			.Parameters(modeArg, new CmdParam(true, ' '))
+			.addParam(channel_, new CmdParam())
+			.addParam(flag_, new CmdParam(true, ' '))
+			.addParam(flagArg_, new CmdParam(true, ' '))
 			.addChecker(validChan)
+			.addChecker(onChan) //TODO: verif if necessary
 			.addChecker(hasChanPriv)
 			.addChecker(validMode)
 			// .addChecker(validArg) ?
@@ -125,8 +124,8 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("PART")
 			.Registration(3)
-			.Parameters(channel, new CmdParam(false, ','))
-			.Parameters(message, new CmdParam(true, '\0'))
+			.addParam(channel_, new CmdParam(false, ','))
+			.addParam(message_, new CmdParam(true, '\0'))
 			.addChecker(validChan)
 			.addChecker(onChan)
 			.CmExecutor(partExec)
@@ -136,8 +135,8 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("PRIVMSG")
 			.Registration(3)
-			.Parameters(target, new CmdParam(false, ','))
-			.Parameters(message, new CmdParam())
+			.addParam(target_, new CmdParam(false, ','))
+			.addParam(message_, new CmdParam())
 			.addChecker(validMess)
 			.addChecker(validTarget)
 			.CmExecutor(privmsgExec)
@@ -146,15 +145,15 @@ void CmdManager::generateCmds()
 	log(CmdSpec::CmdBuilder()
 			.Name("QUIT")
 			.Registration(0)
-			.Parameters(message, new CmdParam(true, '\0'))
+			.addParam(message_, new CmdParam(true, '\0'))
 			//.CmExecutor()
 			.build());
 
 	log(CmdSpec::CmdBuilder()
 			.Name("TOPIC")
 			.Registration(3)
-			.Parameters(channel, new CmdParam())
-			.Parameters(topic_, new CmdParam(true, '\0'))
+			.addParam(channel_, new CmdParam())
+			.addParam(topic_, new CmdParam(true, '\0'))
 			.addChecker(validChan)
 			.addChecker(onChan)
 			.addChecker(hasChanPriv) //(only if mode +t is set)
@@ -162,16 +161,14 @@ void CmdManager::generateCmds()
 			.build());
 }
 
-void CmdManager::log(CmdSpec *cm)
-{
+void CmdManager::log(CmdSpec *cm) {
 	commandList_[cm->getName()] = cm;
 }
 
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-CmdSpec &CmdManager::getCmd(const std::string &cmName)
-{
+CmdSpec &CmdManager::findCmd(const std::string &cmName) {
 	cmdMap::iterator it;
 
 	it = commandList_.find(cmName);
@@ -181,8 +178,7 @@ CmdSpec &CmdManager::getCmd(const std::string &cmName)
 	return (*it->second);
 }
 
-CmdManager &CmdManager::getManagerInstance()
-{
+CmdManager &CmdManager::getManagerInstance() {
 	static CmdManager instance;
 	return (instance);
 }

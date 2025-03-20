@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 11:05:27 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:42:21 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,17 @@ void sendMessageChannel(clientMap allCliChannel, std::string message)
 {
 	for (clientMapIt it = allCliChannel.begin(); it != allCliChannel.end();
 		 ++it) {
-		sendReply(it->second->getFd(), message);
+		reply::send(it->second->getFd(), message);
 	}
 }
 
 bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 {
-	// logLevel(DEBUG, "-----addClientToChan-----");
-	std::map< int, Client * > clients = curChan->getCliInChan();
+	// reply::log(reply::DEBUG, "-----addClientToChan-----");
+	std::map< int, Client * > &clients = curChan->getCliInChan();
 	for (clientMapIt it = clients.begin(); it != clients.end(); ++it)
 		if (curCli == it->second) {
-			// logLevel(INFO, "Client already in channel");
+			// reply::INFO, "Client already in channel");
 			return (false);
 		}
 	if (curChan->getCliInChan().empty())
@@ -56,15 +56,16 @@ bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 
 	curCli->getJoinedChans().push_back(curChan->getName());
 
-	//messageToAllChannel
-	sendMessageChannel(curChan->getCliInChan(),
-					   RPL_JOIN(curCli->cliInfo.getNick(), curChan->getName()));
-
+	for (clientMapIt itCli = curChan->getCliInChan().begin();
+		 itCli != curChan->getCliInChan().end(); ++itCli) {
+		reply::send(itCli->second->getFd(),
+				  RPL_JOIN(curCli->cliInfo.getNick(), curChan->getName()));
+	}
 	if (curChan->getTopic().empty() == true)
-		sendReply(curCli->getFd(),
+		reply::send(curCli->getFd(),
 				  RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan->getName()));
 	else
-		sendReply(curCli->getFd(),
+		reply::send(curCli->getFd(),
 				  RPL_TOPIC(curCli->cliInfo.getNick(), curChan->getName(),
 							curChan->getTopic()));
 	return (true);
@@ -108,7 +109,7 @@ std::string Channel::getTopic() const
 {
 	return (topic_);
 }
-int Channel::getMaxCli() const
+size_t Channel::getMaxCli() const
 {
 	return (maxCli_);
 }

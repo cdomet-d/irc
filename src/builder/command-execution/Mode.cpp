@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 10:40:42 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:40:35 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void executeFlag(std::string flag, std::string param, Channel &curChan)
 	if (flagLevel != -1)
 		flagExecutor[flagLevel](flag, param, curChan);
 	else
-		logLevel(DEBUG, "Invalid flag");
+		reply::log(reply::DEBUG, "Invalid flag");
 }
 
 Channel &findCurChan(std::string chanName)
@@ -132,22 +132,22 @@ Channel &findCurChan(std::string chanName)
 //the modes of a channel need to be empty if no moe is activated and +<modes> if any
 void modeExec(CmdSpec &cmd)
 {
-	logLevel(DEBUG, "-----modeExec-----");
+	reply::log(reply::DEBUG, "-----handleMode-----");
 	Client *sender = &cmd.getSender();
-	Channel &curChan = findCurChan(cmd[channel][0]);
+	Channel &curChan = findCurChan(cmd[channel_][0]);
 	std::string newModes;
 	std::string newMaxCli = "";
 
-	if (!cmd[mode_].getSize()) {
-		sendReply(sender->getFd(),
+	if (!cmd[flag_].getSize()) {
+		reply::send(sender->getFd(),
 				  RPL_UMODEIS(sender->cliInfo.getNick(), curChan.getModes()));
 		return;
 	}
-	for (size_t nbFlag = 0; nbFlag < cmd[mode_].getSize(); nbFlag++) {
-		if (cmd[mode_][nbFlag] == "+l")
-			newMaxCli = cmd[modeArg][nbFlag];
-		executeFlag(cmd[mode_][nbFlag], cmd[modeArg][nbFlag], curChan);
-		newModes.append(cmd[mode_][nbFlag]);
+	for (size_t nbFlag = 0; nbFlag < cmd[flag_].getSize(); ++nbFlag) {
+		if (cmd[flag_][nbFlag] == "+l")
+			newMaxCli = cmd[flagArg_][nbFlag];
+		executeFlag(cmd[flag_][nbFlag], cmd[flagArg_][nbFlag], curChan);
+		newModes.append(cmd[flag_][nbFlag]);
 	}
 	newModes.append(newMaxCli);
 	sendMessageChannel(curChan.getCliInChan(),

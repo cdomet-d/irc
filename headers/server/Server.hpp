@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 11:11:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:39:11 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,12 @@
 #include "typedef.hpp"
 #include <arpa/inet.h>
 #include <cstring>
+#include <fstream>
 #include <netinet/in.h>
 #include <poll.h>
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
-
-enum logEnum { INFO, ERROR, DEBUG };
 
 extern int gSign;
 
@@ -53,11 +52,15 @@ class Server {
 	bool servInit();
 	bool servRun();
 	void acceptClient();
-	void processBuffer(Client *curCli);
-	void addChan(Channel *curChan);
-	void removeChan(Channel *curChan);
 
 	/*                               GETTERS                                  */
+	const nickMap &getUsedNick() const;
+	int getFdFromNick(const std::string &nick) const;
+	const std::string getPass() const;
+
+	/*                               MEMBERS                                  */
+	std::ofstream logfile;
+	
 	const clientMap &getAllCli() const;
 	const channelMap &getAllChan() const;
 	std::string getPass() const;
@@ -78,7 +81,7 @@ class Server {
 
 	clientMap clients_;
 	channelMap channels_;
-	stringVec usedNicks_;
+	nickMap usedNicks_;
 
 	// private constructor
 	Server(void);

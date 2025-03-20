@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 10:41:04 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:41:45 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 void checkTopic(Channel &curChan, Client *curCli)
 {
 	if (curChan.getTopic().empty() == true) {
-		sendReply(curCli->getFd(),
+		reply::send(curCli->getFd(),
 				  RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan.getName()));
 		return;
 	}
-	sendReply(curCli->getFd(),
+	reply::send(curCli->getFd(),
 			  RPL_TOPIC(curCli->cliInfo.getNick(), curChan.getName(),
 						curChan.getTopic()));
 	return;
@@ -29,7 +29,6 @@ void checkTopic(Channel &curChan, Client *curCli)
 void clearTopic(Channel &curChan, Client *curCli)
 {
 	curChan.setTopic("");
-	//messageToAllChannel
 	sendMessageChannel(
 		curChan.getCliInChan(),
 		RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan.getName()));
@@ -38,7 +37,6 @@ void clearTopic(Channel &curChan, Client *curCli)
 void changeTopic(Channel &curChan, Client *curCli, std::string topic)
 {
 	topic.erase(1, 0); //remove the ':'
-	//curChan->getTopic().clear();
 	curChan.setTopic(topic);
 	sendMessageChannel(curChan.getCliInChan(),
 					   RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(),
@@ -49,7 +47,7 @@ void changeTopic(Channel &curChan, Client *curCli, std::string topic)
 void topicExec(CmdSpec &cmd)
 {
 	Client *sender = &cmd.getSender();
-	Channel &curChan = findCurChan(cmd[channel][0]);
+	Channel &curChan = findCurChan(cmd[channel_][0]);
 
 	//if no params (= topic is empty) after chanName, client only checks the topic
 	if (!cmd[topic_].getSize()) {

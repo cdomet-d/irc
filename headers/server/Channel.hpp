@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 11:04:25 by aljulien         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/03/20 12:38:10 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
@@ -63,7 +64,7 @@ class Channel {
 	clientMap cliInChan_;
 	clientMap cliIsOperator_;
 	clientMap cliInvited_;
-	int maxCli_;
+	size_t maxCli_;
 	std::string modes_;
 	std::string name_;
 	std::string pass_;
