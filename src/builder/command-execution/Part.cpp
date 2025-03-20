@@ -18,17 +18,16 @@ void partExec(CmdSpec &cmd)
 {
 	static Server &server = Server::GetServerInstance(0, "");
 	Client *sender = &cmd.getSender();
-	Channel &curChan = findCurChan(cmd[channel][0]);
+	Channel &curChan = findCurChan(cmd[channel_][0]);
 
-	if (!cmd[message].getSize())
+	if (!cmd[message_].getSize())
 		sendMessageChannel(
 			curChan.getCliInChan(),
 			RPL_PARTNOREASON(sender->cliInfo.getPrefix(), curChan.getName()));
 	else
 		sendMessageChannel(curChan.getCliInChan(),
 						   RPL_PARTREASON(sender->cliInfo.getPrefix(),
-										  curChan.getName(), cmd[message][0]));
-
+										  curChan.getName(), cmd[message_][0]));
 
 	int targetFd = sender->getFd();
 	curChan.removeCli(ALLCLI, targetFd);

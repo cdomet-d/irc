@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "CmdSpec.hpp"
 #include "Reply.hpp"
 #include "Server.hpp"
@@ -17,21 +18,22 @@
 void inviteExec(CmdSpec &cmd)
 {
 	static Server &server = Server::GetServerInstance(0, "");
-	Channel &curChan = findCurChan(cmd[channel][0]);
+	Channel &curChan = findCurChan(cmd[channel_][0]);
 	Client *sender = &cmd.getSender();
 
 	Client *targetCli = NULL;
 	for (clientMapIt itTarget = server.getAllCli().begin();
 		 itTarget != server.getAllCli().end(); ++itTarget) {
-		if (itTarget->second->cliInfo.getNick() == cmd[target][0]) {
+		if (itTarget->second->cliInfo.getNick() == cmd[target_][0]) {
 			targetCli = itTarget->second;
 		}
 	}
 
-	sendReply(sender->getFd(),
-			  RPL_INVITING(targetCli->cliInfo.getNick(), cmd[channel][0]));
-	sendReply(targetCli->getFd(),
+	reply::send(sender->getFd(),
+			  RPL_INVITING(targetCli->cliInfo.getNick(), cmd[channel_][0]));
+	reply::send(targetCli->getFd(),
 			  RPL_INVITE(sender->cliInfo.getNick(),
 						 targetCli->cliInfo.getNick(), cmd[channel][0]));
 	curChan.addCli(INVITECLI, targetCli);
+
 }

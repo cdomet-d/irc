@@ -24,9 +24,11 @@ class Channel;
 
 typedef std::map< int, Client * > clientMap;
 typedef std::map< int, Client * >::const_iterator clientMapIt;
+typedef std::map< std::string, int > nickMap;
 typedef std::map< std::string, Channel * > channelMap;
 typedef std::map< std::string, Channel * >::const_iterator channelMapIt;
 typedef std::pair< int, Client * > clientPair;
+typedef std::pair<std::string, int> nickPair;
 typedef std::vector< std::string > stringVec;
 
 // -------------------------------- IRC UTILS ------------------------------- //

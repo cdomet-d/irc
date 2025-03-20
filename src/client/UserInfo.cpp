@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserInfo.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/18 17:01:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 14:06:48 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 
-UserInfo::UserInfo(void) : name_(""), nick_(""), pass_(""), realName_("") {}
+UserInfo::UserInfo(void)
+	: registration_(0), name_(""), nick_(""), pass_(""), realName_("") {}
 UserInfo::~UserInfo(void) {}
 
 UserInfo::UserInfo(const UserInfo &rhs)

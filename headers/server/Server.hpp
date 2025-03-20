@@ -18,13 +18,12 @@
 #include "typedef.hpp"
 #include <arpa/inet.h>
 #include <cstring>
+#include <fstream>
 #include <netinet/in.h>
 #include <poll.h>
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
-
-enum logEnum { INFO, ERROR, DEBUG };
 
 extern int gSign;
 
@@ -60,7 +59,14 @@ class Server {
 	/*                               GETTERS                                  */
 	const clientMap &getAllCli() const;
 	const channelMap &getAllChan() const;
-	std::string getPass() const;
+
+	/*                               GETTERS                                  */
+	const nickMap &getUsedNick() const;
+	int getFdFromNick(const std::string &nick) const;
+	const std::string getPass() const;
+
+	/*                               MEMBERS                                  */
+	std::ofstream logfile;
 
   private:
 	/*                               METHODS                                  */
@@ -78,7 +84,7 @@ class Server {
 
 	clientMap clients_;
 	channelMap channels_;
-	stringVec usedNicks_;
+	nickMap usedNicks_;
 
 	// private constructor
 	Server(void);
@@ -95,9 +101,5 @@ bool privmsgExec(std::string params, Client *curCli);
 bool whoExec(std::string params, Client *curCli);
 //PASS
 bool passExec(std::string params, Client *curCli);
-
-/*                               DEBUG                                  */
-void logLevel(logEnum level, std::string message);
-void logLevel(logEnum level, std::string message, std::string additionalInfo);
 
 #endif //SERVER_HPP

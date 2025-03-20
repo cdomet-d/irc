@@ -16,7 +16,7 @@
 
 bool passExec(std::string params, Client *curCli)
 {
-	logLevel(DEBUG, "----passExec----");
+	reply::log(reply::DEBUG, "----handlePass----");
 	static Server &server = Server::GetServerInstance(0, "");
 
 	std::istringstream iss(params);
@@ -26,23 +26,23 @@ bool passExec(std::string params, Client *curCli)
 	getline(iss, password);
 
 	if (password.empty() == true) {
-		sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(command));
+		reply::send(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->cliInfo.getNick(), command));
 		return (false);
 	}
 
 	clientMapIt senderIt = server.getAllCli().find(curCli->getFd());
 	if (server.getAllCli().size() == 0 &&
 		senderIt != server.getAllCli().end()) {
-		sendReply(curCli->getFd(), ERR_ALREADYREGISTRED());
+		reply::send(curCli->getFd(), ERR_ALREADYREGISTRED(curCli->cliInfo.getNick()));
 		return (false);
 	}
 
 	if (password != server.getPass()) {
-		sendReply(curCli->getFd(), ERR_PASSWDMISMATCH(placeHolder));
+		reply::send(curCli->getFd(), ERR_PASSWDMISMATCH(placeHolder));
 		return (false);
 	}
 
-	sendReply(curCli->getFd(), PASS_SUCCESS());
+	reply::send(curCli->getFd(), PASS_SUCCESS());
 
 	return (true);
 }

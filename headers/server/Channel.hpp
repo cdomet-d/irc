@@ -37,10 +37,11 @@ class Channel {
 	bool getInviteOnly() const;
 	bool getIsPassMatch() const;
 	bool getTopicRestrict() const;
+
 	const clientMap &getCliInChan() const;
 	const clientMap &getOpCli() const;
 	const clientMap &getInvitCli() const;
-	int getMaxCli() const;
+	size_t getMaxCli() const;
 	std::string getName() const;
 	std::string getTopic() const;
 	std::string getModes() const;
@@ -63,7 +64,7 @@ class Channel {
 	clientMap cliInChan_;
 	clientMap cliIsOperator_;
 	clientMap cliInvited_;
-	int maxCli_;
+	size_t maxCli_;
 	std::string modes_;
 	std::string name_;
 	std::string pass_;

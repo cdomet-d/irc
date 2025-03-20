@@ -1,31 +1,34 @@
 # Command specifications analysis
 
 - [Command specifications analysis](#command-specifications-analysis)
-  - [PASS](#pass)
-    - [Parsing rules](#parsing-rules)
-      - [Failure strategy](#failure-strategy)
-      - [Success strategy](#success-strategy)
-    - [Attributes](#attributes)
-    - [Methods](#methods)
-    - [Tests with libera.chat](#tests-with-liberachat)
-  - [NICK](#nick)
-  - [tests with libera.chat :](#tests-with-liberachat-)
-  - [USER](#user)
-  - [tests with libera.chat :](#tests-with-liberachat--1)
-  - [INVITE](#invite)
-  - [tests with libera.chat :](#tests-with-liberachat--2)
-  - [JOIN](#join)
-  - [tests with libera.chat :](#tests-with-liberachat--3)
-  - [KICK](#kick)
-  - [tests with libera.chat :](#tests-with-liberachat--4)
-  - [MODE](#mode)
-  - [tests with libera.chat :](#tests-with-liberachat--5)
-  - [PART](#part)
-  - [tests with libera.chat :](#tests-with-liberachat--6)
-  - [PRIVMSG](#privmsg)
-  - [QUIT](#quit)
-  - [TOPIC](#topic)
-  - [tests with libera.chat :](#tests-with-liberachat--7)
+	- [PASS](#pass)
+		- [Parsing rules](#parsing-rules)
+			- [Failure strategy](#failure-strategy)
+			- [Success strategy](#success-strategy)
+		- [Attributes](#attributes)
+		- [Methods](#methods)
+		- [Tests with libera.chat](#tests-with-liberachat)
+	- [NICK](#nick)
+		- [Parsing rules](#parsing-rules-1)
+			- [Failure strategy](#failure-strategy-1)
+			- [Success strategy](#success-strategy-1)
+	- [tests with libera.chat :](#tests-with-liberachat-)
+	- [USER](#user)
+	- [tests with libera.chat :](#tests-with-liberachat--1)
+	- [INVITE](#invite)
+	- [tests with libera.chat :](#tests-with-liberachat--2)
+	- [JOIN](#join)
+	- [tests with libera.chat :](#tests-with-liberachat--3)
+	- [KICK](#kick)
+	- [tests with libera.chat :](#tests-with-liberachat--4)
+	- [MODE](#mode)
+	- [tests with libera.chat :](#tests-with-liberachat--5)
+	- [PART](#part)
+	- [tests with libera.chat :](#tests-with-liberachat--6)
+	- [PRIVMSG](#privmsg)
+	- [QUIT](#quit)
+	- [TOPIC](#topic)
+	- [tests with libera.chat :](#tests-with-liberachat--7)
 
 ## PASS
 
@@ -64,7 +67,7 @@ PASS : <password>
     in case of failure display ERR_NEEDMOREPARAMS
 
 (2) isRegistered -> check if the password is already set    
-    in case of failure displayERR_ALREADYREGISTERED
+    in case of failure display ERR_ALREADYREGISTERED
 
 (3) pwMatch() -> checks to see if the given password is correct \
     in case of failure display ERR_PASSWDMISMATCH
@@ -85,6 +88,43 @@ PASS
 
 ## NICK
 
+```markdown
+NICK : <nickname>
+  -> ex : /nick my_nickname
+```
+
+### Parsing rules
+
+- MUST NOT contain any of the following characters:
+  - space (`' '`, 0x20),
+  - comma (`','`, 0x2C),
+  - asterisk (`'*'`, 0x2A),
+  - question mark (`'?'`, 0x3F),
+  - exclamation mark (`'!'`, 0x21),
+  - at sign (`'@'`, 0x40)
+- MUST NOT start with any of the following characters:
+  - dollar (`'$'`, 0x24),
+  - colon (`':'`, 0x3A),
+  - hash (`'#'`, 0x23 ),
+  - ampersand (`'&'`, 0x26)
+  - Those result in => ERR_ERRONEUSNICKNAME
+- SHOULD NOT contain any dot character (`'.'`, 0x2E)
+- MUST NOT already be in use => ERR_NICKNAMEINUSE
+- SHOULD NOT be ambiguous with implemented commands.
+
+#### Failure strategy
+
+- Returns the appropriate numeric reply to the client
+- Ignore the command
+
+#### Success strategy
+
+- Informs the clients that the client changed his NICK, using the old nick as a source.
+
+```markdown
+    NICK amelie
+    REPLY: amelie38 changed their nickname to amelie
+```
 //requirement
 password is set
 
@@ -267,15 +307,15 @@ channel object
                     different pour les autres commandes, qui elles regardent juste si le channel existe alors que pour join il regarde s'il est correcte
 
 (3) joinChanRequest() -> checks : 
-                            - the nbr of channels the client is in, if > limit display ERR_TOOMANYCHANNELS \
-                        (1) - if the key to access the channel (if it has one) is supplied and valid \
-                            if not display ERR_BADCHANNELKEY \
+                        (5) - the nbr of channels the client is in, if > limit display ERR_TOOMANYCHANNELS \
+                        (4) - if the key to access the channel (if it has one) is supplied  and valid if not display ERR_BADCHANNELKEY \
                             - if client isn't banned from the channel \
                                 if so display ERR_BANNEDFROMCHAN (we don't have to implement MODE +b so this is optionnal) \
-                        (2) - if channel's client limit (if set) hasn't been reached if so display ERR_CHANNELISFULL \
+                        (2) - if channel's client limit (if set) has been reached if so display ERR_CHANNELISFULL \
                         (3) - if client was invited (if channel is invite-only mode) if not display ERR_INVITEONLYCHAN \
                             - ERR_BADCHANMASK (not sure of the purpose of this one) Indicates the supplied channel name is not a valid. \
                                  is similar to, but stronger than, ERR_NOSUCHCHANNEL (403), which indicates that the channel does not exist, but that it may be a valid name.
+                        (1)- if client is already on channel
                         
 -- executors --
 addToChan() -> adds client to channel \
@@ -539,12 +579,12 @@ command issuer client object
 validMess() -> check : \
                 (1) - if there is a text to be sent, if not display ERR_NOTEXTTOSEND \
                 (2) - if there is a target, if not display ERR_NORECIPIENT
-(3)
+                (3) - validTarget() -> check if nickname exists, if not display     ERR_NOSUCHNICK. si le target est un channel appeler onChan pour verifier si le client est dans le channel
+
 if target is a channel : \
     - check channel modes because they can affect the message \ (we don't have modes that can affect a message)
             if it cannot be delivered to channel display ERR_CANNOTSENDTOCHAN \
-else if target is a user : \
-    - validTarget() -> check if nickname exists, if not display ERR_NOSUCHNICK \
+
 
 -- executors --
 sendMess() -> send <text to be sent> to target \

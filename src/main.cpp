@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 17:04:11 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:53:08 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "Server.hpp"
 #include <csignal>
 #include <cstdlib>
+#include <sstream>
 
 int gSign = false;
 
@@ -23,47 +24,20 @@ void SignalHandler(int signum)
 	gSign = true;
 }
 
-int main(int ac, char **av)
-{
-	(void)av;
+int main(int ac, char *av[]) {
 	if (ac != 3)
-		return (std::cout << "Missing arguments (port and password)\n", 0);
+		return (std::cerr << "Expected <port> <password>" << std::endl, 1);
+
 	signal(SIGINT, SignalHandler);
 	signal(SIGQUIT, SignalHandler);
-	int port = atoi(av[1]);
+	int port = atoi(av[1]); //TODO: protect atoi from overflow
 	std::string password = av[2];
+
 	Server &server = Server::GetServerInstance(port, password);
-	server.servInit();
 	CmdManager &cmManager = CmdManager::getManagerInstance();
+
 	cmManager.generateCmds();
+	server.servInit();
 	server.servRun();
-	/* 	for (channelMapIt it =
-			 server.getAllChan().begin();
-		 it != server.getAllChan().end(); ++it) {
-		std::cout << "Channel: " << it->second->getName() << std::endl;
-		for (clientMapIt itCli =
-				 it->second->getCliInChan().begin();
-			 itCli != it->second->getCliInChan().end(); ++itCli) {
-			std::cout << "Client: " << itCli->second->getNick() << std::endl;
-		}
-	} */
 	return (0);
 }
-
-//int main(int argc, char **argv) {
-//	Client client;
-//	CmdManager &cmManager = CmdManager::getManagerInstance();
-//
-//	if (argc < 2) {
-//		std::cerr << "not enough params\n";
-//		return (1);
-//	}
-//
-//	client.cliInfo.setRegistration(3);
-//	client.mess.setBuffer(argv[1]);
-//
-//	cmManager.generateCmds();
-//
-//	MessageValidator::assess(client);
-//	return (0);
-//}

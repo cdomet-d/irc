@@ -41,15 +41,14 @@ Channel *createChan(const std::string &chanName)
 
 void joinExec(CmdSpec &cmd)
 {
-	logLevel(DEBUG, "-----joinExec-----");
 	Client *sender = &cmd.getSender();
-	if (cmd[channel][0] == "0") {
+	if (cmd[channel_][0] == "0") {
 		//partAllChans(sender);
 		return;
 	}
 
-	for (size_t nbChan = 0; nbChan < cmd[channel].getSize(); nbChan++) {
-		Channel *curChan = createChan(cmd[channel][nbChan]);
+	for (size_t nbChan = 0; nbChan < cmd[channel_].getSize(); nbChan++) {
+		Channel *curChan = createChan(cmd[channel_][nbChan]);
 		curChan->addClientToChan(curChan, sender);
 	}
 	return;
