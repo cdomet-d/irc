@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/20 16:00:05 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/20 17:03:24 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@
 #include "syntaxCheck.hpp"
 
 bool RegStageDone(CmdSpec &cmd) {
-	if (cmd.getSender().cliInfo.getRegistration() <= cmd.getRegistrationStage())
+	if (cmd.getSender().cliInfo.getRegistration() <= cmd.getRegistrationStage() ||
+		cmd.getSender().cliInfo.getRegistration() == 3)
 		return (true);
 	if (cmd.getName() == "PASS")
-		reply::send(cmd.getSender().getFd(), "please use command NICK\r\n");
+		reply::send(cmd.getSender().getFd(), "Please enter nickname\r\n");
 	if (cmd.getName() == "NICK")
-		reply::send(cmd.getSender().getFd(), "please use command USER\r\n");
+		reply::send(cmd.getSender().getFd(), "Please enter username\r\n");
 	return (false);
 }
 
@@ -67,7 +68,7 @@ bool validUser(CmdSpec &cmd) {
 bool validChan(CmdSpec &cmd) {
 	stringVec param = cmd[channel_].getInnerParam();
 	messageValidator::printCmdParam(param, "innerParam");
-	return (0);
+	return (true);
 }
 
 bool validRequest(Channel chan, CmdSpec &cmd, size_t i) {
@@ -75,10 +76,10 @@ bool validRequest(Channel chan, CmdSpec &cmd, size_t i) {
 		return (false);
 	if (joinCheck::reachedChanLimit(chan, cmd.getSender()))
 		return (false);
-	if (chan.getModes().find('i') != std::string::npos &&
+	if (chan.getModes().find("i") != std::string::npos &&
 		!joinCheck::hasInvite(chan, cmd.getSender()))
 		return (false);
-	else if (chan.getModes().find('k') != std::string::npos &&
+	else if (chan.getModes().find("k") != std::string::npos &&
 			 !joinCheck::validKey(chan, cmd[key_], i, cmd.getSender()))
 		return (false);
 	if (joinCheck::reachedCliChanLimit(chan, cmd.getSender()))
