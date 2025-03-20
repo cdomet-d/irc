@@ -9,10 +9,8 @@ Mettre des try catch quand acces en [] a des aprams optionnels
 Commands :
 PRIVMSG, USER, NICK, JOIN, TOPIC, WHO, PART, KICK, QUIT, INVITE, PASS, MODE //currently working on
 
-toutes les functions d'exec prennent reference d'une instance de CmdSpec
 Faire headers exec pour function 
-Faire message reply modes`
-Erase Channel if nobody there (delete empty channel)
+Faire message reply modes
 
 TRAME :
 

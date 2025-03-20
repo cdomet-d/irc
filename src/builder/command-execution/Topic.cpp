@@ -6,10 +6,11 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 12:41:45 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 13:17:37 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
 #include "Server.hpp"
 
@@ -44,7 +45,7 @@ void changeTopic(Channel &curChan, Client *curCli, std::string topic)
 										curChan.getTopic()));
 }
 
-void topicExec(CmdSpec &cmd)
+void topic(CmdSpec &cmd)
 {
 	Client *sender = &cmd.getSender();
 	Channel &curChan = findCurChan(cmd[channel_][0]);

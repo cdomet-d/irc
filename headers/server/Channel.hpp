@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/03/20 12:38:10 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:00:27 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ class Channel {
 	const clientMap &getCliInChan() const;
 	const clientMap &getOpCli() const;
 	const clientMap &getInvitCli() const;
-	int getMaxCli() const;
+	size_t getMaxCli() const;
 	std::string getName() const;
 	std::string getTopic() const;
 	std::string getModes() const;

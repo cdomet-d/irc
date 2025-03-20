@@ -6,12 +6,13 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 12:40:35 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 13:17:27 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdSpec.hpp"
 #include "Server.hpp"
+#include "CmdExecution.hpp"
 #include <cerrno>
 #include <cstdlib>
 #include <limits>
@@ -130,7 +131,7 @@ Channel &findCurChan(std::string chanName)
 }
 
 //the modes of a channel need to be empty if no moe is activated and +<modes> if any
-void modeExec(CmdSpec &cmd)
+void mode(CmdSpec &cmd)
 {
 	reply::log(reply::DEBUG, "-----handleMode-----");
 	Client *sender = &cmd.getSender();

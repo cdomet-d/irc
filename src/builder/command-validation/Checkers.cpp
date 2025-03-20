@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Checkers.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/19 17:07:10 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:48:42 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ bool validChan(CmdSpec &cmd) {
 }
 
 bool joinChanRequest(CmdSpec &cmd) {
-	channelMap::iterator itChan;
+	channelMap::const_iterator itChan;
 
 	for (size_t i = 0; i < cmd[channel_].getSize(); i++) {
 		//TODO: call coralie's function to check syntax of channel
@@ -131,7 +131,7 @@ bool onChan(CmdSpec &cmd) {
 }
 
 bool hasChanPriv(CmdSpec &cmd) {
-	channelMap::iterator itChan;
+	channelMap::const_iterator itChan;
 
 	itChan = cmd.server_.getAllChan().find(cmd[channel_][0]);
 	Channel chan = *itChan->second;
@@ -142,7 +142,7 @@ bool hasChanPriv(CmdSpec &cmd) {
 		return (true);
 	}
 
-	clientMap::iterator itCl;
+	clientMap::const_iterator itCl;
 
 	itCl = chan.getOpCli().find(cmd.getSender().getFd());
 	if (itCl == chan.getOpCli().end()) {

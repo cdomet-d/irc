@@ -6,12 +6,13 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 12:40:10 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 13:19:06 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdSpec.hpp"
 #include "Server.hpp"
+#include "CmdExecution.hpp"
 #include <sstream>
 
 Channel *createChan(const std::string &chanName)
@@ -34,12 +35,12 @@ Channel *createChan(const std::string &chanName)
 {
 	for (stringVec::iterator currChanName = curCli->getJoinedChans().begin();
 		 currChanName != curCli->getJoinedChans().end(); ++currChanName) {
-		partExec(*currChanName, curCli);
+		part(*currChanName, curCli);
 	}
 	curCli->getJoinedChans().clear();
 } */
 
-void joinExec(CmdSpec &cmd)
+void join(CmdSpec &cmd)
 {
 	Client *sender = &cmd.getSender();
 	if (cmd[channel_][0] == "0") {

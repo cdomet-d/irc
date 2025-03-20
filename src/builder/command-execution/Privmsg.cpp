@@ -6,14 +6,15 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 12:41:38 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 13:15:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdSpec.hpp"
+#include "CmdExecution.hpp"
 #include "Server.hpp"
 
-void privmsgExec(CmdSpec &cmd)
+void privmsg(CmdSpec &cmd)
 {
 	static Server &server = Server::GetServerInstance(0, "");
 	Client *sender = &cmd.getSender();

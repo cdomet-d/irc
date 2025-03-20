@@ -6,21 +6,22 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 12:39:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 13:39:22 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
+#include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
 #include "Reply.hpp"
 #include "Server.hpp"
 
-void inviteExec(CmdSpec &cmd)
+void invite(CmdSpec &cmd)
 {
 	static Server &server = Server::GetServerInstance(0, "");
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 	Client *sender = &cmd.getSender();
 
+	//use NickMap
 	Client *targetCli = NULL;
 	for (clientMapIt itTarget = server.getAllCli().begin();
 		 itTarget != server.getAllCli().end(); ++itTarget) {

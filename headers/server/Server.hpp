@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 12:39:11 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 13:09:44 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ class Server {
 	bool servInit();
 	bool servRun();
 	void acceptClient();
+	void addChan(Channel *curChan);
+	void removeChan(Channel *curChan);
 
 	/*                               GETTERS                                  */
 	const nickMap &getUsedNick() const;
@@ -63,7 +65,6 @@ class Server {
 	
 	const clientMap &getAllCli() const;
 	const channelMap &getAllChan() const;
-	std::string getPass() const;
 
   private:
 	/*                               METHODS                                  */
@@ -87,20 +88,5 @@ class Server {
 	Server(void);
 	Server(int port, std::string password);
 };
-
-/*                               COMMAND                                  */
-//NICK--USER
-void handleClientRegistration(const std::string &input, Client *curCli);
-
-//PRIVMSG
-bool privmsgExec(std::string params, Client *curCli);
-//WHO
-bool whoExec(std::string params, Client *curCli);
-//PASS
-bool passExec(std::string params, Client *curCli);
-
-/*                               DEBUG                                  */
-void logLevel(logEnum level, std::string message);
-void logLevel(logEnum level, std::string message, std::string additionalInfo);
 
 #endif //SERVER_HPP

@@ -6,17 +6,19 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 12:41:52 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:01:24 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Reply.hpp"
+#include "CmdExecution.hpp"
 #include "Server.hpp"
 #include <sstream>
 
-bool whoExec(std::string params, Client *curCli)
+bool who(CmdSpec &cmd)
 {
-	static Server &server = Server::GetServerInstance(0, "");
+	(void)cmd;
+	/* 	static Server &server = Server::GetServerInstance(0, "");
 
 	std::istringstream iss(params);
 	std::string channel;
@@ -68,7 +70,7 @@ bool whoExec(std::string params, Client *curCli)
 	reply::send(curCli->getFd(),
 			  RPL_NAMREPLY(curCli->cliInfo.getNick(), "=", channel, nickList));
 	reply::send(curCli->getFd(),
-			  RPL_ENDOFNAMES(curCli->cliInfo.getNick(), channel));
+			  RPL_ENDOFNAMES(curCli->cliInfo.getNick(), channel)); */
 
 	return (true);
 }

@@ -6,13 +6,14 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 12:40:19 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 13:18:18 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdSpec.hpp"
 #include "Reply.hpp"
 #include "Server.hpp"
+#include "CmdExecution.hpp"
 
 void kickFromAllMap(Client *target, Channel &curChan)
 {
@@ -28,7 +29,7 @@ void kickFromAllMap(Client *target, Channel &curChan)
 		curChan.removeCli(INVITECLI, fdTarget);
 }
 
-void kickExec(CmdSpec &cmd)
+void kick(CmdSpec &cmd)
 {
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 	Client *sender = &cmd.getSender();

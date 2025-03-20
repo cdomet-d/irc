@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 12:42:39 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 13:17:10 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,7 +190,7 @@ bool checkOnlyOperator(int fd) {
 	static Server &server = Server::GetServerInstance(0, "");
 
 	clientMap::const_iterator curCli = server.getAllCli().find(fd);
-	//joinExec("0", curCli->second);
+	//join("0", curCli->second);
 	for (stringVec::iterator curChanName =
 			 curCli->second->getJoinedChans().begin();
 		 curChanName != curCli->second->getJoinedChans().end();
@@ -224,6 +224,14 @@ bool Server::disconnectCli(int fd) {
 		return true;
 	}
 	return false;
+}
+
+void Server::addChan(Channel *curChan) {
+	channels_.insert(std::pair<std::string, Channel *>(curChan->getName(), curChan));
+}
+
+void Server::removeChan(Channel *curChan) {
+	channels_.erase(curChan->getName());
 }
 /* ************************************************************************** */
 /*                               EXCEPTIONS                                   */
