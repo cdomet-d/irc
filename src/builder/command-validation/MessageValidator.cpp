@@ -6,7 +6,7 @@
 /*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/20 12:38:21 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/20 13:20:57 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ std::string messageValidator::priv::removeNewlines(std::string &input) {
 	std::string result;
 	std::string::size_type newline = input.find(MESSAGE_TERMINATION);
 	if (newline == std::string::npos) {
-		result = input;
+		result.assign(input, 0, input.size() - 1);
 		input.erase(input.begin(), input.end());
 		return (result);
 	}
