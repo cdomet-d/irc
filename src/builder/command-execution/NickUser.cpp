@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   NickUser.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:46:19 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 13:06:42 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/20 15:27:49 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,10 @@ void handleClientRegistration(const std::string &input, Client *curCli)
 }
 
 #include "CmdSpec.hpp"
-void nick(CmdSpec &cmd) {
+void Nick(CmdSpec &cmd) {
 	cmd.getSender().cliInfo.setRegistration(2);
 }
 
-void user(CmdSpec &cmd) {
+void User(CmdSpec &cmd) {
 	cmd.getSender().cliInfo.setRegistration(3);
 }

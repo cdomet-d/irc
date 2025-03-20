@@ -110,13 +110,13 @@ class CmdSpec {
 };
 
 //PASS
-void pass(CmdSpec &cmd);
+void Pass(CmdSpec &cmd);
 
 //NICK
-void nick(CmdSpec &cmd);
+void Nick(CmdSpec &cmd);
 
 //USER
-void user(CmdSpec &cmd);
+void User(CmdSpec &cmd);
 
 //JOIN
 void handleJoin(CmdSpec &cmd);
