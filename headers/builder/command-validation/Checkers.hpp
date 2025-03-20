@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 15:49:12 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/19 17:52:44 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:35:01 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,6 @@ bool validMode(CmdSpec &cmd);		// Coralie
 bool validNick(CmdSpec &cmd);		// Coralie
 bool validTarget(CmdSpec &cmd);		// Coralie
 bool validUser(CmdSpec &cmd);		// Coralie
+bool RegStageDone(CmdSpec &cmd);
 
 #endif

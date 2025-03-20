@@ -43,6 +43,7 @@ void CmdManager::generateCmds() {
 			.Name("PASS")
 			.Registration(0)
 			.addParam(password_, new CmdParam())
+			.addChecker(RegStageDone)
 			.addChecker(isRegistered)
 			.addChecker(pwMatch)
 			.CmExecutor(Pass)
@@ -53,6 +54,7 @@ void CmdManager::generateCmds() {
 			.Name("NICK")
 			.Registration(1)
 			.addParam(nickname_, new CmdParam())
+			.addChecker(RegStageDone)
 			.addChecker(validNick)
 			.CmExecutor(Nick)
 			.build());

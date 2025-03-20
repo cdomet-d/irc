@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Checkers.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/20 10:10:13 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/20 16:00:05 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,16 @@
 #include "JoinRequestCheck.hpp"
 #include "Reply.hpp"
 #include "syntaxCheck.hpp"
+
+bool RegStageDone(CmdSpec &cmd) {
+	if (cmd.getSender().cliInfo.getRegistration() <= cmd.getRegistrationStage())
+		return (true);
+	if (cmd.getName() == "PASS")
+		reply::send(cmd.getSender().getFd(), "please use command NICK\r\n");
+	if (cmd.getName() == "NICK")
+		reply::send(cmd.getSender().getFd(), "please use command USER\r\n");
+	return (false);
+}
 
 bool pwMatch(CmdSpec &cmd) {
 	if (cmd[password_][0] != cmd.server_.getPass()) {
@@ -25,9 +35,6 @@ bool pwMatch(CmdSpec &cmd) {
 }
 
 bool isRegistered(CmdSpec &cmd) {
-	//TODO : if NICK, USER et PASS ont deja ete fait
-	//		et que la commande est refaite pendant le registration stage
-	//		mettre message custom
 	if (cmd.getSender().cliInfo.getRegistration() == 3) {
 		reply::send(cmd.getSender().getFd(),
 					ERR_ALREADYREGISTRED(cmd.getSender().cliInfo.getNick()));

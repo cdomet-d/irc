@@ -83,11 +83,12 @@ void CmdSpec::hasParamList(void) {
 }
 CmdSpec &CmdSpec::process(Client &sender) {
 	setSender(sender);
-	// std::cout << "sender registration stage: " << sender.cliInfo.getRegistration() << std::endl;
+	std::cout << "sender registration stage: " << sender.cliInfo.getRegistration() << std::endl;
 	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
 		valid_ = false;
 		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER")
 			reply::send(sender_->getFd(), ERR_NOTREGISTERED);
+		//TODO: add custom message for PASS NICK USER
 		return (*this);
 	}
 	setParam();
@@ -180,6 +181,10 @@ Client &CmdSpec::getSender(void) const {
 
 const paramMap &CmdSpec::getParams(void) const {
 	return (params_);
+}
+
+int CmdSpec::getRegistrationStage() const {
+	return  (registrationStage_);
 }
 
 /* ************************************************************************** */
