@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 16:36:19 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:40:42 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,9 +130,9 @@ Channel &findCurChan(std::string chanName)
 }
 
 //the modes of a channel need to be empty if no moe is activated and +<modes> if any
-void handleMode(CmdSpec &cmd)
+void modeExec(CmdSpec &cmd)
 {
-	logLevel(DEBUG, "-----handleMode-----");
+	logLevel(DEBUG, "-----modeExec-----");
 	Client *sender = &cmd.getSender();
 	Channel &curChan = findCurChan(cmd[channel][0]);
 	std::string newModes;
@@ -143,7 +143,7 @@ void handleMode(CmdSpec &cmd)
 				  RPL_UMODEIS(sender->cliInfo.getNick(), curChan.getModes()));
 		return;
 	}
-	for (size_t nbFlag = 0; nbFlag < cmd[mode_].getSize(); ++nbFlag) {
+	for (size_t nbFlag = 0; nbFlag < cmd[mode_].getSize(); nbFlag++) {
 		if (cmd[mode_][nbFlag] == "+l")
 			newMaxCli = cmd[modeArg][nbFlag];
 		executeFlag(cmd[mode_][nbFlag], cmd[modeArg][nbFlag], curChan);

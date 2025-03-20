@@ -77,7 +77,7 @@ void CmdManager::generateCmds()
 			.Parameters(channel, new CmdParam(false, ','))
 			.Parameters(key, new CmdParam(true, ',')) //TODO : TRUE = OPTIONNEL
 			.addChecker(joinChanRequest)
-			.CmExecutor(handleJoin)
+			.CmExecutor(joinExec)
 			.build());
 
 	//can have 0 params or 2
@@ -91,7 +91,7 @@ void CmdManager::generateCmds()
 			.addChecker(onChan)
 			.addChecker(validInvite)
 			.addChecker(hasChanPriv)
-			.CmExecutor(handleInvite)
+			.CmExecutor(inviteExec)
 			.build());
 
 	//si un target est faux on fait pas ceux qui suivent
@@ -106,7 +106,7 @@ void CmdManager::generateCmds()
 			.addChecker(hasChanPriv)
 			.addChecker(validTarget)
 			.addChecker(validKick)
-			.CmExecutor(handleKick)
+			.CmExecutor(kickExec)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -119,7 +119,7 @@ void CmdManager::generateCmds()
 			.addChecker(hasChanPriv)
 			.addChecker(validMode)
 			// .addChecker(validArg) ?
-			.CmExecutor(handleMode)
+			.CmExecutor(modeExec)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -129,7 +129,7 @@ void CmdManager::generateCmds()
 			.Parameters(message, new CmdParam(true, '\0'))
 			.addChecker(validChan)
 			.addChecker(onChan)
-			.CmExecutor(handlePart)
+			.CmExecutor(partExec)
 			.build());
 
 	//we want ERR_NORECIPIENT not ERR_NEEDMOREPARAMS
@@ -140,7 +140,7 @@ void CmdManager::generateCmds()
 			.Parameters(message, new CmdParam())
 			.addChecker(validMess)
 			.addChecker(validTarget)
-			.CmExecutor(handlePrivsmg)
+			.CmExecutor(privmsgExec)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -158,7 +158,7 @@ void CmdManager::generateCmds()
 			.addChecker(validChan)
 			.addChecker(onChan)
 			.addChecker(hasChanPriv) //(only if mode +t is set)
-			.CmExecutor(handleTopic)
+			.CmExecutor(topicExec)
 			.build());
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   NickUser.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:46:19 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 09:10:35 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:41:22 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void handleClientRegistration(const std::string &input, Client *curCli)
 			std::string pass;
 			std::istringstream passStream(line);
 			passStream >> pass >> pass;
-			handlePass(pass, curCli);
+			passExec(pass, curCli);
 		} else if (line.find("NICK") != std::string::npos) {
 			std::string nick;
 			std::istringstream nickStream(line);

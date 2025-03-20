@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Who.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 17:00:47 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:40:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "Server.hpp"
 #include <sstream>
 
-bool handleWho(std::string params, Client *curCli)
+bool whoExec(std::string params, Client *curCli)
 {
 	static Server &server = Server::GetServerInstance(0, "");
 

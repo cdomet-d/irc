@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 16:34:03 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:40:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void kickFromAllMap(Client *target, Channel &curChan)
 		curChan.removeCli(INVITECLI, fdTarget);
 }
 
-void handleKick(CmdSpec &cmd)
+void kickExec(CmdSpec &cmd)
 {
 	Channel &curChan = findCurChan(cmd[channel][0]);
 	Client *sender = &cmd.getSender();

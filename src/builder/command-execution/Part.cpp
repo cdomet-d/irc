@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 16:44:58 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:41:33 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "Reply.hpp"
 #include "Server.hpp"
 
-void handlePart(CmdSpec &cmd)
+void partExec(CmdSpec &cmd)
 {
 	Client *sender = &cmd.getSender();
 	Channel &curChan = findCurChan(cmd[channel][0]);

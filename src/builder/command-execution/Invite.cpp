@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 16:13:44 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:41:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "Reply.hpp"
 #include "Server.hpp"
 
-void handleInvite(CmdSpec &cmd)
+void inviteExec(CmdSpec &cmd)
 {
 	static Server &server = Server::GetServerInstance(0, "");
 	Channel &curChan = findCurChan(cmd[channel][0]);

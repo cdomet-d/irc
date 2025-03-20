@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 16:42:37 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:41:33 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,14 @@ Channel *createChan(const std::string &chanName)
 {
 	for (stringVec::iterator currChanName = curCli->getJoinedChans().begin();
 		 currChanName != curCli->getJoinedChans().end(); ++currChanName) {
-		handlePart(*currChanName, curCli);
+		partExec(*currChanName, curCli);
 	}
 	curCli->getJoinedChans().clear();
 } */
 
-void handleJoin(CmdSpec &cmd)
+void joinExec(CmdSpec &cmd)
 {
-	logLevel(DEBUG, "-----handleJoin-----");
+	logLevel(DEBUG, "-----joinExec-----");
 	Client *sender = &cmd.getSender();
 	if (cmd[channel][0] == "0") {
 		//partAllChans(sender);

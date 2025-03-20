@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 16:23:58 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:14:07 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 /* ************************************************************************** */
 
 Channel::Channel(std::string name)
-	: inviteOnly_(false), isPassMatch_(false), topicRestrict_(true), maxCli_(0),
+	: inviteOnly_(true), isPassMatch_(false), topicRestrict_(true), maxCli_(0),
 	  name_(name), topic_("")
 {
 	setModes();

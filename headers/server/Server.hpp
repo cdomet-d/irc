@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 16:41:27 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:41:22 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,11 @@ class Server {
 void handleClientRegistration(const std::string &input, Client *curCli);
 
 //PRIVMSG
-bool handlePrivsmg(std::string params, Client *curCli);
+bool privmsgExec(std::string params, Client *curCli);
 //WHO
-bool handleWho(std::string params, Client *curCli);
+bool whoExec(std::string params, Client *curCli);
 //PASS
-bool handlePass(std::string params, Client *curCli);
+bool passExec(std::string params, Client *curCli);
 
 /*                               DEBUG                                  */
 void logLevel(logEnum level, std::string message);

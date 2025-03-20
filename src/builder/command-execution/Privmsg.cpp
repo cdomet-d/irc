@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 12:46:43 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:41:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdSpec.hpp"
 #include "Server.hpp"
 
-void handlePrivsmg(CmdSpec &cmd)
+void privmsgExec(CmdSpec &cmd)
 {
 	static Server &server = Server::GetServerInstance(0, "");
 	Client *sender = &cmd.getSender();
