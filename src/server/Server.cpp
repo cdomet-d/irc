@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 10:57:40 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 11:12:07 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,7 @@ bool checkOnlyOperator(int fd)
 {
 	static Server &server = Server::GetServerInstance(0, "");
 
-	clientMap::iterator curCli = server.getAllCli().find(fd);
+	clientMap::const_iterator curCli = server.getAllCli().find(fd);
 	//joinExec("0", curCli->second);
 	for (stringVec::iterator curChanName =
 			 curCli->second->getJoinedChans().begin();
@@ -266,11 +266,11 @@ Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-clientMap &Server::getAllCli()
+const clientMap &Server::getAllCli() const
 {
 	return (clients_);
 }
-channelMap &Server::getAllChan()
+const channelMap &Server::getAllChan() const
 {
 	return (channels_);
 }

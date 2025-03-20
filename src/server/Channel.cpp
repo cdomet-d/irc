@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 10:50:45 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 11:05:27 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void sendMessageChannel(clientMap allCliChannel, std::string message)
 bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 {
 	// logLevel(DEBUG, "-----addClientToChan-----");
-	std::map< int, Client * > &clients = curChan->getCliInChan();
+	std::map< int, Client * > clients = curChan->getCliInChan();
 	for (clientMapIt it = clients.begin(); it != clients.end(); ++it)
 		if (curCli == it->second) {
 			// logLevel(INFO, "Client already in channel");
@@ -124,15 +124,15 @@ bool Channel::getTopicRestrict() const
 {
 	return (topicRestrict_);
 }
-clientMap &Channel::getCliInChan()
+const clientMap &Channel::getCliInChan() const
 {
 	return (cliInChan_);
 }
-clientMap &Channel::getOpCli()
+const clientMap &Channel::getOpCli() const
 {
 	return (cliIsOperator_);
 }
-clientMap &Channel::getInvitCli()
+const clientMap &Channel::getInvitCli() const
 {
 	return (cliInvited_);
 }

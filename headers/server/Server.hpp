@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 10:41:22 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 11:11:07 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ class Server {
 	void removeChan(Channel *curChan);
 
 	/*                               GETTERS                                  */
-	clientMap &getAllCli();
-	channelMap &getAllChan();
+	const clientMap &getAllCli() const;
+	const channelMap &getAllChan() const;
 	std::string getPass() const;
 
   private:

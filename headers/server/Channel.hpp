@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 16:14:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 11:04:25 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ class Channel {
 	bool getInviteOnly() const;
 	bool getIsPassMatch() const;
 	bool getTopicRestrict() const;
-	clientMap &getCliInChan();
-	clientMap &getOpCli();
-	clientMap &getInvitCli();
+	const clientMap &getCliInChan() const;
+	const clientMap &getOpCli() const;
+	const clientMap &getInvitCli() const;
 	int getMaxCli() const;
 	std::string getName() const;
 	std::string getTopic() const;
