@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   NickUser.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:46:19 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 14:19:39 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/20 13:06:42 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,13 @@ void handleClientRegistration(const std::string &input, Client *curCli)
 		reply::send(curCli->getFd(), REG_COMPLETE());
 	curCli->cliInfo.setPrefix();
 	// reply::log(reply::DEBUG, "cliInfo.getPrefix = ", curCli->cliInfo.getPrefix());
+}
+
+#include "CmdSpec.hpp"
+void nick(CmdSpec &cmd) {
+	cmd.getSender().cliInfo.setRegistration(2);
+}
+
+void user(CmdSpec &cmd) {
+	cmd.getSender().cliInfo.setRegistration(3);
 }

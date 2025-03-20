@@ -45,7 +45,7 @@ void CmdManager::generateCmds() {
 			.addParam(password_, new CmdParam())
 			.addChecker(isRegistered)
 			.addChecker(pwMatch)
-			//.CmExecutor()
+			.CmExecutor(pass)
 			.build());
 
 	//on veut pas afficher ERR_NEEDMOREPARAMS si nickname est pas donné
@@ -54,7 +54,7 @@ void CmdManager::generateCmds() {
 			.Registration(1)
 			.addParam(nickname_, new CmdParam())
 			.addChecker(validNick)
-			// .CmExecutor()
+			.CmExecutor(nick)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -66,7 +66,7 @@ void CmdManager::generateCmds() {
 			.addParam(realname_, new CmdParam())
 			.addChecker(isRegistered)
 			.addChecker(validUser)
-			// .CmExecutor()
+			.CmExecutor(user)
 			.build());
 
 	//meme si un channel est faux on fait ceux qui sont juste

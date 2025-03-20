@@ -109,6 +109,15 @@ class CmdSpec {
 			void (*cmExecutor)(CmdSpec &cmd));
 };
 
+//PASS
+void pass(CmdSpec &cmd);
+
+//NICK
+void nick(CmdSpec &cmd);
+
+//USER
+void user(CmdSpec &cmd);
+
 //JOIN
 void handleJoin(CmdSpec &cmd);
 Channel *createChan(const std::string &chanName);

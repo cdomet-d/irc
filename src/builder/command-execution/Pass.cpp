@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Pass.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 09:04:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 16:57:36 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:58:55 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,9 @@ bool handlePass(std::string params, Client *curCli)
 	reply::send(curCli->getFd(), PASS_SUCCESS());
 
 	return (true);
+}
+
+#include "CmdSpec.hpp"
+void pass(CmdSpec &cmd) {
+	cmd.getSender().cliInfo.setRegistration(1);
 }
