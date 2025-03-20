@@ -3,21 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   Checkers.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/19 18:37:13 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:10:13 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Checkers.hpp"
+#include "JoinRequestCheck.hpp"
 #include "Reply.hpp"
 #include "syntaxCheck.hpp"
 
 bool pwMatch(CmdSpec &cmd) {
 	if (cmd[password_][0] != cmd.server_.getPass()) {
 		reply::send(cmd.getSender().getFd(),
-				  ERR_PASSWDMISMATCH(cmd.getSender().cliInfo.getNick()));
+					ERR_PASSWDMISMATCH(cmd.getSender().cliInfo.getNick()));
 		return (false);
 	}
 	return (true);
@@ -29,7 +30,7 @@ bool isRegistered(CmdSpec &cmd) {
 	//		mettre message custom
 	if (cmd.getSender().cliInfo.getRegistration() == 3) {
 		reply::send(cmd.getSender().getFd(),
-				  ERR_ALREADYREGISTRED(cmd.getSender().cliInfo.getNick()));
+					ERR_ALREADYREGISTRED(cmd.getSender().cliInfo.getNick()));
 		return (false);
 	}
 	return (true);
@@ -41,11 +42,11 @@ bool validNick(CmdSpec &cmd) {
 		nick = syntaxCheck::nick::trim(nick);
 		cmd[nickname_].rmParam(0);
 		cmd[nickname_].setOneParam(nick);
-
 	}
 	if (!syntaxCheck::nick::isValid(nick, cmd))
 		return false;
-	if (conflictCheck::nick::inUse(nick, cmd.server_.getUsedNick(), cmd.getSender().getFd()))
+	if (conflictCheck::nick::inUse(nick, cmd.server_.getUsedNick(),
+								   cmd.getSender().getFd()))
 		return false;
 	reply::send(reply::INFO, cmd[nickname_][0] + " is valid nickname\n");
 	return true;
@@ -62,18 +63,19 @@ bool validChan(CmdSpec &cmd) {
 	return (0);
 }
 
-bool validRequest(Channel chan, CmdSpec &cmd) {
-	Server &serv = Server::GetServerInstance(0, "");
-	
-	//TODO: faire un tableau de pointeur sur fonction. ou appeler chaque fonction dans des if
+bool validRequest(Channel chan, CmdSpec &cmd, size_t i) {
 	if (onChan(cmd))
 		return (false);
-	if (chan.getModes().find('i') != std::string::npos) {
-		//faire hasInvite
-	}
-	else if (chan.getModes().find('k') != std::string::npos) {
-		//faire valid key
-	}
+	if (joinCheck::reachedChanLimit(chan, cmd.getSender()))
+		return (false);
+	if (chan.getModes().find('i') != std::string::npos &&
+		!joinCheck::hasInvite(chan, cmd.getSender()))
+		return (false);
+	else if (chan.getModes().find('k') != std::string::npos &&
+			 !joinCheck::validKey(chan, cmd[key_], i, cmd.getSender()))
+		return (false);
+	if (joinCheck::reachedCliChanLimit(chan, cmd.getSender()))
+		return (false);
 	return (true);
 }
 
@@ -85,7 +87,7 @@ bool joinChanRequest(CmdSpec &cmd) {
 		itChan = cmd.server_.getAllChan().find(cmd[channel_][i]);
 		if (itChan == cmd.server_.getAllChan().end())
 			continue;
-		if (!validRequest(*itChan->second, cmd))
+		if (!validRequest(*itChan->second, cmd, i))
 			cmd[channel_].rmParam(i);
 	}
 	if (!cmd[channel_].getSize())
@@ -111,8 +113,8 @@ bool onChan(CmdSpec &cmd) {
 	}
 	if (cmd.getName() != "JOIN")
 		reply::send(cmd.getSender().getFd(),
-				  ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
-								   cmd[channel_][0]));
+					ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
+									 cmd[channel_][0]));
 	return (false);
 }
 
@@ -133,8 +135,8 @@ bool hasChanPriv(CmdSpec &cmd) {
 	itCl = chan.getOpCli().find(cmd.getSender().getFd());
 	if (itCl == chan.getOpCli().end()) {
 		reply::send(cmd.getSender().getFd(),
-				  ERR_CHANOPRIVSNEEDED(cmd.getSender().cliInfo.getNick(),
-									   chan.getName()));
+					ERR_CHANOPRIVSNEEDED(cmd.getSender().cliInfo.getNick(),
+										 chan.getName()));
 		return (false);
 	}
 	return (true);
