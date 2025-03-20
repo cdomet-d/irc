@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 10:14:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:50:45 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ Channel::Channel(std::string name)
 
 Channel::~Channel(void)
 {
-	// logLevel(INFO, "Channel deleted:", this->getName());
+	logLevel(INFO, "Channel deleted:", this->getName());
 }
 
 /* ************************************************************************** */

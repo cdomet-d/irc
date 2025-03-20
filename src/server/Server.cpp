@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 10:40:31 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:57:40 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,6 +225,11 @@ bool checkOnlyOperator(int fd)
 				curChan->second->addCli(OPCLI, curChan->second->getCliInChan().begin()->second);
 				return (true);
 			}
+			//delete chan if the disconnected cli was the one cli in chan
+			if (curChan->second->getCliInChan().empty() == true) {
+				server.removeChan(curChan->second);
+				delete curChan->second;
+			}
 		}
 	}
 	return (false);
@@ -236,7 +241,6 @@ bool Server::disconnectCli(int fd)
 	checkOnlyOperator(fd);
 	clientMapIt it = clients_.find(fd);
 	if (it != clients_.end()) {
-		//TODO deleteEmptyChan 
 		std::stringstream ss;
 		ss << "Client [" << it->second->getFd() << "] connected";
 		logLevel(INFO, ss.str());

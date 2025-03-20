@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 10:41:33 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:55:01 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 void partExec(CmdSpec &cmd)
 {
+	static Server &server = Server::GetServerInstance(0, "");
 	Client *sender = &cmd.getSender();
 	Channel &curChan = findCurChan(cmd[channel][0]);
 
@@ -28,9 +29,13 @@ void partExec(CmdSpec &cmd)
 						   RPL_PARTREASON(sender->cliInfo.getPrefix(),
 										  curChan.getName(), cmd[message][0]));
 
-	//TODO deleteEmptyChan 
+
 	int targetFd = sender->getFd();
 	curChan.removeCli(ALLCLI, targetFd);
 	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end())
 		curChan.removeCli(OPCLI, targetFd);
+	if (curChan.getCliInChan().empty() == true) {
+		server.removeChan(&curChan);
+		delete &curChan;
+	}
 }
