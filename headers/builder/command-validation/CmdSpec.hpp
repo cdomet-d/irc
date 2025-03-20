@@ -54,6 +54,7 @@ class CmdSpec {
 	CmdSpec &process(Client &sender);
 	bool enoughParams(void);
 	void cleanAll(void);
+	bool checkRegistrationStage(void);
 
 	void displayParams(void); //to be removed
 
