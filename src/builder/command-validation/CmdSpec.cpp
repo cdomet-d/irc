@@ -83,16 +83,13 @@ void CmdSpec::hasParamList(void) {
 }
 CmdSpec &CmdSpec::process(Client &sender) {
 	setSender(sender);
-	std::cout << registrationStage_ << " | "
-			  << sender_->cliInfo.getRegistration() << std::endl;
-	setParam();
 	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
-		std::cout << "Registration stage is mismatched" << std::endl;
 		valid_ = false;
 		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER")
 			reply::send(sender_->getFd(), ERR_NOTREGISTERED);
 		return (*this);
 	}
+	setParam();
 	if (!enoughParams())
 		return (*this);
 	hasParamList();
