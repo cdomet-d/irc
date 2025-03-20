@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 17:05:30 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:47:57 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ bool Server::servRun() {
 void Server::acceptClient() {
 	try {
 		Client *newCli = new Client();
-		newCli->cliInfo.setRegistration(3);
+		newCli->cliInfo.setRegistration(0);
 
 		struct epoll_event cliEpollTemp;
 		socklen_t cliLen = sizeof(newCli->cliAddr_);
