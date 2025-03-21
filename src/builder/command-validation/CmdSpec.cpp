@@ -82,6 +82,7 @@ void CmdSpec::hasParamList(void) {
 	}
 }
 CmdSpec &CmdSpec::process(Client &sender) {
+
 	setSender(sender);
 	std::cout << registrationStage_ << " | "
 			  << sender_->cliInfo.getRegistration() << std::endl;
@@ -96,12 +97,12 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	if (!enoughParams())
 		return (*this);
 	hasParamList();
-/* 	for (size_t i = 0; i < checkers_.size(); i++) {
+	for (size_t i = 0; i < checkers_.size(); i++) {
 		if (!checkers_[i](*this)) {
 			valid_ = false;
 			return (*this);
 		}
-	} */
+	}
 	return (*this);
 }
 
@@ -109,6 +110,7 @@ void CmdSpec::cleanAll(void) {
 	for (size_t i = 0; i < params_.size(); i++) {
 		(*params_[i].second).clean();
 	}
+	valid_ = true;
 }
 
 static std::string enumToString(e_param color) {

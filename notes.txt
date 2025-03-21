@@ -51,3 +51,9 @@ NICK alex
 USER alexie
 JOIN #test
 TOPIC #test
+
+PASS 0
+NICK e
+USER e 0 * alex
+JOIN #test
+TOPIC #test yoo

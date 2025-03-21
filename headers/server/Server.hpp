@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 14:10:47 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:26:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ class Server {
 	void acceptClient();
 	void addChan(Channel *curChan);
 	void removeChan(Channel *curChan);
+	bool disconnectCli(int fd);
 
 	/*                               GETTERS                                  */
 	const nickMap &getUsedNick() const;
@@ -68,7 +69,6 @@ class Server {
 
   private:
 	/*                               METHODS                                  */
-	bool disconnectCli(int fd);
 
 	// attributes
 	const int port_;

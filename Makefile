@@ -6,7 +6,7 @@
 #    By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/20 14:00:59 by aljulien         ###   ########.fr        #
+#    Updated: 2025/03/21 10:55:19 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,6 +61,7 @@ BUILD_EXE_SRC:=			Join.cpp \
 						Pass.cpp \
 						Nick.cpp \
 						User.cpp \
+						Quit.cpp \
 
 BUILD_VAL_SRC:=			CmdManager.cpp \
 						CmdSpec.cpp \

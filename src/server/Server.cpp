@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 14:13:11 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:27:24 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ bool Server::servRun() {
 void Server::acceptClient() {
 	try {
 		Client *newCli = new Client();
-		newCli->cliInfo.setRegistration(3);
+		newCli->cliInfo.setRegistration(0);
 
 		struct epoll_event cliEpollTemp;
 		socklen_t cliLen = sizeof(newCli->cliAddr_);
@@ -158,6 +158,7 @@ bool Server::handleData(int fd) {
 		std::string inputCli = curCli->mess.getBuffer();
 		inputCli.append(tmpBuf);
 		curCli->mess.setBuffer(inputCli);
+		std::cout << curCli->mess.getBuffer();
 		messageValidator::assess(*curCli);
 		curCli->mess.clearBuffer();
 		curCli->mess.clearCmdParam();
@@ -190,7 +191,6 @@ bool checkOnlyOperator(int fd) {
 	static Server &server = Server::GetServerInstance(0, "");
 
 	clientMap::const_iterator curCli = server.getAllCli().find(fd);
-	//join("0", curCli->second);
 	for (stringVec::iterator curChanName =
 			 curCli->second->getJoinedChans().begin();
 		 curChanName != curCli->second->getJoinedChans().end();
@@ -212,11 +212,10 @@ bool checkOnlyOperator(int fd) {
 }
 
 bool Server::disconnectCli(int fd) {
-	checkOnlyOperator(fd);
 	clientMapIt it = clients_.find(fd);
 	if (it != clients_.end()) {
 		std::stringstream ss;
-		ss << "Client [" << it->second->getFd() << "] connected";
+		ss << "Client [" << it->second->getFd() << "] deconnected";
 		reply::log(reply::INFO, ss.str());
 		delete it->second;
 		clients_.erase(fd);

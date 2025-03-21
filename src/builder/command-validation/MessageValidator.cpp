@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/20 13:37:42 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:32:49 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ bool messageValidator::assess(Client &sender) {
 		try {
 			manager.executeCm(
 				manager.findCmd(sender.mess.getCmd()).process(sender));
+
 		} catch (const CmdManager::CmdNotFoundException &e) {
 			reply::send(sender.getFd(),
 					  ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),

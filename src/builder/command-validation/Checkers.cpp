@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/20 12:48:42 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:19:22 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ bool validNick(CmdSpec &cmd) {
 		return false;
 	if (conflictCheck::nick::inUse(nick, cmd.server_.getUsedNick(), cmd.getSender().getFd()))
 		return false;
-	reply::send(reply::INFO, cmd[nickname_][0] + " is valid nickname\n");
+	reply::send(cmd.getSender().getFd(), cmd[nickname_][0] + " is valid nickname\n");
 	return true;
 }
 
@@ -59,7 +59,7 @@ bool validUser(CmdSpec &cmd) {
 bool validChan(CmdSpec &cmd) {
 	stringVec param = cmd[channel_].getInnerParam();
 	messageValidator::printCmdParam(param, "innerParam");
-	return (0);
+	return (1);
 }
 
 bool joinChanRequest(CmdSpec &cmd) {
@@ -75,7 +75,7 @@ bool joinChanRequest(CmdSpec &cmd) {
 		//faire un namespace
 		//boucler sur le tableau et si une fonction renvoie false faire rmParam et continue;
 		if (!onChan(cmd)) {
-			if (chan.getCliInChan().size() < chan.getMaxCli()) {
+			if (chan.getCliInChan().size() < chan.getMaxCli() && chan.getMaxCli() != 0) {
 				if (chan.getModes().find('i') == std::string::npos ||
 					(chan.getModes().find('i') != std::string::npos
 					 /*&& sender has an invite*/)) {

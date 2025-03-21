@@ -147,7 +147,7 @@ void CmdManager::generateCmds() {
 			.Name("QUIT")
 			.Registration(0)
 			.addParam(message_, new CmdParam(true, '\0'))
-			//.CmExecutor()
+			//.CmExecutor(quit)
 			.build());
 
 	log(CmdSpec::CmdBuilder()

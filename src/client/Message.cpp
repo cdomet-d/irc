@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/19 15:41:53 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/21 09:57:49 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void Message::clearCmdParam() {
 	for (stringVec::iterator i = cmdParam_.begin(); i != cmdParam_.end();) {
 		cmdParam_.erase(i);
 	}
-	// cmdParam_.clear();
+	cmdParam_.clear();
 }
 void Message::clearBuffer() {
 	buffer_.clear();
