@@ -6,11 +6,12 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 13:37:33 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/21 13:59:15 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "printers.hpp"
 #include <cerrno>
 #include <sstream>
 
@@ -146,17 +147,6 @@ void Server::acceptClient() {
 	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
 }
 
-static void printCharByChar(std::string buf) {
-	for (std::string::size_type i = 0; i < buf.size(); ++i) {
-		if (buf[i] == 10)
-			std::cout << "[" << (int)buf[i] << "]";
-		if (buf[i] == 13)
-			std::cout << "[" << (int)buf[i] << "]";
-		else
-			std::cout << buf[i];
-	}
-	std::cout << std::endl;
-}
 bool Server::handleData(int fd) {
 	char tmpBuf[1024];
 	memset(tmpBuf, 0, sizeof(tmpBuf));
@@ -168,10 +158,10 @@ bool Server::handleData(int fd) {
 	else {
 		std::string inputCli = curCli->mess.getBuffer();
 		inputCli.append(tmpBuf);
-		// printCharByChar(inputCli);
+		print::charByChar(inputCli);
 		curCli->mess.setBuffer(inputCli);
 		if (curCli->mess.getBuffer().find('\n') != std::string::npos) {
-			printCharByChar(curCli->mess.getBuffer());
+			print::charByChar(curCli->mess.getBuffer());
 			formatMess::assess(*curCli);
 			curCli->mess.clearBuffer();
 			curCli->mess.clearCmdParam();
@@ -179,27 +169,6 @@ bool Server::handleData(int fd) {
 	}
 	return (true);
 }
-
-// void Server::processBuffer(Client *curCli) {
-// 	size_t pos;
-// 	while ((pos = curCli->mess.getBuffer().find('\n')) != std::string::npos) {
-// 		if (!curCli->mess.getBuffer().find("QUIT")) {
-// 			std::cout << "Exit server" << std::endl;
-// 			disconnectCli(curCli->getFd());
-// 			return;
-// 		}
-// 		if (curCli->mess.getBuffer().find("CAP LS") != std::string::npos ||
-// 			curCli->mess.getBuffer().find("NICK") != std::string::npos ||
-// 			curCli->mess.getBuffer().find("USER") != std::string::npos) {
-// 			handleClientRegistration(curCli->mess.getBuffer(), curCli);
-// 			curCli->mess.setBuffer("");
-// 			return;
-// 		} else {
-// 			curCli->mess.setBuffer("");
-// 			return;
-// 		}
-// 	}
-// }
 
 bool checkOnlyOperator(int fd) {
 	static Server &server = Server::GetServerInstance(0, "");

@@ -6,13 +6,14 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/21 13:37:33 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/21 13:49:53 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Checkers.hpp"
 #include "Reply.hpp"
 #include "syntaxCheck.hpp"
+#include "printers.hpp"
 
 bool pwMatch(CmdSpec &cmd) {
 	if (cmd[password_][0] != cmd.server_.getPass()) {
@@ -58,7 +59,7 @@ bool validUser(CmdSpec &cmd) {
 
 bool validChan(CmdSpec &cmd) {
 	stringVec param = cmd[channel_].getInnerParam();
-	formatMess::printCmdParam(param, "innerParam");
+	print::cmdParam(param, "innerParam");
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/21 13:39:32 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/21 13:57:42 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ H:=  -I headers/ \
 	-I headers/builder/command-validation/ \
 	-I headers/builder/manager/ \
 	-I headers/client/ \
+	-I headers/debug/ \
 
 CC:=c++
 CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow
@@ -69,6 +70,8 @@ BUILD_VAL_SRC:=		CmdManager.cpp \
 					syntaxCheck.cpp \
 
 BUILD_MAN_SRC:=	\
+
+DEBUG_SRC:=	printers.cpp \
 
 SRC_ROOT:=			main.cpp \
 
@@ -155,8 +158,6 @@ redebug: fclean debug
 
 info:
 	@echo $(CXXFLAGS)
-	@echo
-	@echo $(SRC_PATH)
 	@echo
 	@echo $(SRC)
 
