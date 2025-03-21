@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageValidator.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/21 11:32:49 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/21 12:41:13 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ bool messageValidator::assess(Client &sender) {
 		std::string cmd = priv::removeNewlines(message);
 		if (cmd.find("CAP") != std::string::npos)
 			continue;
-		std::cout << "Extracted	[" + cmd + "]" << std::endl;
-		std::cout << "Remainder	" + message << std::endl;
+		// std::cout << "Extracted	[" + cmd + "]" << std::endl;
+		// std::cout << "Remainder	" + message << std::endl;
 		if (priv::lenIsValid(cmd, sender) == false)
 			return false;
 		if (priv::hasPrefix(cmd, sender.cliInfo.getPrefix()) == false)
@@ -149,14 +149,14 @@ bool messageValidator::priv::lenIsValid(const std::string &mess,
 }
 
 std::string messageValidator::priv::removeNewlines(std::string &input) {
-    std::string result;
-    std::string::size_type newline = input.find(MESSAGE_TERMINATION);
-    if (newline == std::string::npos) {
-        result.assign(input, 0, input.size() - 1);
-        input.erase(input.begin(), input.end());
-        return (result);
-    }
-    result = input.substr(0, newline);
-    input.erase(input.begin(), (input.begin() + newline + 2));
-    return result;
+	std::string result;
+	std::string::size_type newline = input.find(MESSAGE_TERMINATION);
+	if (newline == std::string::npos) {
+		result.assign(input, 0, input.size() - 1);
+		input.erase(input.begin(), input.end());
+		return (result);
+	}
+	result = input.substr(0, newline);
+	input.erase(input.begin(), (input.begin() + newline + 2));
+	return result;
 }

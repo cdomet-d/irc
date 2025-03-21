@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+         #
+#    By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/21 10:55:19 by aljulien         ###   ########.fr        #
+#    Updated: 2025/03/21 12:36:07 by charlotte        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,6 +67,7 @@ BUILD_VAL_SRC:=			CmdManager.cpp \
 						CmdSpec.cpp \
 						CmdParam.cpp \
 						Checkers.cpp \
+						JoinRequestCheck.cpp \
 						MessageValidator.cpp \
 						syntaxCheck.cpp \
 

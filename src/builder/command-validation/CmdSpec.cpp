@@ -39,6 +39,24 @@ CmdParam &CmdSpec::operator[](e_param type) {
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
+bool CmdSpec::checkRegistrationStage(void) {
+	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
+		valid_ = false;
+		if (name_ == "NICK")
+			reply::send(sender_->getFd(), "Please enter password\r\n");
+		else if (name_ == "USER") {
+			if (sender_->cliInfo.getRegistration() == 0)
+				reply::send(sender_->getFd(), "Please enter password\r\n");
+			else
+				reply::send(sender_->getFd(), "Please enter nickname\r\n");
+		}
+		else if (name_ != "PASS")
+			reply::send(sender_->getFd(), ERR_NOTREGISTERED);
+		return (false);
+	}
+	return (true);
+}
+
 bool CmdSpec::enoughParams() {
 	if (name_ == "INVITE" && !(*this)[target_].getSize() &&
 		!(*this)[channel_].getSize())
@@ -81,22 +99,17 @@ void CmdSpec::hasParamList(void) {
 		}
 	}
 }
+
 CmdSpec &CmdSpec::process(Client &sender) {
 
 	setSender(sender);
-	std::cout << registrationStage_ << " | "
-			  << sender_->cliInfo.getRegistration() << std::endl;
-	setParam();
-	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
-		std::cout << "Registration stage is mismatched" << std::endl;
-		valid_ = false;
-		if (name_ != "PASS" && name_ != "NICK" && name_ != "USER")
-			reply::send(sender_->getFd(), ERR_NOTREGISTERED);
+	if (!checkRegistrationStage())
 		return (*this);
-	}
+	setParam();
 	if (!enoughParams())
 		return (*this);
 	hasParamList();
+	// displayParams();
 	for (size_t i = 0; i < checkers_.size(); i++) {
 		if (!checkers_[i](*this)) {
 			valid_ = false;
@@ -124,9 +137,9 @@ static std::string enumToString(e_param color) {
 	case 3:
 		return "message";
 	case 4:
-		return "mode";
+		return "flag";
 	case 5:
-		return "modeArg";
+		return "flagArg";
 	case 6:
 		return "nickname";
 	case 7:
@@ -183,6 +196,10 @@ Client &CmdSpec::getSender(void) const {
 
 const paramMap &CmdSpec::getParams(void) const {
 	return (params_);
+}
+
+int CmdSpec::getRegistrationStage() const {
+	return  (registrationStage_);
 }
 
 /* ************************************************************************** */
