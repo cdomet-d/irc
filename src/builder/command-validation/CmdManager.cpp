@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "CmdManager.hpp"
+#include "CmdExecution.hpp"
 #include "Server.hpp"
 #include "typedef.hpp"
 
@@ -46,7 +47,7 @@ void CmdManager::generateCmds() {
 			.addChecker(RegStageDone)
 			.addChecker(isRegistered)
 			.addChecker(pwMatch)
-			.CmExecutor(Pass)
+			.CmExecutor(pass)
 			.build());
 
 	//on veut pas afficher ERR_NEEDMOREPARAMS si nickname est pas donné
@@ -56,7 +57,7 @@ void CmdManager::generateCmds() {
 			.addParam(nickname_, new CmdParam())
 			.addChecker(RegStageDone)
 			.addChecker(validNick)
-			.CmExecutor(Nick)
+			.CmExecutor(nick)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -68,7 +69,7 @@ void CmdManager::generateCmds() {
 			.addParam(realname_, new CmdParam())
 			.addChecker(isRegistered)
 			.addChecker(validUser)
-			.CmExecutor(User)
+			.CmExecutor(user)
 			.build());
 
 	//meme si un channel est faux on fait ceux qui sont juste
@@ -78,7 +79,7 @@ void CmdManager::generateCmds() {
 			.addParam(channel_, new CmdParam(false, ','))
 			.addParam(key_, new CmdParam(true, ','))
 			.addChecker(joinChanRequest)
-			.CmExecutor(handleJoin)
+			.CmExecutor(join)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -91,7 +92,7 @@ void CmdManager::generateCmds() {
 			.addChecker(onChan)
 			.addChecker(validInvite)
 			.addChecker(hasChanPriv)
-			.CmExecutor(handleInvite)
+			.CmExecutor(invite)
 			.build());
 
 	//si un target est faux on fait pas ceux qui suivent
@@ -106,7 +107,7 @@ void CmdManager::generateCmds() {
 			.addChecker(hasChanPriv)
 			.addChecker(validTarget)
 			.addChecker(validKick)
-			.CmExecutor(handleKick)
+			.CmExecutor(kick)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -120,7 +121,7 @@ void CmdManager::generateCmds() {
 			.addChecker(hasChanPriv)
 			.addChecker(validMode)
 			// .addChecker(validArg) ?
-			.CmExecutor(handleMode)
+			.CmExecutor(mode)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -130,7 +131,7 @@ void CmdManager::generateCmds() {
 			.addParam(message_, new CmdParam(true, '\0'))
 			.addChecker(validChan)
 			.addChecker(onChan)
-			.CmExecutor(handlePart)
+			.CmExecutor(part)
 			.build());
 
 	//we want ERR_NORECIPIENT not ERR_NEEDMOREPARAMS
@@ -141,14 +142,14 @@ void CmdManager::generateCmds() {
 			.addParam(message_, new CmdParam())
 			.addChecker(validMess)
 			.addChecker(validTarget)
-			.CmExecutor(handlePrivsmg)
+			.CmExecutor(privmsg)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
 			.Name("QUIT")
 			.Registration(0)
 			.addParam(message_, new CmdParam(true, '\0'))
-			//.CmExecutor()
+			//.CmExecutor(quit)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
@@ -159,7 +160,7 @@ void CmdManager::generateCmds() {
 			.addChecker(validChan)
 			.addChecker(onChan)
 			.addChecker(hasChanPriv) //(only if mode +t is set)
-			.CmExecutor(handleTopic)
+			.CmExecutor(topic)
 			.build());
 }
 

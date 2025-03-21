@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 16:57:55 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:36:40 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
 #include "Server.hpp"
 
@@ -44,7 +45,7 @@ void changeTopic(Channel &curChan, Client *curCli, std::string topic)
 										curChan.getTopic()));
 }
 
-void handleTopic(CmdSpec &cmd)
+void topic(CmdSpec &cmd)
 {
 	Client *sender = &cmd.getSender();
 	Channel &curChan = findCurChan(cmd[channel_][0]);

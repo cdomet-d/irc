@@ -101,6 +101,7 @@ void CmdSpec::hasParamList(void) {
 }
 
 CmdSpec &CmdSpec::process(Client &sender) {
+
 	setSender(sender);
 	if (!checkRegistrationStage())
 		return (*this);

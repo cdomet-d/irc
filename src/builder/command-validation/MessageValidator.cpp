@@ -6,7 +6,7 @@
 /*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/20 13:20:57 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/21 12:41:13 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ bool messageValidator::assess(Client &sender) {
 		try {
 			manager.executeCm(
 				manager.findCmd(sender.mess.getCmd()).process(sender));
+
 		} catch (const CmdManager::CmdNotFoundException &e) {
 			reply::send(sender.getFd(),
 					  ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
