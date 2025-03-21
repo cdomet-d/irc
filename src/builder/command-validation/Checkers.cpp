@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Checkers.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/19 17:07:10 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/21 13:37:33 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 bool pwMatch(CmdSpec &cmd) {
 	if (cmd[password_][0] != cmd.server_.getPass()) {
 		reply::send(cmd.getSender().getFd(),
-				  ERR_PASSWDMISMATCH(cmd.getSender().cliInfo.getNick()));
+					ERR_PASSWDMISMATCH(cmd.getSender().cliInfo.getNick()));
 		return (false);
 	}
 	return (true);
@@ -29,7 +29,7 @@ bool isRegistered(CmdSpec &cmd) {
 	//		mettre message custom
 	if (cmd.getSender().cliInfo.getRegistration() == 3) {
 		reply::send(cmd.getSender().getFd(),
-				  ERR_ALREADYREGISTRED(cmd.getSender().cliInfo.getNick()));
+					ERR_ALREADYREGISTRED(cmd.getSender().cliInfo.getNick()));
 		return (false);
 	}
 	return (true);
@@ -41,11 +41,11 @@ bool validNick(CmdSpec &cmd) {
 		nick = syntaxCheck::nick::trim(nick);
 		cmd[nickname_].rmParam(0);
 		cmd[nickname_].setOneParam(nick);
-
 	}
 	if (!syntaxCheck::nick::isValid(nick, cmd))
 		return false;
-	if (conflictCheck::nick::inUse(nick, cmd.server_.getUsedNick(), cmd.getSender().getFd()))
+	if (conflictCheck::nick::inUse(nick, cmd.server_.getUsedNick(),
+								   cmd.getSender().getFd()))
 		return false;
 	reply::send(reply::INFO, cmd[nickname_][0] + " is valid nickname\n");
 	return true;
@@ -58,7 +58,7 @@ bool validUser(CmdSpec &cmd) {
 
 bool validChan(CmdSpec &cmd) {
 	stringVec param = cmd[channel_].getInnerParam();
-	messageValidator::printCmdParam(param, "innerParam");
+	formatMess::printCmdParam(param, "innerParam");
 	return (0);
 }
 
@@ -87,7 +87,7 @@ bool joinChanRequest(CmdSpec &cmd) {
 						if (cmd.getSender().getJoinedChans().size() < 50)
 							continue;
 						reply::send(cmd.getSender().getFd(),
-								  ERR_TOOMANYCHANNELS(chan.getName()));
+									ERR_TOOMANYCHANNELS(chan.getName()));
 					}
 					reply::send(
 						cmd.getSender().getFd(),
@@ -95,10 +95,10 @@ bool joinChanRequest(CmdSpec &cmd) {
 										  chan.getName()));
 				}
 				reply::send(cmd.getSender().getFd(),
-						  ERR_INVITEONLYCHAN(chan.getName()));
+							ERR_INVITEONLYCHAN(chan.getName()));
 			}
 			reply::send(cmd.getSender().getFd(),
-					  ERR_CHANNELISFULL(chan.getName()));
+						ERR_CHANNELISFULL(chan.getName()));
 		}
 		cmd[channel_].rmParam(i);
 	}
@@ -125,8 +125,8 @@ bool onChan(CmdSpec &cmd) {
 	}
 	if (cmd.getName() != "JOIN")
 		reply::send(cmd.getSender().getFd(),
-				  ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
-								   cmd[channel_][0]));
+					ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
+									 cmd[channel_][0]));
 	return (false);
 }
 
@@ -147,8 +147,8 @@ bool hasChanPriv(CmdSpec &cmd) {
 	itCl = chan.getOpCli().find(cmd.getSender().getFd());
 	if (itCl == chan.getOpCli().end()) {
 		reply::send(cmd.getSender().getFd(),
-				  ERR_CHANOPRIVSNEEDED(cmd.getSender().cliInfo.getNick(),
-									   chan.getName()));
+					ERR_CHANOPRIVSNEEDED(cmd.getSender().cliInfo.getNick(),
+										 chan.getName()));
 		return (false);
 	}
 	return (true);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 17:05:30 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/21 13:37:33 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,17 @@ void Server::acceptClient() {
 	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
 }
 
+static void printCharByChar(std::string buf) {
+	for (std::string::size_type i = 0; i < buf.size(); ++i) {
+		if (buf[i] == 10)
+			std::cout << "[" << (int)buf[i] << "]";
+		if (buf[i] == 13)
+			std::cout << "[" << (int)buf[i] << "]";
+		else
+			std::cout << buf[i];
+	}
+	std::cout << std::endl;
+}
 bool Server::handleData(int fd) {
 	char tmpBuf[1024];
 	memset(tmpBuf, 0, sizeof(tmpBuf));
@@ -157,10 +168,14 @@ bool Server::handleData(int fd) {
 	else {
 		std::string inputCli = curCli->mess.getBuffer();
 		inputCli.append(tmpBuf);
+		// printCharByChar(inputCli);
 		curCli->mess.setBuffer(inputCli);
-		messageValidator::assess(*curCli);
-		curCli->mess.clearBuffer();
-		curCli->mess.clearCmdParam();
+		if (curCli->mess.getBuffer().find('\n') != std::string::npos) {
+			printCharByChar(curCli->mess.getBuffer());
+			formatMess::assess(*curCli);
+			curCli->mess.clearBuffer();
+			curCli->mess.clearCmdParam();
+		}
 	}
 	return (true);
 }

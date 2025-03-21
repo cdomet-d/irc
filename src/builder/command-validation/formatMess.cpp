@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   MessageValidator.cpp                               :+:      :+:    :+:   */
+/*   formatMess.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/19 17:04:46 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/21 13:38:38 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "MessageValidator.hpp"
+#include "formatMess.hpp"
 #include "CmdManager.hpp"
 #include "Reply.hpp"
 #include <algorithm>
@@ -21,7 +21,7 @@
 /* ************************************************************************** */
 
 //TODO: handle single buffer for CAP NICK USER
-bool messageValidator::assess(Client &sender) {
+bool formatMess::assess(Client &sender) {
 	std::string message = sender.mess.getBuffer();
 
 	while (!message.empty()) {
@@ -44,14 +44,14 @@ bool messageValidator::assess(Client &sender) {
 				manager.findCmd(sender.mess.getCmd()).process(sender));
 		} catch (const CmdManager::CmdNotFoundException &e) {
 			reply::send(sender.getFd(),
-					  ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
-										 sender.mess.getCmd()));
+						ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
+										   sender.mess.getCmd()));
 		}
 	}
 	return true;
 }
 
-stringVec messageValidator::vectorSplit(std::string &s, char del) {
+stringVec formatMess::vectorSplit(std::string &s, char del) {
 	stringVec result;
 	std::string token, trailing;
 
@@ -64,7 +64,7 @@ stringVec messageValidator::vectorSplit(std::string &s, char del) {
 	return (result);
 }
 
-void messageValidator::printCmdParam(const stringVec &obj, std::string where) {
+void formatMess::printCmdParam(const stringVec &obj, std::string where) {
 	std::cout << "[" << std::endl;
 	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it) {
 		if ((*it).empty())
@@ -75,7 +75,7 @@ void messageValidator::printCmdParam(const stringVec &obj, std::string where) {
 	std::cout << "]" << std::endl;
 }
 
-void messageValidator::priv::formatMode(Client &sender) {
+void formatMess::priv::formatMode(Client &sender) {
 	stringVec mode = sender.mess.getCmdParam();
 	if (mode.size() < 2)
 		return;
@@ -109,8 +109,8 @@ void messageValidator::priv::formatMode(Client &sender) {
 	sender.mess.setCmdParam(modeFormat);
 }
 
-bool messageValidator::priv::hasPrefix(std::string &mess,
-									   const std::string &cliPrefix) {
+bool formatMess::priv::hasPrefix(std::string &mess,
+								 const std::string &cliPrefix) {
 	if (mess.at(0) == ':') {
 		std::string::size_type sep = mess.find(" ");
 		if (sep != std::string::npos) {
@@ -124,8 +124,7 @@ bool messageValidator::priv::hasPrefix(std::string &mess,
 	return true;
 }
 
-bool messageValidator::priv::hasTrailing(std::string &mess,
-										 std::string &trailing) {
+bool formatMess::priv::hasTrailing(std::string &mess, std::string &trailing) {
 	std::string::size_type trail = mess.find(" :");
 
 	if (trail != std::string::npos) {
@@ -136,8 +135,8 @@ bool messageValidator::priv::hasTrailing(std::string &mess,
 	return false;
 }
 
-bool messageValidator::priv::lenIsValid(const std::string &mess,
-										const Client &sender) {
+bool formatMess::priv::lenIsValid(const std::string &mess,
+								  const Client &sender) {
 	if (mess.empty())
 		return false;
 	if (mess.size() > 512) {
@@ -147,14 +146,25 @@ bool messageValidator::priv::lenIsValid(const std::string &mess,
 	return true;
 }
 
-std::string messageValidator::priv::removeNewlines(std::string &input) {
+std::string::size_type
+formatMess::priv::evaluateTermination(const std::string &mess) {
+	if (mess.find("\r\n") != std::string::npos)
+		return 2;
+	if (mess.find("\n") != std::string::npos)
+		return 1;
+	return std::string::npos;
+}
 
-	std::string::size_type newline = input.find(MESSAGE_TERMINATION);
-	if (newline == std::string::npos) {
-		input.erase(input.begin(), input.end());
-		return (input);
+std::string formatMess::priv::removeNewlines(std::string &mess) {
+
+	std::string::size_type termSize = evaluateTermination(mess);
+	if (termSize == std::string::npos) {
+		mess.clear();
+		return mess;
 	}
-	std::string result = input.substr(0, newline);
-	input.erase(input.begin(), (input.begin() + newline + 2));
+	std::string::size_type newline =
+		(termSize == 2 ? mess.find("\r\n") : mess.find("\n"));
+	std::string result = mess.substr(0, newline);
+	mess.erase(mess.begin(), (mess.begin() + newline + termSize));
 	return result;
 }

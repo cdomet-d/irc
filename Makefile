@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/19 15:45:34 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/21 13:39:32 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,23 +50,23 @@ CLI_SRC:=			Client.cpp \
 					Message.cpp \
 					UserInfo.cpp \
 
-BUILD_EXE_SRC:=			Join.cpp \
-						NickUser.cpp \
-						Privmsg.cpp \
-						Topic.cpp \
-						Part.cpp \
-						Mode.cpp \
-						Invite.cpp \
-						Kick.cpp \
-						Who.cpp \
-						Pass.cpp \
+BUILD_EXE_SRC:=		Join.cpp \
+					NickUser.cpp \
+					Privmsg.cpp \
+					Topic.cpp \
+					Part.cpp \
+					Mode.cpp \
+					Invite.cpp \
+					Kick.cpp \
+					Who.cpp \
+					Pass.cpp \
 
-BUILD_VAL_SRC:=			CmdManager.cpp \
-						CmdSpec.cpp \
-						CmdParam.cpp \
-						Checkers.cpp \
-						MessageValidator.cpp \
-						syntaxCheck.cpp \
+BUILD_VAL_SRC:=		CmdManager.cpp \
+					CmdSpec.cpp \
+					CmdParam.cpp \
+					Checkers.cpp \
+					formatMess.cpp \
+					syntaxCheck.cpp \
 
 BUILD_MAN_SRC:=	\
 
