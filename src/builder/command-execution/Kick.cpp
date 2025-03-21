@@ -3,32 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 15:49:35 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:11:58 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdSpec.hpp"
 #include "Reply.hpp"
 #include "Server.hpp"
+#include "CmdExecution.hpp"
 
 void kickFromAllMap(Client *target, Channel &curChan)
 {
 	int fdTarget = target->getFd();
 
-	curChan.getCliInChan().erase(fdTarget);
+	curChan.removeCli(ALLCLI, fdTarget);
 	clientMapIt itTarget;
 	itTarget = curChan.getOpCli().find(fdTarget);
 	if (itTarget != curChan.getOpCli().end())
-		curChan.getOpCli().erase(fdTarget);
+		curChan.removeCli(OPCLI, fdTarget);
 	itTarget = curChan.getInvitCli().find(fdTarget);
 	if (itTarget != curChan.getInvitCli().end())
-		curChan.getInvitCli().erase(fdTarget);
+		curChan.removeCli(INVITECLI, fdTarget);
 }
 
-void handleKick(CmdSpec &cmd)
+void kick(CmdSpec &cmd)
 {
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 	Client *sender = &cmd.getSender();
