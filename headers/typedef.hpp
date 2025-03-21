@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   typedef.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/03/20 14:09:20 by aljulien         ###   ########.fr       */
+/*   Created: 2025/03/06 13:59:33 by cdomet-d          #+#    #+#             */
+/*   Updated: 2025/03/21 14:23:58 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ typedef std::vector< std::string > stringVec;
 // -------------------------------- IRC UTILS ------------------------------- //
 
 #define MAX_EVENTS 100
-#define MESSAGE_TERMINATION "\r\n"
 
 // -------------------------------- DEBUG ----------------------------------- //
 

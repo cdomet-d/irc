@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Checkers.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/21 12:49:35 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/21 15:16:38 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "JoinRequestCheck.hpp"
 #include "Reply.hpp"
 #include "syntaxCheck.hpp"
+#include "printers.hpp"
 
 bool RegStageDone(CmdSpec &cmd) {
 	if (cmd.getSender().cliInfo.getRegistration() <=
@@ -73,7 +74,7 @@ bool validUser(CmdSpec &cmd) {
 
 bool validChan(CmdSpec &cmd) {
 	stringVec param = cmd[channel_].getInnerParam();
-	messageValidator::printCmdParam(param, "innerParam");
+	print::cmdParam(param, "innerParam");
 	return (true);
 }
 
