@@ -6,7 +6,7 @@
 /*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 17:53:59 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/20 10:03:59 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/21 12:44:33 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ bool joinCheck::reachedChanLimit(Channel &chan, Client &sender) {
 }
 
 bool joinCheck::hasInvite(Channel &chan, Client &sender) {
-	clientMap::iterator itCli;
+	clientMap::const_iterator itCli;
 
 	itCli = chan.getInvitCli().find(sender.getFd());
 	if (itCli != chan.getInvitCli().end())

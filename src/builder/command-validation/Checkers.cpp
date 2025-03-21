@@ -6,7 +6,7 @@
 /*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/21 12:39:58 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/21 12:49:35 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,16 @@
 #include "syntaxCheck.hpp"
 
 bool RegStageDone(CmdSpec &cmd) {
-	if (cmd.getSender().cliInfo.getRegistration() <= cmd.getRegistrationStage() ||
+	if (cmd.getSender().cliInfo.getRegistration() <=
+			cmd.getRegistrationStage() ||
 		cmd.getSender().cliInfo.getRegistration() == 3)
 		return (true);
-	if (cmd.getName() == "PASS")
-		reply::send(cmd.getSender().getFd(), "Please enter nickname\r\n");
+	if (cmd.getName() == "PASS") {
+		if (cmd.getSender().cliInfo.getRegistration() == 1)
+			reply::send(cmd.getSender().getFd(), "Please enter nickname\r\n");
+		else
+			reply::send(cmd.getSender().getFd(), "Please enter username\r\n");
+	}
 	if (cmd.getName() == "NICK")
 		reply::send(cmd.getSender().getFd(), "Please enter username\r\n");
 	return (false);
@@ -56,7 +61,8 @@ bool validNick(CmdSpec &cmd) {
 	if (conflictCheck::nick::inUse(nick, cmd.server_.getUsedNick(),
 								   cmd.getSender().getFd()))
 		return false;
-	reply::send(cmd.getSender().getFd(), cmd[nickname_][0] + " is valid nickname\n");
+	reply::send(cmd.getSender().getFd(),
+				cmd[nickname_][0] + " is valid nickname\n");
 	return true;
 }
 

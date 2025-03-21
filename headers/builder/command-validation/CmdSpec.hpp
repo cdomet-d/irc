@@ -60,7 +60,7 @@ class CmdSpec {
 
 	/*                               GETTERS                                  */
 	bool getValid(void) const;
-	//TODO: remettre en const et ajouter une fonction addChan dans Client pour pouvoir mettre getJoinedChan en const
+	//TODO: remettre en const
 	Client &getSender(void) const;
 	const paramMap &getParams(void) const;
 	const std::string &getName(void) const;
