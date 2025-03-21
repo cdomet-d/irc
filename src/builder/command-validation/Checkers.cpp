@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/21 14:25:43 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/21 15:16:38 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,6 @@ bool validRequest(Channel chan, CmdSpec &cmd, size_t i) {
 	if (joinCheck::reachedCliChanLimit(chan, cmd.getSender()))
 		return (false);
 	return (true);
-	print::cmdParam(param, "innerParam");
-	return (0);
 }
 
 bool joinChanRequest(CmdSpec &cmd) {
