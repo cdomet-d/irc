@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 17:05:30 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:27:24 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ bool Server::servRun() {
 void Server::acceptClient() {
 	try {
 		Client *newCli = new Client();
-		newCli->cliInfo.setRegistration(3);
+		newCli->cliInfo.setRegistration(0);
 
 		struct epoll_event cliEpollTemp;
 		socklen_t cliLen = sizeof(newCli->cliAddr_);
@@ -158,6 +158,7 @@ bool Server::handleData(int fd) {
 		std::string inputCli = curCli->mess.getBuffer();
 		inputCli.append(tmpBuf);
 		curCli->mess.setBuffer(inputCli);
+		std::cout << curCli->mess.getBuffer();
 		messageValidator::assess(*curCli);
 		curCli->mess.clearBuffer();
 		curCli->mess.clearCmdParam();
@@ -189,19 +190,21 @@ bool Server::handleData(int fd) {
 bool checkOnlyOperator(int fd) {
 	static Server &server = Server::GetServerInstance(0, "");
 
-	clientMap::iterator curCli = server.getAllCli().find(fd);
-	//handleJoin("0", curCli->second);
-	for (stringVec::iterator currChanName =
+	clientMap::const_iterator curCli = server.getAllCli().find(fd);
+	for (stringVec::iterator curChanName =
 			 curCli->second->getJoinedChans().begin();
-		 currChanName != curCli->second->getJoinedChans().end();
-		 ++currChanName) {
-		channelMapIt currChan = server.getAllChan().find(*currChanName);
-		if (!currChan->second->getOpCli().size()) {
-			if (currChan->second->getCliInChan().size() >= 1) {
-				currChan->second->getOpCli().insert(clientPair(
-					currChan->second->getCliInChan().begin()->second->getFd(),
-					currChan->second->getCliInChan().begin()->second));
+		 curChanName != curCli->second->getJoinedChans().end();
+		 ++curChanName) {
+		channelMapIt curChan = server.getAllChan().find(*curChanName);
+		if (!curChan->second->getOpCli().size()) {
+			if (curChan->second->getCliInChan().size() >= 1) {
+				curChan->second->addCli(OPCLI, curChan->second->getCliInChan().begin()->second);
 				return (true);
+			}
+			//delete chan if the disconnected cli was the one cli in chan
+			if (curChan->second->getCliInChan().empty() == true) {
+				server.removeChan(curChan->second);
+				delete curChan->second;
 			}
 		}
 	}
@@ -209,11 +212,10 @@ bool checkOnlyOperator(int fd) {
 }
 
 bool Server::disconnectCli(int fd) {
-	checkOnlyOperator(fd);
 	clientMapIt it = clients_.find(fd);
 	if (it != clients_.end()) {
 		std::stringstream ss;
-		ss << "Client [" << it->second->getFd() << "] connected";
+		ss << "Client [" << it->second->getFd() << "] deconnected";
 		reply::log(reply::INFO, ss.str());
 		delete it->second;
 		clients_.erase(fd);
@@ -223,6 +225,13 @@ bool Server::disconnectCli(int fd) {
 	return false;
 }
 
+void Server::addChan(Channel *curChan) {
+	channels_.insert(std::pair<std::string, Channel *>(curChan->getName(), curChan));
+}
+
+void Server::removeChan(Channel *curChan) {
+	channels_.erase(curChan->getName());
+}
 /* ************************************************************************** */
 /*                               EXCEPTIONS                                   */
 /* ************************************************************************** */
@@ -237,11 +246,13 @@ Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-clientMap &Server::getAllCli() {
+
+const clientMap &Server::getAllCli() const
+{
 	return (clients_);
 }
-
-channelMap &Server::getAllChan() {
+const channelMap &Server::getAllChan() const
+{
 	return (channels_);
 }
 

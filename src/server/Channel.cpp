@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 17:04:52 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:02:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 /* ************************************************************************** */
 
 Channel::Channel(std::string name)
-	: inviteOnly_(false), isPassMatch_(false), topicRestrict_(true), maxCli_(0),
+	: inviteOnly_(true), isPassMatch_(false), topicRestrict_(true), maxCli_(-1),
 	  name_(name), topic_("")
 {
 	setModes();
@@ -43,16 +43,19 @@ void sendMessageChannel(clientMap allCliChannel, std::string message)
 
 bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 {
+
 	// reply::log(reply::DEBUG, "-----addClientToChan-----");
-	std::map< int, Client * > &clients = curChan->getCliInChan();
+
+	std::map< int, Client * > clients = curChan->getCliInChan();
 	for (clientMapIt it = clients.begin(); it != clients.end(); ++it)
 		if (curCli == it->second) {
 			// reply::INFO, "Client already in channel");
 			return (false);
 		}
 	if (curChan->getCliInChan().empty())
-		curChan->getOpCli().insert(clientPair(curCli->getFd(), curCli));
-	curChan->getCliInChan().insert(clientPair(curCli->getFd(), curCli));
+		curChan->addCli(OPCLI, curCli);
+	curChan->addCli(ALLCLI, curCli);
+
 	curCli->getJoinedChans().push_back(curChan->getName());
 
 	for (clientMapIt itCli = curChan->getCliInChan().begin();
@@ -68,6 +71,32 @@ bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 				  RPL_TOPIC(curCli->cliInfo.getNick(), curChan->getName(),
 							curChan->getTopic()));
 	return (true);
+}
+
+void Channel::addCli(mapChan curMap, Client *curCli) {
+	switch (curMap) {
+		case ALLCLI:
+			cliInChan_.insert(clientPair(curCli->getFd(), curCli));
+			break ;
+		case OPCLI:
+			cliIsOperator_.insert(clientPair(curCli->getFd(), curCli));
+			break ;
+		case INVITECLI:
+			cliInvited_.insert(clientPair(curCli->getFd(), curCli));
+	}
+}
+
+void Channel::removeCli(mapChan curMap, int fdCli) {
+	switch (curMap) {
+		case ALLCLI:
+			cliInChan_.erase(fdCli);
+			break ;
+		case OPCLI:
+			cliIsOperator_.erase(fdCli);
+			break ;
+		case INVITECLI:
+			cliInvited_.erase(fdCli);
+	}
 }
 
 /* ************************************************************************** */
@@ -98,15 +127,15 @@ bool Channel::getTopicRestrict() const
 {
 	return (topicRestrict_);
 }
-clientMap &Channel::getCliInChan()
+const clientMap &Channel::getCliInChan() const
 {
 	return (cliInChan_);
 }
-clientMap &Channel::getOpCli()
+const clientMap &Channel::getOpCli() const
 {
 	return (cliIsOperator_);
 }
-clientMap &Channel::getInvitCli()
+const clientMap &Channel::getInvitCli() const
 {
 	return (cliInvited_);
 }

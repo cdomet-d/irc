@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 16:52:19 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:26:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,11 @@ class Server {
 	bool servInit();
 	bool servRun();
 	void acceptClient();
+	void addChan(Channel *curChan);
+	void removeChan(Channel *curChan);
+	bool disconnectCli(int fd);
 
 	/*                               GETTERS                                  */
-	channelMap &getAllChan();
-	clientMap &getAllCli();
 	const nickMap &getUsedNick() const;
 	int getFdFromNick(const std::string &nick) const;
 	const std::string getPass() const;
@@ -63,10 +64,11 @@ class Server {
 	/*                               MEMBERS                                  */
 	std::ofstream logfile;
 	
+	const clientMap &getAllCli() const;
+	const channelMap &getAllChan() const;
 
   private:
 	/*                               METHODS                                  */
-	bool disconnectCli(int fd);
 
 	// attributes
 	const int port_;
@@ -86,16 +88,5 @@ class Server {
 	Server(void);
 	Server(int port, std::string password);
 };
-
-/*                               COMMAND                                  */
-//NICK--USER
-void handleClientRegistration(const std::string &input, Client *curCli);
-
-//PRIVMSG
-bool handlePrivsmg(std::string params, Client *curCli);
-//WHO
-bool handleWho(std::string params, Client *curCli);
-//PASS
-bool handlePass(std::string params, Client *curCli);
 
 #endif //SERVER_HPP

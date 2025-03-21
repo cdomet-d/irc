@@ -109,31 +109,5 @@ class CmdSpec {
 			void (*cmExecutor)(CmdSpec &cmd));
 };
 
-//JOIN
-void handleJoin(CmdSpec &cmd);
-Channel *createChan(const std::string &chanName);
-
-//MODE
-void handleMode(CmdSpec &cmd);
-typedef void (*modesFunc)(std::string flag, std::string param,
-						  Channel &curChan);
-
-//TOPIC
-void handleTopic(CmdSpec &cmd);
-
-//INVITE
-void handleInvite(CmdSpec &cmd);
-
-//KICK
-void handleKick(CmdSpec &cmd);
-
-//PART
-void handlePart(CmdSpec &cmd);
-
-//PRIVMSG
-void handlePrivsmg(CmdSpec &cmd);
-
-//UTILS
-Channel &findCurChan(std::string chanName);
 
 #endif

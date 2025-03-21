@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Checkers.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/19 17:07:10 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:19:22 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ bool validNick(CmdSpec &cmd) {
 		return false;
 	if (conflictCheck::nick::inUse(nick, cmd.server_.getUsedNick(), cmd.getSender().getFd()))
 		return false;
-	reply::send(reply::INFO, cmd[nickname_][0] + " is valid nickname\n");
+	reply::send(cmd.getSender().getFd(), cmd[nickname_][0] + " is valid nickname\n");
 	return true;
 }
 
@@ -59,11 +59,11 @@ bool validUser(CmdSpec &cmd) {
 bool validChan(CmdSpec &cmd) {
 	stringVec param = cmd[channel_].getInnerParam();
 	messageValidator::printCmdParam(param, "innerParam");
-	return (0);
+	return (1);
 }
 
 bool joinChanRequest(CmdSpec &cmd) {
-	channelMap::iterator itChan;
+	channelMap::const_iterator itChan;
 
 	for (size_t i = 0; i < cmd[channel_].getSize(); i++) {
 		//TODO: call coralie's function to check syntax of channel
@@ -75,7 +75,7 @@ bool joinChanRequest(CmdSpec &cmd) {
 		//faire un namespace
 		//boucler sur le tableau et si une fonction renvoie false faire rmParam et continue;
 		if (!onChan(cmd)) {
-			if (chan.getCliInChan().size() < chan.getMaxCli()) {
+			if (chan.getCliInChan().size() < chan.getMaxCli() && chan.getMaxCli() != 0) {
 				if (chan.getModes().find('i') == std::string::npos ||
 					(chan.getModes().find('i') != std::string::npos
 					 /*&& sender has an invite*/)) {
@@ -131,7 +131,7 @@ bool onChan(CmdSpec &cmd) {
 }
 
 bool hasChanPriv(CmdSpec &cmd) {
-	channelMap::iterator itChan;
+	channelMap::const_iterator itChan;
 
 	itChan = cmd.server_.getAllChan().find(cmd[channel_][0]);
 	Channel chan = *itChan->second;
@@ -142,7 +142,7 @@ bool hasChanPriv(CmdSpec &cmd) {
 		return (true);
 	}
 
-	clientMap::iterator itCl;
+	clientMap::const_iterator itCl;
 
 	itCl = chan.getOpCli().find(cmd.getSender().getFd());
 	if (itCl == chan.getOpCli().end()) {

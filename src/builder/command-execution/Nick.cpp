@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Pass.cpp                                           :+:      :+:    :+:   */
+/*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 09:04:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 09:33:03 by aljulien         ###   ########.fr       */
+/*   Created: 2025/03/20 13:20:57 by aljulien          #+#    #+#             */
+/*   Updated: 2025/03/20 13:52:47 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,8 @@
 #include "Reply.hpp"
 #include "Server.hpp"
 
-void pass(CmdSpec &cmd)
-{
+void nick(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
-	reply::send(sender->getFd(), PASS_SUCCESS());
-	sender->cliInfo.setRegistration(1);
+	sender->cliInfo.setNick(cmd[nickname_][0]);
+	sender->cliInfo.setRegistration(2);
 }

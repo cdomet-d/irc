@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   typedef.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/06 13:59:33 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/19 13:52:44 by cdomet-d         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/03/20 14:09:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ class Channel;
 // -------------------------------- DATA TYPES ------------------------------ //
 
 typedef std::map< int, Client * > clientMap;
+typedef std::map< int, Client * >::const_iterator clientMapIt;
 typedef std::map< std::string, int > nickMap;
-typedef std::map< int, Client * >::iterator clientMapIt;
 typedef std::map< std::string, Channel * > channelMap;
-typedef std::map< std::string, Channel * >::iterator channelMapIt;
+typedef std::map< std::string, Channel * >::const_iterator channelMapIt;
 typedef std::pair< int, Client * > clientPair;
 typedef std::pair<std::string, int> nickPair;
 typedef std::vector< std::string > stringVec;

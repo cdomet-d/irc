@@ -3,36 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 16:56:13 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:02:28 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdSpec.hpp"
 #include "Server.hpp"
+#include "CmdExecution.hpp"
 #include <cerrno>
 #include <cstdlib>
 #include <limits>
 
 void executeO(std::string flag, std::string param, Channel &curChan)
 {
-	Client *target;
+	Client *targetCli;
 
 	//find instance of target
 	for (clientMapIt targetIt = curChan.getCliInChan().begin();
 		 targetIt != curChan.getCliInChan().end(); ++targetIt) {
 		if (targetIt->second->cliInfo.getNick() == param) {
-			target = targetIt->second;
+			targetCli = targetIt->second;
 			break;
 		}
 	}
 	if (flag == "+o")
-		curChan.getOpCli().insert(
-			std::pair< int, Client * >(target->getFd(), target));
+		curChan.addCli(OPCLI, targetCli);
 	if (flag == "-o")
-		curChan.getOpCli().erase(target->getFd());
+		curChan.removeCli(OPCLI, targetCli->getFd());
 }
 
 void executeI(std::string flag, std::string param, Channel &curChan)
@@ -131,7 +131,7 @@ Channel &findCurChan(std::string chanName)
 }
 
 //the modes of a channel need to be empty if no moe is activated and +<modes> if any
-void handleMode(CmdSpec &cmd)
+void mode(CmdSpec &cmd)
 {
 	reply::log(reply::DEBUG, "-----handleMode-----");
 	Client *sender = &cmd.getSender();

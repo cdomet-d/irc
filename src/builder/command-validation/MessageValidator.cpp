@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageValidator.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/19 17:04:46 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:32:49 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ bool messageValidator::assess(Client &sender) {
 		try {
 			manager.executeCm(
 				manager.findCmd(sender.mess.getCmd()).process(sender));
+
 		} catch (const CmdManager::CmdNotFoundException &e) {
 			reply::send(sender.getFd(),
 					  ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
@@ -148,13 +149,14 @@ bool messageValidator::priv::lenIsValid(const std::string &mess,
 }
 
 std::string messageValidator::priv::removeNewlines(std::string &input) {
-
-	std::string::size_type newline = input.find(MESSAGE_TERMINATION);
-	if (newline == std::string::npos) {
-		input.erase(input.begin(), input.end());
-		return (input);
-	}
-	std::string result = input.substr(0, newline);
-	input.erase(input.begin(), (input.begin() + newline + 2));
-	return result;
+    std::string result;
+    std::string::size_type newline = input.find(MESSAGE_TERMINATION);
+    if (newline == std::string::npos) {
+        result.assign(input, 0, input.size() - 1);
+        input.erase(input.begin(), input.end());
+        return (result);
+    }
+    result = input.substr(0, newline);
+    input.erase(input.begin(), (input.begin() + newline + 2));
+    return result;
 }
