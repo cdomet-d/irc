@@ -3,24 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/03/19 17:06:13 by csweetin         ###   ########.fr       */
+/*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
+/*   Updated: 2025/03/20 14:11:41 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
+#include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
 #include "Reply.hpp"
 #include "Server.hpp"
 
-void handleInvite(CmdSpec &cmd)
+void invite(CmdSpec &cmd)
 {
 	static Server &server = Server::GetServerInstance(0, "");
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 	Client *sender = &cmd.getSender();
 
+	//use NickMap
 	Client *targetCli = NULL;
 	for (clientMapIt itTarget = server.getAllCli().begin();
 		 itTarget != server.getAllCli().end(); ++itTarget) {
@@ -32,7 +33,7 @@ void handleInvite(CmdSpec &cmd)
 	reply::send(sender->getFd(),
 			  RPL_INVITING(targetCli->cliInfo.getNick(), cmd[channel_][0]));
 	reply::send(targetCli->getFd(),
-			  RPL_INVITE(sender->cliInfo.getNick(),
-						 targetCli->cliInfo.getNick(), cmd[channel_][0]));
-	curChan.getInvitCli().insert(clientPair(targetCli->getFd(), targetCli));
+			  RPL_INVITE(sender->cliInfo.getNick(), targetCli->cliInfo.getNick(), cmd[channel_][0]));
+
+	curChan.addCli(INVITECLI, targetCli);
 }

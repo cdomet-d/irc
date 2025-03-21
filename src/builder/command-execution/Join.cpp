@@ -3,54 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 16:55:58 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/21 10:49:26 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdSpec.hpp"
 #include "Server.hpp"
+#include "CmdExecution.hpp"
 #include <sstream>
 
 Channel *createChan(const std::string &chanName)
 {
-	static Server &server = Server::GetServerInstance(0, "");
+    static Server &server = Server::GetServerInstance(0, "");
 
-	channelMapIt it = server.getAllChan().find(chanName);
-	if (it != server.getAllChan().end()) {
-		return (it->second);
-	}
+    channelMapIt it = server.getAllChan().find(chanName);
+    if (it != server.getAllChan().end()) {
+        return (it->second);
+    }
 
-	Channel *newChan = new Channel(chanName);
-	newChan->setName(chanName);
-	newChan->setModes();
-	server.getAllChan().insert(
-		std::pair< std::string, Channel * >(newChan->getName(), newChan));
-	return (newChan);
+    Channel *newChan = new Channel(chanName);
+    newChan->setName(chanName);
+    newChan->setModes();
+    server.addChan(newChan);
+    return (newChan);
 }
 
-/* void partAllChans(Client *curCli)
+void join(CmdSpec &cmd)
 {
-	for (stringVec::iterator currChanName = curCli->getJoinedChans().begin();
-		 currChanName != curCli->getJoinedChans().end(); ++currChanName) {
-		handlePart(*currChanName, curCli);
-	}
-	curCli->getJoinedChans().clear();
-} */
+    Client *sender = &cmd.getSender();
+    if (cmd[channel_][0] == "0") {
+        partAllChans(sender);
+        return;
+    }
 
-void handleJoin(CmdSpec &cmd)
-{
-	Client *sender = &cmd.getSender();
-	if (cmd[channel_][0] == "0") {
-		//partAllChans(sender);
-		return;
-	}
-
-	for (size_t nbChan = 0; nbChan < cmd[channel_].getSize(); nbChan++) {
-		Channel *curChan = createChan(cmd[channel_][nbChan]);
-		curChan->addClientToChan(curChan, sender);
-	}
-	return;
+    for (size_t nbChan = 0; nbChan < cmd[channel_].getSize(); nbChan++) {
+        Channel *curChan = createChan(cmd[channel_][nbChan]);
+        curChan->addClientToChan(curChan, sender);
+    }
+    return;
 }

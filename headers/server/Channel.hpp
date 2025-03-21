@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 15:56:30 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:10:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
@@ -16,6 +17,8 @@
 #include "Client.hpp"
 #include "Reply.hpp"
 #include "typedef.hpp"
+
+enum mapChan { ALLCLI, OPCLI, INVITECLI };
 
 class Client;
 
@@ -28,14 +31,16 @@ class Channel {
 	/*                               METHODS                                  */
 	bool addClientToChan(Channel *curChan, Client *curCli);
 	void printMapValues();
+	void addCli(mapChan curMap, Client *curCli);
+	void removeCli(mapChan curMap, int fdCli);
 
 	/*                               GETTERS                                  */
 	bool getInviteOnly() const;
 	bool getIsPassMatch() const;
 	bool getTopicRestrict() const;
-	clientMap &getCliInChan();
-	clientMap &getOpCli();
-	clientMap &getInvitCli();
+	const clientMap &getCliInChan() const;
+	const clientMap &getOpCli() const;
+	const clientMap &getInvitCli() const;
 	size_t getMaxCli() const;
 	std::string getName() const;
 	std::string getTopic() const;

@@ -54,15 +54,17 @@ class CmdSpec {
 	CmdSpec &process(Client &sender);
 	bool enoughParams(void);
 	void cleanAll(void);
+	bool checkRegistrationStage(void);
 
 	void displayParams(void); //to be removed
 
 	/*                               GETTERS                                  */
 	bool getValid(void) const;
-	//TODO: remettre en const et ajouter une fonction addChan dans Client pour pouvoir mettre getJoinedChan en const
+	//TODO: remettre en const
 	Client &getSender(void) const;
-	const std::string &getName(void) const;
 	const paramMap &getParams(void) const;
+	const std::string &getName(void) const;
+	int getRegistrationStage() const;
 	void (*getExecutor(void) const)(CmdSpec &cmd);
 
 	/*                               SETTERS                                  */
@@ -108,32 +110,5 @@ class CmdSpec {
 			std::vector< bool (*)(CmdSpec &) > checkers,
 			void (*cmExecutor)(CmdSpec &cmd));
 };
-
-//JOIN
-void handleJoin(CmdSpec &cmd);
-Channel *createChan(const std::string &chanName);
-
-//MODE
-void handleMode(CmdSpec &cmd);
-typedef void (*modesFunc)(std::string flag, std::string param,
-						  Channel &curChan);
-
-//TOPIC
-void handleTopic(CmdSpec &cmd);
-
-//INVITE
-void handleInvite(CmdSpec &cmd);
-
-//KICK
-void handleKick(CmdSpec &cmd);
-
-//PART
-void handlePart(CmdSpec &cmd);
-
-//PRIVMSG
-void handlePrivsmg(CmdSpec &cmd);
-
-//UTILS
-Channel &findCurChan(std::string chanName);
 
 #endif

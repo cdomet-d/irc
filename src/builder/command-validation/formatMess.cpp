@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/21 13:49:09 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/21 14:26:09 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ bool formatMess::assess(Client &sender) {
 		std::string cmd = priv::removeNewlines(message);
 		if (cmd.find("CAP") != std::string::npos)
 			continue;
-		std::cout << "Extracted	[" + cmd + "]" << std::endl;
-		std::cout << "Remainder	" + message << std::endl;
+		// std::cout << "Extracted	[" + cmd + "]" << std::endl;
+		// std::cout << "Remainder	" + message << std::endl;
 		if (priv::lenIsValid(cmd, sender) == false)
 			return false;
 		if (priv::hasPrefix(cmd, sender.cliInfo.getPrefix()) == false)
@@ -42,6 +42,7 @@ bool formatMess::assess(Client &sender) {
 		try {
 			manager.executeCm(
 				manager.findCmd(sender.mess.getCmd()).process(sender));
+
 		} catch (const CmdManager::CmdNotFoundException &e) {
 			reply::send(sender.getFd(),
 						ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
