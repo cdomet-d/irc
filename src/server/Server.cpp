@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 14:26:25 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/21 18:38:13 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ bool Server::servInit() {
 	if (listen(servFd_, SOMAXCONN) == -1)
 		return (false);
 	servPoll_.data.fd = servFd_;
-	servPoll_.events = POLLIN;
+	servPoll_.events = EPOLLIN | EPOLLOUT;
 	if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, servFd_, &servPoll_) == -1)
 		return 0;
 	return (true);
@@ -123,13 +123,15 @@ void Server::acceptClient() {
 		} else {
 			newCli->cliInfo.setHostname(client_ip); // Use IP as fallback
 		}
+		
 		//TODO: not throw an exeption when a client cannot connect: it can't kill the server.
 		if (fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK) == -1) {
 			close(newCli->getFd());
 			throw Server::InitFailed(
 				const_cast< const char * >(strerror(errno)));
 		}
-		cliEpollTemp.events = EPOLLIN;
+		
+		cliEpollTemp.events = EPOLLIN | EPOLLOUT;
 		cliEpollTemp.data.fd = newCli->getFd();
 		newCli->setCliEpoll(cliEpollTemp);
 
@@ -150,11 +152,18 @@ void Server::acceptClient() {
 bool Server::handleData(int fd) {
 	char tmpBuf[1024];
 	memset(tmpBuf, 0, sizeof(tmpBuf));
-	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, 0);
+	// std::cout << "In handle data" << std::endl;
+	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, MSG_DONTWAIT);
 
+	// std::cout << bytes << std::endl;
 	Client *curCli = clients_.find(fd)->second;
-	if (bytes <= 0)
+	//TODO: handle -1 differently
+	if (bytes == 0)
 		return (disconnectCli(fd));
+	else if (bytes == -1 && (errno == EAGAIN || errno == EWOULDBLOCK))
+		return true;
+	else if (bytes == -1)
+		perror("HandleData:");
 	else {
 		std::string inputCli = curCli->mess.getBuffer();
 		inputCli.append(tmpBuf);
@@ -195,11 +204,11 @@ bool checkOnlyOperator(int fd) {
 }
 
 bool Server::disconnectCli(int fd) {
+	std::cout << "DisconnectCli" << std::endl;
 	clientMapIt it = clients_.find(fd);
 	if (it != clients_.end()) {
-		std::stringstream ss;
-		ss << "Client [" << it->second->getFd() << "] deconnected";
-		reply::log(reply::INFO, ss.str());
+		epoll_ctl(epollFd_, EPOLL_CTL_DEL, fd, it->second->getCliEpoll());
+		reply::log(reply::INFO,"Client was disconnected");
 		delete it->second;
 		clients_.erase(fd);
 		close(fd);
