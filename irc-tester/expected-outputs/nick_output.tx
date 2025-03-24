@@ -14,8 +14,11 @@
 : 432 * }cha :illegal first char (should be a letter), is } :Erroneous Nickname
 : 432 * +cha :illegal first char (should be a letter), is + :Erroneous Nickname
 : 432 * cha$ :illegal char (should be a letter, a digit or -[]\`^{}), is $ :Erroneous Nickname
-Introducing new nick "cha-[]\^{}4`"
+Introducing new nick "cha-[]\^4`{}"
 : NOTICE : Registration complete
-cha-[]\^{}4` changed his nickname to chacham
+cha-[]\^4`{} changed his nickname to chacham
 : 432 chacham cha# :illegal char (should be a letter, a digit or -[]\`^{}), is # :Erroneous Nickname
 : 432 chacham cha: :illegal char (should be a letter, a digit or -[]\`^{}), is : :Erroneous Nickname
+: 431 * :No nickname given
+: NOTICE : Valid password ! You may register
+: 433 * chacham :Nickname is already in use
