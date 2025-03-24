@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/24 16:21:53 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/24 18:30:51 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ bool validNick(CmdSpec &cmd) {
 	if (conflictCheck::nick::inUse(nick, cmd.server_.getUsedNick(),
 								   cmd.getSender().getFd()))
 		return false;
-	reply::send(cmd.getSender().getFd(),
-				cmd[nickname_][0] + " is valid nickname\n");
+	// reply::send(cmd.getSender().getFd(),
+	// 			cmd[nickname_][0] + " is valid nickname\n");
 	return true;
 }
 
