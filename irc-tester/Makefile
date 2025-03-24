@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+         #
+#    By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/29 15:03:27 by csweetin          #+#    #+#              #
-#    Updated: 2025/03/24 14:01:54 by charlotte        ###   ########.fr        #
+#    Updated: 2025/03/24 16:37:55 by csweetin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ CFLAGS := -Wall -Wextra -Werror -std=c++98
 CPPFLAGS := $(INCLUDES) -MMD -MP
 
 SRCS := main.cpp \
+		testers.cpp \
 
 OBJS := $(SRCS:%.cpp=$(BUILD_DIR)%.o)
 DEPS := $(OBJS:%.o=%.d)
@@ -37,7 +38,6 @@ $(BUILD_DIR)%.o: $(SRC_DIR)%.cpp
 
 clean :
 	rm -rf $(OBJS) $(DEPS)
-	rm output.txt
 
 fclean : clean
 	rm -rf $(NAME)

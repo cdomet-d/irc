@@ -1,6 +1,7 @@
 .bdir/
 .dbdir/
 .vscode/
+dir_build/
 *.mk
 *.txt
 d-ircserv
