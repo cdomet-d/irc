@@ -1,3 +1,21 @@
 : NOTICE : Valid password ! You may register
 : 431 * :No nickname given
-: 432 * cha sweet :Erroneous Nickname
+: 432 * charlotte sweeting :illegal char (should be a letter, a digit or -[]\`^{}), is   :Erroneous nickname
+: 432 * #cha :illegal first char (should be a letter), is # :Erroneous Nickname
+: 432 * :cha :illegal first char (should be a letter), is : :Erroneous Nickname
+: 432 * 4cha :illegal first char (should be a letter), is 4 :Erroneous Nickname
+: 432 * -cha :illegal first char (should be a letter), is - :Erroneous Nickname
+: 432 * [cha :illegal first char (should be a letter), is [ :Erroneous Nickname
+: 432 * ]cha :illegal first char (should be a letter), is ] :Erroneous Nickname
+: 432 * \cha :illegal first char (should be a letter), is \ :Erroneous Nickname
+: 432 * `cha :illegal first char (should be a letter), is ` :Erroneous Nickname
+: 432 * ^cha :illegal first char (should be a letter), is ^ :Erroneous Nickname
+: 432 * {cha :illegal first char (should be a letter), is { :Erroneous Nickname
+: 432 * }cha :illegal first char (should be a letter), is } :Erroneous Nickname
+: 432 * +cha :illegal first char (should be a letter), is + :Erroneous Nickname
+: 432 * cha$ :illegal char (should be a letter, a digit or -[]\`^{}), is $ :Erroneous Nickname
+Introducing new nick "cha-[]\^{}4`"
+: NOTICE : Registration complete
+cha-[]\^{}4` changed his nickname to chacham
+: 432 chacham cha# :illegal char (should be a letter, a digit or -[]\`^{}), is # :Erroneous Nickname
+: 432 chacham cha: :illegal char (should be a letter, a digit or -[]\`^{}), is : :Erroneous Nickname
