@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 13:59:33 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/21 14:23:58 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:47:49 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,21 @@ typedef std::map< std::string, int > nickMap;
 typedef std::map< std::string, Channel * > channelMap;
 typedef std::map< std::string, Channel * >::const_iterator channelMapIt;
 typedef std::pair< int, Client * > clientPair;
-typedef std::pair<std::string, int> nickPair;
+typedef std::pair< std::string, int > nickPair;
 typedef std::vector< std::string > stringVec;
+
+typedef enum {
+	TYPE_ERR,
+	B,
+	C,
+	D,
+} e_modetype;
+
+typedef enum {
+	SET_ERR, 
+	SET, 
+	UNSET,
+} e_modeset;
 
 // -------------------------------- IRC UTILS ------------------------------- //
 

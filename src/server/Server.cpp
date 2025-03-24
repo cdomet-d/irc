@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 18:38:13 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/24 16:22:03 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,10 +167,8 @@ bool Server::handleData(int fd) {
 	else {
 		std::string inputCli = curCli->mess.getBuffer();
 		inputCli.append(tmpBuf);
-		print::charByChar(inputCli);
 		curCli->mess.setBuffer(inputCli);
 		if (curCli->mess.getBuffer().find('\n') != std::string::npos) {
-			print::charByChar(curCli->mess.getBuffer());
 			formatMess::assess(*curCli);
 			curCli->mess.clearBuffer();
 			curCli->mess.clearCmdParam();

@@ -6,15 +6,15 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/21 15:16:38 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/24 17:44:38 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Checkers.hpp"
 #include "JoinRequestCheck.hpp"
 #include "Reply.hpp"
-#include "syntaxCheck.hpp"
 #include "printers.hpp"
+#include "syntaxCheck.hpp"
 
 bool RegStageDone(CmdSpec &cmd) {
 	if (cmd.getSender().cliInfo.getRegistration() <=
@@ -74,7 +74,6 @@ bool validUser(CmdSpec &cmd) {
 
 bool validChan(CmdSpec &cmd) {
 	stringVec param = cmd[channel_].getInnerParam();
-	print::cmdParam(param, "innerParam");
 	return (true);
 }
 
@@ -162,12 +161,99 @@ bool validKick(CmdSpec &cmd) {
 	return (true);
 }
 
-bool validMode(CmdSpec &cmd) {
+bool validMess(CmdSpec &cmd) {
 	(void)cmd;
 	return (true);
 }
 
-bool validMess(CmdSpec &cmd) {
-	(void)cmd;
+static e_modeset checkModeset(char c) {
+	switch (c) {
+	case '+':
+		return SET;
+	case '-':
+		return UNSET;
+	default:
+		return SET_ERR;
+	}
+}
+
+static e_modetype checkModetype(char c) {
+	switch (c) {
+	case 'i':
+		return D;
+	case 'k':
+		return C;
+	case 'l':
+		return C;
+	case 'o':
+		return B;
+	case 't':
+		return D;
+	default:
+		return TYPE_ERR;
+	}
+}
+
+// TYPE B: always MUST have a param
+// TYPE C: MUST have a param when set, MUST NOT have a param when unset
+// TYPE D: MUST NOT have a param
+
+bool validMode(CmdSpec &cmd) {
+	e_modetype type;
+	e_modeset set;
+	stringVec flags, param;
+
+	try {
+		flags = cmd[flag_].getInnerParam();
+		param = cmd[flagArg_].getInnerParam();
+	} catch (std::exception &e) { return false; }
+	
+	if (flags.size() == 0) {
+		std::cout << "No modestring provided" << std::endl;
+		return false;
+	}
+	print::cmdParam(cmd[flag_].getInnerParam(), "flags:");
+	print::cmdParam(cmd[flagArg_].getInnerParam(), "flags params:");
+
+	// iterate on the flag list
+	for (size_t i = 0; i < flags.size();) {
+	std::cout << "-----------------" << std::endl;
+	size_t size = flags.size();
+		// for i, recover setchar and flagtype; exit if either doesn't exist
+		try {
+			set = checkModeset(flags.at(i).at(0));
+			type = checkModetype(flags.at(i).at(1));
+			if (!set || !type) {
+				reply::send(cmd.getSender().getFd(),
+							ERR_UNKNOWNMODE(cmd.getSender().cliInfo.getNick(),
+											flags.at(i).at(1)));
+				return false;
+			}
+		} catch (std::exception &e) { 
+		std::cerr << "i: " << i << ":	" << e.what() << std::endl; }
+		
+		std::cout << "For i [" << i << "] | " << flags.at(i) << std::endl;
+		print::modeEnumToString(set, type);
+
+		// check that we can access the param at the flag index
+		
+		// if we MUST have a param and we don't, erase the flag
+		if (((type == B) || (type == C && set == SET)) && i > param.size()) {
+			std::cout << "Must have param, but not enough param" << std::endl;
+			flags.erase(flags.begin() + i);
+		} 
+		// if we don't need a parameter, we add a blank space
+		else if ((type == C && set == UNSET) || type == D)
+			param.insert(param.begin() + i, "");
+
+		// if we don't need a parameter but we do have one ? 
+		if (size == flags.size())
+			i++;
+	}
+	std::cout << "-----------------" << std::endl;
+	cmd[flag_].setParamList(flags);
+	cmd[flagArg_].setParamList(param);
+	print::cmdParam(cmd[flag_].getInnerParam(), "after: flags:");
+	print::cmdParam(cmd[flagArg_].getInnerParam(), "after: flags params:");
 	return (true);
 }
