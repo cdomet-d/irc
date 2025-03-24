@@ -65,7 +65,7 @@ bool CmdSpec::enoughParams() {
 		CmdParam &innerParam = *params_[i].second;
 		if (!innerParam.getOpt() && !innerParam.getSize()) {
 			if (name_ == "NICK") {
-				reply::send((*sender_).getFd(), ERR_NONICKNAMEGIVEN());
+				reply::send((*sender_).getFd(), ERR_NONICKNAMEGIVEN(sender_->cliInfo.getNick()));
 			} else if (name_ == "PRIVMSG") {
 				reply::send((*sender_).getFd(), ERR_NOTEXTTOSEND());
 			} else {

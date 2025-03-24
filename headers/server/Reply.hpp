@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 11:35:22 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/24 13:23:02 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 #define ERR_INVITEONLYCHAN(channel) (": 473 " + channel + " :Cannot join channel (+i)\r\n")
 #define ERR_NEEDMOREPARAMS(nickname, command)(": 461 " + nickname + " " + command + " :Not enough parameters\r\n")
 #define ERR_NICKNAMEINUSE(nick) (": 433 " + nick + " :Nickname is already in use\r\n")
-#define ERR_NONICKNAMEGIVEN() (": 431 :No nickname given\r\n")
+#define ERR_NONICKNAMEGIVEN(nickname) (": 431 " + nickname + " :No nickname given\r\n")
 #define ERR_NORECIPIENT(command) (": 411 :No recipient given (" + command + ")\r\n")
 #define ERR_NOSUCHCHANNEL(nickname, channel) (": 403 " + nickname + " " + channel + " :No such channel" + "\r\n")
 #define ERR_NOSUCHNICK(nickname) (": 401 " + nickname + " :No such nick/channel\r\n")

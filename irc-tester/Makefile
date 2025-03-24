@@ -6,13 +6,13 @@
 #    By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/29 15:03:27 by csweetin          #+#    #+#              #
-#    Updated: 2025/03/24 10:49:53 by charlotte        ###   ########.fr        #
+#    Updated: 2025/03/24 14:01:54 by charlotte        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME := tester
 BUILD_DIR := dir_build/
-#SRC_DIR := src/
+SRC_DIR := src/
 INCLUDES := -I includes
 
 CC := c++
@@ -29,7 +29,7 @@ all : $(NAME)
 $(NAME) : $(OBJS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
-$(BUILD_DIR)%.o: %.cpp
+$(BUILD_DIR)%.o: $(SRC_DIR)%.cpp
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 

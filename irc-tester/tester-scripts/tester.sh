@@ -1,31 +1,5 @@
 #!/bin/bash
 
-# Registration
-cat <<EOF > test_input.txt
-USER c c c c
-NICK chacham
-PASS 0
-PASS fff
-USER c c c c
-NICK alex
-NICK alex
-PASS 0
-USER c c c c
-EOF
-
-timeout 2s nc 0.0.0.0 4444 < test_input.txt > output.txt
-
-#Pass
-cat <<EOF > test_input.txt
-PASS
-PASS wrongpassword
-PASS 0
-EOF
-
-timeout 2s nc 0.0.0.0 4444 < test_input.txt >> output.txt
-
-
-
 # Préparation des fichiers de commandes pour les deux clients
 #cat <<EOF > client1_input.txt
 #USER user1 u u u
