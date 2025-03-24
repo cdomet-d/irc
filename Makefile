@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
+#    By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/21 14:23:47 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/24 16:17:38 by csweetin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,13 +64,13 @@ BUILD_EXE_SRC:=			Join.cpp \
 						User.cpp \
 						Quit.cpp \
 
-BUILD_VAL_SRC:=		CmdManager.cpp \
-					CmdSpec.cpp \
+BUILD_VAL_SRC:=		Checkers.cpp \
+					CmdManager.cpp \
 					CmdParam.cpp \
-					Checkers.cpp \
-					JoinRequestCheck.cpp \
-					formatMess.cpp \
-					syntaxCheck.cpp \
+					CmdSpec.cpp \
+					n_checkJoin.cpp \
+					n_formatMess.cpp \
+					n_syntaxCheck.cpp \
 
 BUILD_MAN_SRC:=	\
 

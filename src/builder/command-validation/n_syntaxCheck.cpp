@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "syntaxCheck.hpp"
+#include "n_syntaxCheck.hpp"
 #include "Checkers.hpp"
 #include "Reply.hpp"
 

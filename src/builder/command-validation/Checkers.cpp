@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   Checkers.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/24 09:52:41 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/24 16:21:53 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Checkers.hpp"
-#include "JoinRequestCheck.hpp"
-#include "Reply.hpp"
-#include "syntaxCheck.hpp"
+#include "n_checkJoin.hpp"
+#include "n_syntaxCheck.hpp"
 #include "printers.hpp"
+#include "Reply.hpp"
 
 bool RegStageDone(CmdSpec &cmd) {
 	if (cmd.getSender().cliInfo.getRegistration() <=
@@ -82,15 +82,15 @@ bool validChan(CmdSpec &cmd) {
 bool validRequest(Channel chan, CmdSpec &cmd, size_t i) {
 	if (onChan(cmd))
 		return (false);
-	if (joinCheck::reachedChanLimit(chan, cmd.getSender()))
+	if (checkJoin::reachedChanLimit(chan, cmd.getSender()))
 		return (false);
 	if (chan.getModes().find("i") != std::string::npos &&
-		!joinCheck::hasInvite(chan, cmd.getSender()))
+		!checkJoin::hasInvite(chan, cmd.getSender()))
 		return (false);
 	else if (chan.getModes().find("k") != std::string::npos &&
-			 !joinCheck::validKey(chan, cmd[key_], i, cmd.getSender()))
+			 !checkJoin::validKey(chan, cmd[key_], i, cmd.getSender()))
 		return (false);
-	if (joinCheck::reachedCliChanLimit(chan, cmd.getSender()))
+	if (checkJoin::reachedCliChanLimit(chan, cmd.getSender()))
 		return (false);
 	return (true);
 }

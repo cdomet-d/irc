@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   syntaxCheck.hpp                                 :+:      :+:    :+:   */
+/*   n_syntaxCheck.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SYNTAXCHECK_HPP
-#define SYNTAXCHECK_HPP
+#ifndef N_SYNTAXCHECK_HPP
+#define N_SYNTAXCHECK_HPP
 
 #include "typedef.hpp"
 

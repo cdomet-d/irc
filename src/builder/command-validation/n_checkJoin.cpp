@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   JoinRequestCheck.cpp                               :+:      :+:    :+:   */
+/*   n_checkJoin.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 17:53:59 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/21 12:44:33 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/24 16:16:31 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "JoinRequestCheck.hpp"
+#include "n_checkJoin.hpp"
 
-bool joinCheck::reachedChanLimit(Channel &chan, Client &sender) {
+bool checkJoin::reachedChanLimit(Channel &chan, Client &sender) {
 	if (chan.getModes().find('l') == std::string::npos ||
 		chan.getCliInChan().size() < chan.getMaxCli())
 		return (false);
@@ -20,7 +20,7 @@ bool joinCheck::reachedChanLimit(Channel &chan, Client &sender) {
 	return (true);
 }
 
-bool joinCheck::hasInvite(Channel &chan, Client &sender) {
+bool checkJoin::hasInvite(Channel &chan, Client &sender) {
 	clientMap::const_iterator itCli;
 
 	itCli = chan.getInvitCli().find(sender.getFd());
@@ -30,7 +30,7 @@ bool joinCheck::hasInvite(Channel &chan, Client &sender) {
 	return (false);
 }
 
-bool joinCheck::validKey(Channel &chan, CmdParam &keys, size_t i,
+bool checkJoin::validKey(Channel &chan, CmdParam &keys, size_t i,
 						 Client &sender) {
 	if (i < keys.getSize() && chan.getPassword() == keys[i])
 		return (true);
@@ -39,7 +39,7 @@ bool joinCheck::validKey(Channel &chan, CmdParam &keys, size_t i,
 	return (false);
 }
 
-bool joinCheck::reachedCliChanLimit(Channel &chan, Client &sender) {
+bool checkJoin::reachedCliChanLimit(Channel &chan, Client &sender) {
 	//TODO: faire un define pour client chan limit
 	if (sender.getJoinedChans().size() < 50)
 		return (false);

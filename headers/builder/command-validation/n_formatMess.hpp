@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   formatMess.hpp                                     :+:      :+:    :+:   */
+/*   n_formatMess.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:04 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/21 13:47:30 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/24 16:19:25 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FORMATMESS_HPP
-#define FORMATMESS_HPP
+#ifndef N_FORMATMESS_HPP
+#define N_FORMATMESS_HPP
 
 #include "Client.hpp"
 #include "typedef.hpp"
