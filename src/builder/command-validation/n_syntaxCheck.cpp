@@ -15,21 +15,21 @@
 #include "Reply.hpp"
 
 bool syntaxCheck::nick::isValid(const std::string &nick, const CmdSpec &cmd) {
-	std::string badFirst(": illegal first char (should be a letter), is "),
+	std::string badFirst(" :illegal first char (should be a letter), is "),
 		illegal(
-			": illegal char (should be a letter, a digit or -[]\\`^{}), is ");
+			" :illegal char (should be a letter, a digit or -[]\\`^{}), is ");
 	std::string::const_iterator start = nick.begin();
 
 	if (!isalpha(*start)) {
 		reply::send(cmd.getSender().getFd(),
-				  ERR_ERRONEUSNICKNAME(nick + badFirst + *start));
+				  ERR_ERRONEUSNICKNAME(cmd.getSender().cliInfo.getNick(), nick + badFirst + *start));
 		return false;
 	}
 	start += 1;
 	while (start != nick.end()) {
 		if (!syntaxCheck::nick::priv::isValidChar(*start)) {
 			reply::send(cmd.getSender().getFd(),
-					  ERR_ERRONEUSNICKNAME(nick + illegal + *start));
+					  ERR_ERRONEUSNICKNAME(cmd.getSender().cliInfo.getNick(), nick + illegal + *start));
 			return false;
 		}
 		++start;
