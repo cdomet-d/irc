@@ -39,9 +39,9 @@ int main() {
         expectedOutputContent = trim_crlf(expectedOutputContent);
 
         if (expectedOutputContent != outputContent) {
-             std::cerr << "\033[31mError on Test " << i << ":\033[0m\n"
-                    << "Expected: " << expectedOutputContent << std::endl
-                    << "Got: " << outputContent << std::endl;
+             std::cerr << "\033[31mTest " << i << ":\033[0m\n"
+                    << "\033[31mExpected:\033[0m " << expectedOutputContent << std::endl
+                    << "\033[31mGot:\033[0m " << outputContent << std::endl;
         }
         else
             std::cout << "\033[32mTest " << i << ":\nSuccess\033[0m\n";

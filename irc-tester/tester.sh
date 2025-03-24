@@ -1,11 +1,9 @@
 #!/bin/bash
 
-# Fichier contenant les commandes à envoyer
-#registration test
+# Registration
 cat <<EOF > test_input.txt
 USER c c c c
 NICK chacham
-PASS wrongpassword
 PASS 0
 PASS fff
 USER c c c c
@@ -15,8 +13,17 @@ PASS 0
 USER c c c c
 EOF
 
-# Envoi des commandes à l'IRC server et capture de la réponse
 timeout 2s nc 0.0.0.0 4444 < test_input.txt > output.txt
+
+#Pass
+cat <<EOF > test_input.txt
+PASS
+PASS wrongpassword
+PASS 0
+EOF
+
+timeout 2s nc 0.0.0.0 4444 < test_input.txt >> output.txt
+
 
 
 # Préparation des fichiers de commandes pour les deux clients
