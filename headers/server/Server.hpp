@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/24 16:20:42 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/25 14:57:47 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ class Server {
 	void acceptClient();
 	void addChan(Channel *curChan);
 	void removeChan(Channel *curChan);
+	void removeCli(Client *curCli);
 	bool disconnectCli(int fd);
 
 	/*                               GETTERS                                  */
