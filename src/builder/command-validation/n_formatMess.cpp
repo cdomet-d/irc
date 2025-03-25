@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/24 16:20:46 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:12:19 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 bool formatMess::assess(Client &sender) {
 	std::string message = sender.mess.getBuffer();
 
+	std::cout << message << std::endl;
 	while (!message.empty()) {
 		std::string cmd = priv::removeNewlines(message);
 		if (cmd.find("CAP") != std::string::npos)

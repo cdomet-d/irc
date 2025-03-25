@@ -42,3 +42,9 @@ exec {client1_out_fd}>&-
 rm -f client*
 
 #TODO: add limit to username ?
+
+#TODO: oblige 0 and * for hostname and servername ?
+#Note that hostname and servername are normally ignored by the IRC
+#   server when the USER command comes from a directly connected client
+#   (for security reasons), but they are used in server to server
+#   communication.
