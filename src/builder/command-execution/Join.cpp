@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 10:49:26 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/25 16:45:21 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ Channel *createChan(const std::string &chanName)
 
     channelMapIt it = server.getAllChan().find(chanName);
     if (it != server.getAllChan().end()) {
-        return (it->second);
+		std::cout << "Found channel" << std::endl;
+		return (it->second);
     }
 
     Channel *newChan = new Channel(chanName);

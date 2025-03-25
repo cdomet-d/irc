@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/25 14:17:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/25 16:46:34 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void quit(CmdSpec &cmd) {
     Client *sender = &cmd.getSender();
 	sender->mess.clearBuffer();
 	
-	partAllChans(sender);
-    checkOnlyOperator(sender->getFd());
+
 	server.disconnectCli(sender->getFd());
 }

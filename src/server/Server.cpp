@@ -6,11 +6,12 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/25 15:42:19 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/25 16:48:03 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "CmdExecution.hpp"
 #include "printers.hpp"
 #include <cerrno>
 #include <sstream>
@@ -174,6 +175,8 @@ bool Server::handleData(int fd) {
 bool Server::disconnectCli(int fd) {
 	clientMapIt it = clients_.find(fd);
 	if (it != clients_.end()) {
+		partAllChans(it->second);
+		checkOnlyOperator(fd);
 		std::stringstream ss;
 		ss << "Client [" << it->second->getFd() << "] deconnected";
 		reply::log(reply::INFO, ss.str());
