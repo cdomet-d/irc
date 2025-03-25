@@ -113,6 +113,8 @@ wait $PID3 2>/dev/null
 cat client1_out > output.txt &
 cat client2_out >> output.txt &
 
+sleep 0.5
+
 # Nettoyer les FIFOs et autres fichiers temporaires
 exec {client1_in_fd}>&-
 exec {client1_out_fd}>&-
