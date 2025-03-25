@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 14:24:04 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:33:47 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ class Server {
 	void acceptClient();
 	void addChan(Channel *curChan);
 	void removeChan(Channel *curChan);
+	void removeCli(Client *curCli);
 	bool disconnectCli(int fd);
 
 	/*                               GETTERS                                  */

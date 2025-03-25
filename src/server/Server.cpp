@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 14:26:25 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:34:02 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,24 +150,46 @@ void Server::acceptClient() {
 bool Server::handleData(int fd) {
 	char tmpBuf[1024];
 	memset(tmpBuf, 0, sizeof(tmpBuf));
-	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, 0);
+	// std::cout << "In handle data" << std::endl;
+	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, MSG_DONTWAIT);
 
+	// std::cout << bytes << std::endl;
 	Client *curCli = clients_.find(fd)->second;
-	if (bytes <= 0)
-		return (disconnectCli(fd));
+	//TODO: handle -1 differently
+	if (bytes == 0)
+		return (false);
+	else if (bytes == -1 && (errno == EAGAIN || errno == EWOULDBLOCK))
+		return true;
+	else if (bytes == -1)
+		perror("HandleData:");
 	else {
 		std::string inputCli = curCli->mess.getBuffer();
 		inputCli.append(tmpBuf);
-		print::charByChar(inputCli);
 		curCli->mess.setBuffer(inputCli);
 		if (curCli->mess.getBuffer().find('\n') != std::string::npos) {
-			print::charByChar(curCli->mess.getBuffer());
+			std::string temp = curCli->mess.getBuffer();
 			formatMess::assess(*curCli);
-			curCli->mess.clearBuffer();
-			curCli->mess.clearCmdParam();
+			if (temp.find("QUIT") == std::string::npos) {
+				curCli->mess.clearBuffer();
+				curCli->mess.clearCmdParam();
+			}
 		}
 	}
 	return (true);
+}
+
+bool Server::disconnectCli(int fd) {
+	clientMapIt it = clients_.find(fd);
+	if (it != clients_.end()) {
+		std::stringstream ss;
+		ss << "Client [" << it->second->getFd() << "] deconnected";
+		reply::log(reply::INFO, ss.str());
+		delete it->second;
+		clients_.erase(fd);
+		close(fd);
+		return true;
+	}
+	return false;
 }
 
 bool checkOnlyOperator(int fd) {
@@ -194,26 +216,15 @@ bool checkOnlyOperator(int fd) {
 	return (false);
 }
 
-bool Server::disconnectCli(int fd) {
-	clientMapIt it = clients_.find(fd);
-	if (it != clients_.end()) {
-		std::stringstream ss;
-		ss << "Client [" << it->second->getFd() << "] deconnected";
-		reply::log(reply::INFO, ss.str());
-		delete it->second;
-		clients_.erase(fd);
-		close(fd);
-		return true;
-	}
-	return false;
-}
-
 void Server::addChan(Channel *curChan) {
 	channels_.insert(std::pair<std::string, Channel *>(curChan->getName(), curChan));
 }
 
 void Server::removeChan(Channel *curChan) {
 	channels_.erase(curChan->getName());
+}
+void Server::removeCli(Client *curCli) {
+	clients_.erase(curCli->getFd());
 }
 /* ************************************************************************** */
 /*                               EXCEPTIONS                                   */

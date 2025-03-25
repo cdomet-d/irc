@@ -6,10 +6,11 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 11:35:27 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:34:30 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <sstream>
 #include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
 #include "Reply.hpp"
@@ -26,10 +27,12 @@ void partAllChans(Client *sender) {
 }
 
 void quit(CmdSpec &cmd) {
+	static Server &server = Server::GetServerInstance(0, "");
+
     Client *sender = &cmd.getSender();
 	sender->mess.clearBuffer();
+	
 	partAllChans(sender);
     checkOnlyOperator(sender->getFd());
-	reply::send(sender->getFd(), RPL_BYEYBE());
-	//server.disconnectCli(sender->getFd());
+	server.disconnectCli(sender->getFd());
 }
