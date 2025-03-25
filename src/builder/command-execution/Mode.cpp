@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 11:02:28 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/25 14:40:19 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,8 +150,10 @@ void mode(CmdSpec &cmd)
 		executeFlag(cmd[flag_][nbFlag], cmd[flagArg_][nbFlag], curChan);
 		newModes.append(cmd[flag_][nbFlag]);
 	}
+	newModes.append(" ");
 	newModes.append(newMaxCli);
 	sendMessageChannel(curChan.getCliInChan(),
 					   RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
 										 curChan.getName(), newModes));
+	std::cout << "new mode : " << std::endl;
 }

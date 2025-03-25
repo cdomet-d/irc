@@ -57,3 +57,48 @@ NICK e
 USER e 0 * alex
 JOIN #test
 TOPIC #test yoo
+
+
+
+
+
+
+epoll_create1 --> create a epoll object and returns it's fd
+
+init struct sockaddr_in : Structures for handling internet addresses
+	servAddr_.sin_family = AF_INET --> une famille d'adresse IP
+	servAddr_.sin_port = htons(port_) --> converts the unsigned short integer hostshort from host byte order to network byte order
+	servAddr_.sin_addr.s_addr = INADDR_ANY --> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

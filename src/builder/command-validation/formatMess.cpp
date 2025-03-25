@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   formatMess.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/21 14:26:09 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:44:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ bool formatMess::assess(Client &sender) {
 		try {
 			manager.executeCm(
 				manager.findCmd(sender.mess.getCmd()).process(sender));
-
 		} catch (const CmdManager::CmdNotFoundException &e) {
 			reply::send(sender.getFd(),
 						ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),

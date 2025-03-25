@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/25 13:34:02 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:42:19 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ bool Server::servInit() {
 	if (listen(servFd_, SOMAXCONN) == -1)
 		return (false);
 	servPoll_.data.fd = servFd_;
-	servPoll_.events = POLLIN;
+	servPoll_.events = EPOLLIN;
 	if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, servFd_, &servPoll_) == -1)
 		return 0;
 	return (true);
@@ -103,41 +103,34 @@ void Server::acceptClient() {
 
 		struct epoll_event cliEpollTemp;
 		socklen_t cliLen = sizeof(newCli->cliAddr_);
-		newCli->setFd(
-			accept(servFd_, (struct sockaddr *)&newCli->cliAddr_, &cliLen));
+		newCli->setFd(accept(servFd_, (struct sockaddr *)&newCli->cliAddr_, &cliLen));
 
 		if (newCli->getFd() == -1)
-			throw Server::InitFailed(
-				const_cast< const char * >(strerror(errno)));
+			throw Server::InitFailed(const_cast< const char * >(strerror(errno)));
 
 		char client_ip[INET_ADDRSTRLEN];
-		inet_ntop(AF_INET, &(newCli->cliAddr_.sin_addr), client_ip,
-				  INET_ADDRSTRLEN);
+		inet_ntop(AF_INET, &(newCli->cliAddr_.sin_addr), client_ip,  INET_ADDRSTRLEN);
 		newCli->cliInfo.setIP(client_ip);
 
 		char hostname[NI_MAXHOST];
-		int result = getnameinfo((struct sockaddr *)&newCli->cliAddr_, cliLen,
-								 hostname, NI_MAXHOST, NULL, 0, 0);
-		if (result == 0) {
+		int result = getnameinfo((struct sockaddr *)&newCli->cliAddr_, cliLen, hostname, NI_MAXHOST, NULL, 0, 0);
+		if (result == 0)
 			newCli->cliInfo.setHostname(hostname);
-		} else {
+		else
 			newCli->cliInfo.setHostname(client_ip); // Use IP as fallback
-		}
+
 		//TODO: not throw an exeption when a client cannot connect: it can't kill the server.
 		if (fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK) == -1) {
 			close(newCli->getFd());
-			throw Server::InitFailed(
-				const_cast< const char * >(strerror(errno)));
+			throw Server::InitFailed(const_cast< const char * >(strerror(errno)));
 		}
 		cliEpollTemp.events = EPOLLIN;
 		cliEpollTemp.data.fd = newCli->getFd();
 		newCli->setCliEpoll(cliEpollTemp);
 
-		if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, newCli->getFd(),
-					  newCli->getCliEpoll()) == -1) {
+		if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, newCli->getFd(), newCli->getCliEpoll()) == -1) {
 			close(newCli->getFd());
-			throw Server::InitFailed(
-				const_cast< const char * >(strerror(errno)));
+			throw Server::InitFailed(const_cast< const char * >(strerror(errno)));
 		}
 
 		clients_.insert(clientPair(newCli->getFd(), newCli));
@@ -157,7 +150,7 @@ bool Server::handleData(int fd) {
 	Client *curCli = clients_.find(fd)->second;
 	//TODO: handle -1 differently
 	if (bytes == 0)
-		return (false);
+		return (disconnectCli(fd));
 	else if (bytes == -1 && (errno == EAGAIN || errno == EWOULDBLOCK))
 		return true;
 	else if (bytes == -1)
@@ -169,7 +162,7 @@ bool Server::handleData(int fd) {
 		if (curCli->mess.getBuffer().find('\n') != std::string::npos) {
 			std::string temp = curCli->mess.getBuffer();
 			formatMess::assess(*curCli);
-			if (temp.find("QUIT") == std::string::npos) {
+			if (strncmp(temp.c_str(), "QUIT", 4)) {
 				curCli->mess.clearBuffer();
 				curCli->mess.clearCmdParam();
 			}
