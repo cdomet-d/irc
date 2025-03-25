@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/24 17:44:38 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/25 16:38:38 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ bool validRequest(Channel chan, CmdSpec &cmd, size_t i) {
 bool joinChanRequest(CmdSpec &cmd) {
 	channelMap::const_iterator itChan;
 
-	for (size_t i = 0; i < cmd[channel_].getSize(); i++) {
+	for (size_t i = 0; i < cmd[channel_].size(); i++) {
 		//TODO: call coralie's function to check syntax of channel
 		itChan = cmd.server_.getAllChan().find(cmd[channel_][i]);
 		if (itChan == cmd.server_.getAllChan().end())
@@ -104,7 +104,7 @@ bool joinChanRequest(CmdSpec &cmd) {
 		if (!validRequest(*itChan->second, cmd, i))
 			cmd[channel_].rmParam(i);
 	}
-	if (!cmd[channel_].getSize())
+	if (!cmd[channel_].size())
 		return (false);
 	return (true);
 }
@@ -166,7 +166,8 @@ bool validMess(CmdSpec &cmd) {
 	return (true);
 }
 
-static e_modeset checkModeset(char c) {
+/* Returns SET, UNSER or SET_ERR */
+static e_mdeset checkModeset(char c) {
 	switch (c) {
 	case '+':
 		return SET;
@@ -177,7 +178,8 @@ static e_modeset checkModeset(char c) {
 	}
 }
 
-static e_modetype checkModetype(char c) {
+/* Returns one of the following: B, C, D, TYPE_ERR */
+static e_mdetype checkModetype(char c) {
 	switch (c) {
 	case 'i':
 		return D;
@@ -194,66 +196,52 @@ static e_modetype checkModetype(char c) {
 	}
 }
 
-// TYPE B: always MUST have a param
-// TYPE C: MUST have a param when set, MUST NOT have a param when unset
-// TYPE D: MUST NOT have a param
-
-bool validMode(CmdSpec &cmd) {
-	e_modetype type;
-	e_modeset set;
-	stringVec flags, param;
-
+/* for the current flag, recover type of setchar [+ | -] and type of flagtype [i | k | l | o | t]
+Sends the ERR_UNKNOWN PARAM if they don't exist, the return an error.
+if returns an error if they don't exist */
+static bool assessFlag(e_mdeset &set, e_mdetype &type, const std::string &flag,
+					   const Client &cli) {
 	try {
-		flags = cmd[flag_].getInnerParam();
-		param = cmd[flagArg_].getInnerParam();
+		set = checkModeset(flag.at(0));
+		type = checkModetype(flag.at(1));
 	} catch (std::exception &e) { return false; }
-	
-	if (flags.size() == 0) {
-		std::cout << "No modestring provided" << std::endl;
+	if (!set || !type) {
+		reply::send(cli.getFd(),
+					ERR_UNKNOWNMODE(cli.cliInfo.getNick(),
+									(!set ? flag.at(0) : flag.at(1))));
 		return false;
 	}
-	print::cmdParam(cmd[flag_].getInnerParam(), "flags:");
-	print::cmdParam(cmd[flagArg_].getInnerParam(), "flags params:");
+	return true;
+}
 
-	// iterate on the flag list
-	for (size_t i = 0; i < flags.size();) {
-	std::cout << "-----------------" << std::endl;
-	size_t size = flags.size();
-		// for i, recover setchar and flagtype; exit if either doesn't exist
-		try {
-			set = checkModeset(flags.at(i).at(0));
-			type = checkModetype(flags.at(i).at(1));
-			if (!set || !type) {
-				reply::send(cmd.getSender().getFd(),
-							ERR_UNKNOWNMODE(cmd.getSender().cliInfo.getNick(),
-											flags.at(i).at(1)));
-				return false;
-			}
-		} catch (std::exception &e) { 
-		std::cerr << "i: " << i << ":	" << e.what() << std::endl; }
-		
-		std::cout << "For i [" << i << "] | " << flags.at(i) << std::endl;
-		print::modeEnumToString(set, type);
+bool validMode(CmdSpec &cmd) {
+	e_mdetype type;
+	e_mdeset set;
+	stringVec flags, param;
 
-		// check that we can access the param at the flag index
-		
+	if (cmd[flag_].empty()) {
+		return true;
+	}
+
+	size_t size;
+	for (size_t i = 0; i < cmd[flag_].size();) {
+		size = cmd[flag_].size();
+		if (!assessFlag(set, type, cmd[flag_][i], cmd.getSender()))
+			return false;
 		// if we MUST have a param and we don't, erase the flag
-		if (((type == B) || (type == C && set == SET)) && i > param.size()) {
-			std::cout << "Must have param, but not enough param" << std::endl;
-			flags.erase(flags.begin() + i);
-		} 
-		// if we don't need a parameter, we add a blank space
+		if (((type == B) || (type == C && set == SET)) && i >= cmd[flagArg_].size())
+			cmd[flag_].rmParam(i);
+		// else if we don't need a parameter, and cmd[flagArg_] is empty, we add a blank space at str.begin()
+		else if (cmd[flagArg_].empty() && ((type == C && set == UNSET) || type == D))
+			cmd[flagArg_].addOne(i);
+		// else if we don't need a parameter, and cmd[flagArg_] is not, we add a blank space at i
 		else if ((type == C && set == UNSET) || type == D)
-			param.insert(param.begin() + i, "");
-
-		// if we don't need a parameter but we do have one ? 
-		if (size == flags.size())
+			cmd[flagArg_].addOne(i);
+		// increment if no cmd[flag_] were removed
+		if (size == cmd[flag_].size())
 			i++;
 	}
-	std::cout << "-----------------" << std::endl;
-	cmd[flag_].setParamList(flags);
-	cmd[flagArg_].setParamList(param);
-	print::cmdParam(cmd[flag_].getInnerParam(), "after: flags:");
-	print::cmdParam(cmd[flagArg_].getInnerParam(), "after: flags params:");
-	return (true);
+	print::modeArgs(cmd[flag_].getInnerParam(), cmd[flagArg_].getInnerParam(),
+					"after");
+	return true;
 }

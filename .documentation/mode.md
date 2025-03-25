@@ -21,7 +21,7 @@ The following two paragraphs are extracted from the [modern IRC documentation](h
 
 There are four categories of channel modes, defined as follows:
 
-- **Type A**: Modes that add or remove an address to or from a list associated to a channel (ie, ban or invite lists). These modes MUST always have a parameter when sent from the server to a client. A client MAY issue this type of mode without an argument to obtain the current contents of the list. The numerics used to retrieve contents of Type A modes depends on the specific mode. Also see the EXTBAN parameter. 
+- **Type A**: Modes that add or remove an address to or from a list associated to a channel (ie, ban or invite lists). These modes MUST always have a parameter when sent from the server to a client. A client MAY issue this type of mode without an argument to obtain the current contents of the list. The numerics used to retrieve contents of Type A modes depends on the specific mode. Also see the EXTBAN parameter.
 - **Type B**: Modes that change a setting on a channel. These modes MUST always have a parameter.
 - **Type C**: Modes that change a setting on a channel. These modes MUST have a parameter when being set, and MUST NOT have a parameter when being unset.
 - **Type D**: Modes that change a setting on a channel. These modes MUST NOT have a parameter.
@@ -56,3 +56,45 @@ In `ft_irc`, we implement only the following channel modes:
 
 In order to ease parsing, each flag should be prequalified with its type.
 
+## Mode tests
+
+```text
+
+
+MODE #test -i +k aha
+    # valid
+ MODE #test +l +k aha lol
+    # valid
+
+```
+
+## Types B and set C: always need an argument
+
+- **Behavior**: first of coming argument is assigned.
+- **Error behavior**: if no argument is provided, the flag is removed.
+
+```text
+MODE #test +l +k aha
+    # expected: +k should get removed, +l has aha as parameter
+MODE #test +o
+    # should be ignored and treated as /mode without arguments
+```
+
+## Types D and unset C: does not need argument
+
+- **Behavior**: empty vec is inserted in the parameters.
+- **Error behavior**: argument is ignored if provided, pushed by the blank vector.
+
+```text
+    MODE #test -k yeah
+    MODE #test -kl yeah 5
+    MODE #test -t jeje
+    MODE #test +i aha
+    MODE #test -i
+    MODE #test +t
+    MODE #test +t jeje
+```
+
+-> Needs argument and has argument
+MODE #test +k yeah
+MODE #test -kl

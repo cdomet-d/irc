@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 10:48:37 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/25 16:39:04 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void part(CmdSpec &cmd)
     Client *sender = &cmd.getSender();
     Channel &curChan = findCurChan(cmd[channel_][0]);
 
-    if (!cmd[message_].getSize())
+    if (!cmd[message_].size())
         sendMessageChannel(
             curChan.getCliInChan(),
             RPL_PARTNOREASON(sender->cliInfo.getPrefix(), curChan.getName()));

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 13:59:33 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/24 14:47:49 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:49:19 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,21 @@ typedef std::pair< std::string, int > nickPair;
 typedef std::vector< std::string > stringVec;
 
 typedef enum {
+	/* TYPE_ERR: is unknown flag */
 	TYPE_ERR,
+	/* TYPE B: always MUST have a param */
 	B,
+	/* TYPE C: MUST have a param when set, MUST NOT have a param when unset	*/
 	C,
-	D,
-} e_modetype;
+	/* TYPE D: MUST NOT have a param */
+	D
+} e_mdetype;
 
 typedef enum {
 	SET_ERR, 
 	SET, 
 	UNSET,
-} e_modeset;
+} e_mdeset;
 
 // -------------------------------- IRC UTILS ------------------------------- //
 
