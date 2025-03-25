@@ -14,9 +14,9 @@ exec {client2_in_fd}<>client2_in
 exec {client2_out_fd}<>client2_out
 
 # Lancer les clients (en lecture/écriture FIFO)
-timeout --preserve-status -s SIGKILL 5s nc 0.0.0.0 4444 0<&${client2_in_fd} 1>&${client2_out_fd}
+timeout 2s nc 0.0.0.0 4444 0<&${client1_in_fd} 1>&${client1_out_fd} &
 PID1=$!
-timeout --preserve-status -s SIGKILL 5s nc 0.0.0.0 4444 0<&${client2_in_fd} 1>&${client2_out_fd}
+timeout 2s nc 0.0.0.0 4444 0<&${client2_in_fd} 1>&${client2_out_fd} &
 PID2=$!
 
 sleep 0.2  # Laisser le temps aux connexions de se faire
@@ -71,35 +71,14 @@ echo "NICK sweet" >&${client1_in_fd}
 
 sleep 1.5  # Laisser le serveur envoyer les réponses
 
-# Envoyer EOF aux pipes d'entrée
-exec {client1_in_fd}>&-
-exec {client2_in_fd}>&-
-
-# Fermer les clients proprement en tuant les processus netcat (nc)
-kill $PID1 2>/dev/null || true  # Éviter erreur si déjà fermé
-kill $PID2 2>/dev/null || true
-
-# Attendre que les processus se ferment complètement (optionnel)
-wait $PID1 2>/dev/null || true 
-wait $PID2 2>/dev/null || true 
-
-# Vérifier si les processus sont encore en vie
-if ps -p $PID1 > /dev/null || ps -p $PID2 > /dev/null; then
-    echo "Les processus nc sont toujours en vie. Tentative de les tuer..."
-    kill -9 $PID1 $PID2 2>/dev/null || true
-fi
+#echo "QUIT" >&${client1_in_fd}
+#echo "QUIT" >&${client2_in_fd}
 
 # Récupérer les logs depuis les FIFOs vers un fichier de sortie
 cat client1_out > output.txt
 cat client2_out >> output.txt
 
 # Nettoyer les FIFOs et autres fichiers temporaires
-exec {client1_out_fd}>&-
-exec {client2_out_fd}>&-
+exec {client1_in_fd}>&- {client1_out_fd}>&-
+exec {client2_in_fd}>&- {client2_out_fd}>&-
 rm -f client*
-
-
-#TODO: mettre le client dans un channel, changer son nickname et voir si le message est envoye a tout le channel
-
-#echo "QUIT" >&${client1_in_fd}
-#echo "QUIT" >&${client2_in_fd}

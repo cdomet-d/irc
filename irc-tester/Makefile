@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+         #
+#    By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/29 15:03:27 by csweetin          #+#    #+#              #
-#    Updated: 2025/03/24 16:37:55 by csweetin         ###   ########.fr        #
+#    Updated: 2025/03/25 13:25:25 by charlotte        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,7 @@ $(BUILD_DIR)%.o: $(SRC_DIR)%.cpp
 
 clean :
 	rm -rf $(OBJS) $(DEPS)
+	rm -f client*
 
 fclean : clean
 	rm -rf $(NAME)
