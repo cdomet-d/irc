@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/21 14:23:47 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/26 13:11:05 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ H:=  -I headers/ \
 	-I headers/server/ \
 	-I headers/builder/command-execution/ \
 	-I headers/builder/command-validation/ \
+	-I headers/builder/command-validation/checkers/ \
 	-I headers/builder/manager/ \
 	-I headers/client/ \
 	-I headers/debug/ \
@@ -35,6 +36,7 @@ SRC_DIR:= src/
 
 BUILD_EXE_DIR:= $(SRC_DIR)builder/command-execution/
 BUILD_VAL_DIR:= $(SRC_DIR)builder/command-validation/
+BUILD_CHECK_DIR:= $(SRC_DIR)builder/command-validation/checkers/
 BUILD_MAN_DIR:= $(SRC_DIR)builder/manager/
 
 CLI_DIR:= $(SRC_DIR)client/
@@ -51,30 +53,33 @@ CLI_SRC:=			Client.cpp \
 					Message.cpp \
 					UserInfo.cpp \
 
-BUILD_EXE_SRC:=			Join.cpp \
-						Privmsg.cpp \
-						Topic.cpp \
-						Part.cpp \
-						Mode.cpp \
-						Invite.cpp \
-						Kick.cpp \
-						Who.cpp \
-						Pass.cpp \
-						Nick.cpp \
-						User.cpp \
-						Quit.cpp \
+BUILD_EXE_SRC:=		Join.cpp \
+					Privmsg.cpp \
+					Topic.cpp \
+					Part.cpp \
+					Mode.cpp \
+					Invite.cpp \
+					Kick.cpp \
+					Who.cpp \
+					Pass.cpp \
+					Nick.cpp \
+					User.cpp \
+					Quit.cpp \
 
 BUILD_VAL_SRC:=		CmdManager.cpp \
 					CmdSpec.cpp \
 					CmdParam.cpp \
 					Checkers.cpp \
 					JoinRequestCheck.cpp \
-					formatMess.cpp \
-					syntaxCheck.cpp \
+					format_mess.cpp \
+					syntax.cpp \
+
+BUILD_CHECK_DIR:=	Checkers.cpp \
+					valid_mode.cpp \
 
 BUILD_MAN_SRC:=	\
 
-DEBUG_SRC:=	printers.cpp \
+DEBUG_SRC:=			printers.cpp \
 
 SRC_ROOT:=			main.cpp \
 

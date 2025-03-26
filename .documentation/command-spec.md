@@ -250,7 +250,7 @@ list of all clients to find the target and send him the invite
 (5) validInvite() -> checks if the target user is already on the channel \
                     if so display ERR_USERONCHANNEL
 
-(6) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
+(6) privileges() -> checks if client has the appropriate channel privileges to execute command \
                     if not display ERR_CHANOPRIVSNEEDED
 
 -- executors --
@@ -418,7 +418,7 @@ channel object
 (3) onChan() -> checks if the client belongs to the channel \
             if not display ERR_NOTONCHANNEL
 
-(4) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
+(4) privileges() -> checks if client has the appropriate channel privileges to execute command \
                     if not display ERR_CHANOPRIVSNEEDED
 
 (5) validTarget() -> verifier si le target existe sinon ERR_NOSUCHNICK
@@ -495,7 +495,7 @@ command issuer client object
 
 (2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
-(3) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
+(3) privileges() -> checks if client has the appropriate channel privileges to execute command \
                     if not display ERR_CHANOPRIVSNEEDED
 
 (4) validMode() -> verifier que le mode existe sinon ERR_UNKNOWNMODE
@@ -642,7 +642,7 @@ command issuer client object
             if not display ERR_NOTONCHANNEL
 
 (if MODE +t is set and client wants to change topic)
-(4) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
+(4) privileges() -> checks if client has the appropriate channel privileges to execute command \
                     if not display ERR_CHANOPRIVSNEEDED
 
 -- executors --

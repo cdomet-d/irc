@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   formatMess.hpp                                     :+:      :+:    :+:   */
+/*   n_formatMess.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:04 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/24 12:33:21 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/26 10:12:58 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FORMATMESS_HPP
-#define FORMATMESS_HPP
+#ifndef N_FORMATMESS_HPP
+#define N_FORMATMESS_HPP
 
 #include "Client.hpp"
 #include "typedef.hpp"
 
-namespace formatMess {
+namespace format_mess {
 	bool assess(Client &sender);
 	stringVec vectorSplit(std::string &s, char del);
 
@@ -27,9 +27,7 @@ namespace formatMess {
 		std::string removeNewlines(std::string &input);
 		std::string::size_type evaluateTermination(const std::string &input);
 		void formatMode(Client &sender);
-		
 	} // namespace priv
-}; // namespace formatMess
+}; // namespace format_mess
 
 #endif
-

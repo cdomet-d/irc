@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   formatMess.cpp                                     :+:      :+:    :+:   */
+/*   n_formatMess.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/25 12:55:32 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/26 10:12:58 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "formatMess.hpp"
+#include "n_formatMess.hpp"
 #include "CmdManager.hpp"
 #include "Reply.hpp"
 #include "printers.hpp"
@@ -22,7 +22,7 @@
 /* ************************************************************************** */
 
 //TODO: handle single buffer for CAP NICK USER
-bool formatMess::assess(Client &sender) {
+bool format_mess::assess(Client &sender) {
 	std::string message = sender.mess.getBuffer();
 
 	while (!message.empty()) {
@@ -53,7 +53,7 @@ bool formatMess::assess(Client &sender) {
 	return true;
 }
 
-stringVec formatMess::vectorSplit(std::string &s, char del) {
+stringVec format_mess::vectorSplit(std::string &s, char del) {
 	stringVec result;
 	std::string token, trailing;
 
@@ -66,7 +66,7 @@ stringVec formatMess::vectorSplit(std::string &s, char del) {
 	return (result);
 }
 
-void formatMess::priv::formatMode(Client &sender) {
+void format_mess::priv::formatMode(Client &sender) {
 	stringVec mode = sender.mess.getCmdParam();
 	if (mode.size() < 2)
 		return;
@@ -100,7 +100,7 @@ void formatMess::priv::formatMode(Client &sender) {
 	sender.mess.setCmdParam(modeFormat);
 }
 
-bool formatMess::priv::hasPrefix(std::string &mess,
+bool format_mess::priv::hasPrefix(std::string &mess,
 								 const std::string &cliPrefix) {
 	if (mess.at(0) == ':') {
 		std::string::size_type sep = mess.find(" ");
@@ -115,7 +115,7 @@ bool formatMess::priv::hasPrefix(std::string &mess,
 	return true;
 }
 
-bool formatMess::priv::hasTrailing(std::string &mess, std::string &trailing) {
+bool format_mess::priv::hasTrailing(std::string &mess, std::string &trailing) {
 	std::string::size_type trail = mess.find(" :");
 
 	if (trail != std::string::npos) {
@@ -126,7 +126,7 @@ bool formatMess::priv::hasTrailing(std::string &mess, std::string &trailing) {
 	return false;
 }
 
-bool formatMess::priv::lenIsValid(const std::string &mess,
+bool format_mess::priv::lenIsValid(const std::string &mess,
 								  const Client &sender) {
 	if (mess.empty())
 		return false;
@@ -138,7 +138,7 @@ bool formatMess::priv::lenIsValid(const std::string &mess,
 }
 
 std::string::size_type
-formatMess::priv::evaluateTermination(const std::string &mess) {
+format_mess::priv::evaluateTermination(const std::string &mess) {
 	if (mess.find("\r\n") != std::string::npos)
 		return 2;
 	if (mess.find("\n") != std::string::npos)
@@ -146,7 +146,7 @@ formatMess::priv::evaluateTermination(const std::string &mess) {
 	return std::string::npos;
 }
 
-std::string formatMess::priv::removeNewlines(std::string &mess) {
+std::string format_mess::priv::removeNewlines(std::string &mess) {
 
 	std::string::size_type termSize = evaluateTermination(mess);
 	if (termSize == std::string::npos) {

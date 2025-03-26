@@ -14,6 +14,7 @@
 #include "CmdExecution.hpp"
 #include "Server.hpp"
 #include "typedef.hpp"
+#include "validator.hpp"
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
@@ -78,7 +79,7 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.addParam(channel_, new CmdParam(false, ','))
 			.addParam(key_, new CmdParam(true, ','))
-			.addChecker(joinChanRequest)
+			.addChecker(assessRequest)
 			.CmExecutor(join)
 			.build());
 
@@ -91,7 +92,7 @@ void CmdManager::generateCmds() {
 			.addChecker(validChan)
 			.addChecker(onChan)
 			.addChecker(validInvite)
-			.addChecker(hasChanPriv)
+			.addChecker(privileges)
 			.CmExecutor(invite)
 			.build());
 
@@ -104,7 +105,7 @@ void CmdManager::generateCmds() {
 			.addParam(message_, new CmdParam(true, '\0'))
 			.addChecker(validChan)
 			.addChecker(onChan)
-			.addChecker(hasChanPriv)
+			.addChecker(privileges)
 			.addChecker(validTarget)
 			.addChecker(validKick)
 			.CmExecutor(kick)
@@ -118,7 +119,7 @@ void CmdManager::generateCmds() {
 			.addParam(flagArg_, new CmdParam(true, ' '))
 			.addChecker(validChan)
 			.addChecker(onChan) //TODO: verif if necessary
-			.addChecker(hasChanPriv)
+			.addChecker(privileges)
 			.addChecker(validMode)
 			// .addChecker(validArg) ?
 			.CmExecutor(mode)
@@ -159,7 +160,7 @@ void CmdManager::generateCmds() {
 			.addParam(topic_, new CmdParam(true, '\0'))
 			.addChecker(validChan)
 			.addChecker(onChan)
-			.addChecker(hasChanPriv) //(only if mode +t is set)
+			.addChecker(privileges) //(only if mode +t is set)
 			.CmExecutor(topic)
 			.build());
 }

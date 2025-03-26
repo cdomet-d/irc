@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 13:59:33 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/25 15:49:19 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/26 09:59:38 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef std::pair< int, Client * > clientPair;
 typedef std::pair< std::string, int > nickPair;
 typedef std::vector< std::string > stringVec;
 
+/* assess the type of the mode flag */
 typedef enum {
 	/* TYPE_ERR: is unknown flag */
 	TYPE_ERR,
@@ -42,6 +43,7 @@ typedef enum {
 	D
 } e_mdetype;
 
+/* assess whether the mode is being set '+' or unset '-' */
 typedef enum {
 	SET_ERR, 
 	SET, 
