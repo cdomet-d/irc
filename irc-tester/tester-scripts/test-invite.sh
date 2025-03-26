@@ -62,6 +62,7 @@ sleep 0.5
 
 # ➤ client1
 #tries using INVITE with incorrect parameters
+#TODO: INVITE sans parametre envoie la liste des channel auquels est invite le sender
 cat <<EOF >&${client1_in_fd}
 INVITE
 INVITE dontexist #chan
