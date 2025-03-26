@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   testers.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 15:41:52 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/24 16:32:16 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/26 09:52:11 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void compare(std::ifstream &output, std::ifstream &expectedOutput) {
 	std::string expectedOutputContent;
 	std::string outputContent;
 
-	std::cout << std::endl;
 	while (getline(expectedOutput, expectedOutputContent, '\n') &&
 		   getline(output, outputContent, '\n')) {
 		outputContent = trim_crlf(outputContent);
@@ -67,17 +66,17 @@ int test(const char *script, const char *expectedOutputFile,
 	std::ifstream output;
 	std::ifstream expectedOutput;
 
-	output.open("output.txt");
+	if (launchScript(script))
+		return (1);
+		
+	output.open("outputs/output.txt");
 	if (!output.is_open()) {
 		std::cout << "Error: could not open file 'output.txt'" << std::endl;
 		return (1);
 	}
-
-	if (launchScript(script))
-		return (1);
 	if (openFile(expectedOutput, expectedOutputFile))
 		return (1);
-	std::cout << testName;
+	std::cout << testName << std::endl;
 	compare(output, expectedOutput);
 
 	output.close();

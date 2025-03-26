@@ -13,4 +13,4 @@ PASS 0
 USER c c c c
 EOF
 
-timeout 2s nc 0.0.0.0 4444 < test_input.txt > output.txt
+timeout 2s nc 0.0.0.0 4444 < test_input.txt > outputs/output.txt

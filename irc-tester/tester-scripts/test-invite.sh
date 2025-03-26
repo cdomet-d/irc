@@ -1,20 +1,20 @@
 #!/bin/bash
 
 # Nettoyage si des FIFOs sont déjà là
-rm -f client*
+rm -f outputs/client*
 
 # Création des pipes nommés
-mkfifo client1_in client1_out
-mkfifo client2_in client2_out
-mkfifo client3_in client3_out
+mkfifo outputs/client1_in.txt outputs/client1_out.txt
+mkfifo outputs/client2_in.txt outputs/client2_out.txt
+mkfifo outputs/client3_in.txt outputs/client3_out.txt
 
 # Ouvrir les FIFOs avec des descripteurs de fichiers dynamiques
-exec {client1_in_fd}<>client1_in
-exec {client1_out_fd}<>client1_out
-exec {client2_in_fd}<>client2_in
-exec {client2_out_fd}<>client2_out
-exec {client3_in_fd}<>client3_in
-exec {client3_out_fd}<>client3_out
+exec {client1_in_fd}<>outputs/client1_in.txt
+exec {client1_out_fd}<>outputs/client1_out.txt
+exec {client2_in_fd}<>outputs/client2_in.txt
+exec {client2_out_fd}<>outputs/client2_out.txt
+exec {client3_in_fd}<>outputs/client3_in.txt
+exec {client3_out_fd}<>outputs/client3_out.txt
 
 # Lancer les clients (en lecture/écriture FIFO)
 nc 0.0.0.0 4444 0<&${client1_in_fd} 1>&${client1_out_fd} &
@@ -110,8 +110,8 @@ wait $PID2 2>/dev/null
 wait $PID3 2>/dev/null
 
 # Récupérer les logs depuis les FIFOs vers un fichier de sortie
-cat client1_out > output.txt &
-cat client2_out >> output.txt &
+cat outputs/client1_out.txt > outputs/output.txt &
+cat outputs/client2_out.txt >> outputs/output.txt &
 
 sleep 0.5
 
@@ -123,6 +123,4 @@ exec {client2_out_fd}>&-
 exec {client3_in_fd}>&-
 exec {client3_out_fd}>&-
 
-rm -f client*
-
-trap cleanup EXIT
+rm -f outputs/client*
