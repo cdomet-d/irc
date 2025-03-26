@@ -36,7 +36,7 @@ EOF
 sleep 0.5
 
 #tests if clients receive appropriate messages
-echo "QUIT" >&${client1_in_fd}
+echo "QUIT :bye bye" >&${client1_in_fd}
 echo "QUIT" >&${client2_in_fd}
 
 sleep 3
@@ -65,3 +65,18 @@ QUIT
 EOF
 
 timeout 2s nc 0.0.0.0 4444 < test_input.txt > outputs/output.txt
+
+
+#TODO:
+#When connections are terminated by a client-sent QUIT command, 
+#servers SHOULD prepend <reason> with the ASCII string "Quit: " 
+#when sending QUIT messages to other clients, to represent that this user terminated the connection themselves. 
+#This applies even if <reason> is empty, 
+#in which case the reason sent to other clients SHOULD be just this "Quit: " string. 
+#However, clients SHOULD NOT change behaviour based on the prefix of QUIT message reasons, as this is not required behaviour from servers.
+
+#If a client connection is closed without the client issuing a QUIT command to the server, 
+#the server MUST distribute a QUIT message to other clients informing them of this, 
+#distributed in the same was an ordinary QUIT message. 
+#Servers MUST fill <reason> with a message reflecting the nature of the event which caused it to happen. 
+#For instance, "Ping timeout: 120 seconds", "Excess Flood", and "Too many connections from this IP" are examples of relevant reasons for closing or for a connection with a client to have been closed.
