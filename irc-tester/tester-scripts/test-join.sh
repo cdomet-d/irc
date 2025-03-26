@@ -18,7 +18,10 @@ PID2=$!
 sleep 0.2
 
 #tests if channel name is valid + if correct JOIN messages are sent
+# + tries using JOIN before registration 
 cat <<EOF >&${client1_in_fd}
+JOIN
+JOIN #chan
 PASS 0
 NICK chacham
 USER c c c c
@@ -26,6 +29,7 @@ JOIN
 JOIN :#chan with space
 JOIN :#chan,
 JOIN #:chan
+JOIN chan
 JOIN &chan
 JOIN #chan
 MODE #chan +k key
@@ -62,6 +66,21 @@ sleep 0.5
 cat <<EOF >&${client2_in_fd}
 JOIN 0
 JOIN #chan
+EOF
+
+sleep 0.5
+
+#client1 joins several channels at once and tries to join #chan though he's already in it
+cat <<EOF >&${client1_in_fd}
+INVITE bobby #chan
+EOF
+
+sleep 0.5
+
+#tests JOIN 0 + tests if having an invite makes key unnecessary
+cat <<EOF >&${client2_in_fd}
+JOIN #chan
+JOIN #chan key
 PART #chan
 EOF
 
@@ -69,8 +88,7 @@ sleep 0.5
 
 #tests channel client limit
 cat <<EOF >&${client1_in_fd}
-MODE #chan +l 1
-INVITE bobby #chan
+MODE #chan -ik +l key 1
 EOF
 
 sleep 0.5

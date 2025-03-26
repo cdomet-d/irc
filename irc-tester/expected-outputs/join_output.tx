@@ -1,0 +1,54 @@
+:servername 451 * :You have not registered
+:servername 451 * :You have not registered
+:servername NOTICE * :Valid password ! You may register
+:servername NOTICE * :Introducing new nick "chacham"
+:servername NOTICE chacham :Registration complete
+:calcium.libera.chat 461 chacham JOIN :Not enough parameters
+:calcium.libera.chat 479 chacham #tosti with space :Illegal channel name
+:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #chan
+:calcium.libera.chat MODE #chan +Cnst
+:calcium.libera.chat 353 chacham @ #chan :@chacham
+:calcium.libera.chat 366 chacham #chan :End of /NAMES list.
+:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #:cha
+:calcium.libera.chat MODE #:cha +Cnst
+:calcium.libera.chat 353 chacham @ #:cha :@chacham
+:calcium.libera.chat 366 chacham #:cha :End of /NAMES list.
+:calcium.libera.chat 403 chacham chan :No such channel
+:calcium.libera.chat 403 chacham &chan :No such channel
+:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #chan
+:calcium.libera.chat MODE #chan +Cnst
+:calcium.libera.chat 353 chacham @ #chan :@chacham
+:calcium.libera.chat 366 chacham #chan :End of /NAMES list.
+:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr MODE #chan +k key
+:bobyy!~b@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #chan
+:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #chan2
+:calcium.libera.chat 353 chacham @ #chan2 :chacham @bobyy
+:calcium.libera.chat 366 chacham #chan2 :End of /NAMES list.
+:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #chan3
+:calcium.libera.chat 353 chacham @ #chan3 :chacham @bobyy
+:calcium.libera.chat 366 chacham #chan3 :End of /NAMES list.
+
+
+:servername NOTICE * : Valid password ! You may register
+:servername NOTICE * :Introducing new nick "bobby"
+:servername NOTICE * :Registration complete
+:platinum.libera.chat 475 bobyy #chan :Cannot join channel (+k) - bad key
+:platinum.libera.chat 475 bobyy #chan :Cannot join channel (+k) - bad key
+:bobyy!~b@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #chan
+:platinum.libera.chat 353 bobyy @ #chan :bobyy @chacham
+:platinum.libera.chat 366 bobyy #chan :End of /NAMES list.
+:bobyy!~b@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #chan2
+:platinum.libera.chat MODE #chan2 +Cnst
+:platinum.libera.chat 353 bobyy @ #chan2 :@bobyy
+:platinum.libera.chat 366 bobyy #chan2 :End of /NAMES list.
+:bobyy!~b@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #chan3
+:platinum.libera.chat MODE #chan3 +Cnst
+:platinum.libera.chat 353 bobyy @ #chan3 :@bobyy
+:platinum.libera.chat 366 bobyy #chan3 :End of /NAMES list.
+:bobyy!~b@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr MODE #chan3 +k key
+:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #chan2
+:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #chan3
+:bobyy!~b@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr PART #chan
+:bobyy!~b@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr PART #chan2
+:bobyy!~b@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr PART #chan3
+
