@@ -50,7 +50,6 @@ void CmdManager::generateCmds() {
 			.CmExecutor(pass)
 			.build());
 
-	//on veut pas afficher ERR_NEEDMOREPARAMS si nickname est pas donné
 	log(CmdSpec::CmdBuilder()
 			.Name("NICK")
 			.Registration(1)
@@ -72,7 +71,6 @@ void CmdManager::generateCmds() {
 			.CmExecutor(user)
 			.build());
 
-	//meme si un channel est faux on fait ceux qui sont juste
 	log(CmdSpec::CmdBuilder()
 			.Name("JOIN")
 			.Registration(3)
@@ -104,6 +102,8 @@ void CmdManager::generateCmds() {
 			.addChecker(validChan)
 			.addChecker(onChan)
 			.addChecker(hasChanPriv)
+			//TODO: dans validKick verifier validTarget et si target est bien sur le channel
+			//boucler sur chaque target
 			.addChecker(validTarget)
 			.addChecker(validKick)
 			.CmExecutor(kick)
@@ -128,7 +128,8 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.addParam(channel_, new CmdParam(false, ','))
 			.addParam(message_, new CmdParam(true, '\0'))
-			.addChecker(validChan)
+			//TODO: faire une fonction validPart dans lequel on applique validChan et onChan sur tous les channels
+			.addChecker(validChan) 
 			.addChecker(onChan)
 			.CmExecutor(part)
 			.build());
@@ -139,6 +140,8 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.addParam(target_, new CmdParam(false, ','))
 			.addParam(message_, new CmdParam())
+			//TODO: faire validTarget pour chaque target
+			//TODO: ajouter onChan et validChan si le sender veut envoyer un message a un channel
 			.addChecker(validMess)
 			.addChecker(validTarget)
 			.CmExecutor(privmsg)
