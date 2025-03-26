@@ -1,3 +1,8 @@
 : 461 * PASS :Not enough parameters
 : 464 * :Password incorrect
 : NOTICE : Valid password ! You may register
+:Introducing new nick "chacham"
+: NOTICE : Registration complete
+: 462 chacham :You may not reregister
+: 462 chacham :You may not reregister
+

@@ -19,10 +19,11 @@ USER
 USER c
 USER c c
 USER c c c
-USER c c c c
 USER :c c
-USER c c c c :hello world
-USER c c c c 
+USER charlottesweeting c c c :hello world
+USER c
+USER c c c c
+JOIN #chan
 QUIT
 EOF
 
@@ -41,10 +42,12 @@ exec {client1_out_fd}>&-
 
 rm -f outputs/client*
 
-#TODO: add limit to username ?
+#TODO: add limit to username
 
 #TODO: oblige 0 and * for hostname and servername ?
 #Note that hostname and servername are normally ignored by the IRC
 #   server when the USER command comes from a directly connected client
 #   (for security reasons), but they are used in server to server
 #   communication.
+
+#TODO: check if already registered before enoughParams ?

@@ -1,0 +1,11 @@
+: NOTICE : Valid password ! You may register
+:Introducing new nick "chacham"
+: 461 chacham USER :Not enough parameters
+: 461 chacham USER :Not enough parameters
+: 461 chacham USER :Not enough parameters
+: 461 chacham USER :Not enough parameters
+: 461 chacham USER :Not enough parameters
+: NOTICE : Registration complete
+: 462 chacham :You may not reregister
+: 462 chacham :You may not reregister
+:chacham!~charlotte@hostname JOIN #tosti
