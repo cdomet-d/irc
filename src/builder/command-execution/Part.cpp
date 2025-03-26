@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/26 13:05:00 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:09:56 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void partOneChan(Client *sender, Channel &curChan) {
     int targetFd = sender->getFd();
     curChan.removeCli(ALLCLI, targetFd);
     if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end()) {
-		std::cout << "found the client in the op in PART " << std::endl;
 		curChan.removeCli(OPCLI, targetFd);
 	}
     if (curChan.getCliInChan().empty() == true) {

@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/26 13:02:28 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:10:43 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,6 @@ bool Server::handleData(int fd) {
 		curCli->mess.setBuffer(inputCli);
 		if (curCli->mess.getBuffer().find('\n') != std::string::npos) {
 			std::string temp = curCli->mess.getBuffer();
-			std::cout << "Buffer: " << temp << std::endl;
 			formatMess::assess(*curCli);
 			if (strncmp(temp.c_str(), "QUIT", 4)) {
 				curCli->mess.clearBuffer();
@@ -179,18 +178,14 @@ bool Server::handleData(int fd) {
 bool checkOnlyOperator(int fd) {
 	static Server &server = Server::GetServerInstance(0, "");
 
-	std::cout << "checkOnlyOperator" << std::endl; 
 	clientMap::const_iterator curCli = server.getAllCli().find(fd);
 	for (stringVec::iterator curChanName =
 			 curCli->second->getJoinedChans().begin();
 		 curChanName != curCli->second->getJoinedChans().end();
 		 ++curChanName) {
 		channelMapIt curChan = server.getAllChan().find(*curChanName);
-		std::cout << "Found channel" << std::endl;
 		if (!curChan->second->getOpCli().size()) {
-			std::cout << "op map is empty" << std::endl;
 			if (curChan->second->getCliInChan().size() >= 1) {
-				std::cout << "adding the client in the op map" << std::endl;
 				curChan->second->addCli(OPCLI, curChan->second->getCliInChan().begin()->second);
 				reply::send(curChan->second->getCliInChan().begin()->second->getFd(), RPL_CHANOPE(curChan->second->getName()));
 				return (true);

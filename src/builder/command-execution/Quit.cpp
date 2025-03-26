@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/26 12:40:43 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:10:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void partAllChans(Client *sender) {
     for (stringVec::iterator currChanName = sender->getJoinedChans().begin();
         currChanName != sender->getJoinedChans().end(); ++currChanName) {
 			std::string tempMess = "PART " + *currChanName + "\n\r";
-			std::cout << "tempMess: " << tempMess << std::endl;
 			sender->mess.setBuffer(tempMess);
 			formatMess::assess(*sender);
 		}
