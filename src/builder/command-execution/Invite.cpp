@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 14:11:41 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:18:00 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 #include "Reply.hpp"
 #include "Server.hpp"
 
-void invite(CmdSpec &cmd)
-{
+void invite(CmdSpec &cmd) {
 	static Server &server = Server::GetServerInstance(0, "");
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 	Client *sender = &cmd.getSender();
@@ -31,9 +30,10 @@ void invite(CmdSpec &cmd)
 	}
 
 	reply::send(sender->getFd(),
-			  RPL_INVITING(targetCli->cliInfo.getNick(), cmd[channel_][0]));
+				RPL_INVITING(targetCli->cliInfo.getNick(), cmd[channel_][0]));
 	reply::send(targetCli->getFd(),
-			  RPL_INVITE(sender->cliInfo.getNick(), targetCli->cliInfo.getNick(), cmd[channel_][0]));
+				RPL_INVITE(sender->cliInfo.getNick(),
+						   targetCli->cliInfo.getNick(), cmd[channel_][0]));
 
 	curChan.addCli(INVITECLI, targetCli);
 }

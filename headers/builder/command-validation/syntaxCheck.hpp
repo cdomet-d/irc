@@ -30,8 +30,8 @@ namespace syntaxCheck {
 
 namespace conflictCheck {
 	namespace nick {
-		bool inUse(const std::string &nick,
-								const nickMap &regCli, const int &senderFd);
+		bool inUse(const std::string &nick, const nickMap &regCli,
+				   const int &senderFd);
 		namespace priv {}
 	} // namespace nick
 }; // namespace conflictCheck

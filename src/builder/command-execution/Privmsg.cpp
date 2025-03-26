@@ -6,16 +6,15 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 14:13:20 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:18:02 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "CmdSpec.hpp"
 #include "CmdExecution.hpp"
+#include "CmdSpec.hpp"
 #include "Server.hpp"
 
-void privmsg(CmdSpec &cmd)
-{
+void privmsg(CmdSpec &cmd) {
 	static Server &server = Server::GetServerInstance(0, "");
 	Client *sender = &cmd.getSender();
 
@@ -24,9 +23,9 @@ void privmsg(CmdSpec &cmd)
 			 itTarget != server.getAllCli().end(); ++itTarget) {
 			if (itTarget->second->cliInfo.getNick() == cmd[target_][0]) {
 				reply::send(itTarget->first,
-						  RPL_PRIVMSG(sender->cliInfo.getPrefix(),
-									  itTarget->second->cliInfo.getNick(),
-									  cmd[message_][0]));
+							RPL_PRIVMSG(sender->cliInfo.getPrefix(),
+										itTarget->second->cliInfo.getNick(),
+										cmd[message_][0]));
 				return;
 			}
 		}
@@ -37,7 +36,7 @@ void privmsg(CmdSpec &cmd)
 		 itCli != curChan.getCliInChan().end(); ++itCli) {
 		if (itCli->first != sender->getFd())
 			reply::send(itCli->second->getFd(),
-					  RPL_PRIVMSG(sender->cliInfo.getPrefix(),
-								  curChan.getName(), cmd[message_][0]));
+						RPL_PRIVMSG(sender->cliInfo.getPrefix(),
+									curChan.getName(), cmd[message_][0]));
 	}
 }

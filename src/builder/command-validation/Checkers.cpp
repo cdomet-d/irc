@@ -6,15 +6,15 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/26 11:22:14 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:17:58 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Checkers.hpp"
 #include "JoinRequestCheck.hpp"
 #include "Reply.hpp"
-#include "syntaxCheck.hpp"
 #include "printers.hpp"
+#include "syntaxCheck.hpp"
 
 bool RegStageDone(CmdSpec &cmd) {
 	if (cmd.getSender().cliInfo.getRegistration() <=

@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:08:25 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 10:55:02 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:17:57 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 #include "CmdSpec.hpp"
 #include "typedef.hpp"
 
-typedef void (*modesFunc)(std::string flag, std::string param, Channel &curChan);
+typedef void (*modesFunc)(std::string flag, std::string param,
+						  Channel &curChan);
 
 void pass(CmdSpec &cmd);
 void nick(CmdSpec &cmd);

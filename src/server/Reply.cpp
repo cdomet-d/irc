@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:37:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/26 10:00:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:17:56 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void reply::send(int fd, std::string reply) {
 }
 
 void reply::log(e_level level, std::string message) {
-	Server& serv = Server::GetServerInstance(0, "");
+	Server &serv = Server::GetServerInstance(0, "");
 	if (serv.logfile.is_open()) {
 		switch (level) {
 		case INFO:
@@ -50,7 +50,7 @@ void reply::log(e_level level, std::string message) {
 }
 
 void reply::log(e_level level, std::string message, std::string verbose) {
-	Server& serv = Server::GetServerInstance(0, "");
+	Server &serv = Server::GetServerInstance(0, "");
 	if (serv.logfile.is_open()) {
 		switch (level) {
 		case (INFO):

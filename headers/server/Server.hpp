@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/26 10:54:59 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:17:55 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ class Server {
 
 	/*                               MEMBERS                                  */
 	std::ofstream logfile;
-	
+
 	const clientMap &getAllCli() const;
 	const channelMap &getAllChan() const;
 

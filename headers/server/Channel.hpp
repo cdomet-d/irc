@@ -6,10 +6,9 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 14:10:20 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:17:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP

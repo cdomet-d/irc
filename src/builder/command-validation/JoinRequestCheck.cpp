@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   JoinRequestCheck.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 17:53:59 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/21 12:44:33 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/26 13:18:00 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

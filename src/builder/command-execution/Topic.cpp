@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 11:36:40 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:18:02 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,39 +14,34 @@
 #include "CmdSpec.hpp"
 #include "Server.hpp"
 
-void checkTopic(Channel &curChan, Client *curCli)
-{
+void checkTopic(Channel &curChan, Client *curCli) {
 	if (curChan.getTopic().empty() == true) {
 		reply::send(curCli->getFd(),
-				  RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan.getName()));
+					RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan.getName()));
 		return;
 	}
 	reply::send(curCli->getFd(),
-			  RPL_TOPIC(curCli->cliInfo.getNick(), curChan.getName(),
-						curChan.getTopic()));
+				RPL_TOPIC(curCli->cliInfo.getNick(), curChan.getName(),
+						  curChan.getTopic()));
 	return;
 }
 
-void clearTopic(Channel &curChan, Client *curCli)
-{
+void clearTopic(Channel &curChan, Client *curCli) {
 	curChan.setTopic("");
 	sendMessageChannel(
 		curChan.getCliInChan(),
 		RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan.getName()));
 }
 
-void changeTopic(Channel &curChan, Client *curCli, std::string topic)
-{
+void changeTopic(Channel &curChan, Client *curCli, std::string topic) {
 	topic.erase(1, 0); //remove the ':'
 	curChan.setTopic(topic);
 	sendMessageChannel(curChan.getCliInChan(),
 					   RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(),
-										curChan.getName(),
-										curChan.getTopic()));
+										curChan.getName(), curChan.getTopic()));
 }
 
-void topic(CmdSpec &cmd)
-{
+void topic(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 

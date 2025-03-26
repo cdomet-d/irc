@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   typedef.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 13:59:33 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/21 14:23:58 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:17:51 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef std::map< std::string, int > nickMap;
 typedef std::map< std::string, Channel * > channelMap;
 typedef std::map< std::string, Channel * >::const_iterator channelMapIt;
 typedef std::pair< int, Client * > clientPair;
-typedef std::pair<std::string, int> nickPair;
+typedef std::pair< std::string, int > nickPair;
 typedef std::vector< std::string > stringVec;
 
 // -------------------------------- IRC UTILS ------------------------------- //

@@ -6,17 +6,16 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 14:13:27 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:18:03 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Reply.hpp"
 #include "CmdExecution.hpp"
+#include "Reply.hpp"
 #include "Server.hpp"
 #include <sstream>
 
-bool who(CmdSpec &cmd)
-{
+bool who(CmdSpec &cmd) {
 	(void)cmd;
 	/* 	static Server &server = Server::GetServerInstance(0, "");
 
