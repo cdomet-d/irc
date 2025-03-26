@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/26 13:18:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:02:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@
 #define NOTICE_REQUIRE_PASSWORD() (":NOTICE : You must provide a password using the PASS command before registration\r\n")
 #define PASS_SUCCESS() (":NOTICE : Valid password ! You may register\r\n")
 #define RPL_NICK(nickname) (":NOTICE : The nickname " + nickname + " is valid and saved !\r\n")
-#define RPL_USER(username) (":NOTICE : The Username " + username + " is valid and saved !\r\n")
+#define RPL_USER(username) (":NOTICE : The username " + username + " is valid and saved !\r\n")
 #define REG_COMPLETE() (":NOTICE : Registration completed, you can join channels and start chatting !\r\n")
 #define RPL_CHANOPE(channel) (":NOTICE : You're operator of " + channel + "\r\n")
 #define RPL_CHANGEMODE(prefix, channel, mode) (":" + prefix + " MODE " + channel + " " + mode + "\r\n")
@@ -78,8 +78,8 @@
 #define RPL_PARTNOREASON(prefix, channel) (":" + prefix + " PART " + channel + "\r\n")
 #define RPL_PARTREASON(prefix, channel, reason) (":" + prefix + " PART " + channel + " " + reason + "\r\n")
 #define RPL_PRIVMSG(prefix, target, message) (":" + prefix + " PRIVMSG " + target + message + "\r\n")
-#define RPL_TOPICCHANGED(prefix, channel, topic) (":" + prefix + " TOPIC " + channel + topic + "\r\n")
-#define RPL_BYEYBE() (": You quitted the server, see you next time !\r\n")
+#define RPL_TOPICCHANGED(prefix, channel, topic) (":" + prefix + " TOPIC " + channel + " " + topic + "\r\n")
+#define RPL_BYEYBE() (": You have left the server, see you next time !\r\n")
 
 namespace reply {
 	enum e_level { INFO, ERROR, DEBUG, REPLY };

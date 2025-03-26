@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/26 13:18:01 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:58:52 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,6 @@ Channel &findCurChan(std::string chanName) {
 
 //the modes of a channel need to be empty if no moe is activated and +<modes> if any
 void mode(CmdSpec &cmd) {
-	reply::log(reply::DEBUG, "-----handleMode-----");
 	Client *sender = &cmd.getSender();
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 	std::string newModes;
@@ -146,5 +145,4 @@ void mode(CmdSpec &cmd) {
 	sendMessageChannel(curChan.getCliInChan(),
 					   RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
 										 curChan.getName(), newModes));
-	std::cout << "new mode : " << std::endl;
 }

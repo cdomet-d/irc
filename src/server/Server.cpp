@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/26 13:17:56 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:17:22 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,8 +160,7 @@ bool Server::handleData(int fd) {
 	if (bytes == 0) {
 		curCli->mess.setBuffer("QUIT\n");
 		formatMess::assess(*curCli);
-		return (true);
-	} else if (bytes == -1 && (errno == EAGAIN || errno == EWOULDBLOCK))
+	} else if (bytes == -1)
 		return (true);
 	else if (bytes == -1)
 		perror("HandleData:");
