@@ -95,11 +95,10 @@ void CmdManager::generateCmds() {
 			.CmExecutor(invite)
 			.build());
 
-	//si un target est faux on fait pas ceux qui suivent
 	log(CmdSpec::CmdBuilder()
 			.Name("KICK")
 			.Registration(3)
-			.addParam(channel_, new CmdParam())
+			.addParam(channel_, new CmdParam()) //add list
 			.addParam(target_, new CmdParam(false, ','))
 			.addParam(message_, new CmdParam(true, '\0'))
 			.addChecker(validChan)

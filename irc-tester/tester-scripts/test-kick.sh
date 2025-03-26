@@ -94,19 +94,30 @@ EOF
 sleep 0.5
 
 echo "QUIT" >&${client1_in_fd}
+echo "QUIT" >&${client2_in_fd}
+echo "QUIT" >&${client3_in_fd}
 
 sleep 3
 
 kill $PID1 2>/dev/null
+kill $PID2 2>/dev/null
+kill $PID3 2>/dev/null
 
 wait $PID1 2>/dev/null
+wait $PID2 2>/dev/null
+wait $PID3 2>/dev/null
 
-cat outputs/client1_out > outputs/output.txt &
+cat outputs/client1_out.txt > outputs/output.txt &
+cat outputs/client2_out.txt >> outputs/output.txt &
 
 sleep 0.5
 
 exec {client1_in_fd}>&-
 exec {client1_out_fd}>&-
+exec {client2_in_fd}>&-
+exec {client2_out_fd}>&-
+exec {client3_in_fd}>&-
+exec {client3_out_fd}>&-
 
 rm -f outputs/client*
 
