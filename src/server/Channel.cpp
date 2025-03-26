@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/25 16:36:38 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 10:16:42 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,6 @@ void sendMessageChannel(clientMap allCliChannel, std::string message)
 
 bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 {
-
-	// reply::log(reply::DEBUG, "-----addClientToChan-----");
-
-	std::map< int, Client * > clients = curChan->getCliInChan();
-	for (clientMapIt it = clients.begin(); it != clients.end(); ++it)
-		if (curCli == it->second) {
-			// reply::INFO, "Client already in channel");
-			return (false);
-		}
-	if (curChan->getCliInChan().empty())
-		curChan->addCli(OPCLI, curCli);
 	curChan->addCli(ALLCLI, curCli);
 
 	curCli->getJoinedChans().push_back(curChan->getName());
@@ -70,6 +59,11 @@ bool Channel::addClientToChan(Channel *curChan, Client *curCli)
 		reply::send(curCli->getFd(),
 				  RPL_TOPIC(curCli->cliInfo.getNick(), curChan->getName(),
 							curChan->getTopic()));
+	if (curChan->getOpCli().empty()) {
+		reply::send(curCli->getFd(), RPL_CHANOPE(curChan->getName()));
+		curChan->addCli(OPCLI, curCli);
+	}
+
 	return (true);
 }
 

@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 11:35:22 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 11:28:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include <string>
 
 //standard replies
-
 #define ERR_ALREADYREGISTRED(nickname) (": 462 " + nickname + " :You may not reregister\r\n")
 // #define ERR_BADCHANNELKEY(channel) (":475 " + channel + " :Cannot join channel (+k)\r\n")
 #define ERR_BADCHANNELKEY(nickname, channel) (": 475 " + nickname + " " + channel + " :Cannot join channel (+k)" + "\r\n")
@@ -66,9 +65,12 @@
 // #define ERR_ERRONEUSNICKNAME(nickname, badnick) (":432 " + nickname + " " + badnick + " :Erroneous nickname\r\n")
 
 //user define replies
-#define NOTICE_REQUIRE_PASSWORD() (": NOTICE : You must provide a password using the PASS command before registration\r\n")
-#define PASS_SUCCESS() (": NOTICE : Valid password ! You may register\r\n")
-#define REG_COMPLETE() (": NOTICE : Registration complete\r\n")
+#define NOTICE_REQUIRE_PASSWORD() (":NOTICE : You must provide a password using the PASS command before registration\r\n")
+#define PASS_SUCCESS() (":NOTICE : Valid password ! You may register\r\n")
+#define RPL_NICK(nickname) (":NOTICE : The nickname " + nickname + " is valid and saved !\r\n")
+#define RPL_USER(username) (":NOTICE : The Username " + username + " is valid and saved !\r\n")
+#define REG_COMPLETE() (":NOTICE : Registration completed, you can join channels and start chatting !\r\n")
+#define RPL_CHANOPE(channel) (":NOTICE : You're operator of " + channel + "\r\n")
 #define RPL_CHANGEMODE(prefix, channel, mode) (":" + prefix + " MODE " + channel + " " + mode + "\r\n")
 #define RPL_INVITE(nickname, target, channel) (":" + nickname + " INVITE " + target + " :" + channel + "\r\n")
 #define RPL_JOIN(nickname, channel) (":" + nickname + " JOIN :" + channel + "\r\n")
@@ -80,7 +82,7 @@
 #define RPL_BYEYBE() (": You quitted the server, see you next time !\r\n")
 
 namespace reply {
-	enum e_level { INFO, ERROR, DEBUG };
+	enum e_level { INFO, ERROR, DEBUG, REPLY };
 	void log(e_level level, std::string message, std::string verbose);
 	void log(e_level level, std::string message);
 	void send(int fd, std::string reply);

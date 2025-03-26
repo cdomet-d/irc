@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Checkers.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/21 15:16:38 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/26 11:22:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ bool validNick(CmdSpec &cmd) {
 	if (conflictCheck::nick::inUse(nick, cmd.server_.getUsedNick(),
 								   cmd.getSender().getFd()))
 		return false;
-	reply::send(cmd.getSender().getFd(),
-				cmd[nickname_][0] + " is valid nickname\n");
 	return true;
 }
 

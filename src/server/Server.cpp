@@ -6,13 +6,14 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/25 16:48:03 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:02:28 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "CmdExecution.hpp"
 #include "printers.hpp"
+#include "Reply.hpp"
 #include <cerrno>
 #include <sstream>
 
@@ -72,7 +73,7 @@ bool Server::servInit() {
 	if (listen(servFd_, SOMAXCONN) == -1)
 		return (false);
 	servPoll_.data.fd = servFd_;
-	servPoll_.events = EPOLLIN;
+	servPoll_.events = EPOLLIN | EPOLLOUT;
 	if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, servFd_, &servPoll_) == -1)
 		return 0;
 	return (true);
@@ -125,7 +126,7 @@ void Server::acceptClient() {
 			close(newCli->getFd());
 			throw Server::InitFailed(const_cast< const char * >(strerror(errno)));
 		}
-		cliEpollTemp.events = EPOLLIN;
+		cliEpollTemp.events = EPOLLIN | EPOLLOUT;
 		cliEpollTemp.data.fd = newCli->getFd();
 		newCli->setCliEpoll(cliEpollTemp);
 
@@ -138,22 +139,24 @@ void Server::acceptClient() {
 		usedNicks_.insert(nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected";
+		std::cout << ss << std::endl;
 	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
 }
 
 bool Server::handleData(int fd) {
 	char tmpBuf[1024];
 	memset(tmpBuf, 0, sizeof(tmpBuf));
-	// std::cout << "In handle data" << std::endl;
 	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, MSG_DONTWAIT);
 
-	// std::cout << bytes << std::endl;
 	Client *curCli = clients_.find(fd)->second;
 	//TODO: handle -1 differently
-	if (bytes == 0)
-		return (disconnectCli(fd));
+	if (bytes == 0) {
+		curCli->mess.setBuffer("QUIT\n");
+		formatMess::assess(*curCli);
+		return (true); 
+	}
 	else if (bytes == -1 && (errno == EAGAIN || errno == EWOULDBLOCK))
-		return true;
+		return (true);
 	else if (bytes == -1)
 		perror("HandleData:");
 	else {
@@ -162,6 +165,7 @@ bool Server::handleData(int fd) {
 		curCli->mess.setBuffer(inputCli);
 		if (curCli->mess.getBuffer().find('\n') != std::string::npos) {
 			std::string temp = curCli->mess.getBuffer();
+			std::cout << "Buffer: " << temp << std::endl;
 			formatMess::assess(*curCli);
 			if (strncmp(temp.c_str(), "QUIT", 4)) {
 				curCli->mess.clearBuffer();
@@ -172,34 +176,23 @@ bool Server::handleData(int fd) {
 	return (true);
 }
 
-bool Server::disconnectCli(int fd) {
-	clientMapIt it = clients_.find(fd);
-	if (it != clients_.end()) {
-		partAllChans(it->second);
-		checkOnlyOperator(fd);
-		std::stringstream ss;
-		ss << "Client [" << it->second->getFd() << "] deconnected";
-		reply::log(reply::INFO, ss.str());
-		delete it->second;
-		clients_.erase(fd);
-		close(fd);
-		return true;
-	}
-	return false;
-}
-
 bool checkOnlyOperator(int fd) {
 	static Server &server = Server::GetServerInstance(0, "");
 
+	std::cout << "checkOnlyOperator" << std::endl; 
 	clientMap::const_iterator curCli = server.getAllCli().find(fd);
 	for (stringVec::iterator curChanName =
 			 curCli->second->getJoinedChans().begin();
 		 curChanName != curCli->second->getJoinedChans().end();
 		 ++curChanName) {
 		channelMapIt curChan = server.getAllChan().find(*curChanName);
+		std::cout << "Found channel" << std::endl;
 		if (!curChan->second->getOpCli().size()) {
+			std::cout << "op map is empty" << std::endl;
 			if (curChan->second->getCliInChan().size() >= 1) {
+				std::cout << "adding the client in the op map" << std::endl;
 				curChan->second->addCli(OPCLI, curChan->second->getCliInChan().begin()->second);
+				reply::send(curChan->second->getCliInChan().begin()->second->getFd(), RPL_CHANOPE(curChan->second->getName()));
 				return (true);
 			}
 			//delete chan if the disconnected cli was the one cli in chan

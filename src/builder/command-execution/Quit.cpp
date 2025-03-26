@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/25 16:46:34 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:40:43 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,12 @@
 #include "Server.hpp"
 
 void partAllChans(Client *sender) {
-   static Server &server = Server::GetServerInstance(0, "");
-
     for (stringVec::iterator currChanName = sender->getJoinedChans().begin();
         currChanName != sender->getJoinedChans().end(); ++currChanName) {
-			partOneChan(sender, *server.getAllChan().find(*currChanName)->second);
+			std::string tempMess = "PART " + *currChanName + "\n\r";
+			std::cout << "tempMess: " << tempMess << std::endl;
+			sender->mess.setBuffer(tempMess);
+			formatMess::assess(*sender);
 		}
 	sender->getJoinedChans().clear();
 }
@@ -31,7 +32,13 @@ void quit(CmdSpec &cmd) {
 
     Client *sender = &cmd.getSender();
 	sender->mess.clearBuffer();
-	
-
-	server.disconnectCli(sender->getFd());
+	partAllChans(sender);
+	reply::send(sender->getFd(), RPL_BYEYBE());
+	std::stringstream ss;
+	ss << "Client [" << sender->getFd() << "] deconnected";
+	std::cout << ss << std::endl;
+	reply::log(reply::INFO, ss.str());
+	delete sender;
+	server.removeCli(sender);
+	close(sender->getFd());
 }

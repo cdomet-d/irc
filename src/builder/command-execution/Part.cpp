@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 10:48:37 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:05:00 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,10 @@ void partOneChan(Client *sender, Channel &curChan) {
 
     int targetFd = sender->getFd();
     curChan.removeCli(ALLCLI, targetFd);
-    if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end())
-        curChan.removeCli(OPCLI, targetFd);
+    if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end()) {
+		std::cout << "found the client in the op in PART " << std::endl;
+		curChan.removeCli(OPCLI, targetFd);
+	}
     if (curChan.getCliInChan().empty() == true) {
         server.removeChan(&curChan);
         delete &curChan;
@@ -37,9 +39,9 @@ void part(CmdSpec &cmd)
         sendMessageChannel(
             curChan.getCliInChan(),
             RPL_PARTNOREASON(sender->cliInfo.getPrefix(), curChan.getName()));
-    else
-        sendMessageChannel(curChan.getCliInChan(),
-					RPL_PARTREASON(sender->cliInfo.getPrefix(),
-                                          curChan.getName(), cmd[message_][0]));
+    else {
+        sendMessageChannel(curChan.getCliInChan(), RPL_PARTREASON(sender->cliInfo.getPrefix(), curChan.getName(), cmd[message_][0]));
+	}	
     partOneChan(sender, curChan);
+	checkOnlyOperator(sender->getFd());
 }
