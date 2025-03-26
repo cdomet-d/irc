@@ -1,34 +1,36 @@
+:servernam NOTICE * :Valid password ! You may register
+:servername 431 * :No nickname given
+:servername 432 * charlotte sweeting :illegal char (should be a letter, a digit or -[]\`^{}), is   :Erroneous nickname
+:servername 432 * #cha :illegal first char (should be a letter), is # :Erroneous Nickname
+:servername 432 * :cha :illegal first char (should be a letter), is : :Erroneous Nickname
+:servername 432 * 4cha :illegal first char (should be a letter), is 4 :Erroneous Nickname
+:servername 432 * -cha :illegal first char (should be a letter), is - :Erroneous Nickname
+:servername 432 * [cha :illegal first char (should be a letter), is [ :Erroneous Nickname
+:servername 432 * ]cha :illegal first char (should be a letter), is ] :Erroneous Nickname
+:servername 432 * \cha :illegal first char (should be a letter), is \ :Erroneous Nickname
+:servername 432 * `cha :illegal first char (should be a letter), is ` :Erroneous Nickname
+:servername 432 * ^cha :illegal first char (should be a letter), is ^ :Erroneous Nickname
+:servername 432 * {cha :illegal first char (should be a letter), is { :Erroneous Nickname
+:servername 432 * }cha :illegal first char (should be a letter), is } :Erroneous Nickname
+:servername 432 * +cha :illegal first char (should be a letter), is + :Erroneous Nickname
+:servername 432 * cha$ :illegal char (should be a letter, a digit or -[]\`^{}), is $ :Erroneous Nickname
+:servername NOTICE * :Introducing new nick "cha-[]\^4`{}"
+:servername NOTICE cha-[]\^4`{} :Registration complete
+:cha-[]\^4`{}!~c@hostname NICK :chacham
+:servername 432 chacham cha# :illegal char (should be a letter, a digit or -[]\`^{}), is # :Erroneous Nickname
+:servername 432 chacham cha: :illegal char (should be a letter, a digit or -[]\`^{}), is : :Erroneous Nickname
+:servername 431 * :No nickname given
+:chacham!~c@hostname JOIN #chan
+:servername MODE #chan +t
+:servername 353 chacham @ #chan :@chacham
+:servername 366 chacham #chan :End of /NAMES list.
+:bobby!~b@hostname JOIN #chan
+:chacham!~c@hostname NICK :sweet
 : NOTICE : Valid password ! You may register
-: 431 * :No nickname given
-: 432 * charlotte sweeting :illegal char (should be a letter, a digit or -[]\`^{}), is   :Erroneous nickname
-: 432 * #cha :illegal first char (should be a letter), is # :Erroneous Nickname
-: 432 * :cha :illegal first char (should be a letter), is : :Erroneous Nickname
-: 432 * 4cha :illegal first char (should be a letter), is 4 :Erroneous Nickname
-: 432 * -cha :illegal first char (should be a letter), is - :Erroneous Nickname
-: 432 * [cha :illegal first char (should be a letter), is [ :Erroneous Nickname
-: 432 * ]cha :illegal first char (should be a letter), is ] :Erroneous Nickname
-: 432 * \cha :illegal first char (should be a letter), is \ :Erroneous Nickname
-: 432 * `cha :illegal first char (should be a letter), is ` :Erroneous Nickname
-: 432 * ^cha :illegal first char (should be a letter), is ^ :Erroneous Nickname
-: 432 * {cha :illegal first char (should be a letter), is { :Erroneous Nickname
-: 432 * }cha :illegal first char (should be a letter), is } :Erroneous Nickname
-: 432 * +cha :illegal first char (should be a letter), is + :Erroneous Nickname
-: 432 * cha$ :illegal char (should be a letter, a digit or -[]\`^{}), is $ :Erroneous Nickname
-:Introducing new nick "cha-[]\^4`{}"
-: NOTICE : Registration complete
-:cha-[]\^4`{} changed his nickname to chacham
-: 432 chacham cha# :illegal char (should be a letter, a digit or -[]\`^{}), is # :Erroneous Nickname
-: 432 chacham cha: :illegal char (should be a letter, a digit or -[]\`^{}), is : :Erroneous Nickname
-: 431 * :No nickname given
-: chacham JOIN #chan
-: MODE #chan +t
-: 353 chacham @ #chan :@chacham
-:bobby JOIN #chan
-:chacham changed his nickname to sweet
-: NOTICE : Valid password ! You may register
-: 433 * chacham :Nickname is already in use
-:Introducing new nick "bobby"
-: NOTICE : Registration complete
-:bobby JOIN #chan
-: 353 bobby @ #chan :bobby @chacham
-:chacham changed his nickname to sweet
+:servername 433 * chacham :Nickname is already in use
+:servername NOTICE * :Introducing new nick "bobby"
+:servername NOTICE * :Registration complete
+:bobyy!~b@hostname JOIN #tosti
+:servername 353 bobyy @ #tosti :bobyy @chacham
+:servername 366 bobyy #tosti :End of /NAMES list.
+:chacham!~c@hostname NICK :sweet

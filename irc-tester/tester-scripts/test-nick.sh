@@ -56,7 +56,6 @@ PASS 0
 NICK chacham
 NICK bobby
 USER b b b b
-JOIN #chan
 EOF
 
 sleep 0.5
