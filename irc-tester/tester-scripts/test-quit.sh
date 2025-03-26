@@ -17,47 +17,25 @@ PID2=$!
 
 sleep 0.2
 
-#tries PART before registration
-#tries PART with wrong params
-#parts from several channels at once with a comment
 cat <<EOF >&${client1_in_fd}
-PART
 PASS 0
 NICK chacham
 USER c c c c
-PART
-PART #dontexist
-PART wrongchan
-JOIN #chan
-JOIN #chan2
-JOIN #chan3
-PART #chan,#chan2,#chan3 :im leaving. idiots.
 JOIN #chan
 EOF
 
 sleep 0.5
 
-#tries to part from a channel he isn't in
-#succedes to part from chan, client1 should receive appropriate message
 cat <<EOF >&${client2_in_fd}
 PASS 0
 NICK bobby
 USER b b b b
-PART #chan
-JOIN #chan
-PART #chan
-EOF
-
-sleep 0.5
-
-#tests if channel is correctly deleted if all clients leave
-cat <<EOF >&${client1_in_fd}
-PART #chan
 JOIN #chan
 EOF
 
 sleep 0.5
 
+#tests if clients receive appropriate messages
 echo "QUIT" >&${client1_in_fd}
 echo "QUIT" >&${client2_in_fd}
 
@@ -80,3 +58,10 @@ exec {client2_in_fd}>&-
 exec {client2_out_fd}>&-
 
 rm -f outputs/client*
+
+#tests if QUIT works during registration
+cat <<EOF > test_input.txt
+QUIT
+EOF
+
+timeout 2s nc 0.0.0.0 4444 < test_input.txt > outputs/output.txt
