@@ -26,7 +26,7 @@
 :servername 366 chacham #chan :End of /NAMES list.
 :bobby!~b@hostname JOIN #chan
 :chacham!~c@hostname NICK :sweet
-: NOTICE : Valid password ! You may register
+:servername NOTICE * : Valid password ! You may register
 :servername 433 * chacham :Nickname is already in use
 :servername NOTICE * :Introducing new nick "bobby"
 :servername NOTICE * :Registration complete

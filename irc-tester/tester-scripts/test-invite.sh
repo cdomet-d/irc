@@ -27,7 +27,10 @@ PID3=$!
 sleep 0.2  # Laisser le temps aux connexions de se faire
 
 # ➤ client1
+#tries using INVITE before registration
 cat <<EOF >&${client1_in_fd}
+INVITE cc cc
+INVITE
 PASS 0
 NICK chacham
 USER c c c c
@@ -38,6 +41,7 @@ EOF
 sleep 0.5
 
 # ➤ client2
+#tries to join #chan without an invite
 cat <<EOF >&${client2_in_fd}
 PASS 0
 NICK bobby
@@ -57,17 +61,19 @@ EOF
 sleep 0.5
 
 # ➤ client1
+#tries using INVITE with incorrect parameters
 cat <<EOF >&${client1_in_fd}
 INVITE
 INVITE dontexist #chan
 INVITE bobby #dontexist
-INVITE bobby wrongchan
+INVITE dontexist #dontexist
 INVITE bobby #chan
 EOF
 
 sleep 0.5
 
 # ➤ client2
+#tries inviting someone but isn't an operator (with mode +i on #chan)
 cat <<EOF >&${client2_in_fd}
 JOIN #chan
 INVITE juju #chan
@@ -76,6 +82,7 @@ EOF
 sleep 0.5
 
 # ➤ client1
+#invites bobby again even though he's already on #chan
 cat <<EOF >&${client1_in_fd}
 INVITE bobby #chan
 MODE #chan -i
@@ -84,6 +91,8 @@ EOF
 sleep 0.5
 
 # ➤ client2
+#tries inviting someone but isn't an operator (without mode +i on #chan)
+#tries inviting someone but isn't on #chan
 cat <<EOF >&${client2_in_fd}
 INVITE juju #chan
 PART #chan
