@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 14:16:04 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 14:20:07 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,20 @@ bool Channel::addClientToChan(Channel *curChan, Client *sender) {
 
 	for (clientMapIt itCli = curChan->getCliInChan().begin();
 		 itCli != curChan->getCliInChan().end(); ++itCli) {
-		reply::sendReply(itCli->second->getFd(),
-					RPL_JOIN(sender->cliInfo.getPrefix(), curChan->getName()));
+		reply::sendReply(
+			itCli->second->getFd(),
+			RPL_JOIN(sender->cliInfo.getPrefix(), curChan->getName()));
 	}
 	if (curChan->getTopic().empty() == true)
-		reply::sendReply(sender->getFd(),
-					RPL_NOTOPIC(sender->cliInfo.getNick(), curChan->getName()));
+		reply::sendReply(sender->getFd(), RPL_NOTOPIC(sender->cliInfo.getNick(),
+													  curChan->getName()));
 	else
 		reply::sendReply(sender->getFd(),
-					RPL_TOPIC(sender->cliInfo.getNick(), curChan->getName(),
-							  curChan->getTopic()));
+						 RPL_TOPIC(sender->cliInfo.getNick(),
+								   curChan->getName(), curChan->getTopic()));
 	if (curChan->getOpCli().empty()) {
-		reply::sendReply(sender->getFd(),
-					RPL_CHANOPE(sender->cliInfo.getNick(), curChan->getName()));
+		reply::sendReply(sender->getFd(), RPL_CHANOPE(sender->cliInfo.getNick(),
+													  curChan->getName()));
 		curChan->addCli(OPCLI, sender);
 	}
 

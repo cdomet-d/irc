@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 11:39:01 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 14:20:25 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ namespace reply {
 	enum e_level { INFO, ERROR, DEBUG, REPLY };
 	void log(e_level level, std::string message, std::string verbose);
 	void log(e_level level, std::string message);
-	void send(int fd, std::string reply);
+	void sendReply(int fd, std::string reply);
 
 } // namespace reply
 #endif //REPLY_H

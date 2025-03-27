@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:20:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 14:16:04 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 14:20:12 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,6 @@ void nick(CmdSpec &cmd) {
 		sender->cliInfo.setRegistration(2);
 	sender->cliInfo.setNick(cmd[nickname_][0]);
 	sender->cliInfo.setPrefix();
-	reply::sendReply(cmd.getSender().getFd(), RPL_NICK(sender->cliInfo.getNick()));
+	reply::sendReply(cmd.getSender().getFd(),
+					 RPL_NICK(sender->cliInfo.getNick()));
 }
