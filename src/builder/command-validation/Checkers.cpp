@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/25 16:38:38 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/27 09:05:41 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,10 +229,12 @@ bool validMode(CmdSpec &cmd) {
 		if (!assessFlag(set, type, cmd[flag_][i], cmd.getSender()))
 			return false;
 		// if we MUST have a param and we don't, erase the flag
-		if (((type == B) || (type == C && set == SET)) && i >= cmd[flagArg_].size())
+		if (((type == B) || (type == C && set == SET)) &&
+			i >= cmd[flagArg_].size())
 			cmd[flag_].rmParam(i);
 		// else if we don't need a parameter, and cmd[flagArg_] is empty, we add a blank space at str.begin()
-		else if (cmd[flagArg_].empty() && ((type == C && set == UNSET) || type == D))
+		else if (cmd[flagArg_].empty() &&
+				 ((type == C && set == UNSET) || type == D))
 			cmd[flagArg_].addOne(i);
 		// else if we don't need a parameter, and cmd[flagArg_] is not, we add a blank space at i
 		else if ((type == C && set == UNSET) || type == D)
@@ -241,7 +243,9 @@ bool validMode(CmdSpec &cmd) {
 		if (size == cmd[flag_].size())
 			i++;
 	}
-	print::modeArgs(cmd[flag_].getInnerParam(), cmd[flagArg_].getInnerParam(),
-					"after");
+	if (cmd[flag_].empty())
+		reply::send(
+			cmd.getSender().getFd(),
+			ERR_NEEDMOREPARAMS(cmd.getSender().cliInfo.getNick(), "Mode"));
 	return true;
 }
