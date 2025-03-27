@@ -244,7 +244,7 @@ list of all clients to find the target and send him the invite
 
 (3) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
-(4) onChan() -> checks if the client belongs to the channel \
+(4) isOnChan() -> checks if the client belongs to the channel \
             if not display ERR_NOTONCHANNEL
 
 (5) validInvite() -> checks if the target user is already on the channel \
@@ -415,7 +415,7 @@ channel object
 
 (2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
-(3) onChan() -> checks if the client belongs to the channel \
+(3) isOnChan() -> checks if the client belongs to the channel \
             if not display ERR_NOTONCHANNEL
 
 (4) privileges() -> checks if client has the appropriate channel privileges to execute command \
@@ -541,7 +541,7 @@ channel object
 
 (2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
-(3) onChan() -> checks if the client belongs to the channel \
+(3) isOnChan() -> checks if the client belongs to the channel \
             if not display ERR_NOTONCHANNEL
 
 -- executors --
@@ -586,7 +586,7 @@ command issuer client object
 validMess() -> check : \
                 (1) - if there is a text to be sent, if not display ERR_NOTEXTTOSEND \
                 (2) - if there is a target, if not display ERR_NORECIPIENT
-                (3) - validTarget() -> check if nickname exists, if not display     ERR_NOSUCHNICK. si le target est un channel appeler onChan pour verifier si le client est dans le channel
+                (3) - validTarget() -> check if nickname exists, if not display     ERR_NOSUCHNICK. si le target est un channel appeler isOnChan pour verifier si le client est dans le channel
 
 if target is a channel : \
     - check channel modes because they can affect the message \ (we don't have modes that can affect a message)
@@ -638,7 +638,7 @@ command issuer client object
 
 (2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
-(3) onChan() -> checks if the client belongs to the channel \
+(3) isOnChan() -> checks if the client belongs to the channel \
             if not display ERR_NOTONCHANNEL
 
 (if MODE +t is set and client wants to change topic)

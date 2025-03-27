@@ -1,8 +1,0 @@
-[26-03-2025 10:03:24] INFO : NOTICE : Valid password ! You may register
-[26-03-2025 10:03:24] INFO jauppp is valid nickname
-[26-03-2025 10:03:24] INFO : NOTICE : Registration complete
-[26-03-2025 10:03:32] INFO :jauppp JOIN :#test
-[26-03-2025 10:03:32] INFO : 331 jauppp #test :No topic is set
-[26-03-2025 10:03:32] DEBUG -----handleMode-----[26-03-2025 10:03:32] INFO : 221 jauppp +lit
-[26-03-2025 10:03:32] INFO : 421 jauppp WHO :Unknown command
-[26-03-2025 10:03:34] INFO : 461 jauppp Mode :Not enough parameters

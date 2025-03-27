@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/26 10:12:58 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/27 11:01:31 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void format_mess::priv::formatMode(Client &sender) {
 				for (size_t j = 1; j < flags.size(); ++j) {
 					flagformat += firstChar;
 					flagformat += (*i)[j];
-					flagformat += ' ';
+					flagformat += ',';
 				}
 			} else {
 				paramformat += *i;
@@ -98,6 +98,7 @@ void format_mess::priv::formatMode(Client &sender) {
 		modeFormat.push_back(paramformat);
 	sender.mess.clearCmdParam();
 	sender.mess.setCmdParam(modeFormat);
+	print::cmdParam(sender.mess.getCmdParam(), "mode:");
 }
 
 bool format_mess::priv::hasPrefix(std::string &mess,

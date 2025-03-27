@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "CmdManager.hpp"
 #include "CmdExecution.hpp"
+#include "CmdManager.hpp"
 #include "Server.hpp"
 #include "typedef.hpp"
 #include "validator.hpp"
@@ -45,9 +45,9 @@ void CmdManager::generateCmds() {
 			.Name("PASS")
 			.Registration(0)
 			.addParam(password_, new CmdParam())
-			.addChecker(RegStageDone)
-			.addChecker(isRegistered)
-			.addChecker(pwMatch)
+			.addChecker(check::register_::stageDone)
+			.addChecker(check::register_::isRegistered)
+			.addChecker(check::register_::pwMatch)
 			.CmExecutor(pass)
 			.build());
 
@@ -56,8 +56,8 @@ void CmdManager::generateCmds() {
 			.Name("NICK")
 			.Registration(1)
 			.addParam(nickname_, new CmdParam())
-			.addChecker(RegStageDone)
-			.addChecker(validNick)
+			.addChecker(check::register_::stageDone)
+			.addChecker(check::nick)
 			.CmExecutor(nick)
 			.build());
 
@@ -68,8 +68,8 @@ void CmdManager::generateCmds() {
 			.addParam(hostname_, new CmdParam())
 			.addParam(servername_, new CmdParam())
 			.addParam(realname_, new CmdParam())
-			.addChecker(isRegistered)
-			.addChecker(validUser)
+			.addChecker(check::register_::isRegistered)
+			.addChecker(check::user)
 			.CmExecutor(user)
 			.build());
 
@@ -79,7 +79,7 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.addParam(channel_, new CmdParam(false, ','))
 			.addParam(key_, new CmdParam(true, ','))
-			.addChecker(assessRequest)
+			.addChecker(check::join)
 			.CmExecutor(join)
 			.build());
 
@@ -88,11 +88,11 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.addParam(target_, new CmdParam())
 			.addParam(channel_, new CmdParam())
-			.addChecker(validTarget)
-			.addChecker(validChan)
-			.addChecker(onChan)
-			.addChecker(validInvite)
-			.addChecker(privileges)
+			.addChecker(check::target)
+			.addChecker(check::chan)
+			.addChecker(check::chans_::isOnChan)
+			.addChecker(check::invite)
+			.addChecker(check::chans_::hasChanAuthorisations)
 			.CmExecutor(invite)
 			.build());
 
@@ -103,11 +103,11 @@ void CmdManager::generateCmds() {
 			.addParam(channel_, new CmdParam())
 			.addParam(target_, new CmdParam(false, ','))
 			.addParam(message_, new CmdParam(true, '\0'))
-			.addChecker(validChan)
-			.addChecker(onChan)
-			.addChecker(privileges)
-			.addChecker(validTarget)
-			.addChecker(validKick)
+			.addChecker(check::chan)
+			.addChecker(check::chans_::isOnChan)
+			.addChecker(check::chans_::hasChanAuthorisations)
+			.addChecker(check::target)
+			.addChecker(check::kick)
 			.CmExecutor(kick)
 			.build());
 
@@ -117,10 +117,10 @@ void CmdManager::generateCmds() {
 			.addParam(channel_, new CmdParam())
 			.addParam(flag_, new CmdParam(true, ' '))
 			.addParam(flagArg_, new CmdParam(true, ' '))
-			.addChecker(validChan)
-			.addChecker(onChan) //TODO: verif if necessary
-			.addChecker(privileges)
-			.addChecker(validMode)
+			.addChecker(check::chan)
+			.addChecker(check::chans_::isOnChan) //TODO: verif if necessary
+			.addChecker(check::chans_::hasChanAuthorisations)
+			.addChecker(check::mode)
 			// .addChecker(validArg) ?
 			.CmExecutor(mode)
 			.build());
@@ -130,8 +130,8 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.addParam(channel_, new CmdParam(false, ','))
 			.addParam(message_, new CmdParam(true, '\0'))
-			.addChecker(validChan)
-			.addChecker(onChan)
+			.addChecker(check::chan)
+			.addChecker(check::chans_::isOnChan)
 			.CmExecutor(part)
 			.build());
 
@@ -141,8 +141,8 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.addParam(target_, new CmdParam(false, ','))
 			.addParam(message_, new CmdParam())
-			.addChecker(validMess)
-			.addChecker(validTarget)
+			.addChecker(check::mess)
+			.addChecker(check::target)
 			.CmExecutor(privmsg)
 			.build());
 
@@ -158,9 +158,9 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.addParam(channel_, new CmdParam())
 			.addParam(topic_, new CmdParam(true, '\0'))
-			.addChecker(validChan)
-			.addChecker(onChan)
-			.addChecker(privileges) //(only if mode +t is set)
+			.addChecker(check::chan)
+			.addChecker(check::chans_::isOnChan)
+			.addChecker(check::chans_::hasChanAuthorisations) //(only if mode +t is set)
 			.CmExecutor(topic)
 			.build());
 }

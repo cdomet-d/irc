@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/26 13:11:05 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/27 13:19:45 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,15 +67,16 @@ BUILD_EXE_SRC:=		Join.cpp \
 					Quit.cpp \
 
 BUILD_VAL_SRC:=		CmdManager.cpp \
-					CmdSpec.cpp \
-					CmdParam.cpp \
-					Checkers.cpp \
-					JoinRequestCheck.cpp \
-					format_mess.cpp \
-					syntax.cpp \
+					n_formatMess.cpp \
+					CmdParam.cpp  \
+					CmdSpec.cpp  \
 
-BUILD_CHECK_DIR:=	Checkers.cpp \
-					valid_mode.cpp \
+BUILD_CHECK_SRC:=	check_mode.cpp \
+					check_registration.cpp \
+					check_nick.cpp \
+					check_join.cpp \
+					check.cpp \
+					check_chans.cpp \
 
 BUILD_MAN_SRC:=	\
 
@@ -89,6 +90,7 @@ SRC:= $(addprefix $(SRC_DIR), $(SRC_ROOT))
 SRC+= $(addprefix $(BUILD_EXE_DIR), $(BUILD_EXE_SRC))
 SRC+= $(addprefix $(BUILD_MAN_DIR), $(BUILD_MAN_SRC))
 SRC+= $(addprefix $(BUILD_VAL_DIR), $(BUILD_VAL_SRC))
+SRC+= $(addprefix $(BUILD_CHECK_DIR), $(BUILD_CHECK_SRC))
 SRC+= $(addprefix $(CLI_DIR), $(CLI_SRC))
 SRC+= $(addprefix $(DEBUG_DIR), $(DEBUG_SRC))
 SRC+= $(addprefix $(SERV_DIR), $(SERV_SRC))

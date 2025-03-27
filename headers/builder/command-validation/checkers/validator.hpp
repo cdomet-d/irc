@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:30 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/26 14:21:22 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/27 13:24:39 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,41 +24,42 @@ namespace check {
 	bool nick(CmdSpec &cmd);
 	bool target(CmdSpec &cmd);
 	bool user(CmdSpec &cmd);
+	bool join(CmdSpec &cmd);
 
 	namespace mode_ {
-		bool format(CmdSpec &cmd);
-		namespace valid {
-			bool flag(e_mdeset &set, e_mdetype &type, const std::string &flag,
-					  const Client &cli);
-			e_mdeset set(const char &c);
-			e_mdetype type(const char &c);
-		} // namespace check
+		bool formatArgs(CmdSpec &cmd);
+		bool flagIsValid(e_mdeset &set, e_mdetype &type,
+						 const std::string &flag, const Client &cli);
+		e_mdeset whichSet(const char &c);
+		e_mdetype typeIsValid(const char &c);
 	} // namespace mode_
 
 	namespace nick_ {
-		bool unique(const std::string &nick, const nickMap &regCli,
-					const int &senderFd);
+		bool isUnique(const std::string &nick, const nickMap &regCli,
+					  const int &senderFd);
 		std::string trim(const std::string &nick);
-		namespace valid {
-			bool alphaNumChar(const char &c);
-			bool specialChar(const char &c);
-			bool syntax(const std::string &nick, const CmdSpec &cmd);
-		}
+		bool isAllowed(const char &c);
+		bool isSpecial(const char &c);
+		bool syntaxIsValid(const std::string &nick, const CmdSpec &cmd);
 	} // namespace nick_
 
 	namespace join_ {
-		bool hasChanPriv(CmdSpec &cmd);
-		bool assessRequest(CmdSpec &cmd);
-		namespace valid {
-			bool request(Channel chan, CmdSpec &cmd, size_t i);
-			bool onChan(CmdSpec &cmd);
-			bool hasInvite(Channel &chan, Client &sender);
-			bool validKey(Channel &chan, CmdParam &keys, size_t i,
-						  Client &sender);
-			bool reachedChanLimit(Channel &chan, Client &sender);
-			bool reachedCliChanLimit(Channel &chan, Client &sender);
-		} // namespace check
+		bool assessRequest(Channel chan, CmdSpec &cmd, size_t i);
+		bool hasInvite(Channel &chan, Client &sender);
+		bool validKey(Channel &chan, CmdParam &keys, size_t i, Client &sender);
+		bool chanHasRoom(Channel &chan, Client &sender);
+		bool cliHasMaxChans(Channel &chan, Client &sender);
 	} // namespace join_
+
+	namespace chans_ {
+		bool isOnChan(CmdSpec &cmd);
+		bool hasChanAuthorisations(CmdSpec &cmd);
+	} // namespace chans_
+	namespace register_ {
+		bool isRegistered(CmdSpec &cmd);
+		bool stageDone(CmdSpec &cmd);
+		bool pwMatch(CmdSpec &cmd);
+	} // namespace register_
 } // namespace check
 
 #endif
