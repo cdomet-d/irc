@@ -6,7 +6,7 @@
 /*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/27 10:16:29 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/27 11:03:35 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ bool validChan(CmdSpec &cmd) {
 }
 
 bool validRequest(Channel chan, CmdSpec &cmd, size_t i) {
-	if (onChan(cmd))
+	if (onChan(cmd)) //TODO: issue : only checks [channel][0]
 		return (false);
 	if (checkJoin::reachedChanLimit(chan, cmd.getSender()))
 		return (false);

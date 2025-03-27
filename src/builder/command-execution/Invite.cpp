@@ -6,7 +6,7 @@
 /*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 10:24:36 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/27 10:30:00 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 void invite(CmdSpec &cmd)
 {
-	if (cmd[channel_].empty()) {
+	if (cmd[target_].empty()) {
 		//TODO: print invite list
 		return ;
 	}

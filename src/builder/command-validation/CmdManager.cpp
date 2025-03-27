@@ -113,7 +113,7 @@ void CmdManager::generateCmds() {
 			.Name("MODE")
 			.Registration(3)
 			.addParam(channel_, new CmdParam())
-			.addParam(flag_, new CmdParam(true, ' '))
+			.addParam(flag_, new CmdParam(true, ' ')) //TODO: replace with coma. can remove var delim ?
 			.addParam(flagArg_, new CmdParam(true, ' '))
 			.addChecker(validChan)
 			.addChecker(onChan) //TODO: verif if necessary
