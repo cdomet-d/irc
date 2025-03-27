@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 14:42:58 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 15:06:41 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,11 @@
 
 //RESPONDS_REPLIES
 //server_replies
-#define RPL_WELCOME(nickname, user, prefix) (":irc.bitchat.net 001 " + nickname + " :Welcome to the Internet Relay Network " + prefix "\r\n") //TODO : not used
-#define RPL_YOURHOST(servername, version) (":irc.bitchat.net 002 :Your host is " + servername + ", running version " + version + "\r\n") //TODO : not used
+#define RPL_WELCOME(nickname, prefix) (":irc.bitchat.net 001 " + nickname + " :Welcome to the Internet Relay Network " + prefix + "\r\n")
+#define RPL_YOURHOST() (":irc.bitchat.net 002 :Your host is Bitchat, running version 1.0 \r\n")
 #define RPL_CREATED(date) (":irc.bitchat.net 003 :This server was created " + date + "\r\n") //TODO : not used
-#define RPL_MYINFO(servername, version, umodes, cmodes) (":irc.bitchat.net 004 " + servername + " " + version + " " + umodes + " " + cmodes + "\r\n") //TODO : not used
-#define RPL_ISUPPORT ":irc.bitchat.net 005 Nickname CHANMODES=b,k,l,it CHANNELLEN=200 NICKLEN=9 MAXTARGETS=1 TOPICLEN=307 KICKLEN=307 MODES NETWORK=YourNetwork :are supported by this server"
+#define RPL_MYINFO(nickname) (":irc.bitchat.net 004 " + nickname + " Bitchat 1.0 o klit klo Bitchat IRC | Modes: o,k,l,i,t | Max nick: 9 chars\r\n") //TODO : not used
+#define RPL_ISUPPORT() ":irc.bitchat.net 005 Nickname CHANMODES=k,l,i,t CHANNELLEN=200 NICKLEN=9 MAXTARGETS=1 TOPICLEN=307 KICKLEN=307 MODES NETWORK=YourNetwork :are supported by this server"
 //channel_replies
 #define RPL_CHANNELMODEIS(nickname, channel, modes) (":irc.bitchat.net 324 " + nickname + " " + channel + " :" + modes + "\r\n")
 #define RPL_ENDOFNAMES(nickname, channel) (":irc.bitchat.net 366 " + nickname + " " + channel + " :End of /NAMES list\r\n")
@@ -74,7 +74,7 @@
 #define RPL_CHANOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " : You're operator of " + channel + "\r\n")
 #define RPL_BYEYBE(nickname) (":irc.bitchat.net " + nickname + " You quitted the server, see you next time !\r\n")
 //command_replies (uses prefix)
-#define RPL_INVITE(prefixCli, target, channel) (":" + prefix + " INVITE " + target + " :" + channel + "\r\n")
+#define RPL_INVITE(prefix, target, channel) (":" + prefix + " INVITE " + target + " :" + channel + "\r\n")
 #define RPL_JOIN(prefix, channel) (":" + prefix + " JOIN :" + channel + "\r\n")
 #define RPL_KICK(prefix, channel, target, reason) (":" + prefix + " KICK " + channel + " " + target + " " + reason + "\r\n")
 #define RPL_PARTNOREASON(prefix, channel) (":" + prefix + " PART " + channel + "\r\n")
@@ -82,8 +82,6 @@
 #define RPL_PRIVMSG(prefix, target, message) (":" + prefix + " PRIVMSG " + target + " " + message + "\r\n")
 #define RPL_TOPICCHANGED(prefix, channel, topic) (":" + prefix + " TOPIC " + channel + topic + "\r\n")
 #define RPL_CHANGEMODE(prefix, channel, mode) (":" + prefix + " MODE " + channel + " " + mode + "\r\n") //TODO : not used
-
-
 
 namespace reply {
 	enum e_level { INFO, ERROR, DEBUG, REPLY };
