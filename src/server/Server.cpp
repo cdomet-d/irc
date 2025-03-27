@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 10:02:41 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 11:38:46 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,10 @@ bool checkOnlyOperator(int fd) {
 					OPCLI, curChan->second->getCliInChan().begin()->second);
 				reply::send(
 					curChan->second->getCliInChan().begin()->second->getFd(),
-					RPL_CHANOPE(curChan->second->getName()));
+					RPL_CHANOPE(curChan->second->getCliInChan()
+									.begin()
+									->second->cliInfo.getNick(),
+								curChan->second->getName()));
 				return (true);
 			}
 			//delete chan if the disconnected cli was the one cli in chan
