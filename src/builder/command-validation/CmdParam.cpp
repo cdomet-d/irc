@@ -20,9 +20,9 @@ CmdParam::CmdParam(void) : opt_(false), delim_('\0') {}
 CmdParam::CmdParam(const bool opt, const char delim)
 	: opt_(opt), delim_(delim) {}
 
-CmdParam::CmdParam(const CmdParam &rhs) {
-	*this = rhs;
-}
+// CmdParam::CmdParam(const CmdParam &rhs) {
+// 	*this = rhs;
+// }
 
 CmdParam::~CmdParam(void) {}
 
@@ -42,6 +42,14 @@ CmdParam &CmdParam::operator=(const CmdParam &rhs) {
 		innerParam_ = rhs.getInnerParam();
 	}
 	return (*this);
+}
+
+bool CmdParam::empty() {
+	return innerParam_.begin() == innerParam_.end();
+}
+
+size_t CmdParam::size(void) const {
+	return (innerParam_.size());
 }
 
 void CmdParam::rmParam(unsigned int pos) {
@@ -67,9 +75,6 @@ const stringVec &CmdParam::getInnerParam(void) const {
 	return (innerParam_);
 }
 
-size_t CmdParam::getSize(void) const {
-	return (innerParam_.size());
-}
 
 bool CmdParam::getOpt(void) const {
 	return (opt_);

@@ -1,7 +1,7 @@
 
 # COMMAND PASS
 
-The PASS command is used to set a 'connection password'.  The optional password can and MUST be set 
+The PASS command is used to set a 'connection password'.  The optional password can and MUST be set
 before any attempt to register the connection is made.  
 Currently this requires that user send a PASS command before sending the NICK/USER combination.
 
@@ -100,7 +100,7 @@ RPL_NAMREPLY which is mentionned in the doc but not under numeric replies:
 | 331     | RPL_NOTOPIC          | "< channel > :No topic is set"                                                            |
 | 332     | RPL_TOPIC            | "< channel > :< topic >"                                                                  |
 | 341     | RPL_INVITING         | "< channel > < nick >"                                                                    |
-| 353     | RPL_NAMREPLY         | "( "=" / "*" / "@" ) < channel > :[ "@" / "+" ] < nick > *( " " [ "@" / "+" ] < nick > )" |
+| 353     | RPL_NAMREPLY         | "( "=" / "*" / "@" ) < channel > :[ "@" / "+" ] < nick >*( " " [ "@" / "+" ] < nick > )" |
 | 366     | RPL_ENDOFNAMES       | "< channel > :End of /NAMES list"                                                         |
 | 401     | ERR_NOSUCHNICK       | "< nickname > :No such nick/channel"                                                      |
 | 403     | ERR_NOSUCHCHANNEL    | "< channel name > :No such channel"                                                       |

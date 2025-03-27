@@ -35,7 +35,7 @@ bool joinCheck::hasInvite(Channel &chan, Client &sender) {
 
 bool joinCheck::validKey(Channel &chan, CmdParam &keys, size_t i,
 						 Client &sender) {
-	if (i < keys.getSize() && chan.getPassword() == keys[i])
+	if (i < keys.size() && chan.getPassword() == keys[i])
 		return (true);
 	reply::sendReply(sender.getFd(), ERR_BADCHANNELKEY(sender.cliInfo.getNick(),
 													   chan.getName()));

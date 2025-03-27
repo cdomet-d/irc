@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
 /*   Updated: 2025/03/27 14:20:12 by aljulien         ###   ########.fr       */
@@ -129,12 +129,12 @@ void mode(CmdSpec &cmd) {
 	std::string newModes;
 	std::string newMaxCli = "";
 
-	if (!cmd[flag_].getSize()) {
-		reply::sendReply(sender->getFd(), RPL_UMODEIS(sender->cliInfo.getNick(),
-													  curChan.getModes()));
+	if (!cmd[flag_].size()) {
+		reply::send(sender->getFd(),
+				  RPL_UMODEIS(sender->cliInfo.getNick(), curChan.getModes()));
 		return;
 	}
-	for (size_t nbFlag = 0; nbFlag < cmd[flag_].getSize(); ++nbFlag) {
+	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
 		if (cmd[flag_][nbFlag] == "+l")
 			newMaxCli = cmd[flagArg_][nbFlag];
 		executeFlag(cmd[flag_][nbFlag], cmd[flagArg_][nbFlag], curChan);

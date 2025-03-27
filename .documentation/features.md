@@ -8,7 +8,7 @@
 		- [Parser / builder](#parser--builder)
 			- [IRC messages](#irc-messages)
 			- [IRC rules](#irc-rules)
-	- [Appendix:](#appendix)
+	- [Appendix](#appendix)
 		- [**BNF syntax**](#bnf-syntax)
 
 ## Classes
@@ -67,7 +67,6 @@ They may consist from three parts, separated by a single ASCII space (0x20 or 32
 
 #### IRC rules
 
-
 ```markdown
 <message>  ::= [':' <prefix> <SPACE> ] <command> <params> <crlf>
 <prefix>   ::= <servername> | <nick> [ '!' <user> ] [ '@' <host> ]
@@ -81,7 +80,7 @@ They may consist from three parts, separated by a single ASCII space (0x20 or 32
 <crlf>     ::= CR LF
 ```
 
-## Appendix:
+## Appendix
 
 ### [**BNF syntax**][def]
 

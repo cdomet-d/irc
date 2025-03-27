@@ -31,6 +31,23 @@ typedef std::pair< int, Client * > clientPair;
 typedef std::pair< std::string, int > nickPair;
 typedef std::vector< std::string > stringVec;
 
+typedef enum {
+	/* TYPE_ERR: is unknown flag */
+	TYPE_ERR,
+	/* TYPE B: always MUST have a param */
+	B,
+	/* TYPE C: MUST have a param when set, MUST NOT have a param when unset	*/
+	C,
+	/* TYPE D: MUST NOT have a param */
+	D
+} e_mdetype;
+
+typedef enum {
+	SET_ERR, 
+	SET, 
+	UNSET,
+} e_mdeset;
+
 // -------------------------------- IRC UTILS ------------------------------- //
 
 #define MAX_EVENTS 100

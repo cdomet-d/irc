@@ -13,6 +13,7 @@
 #include "formatMess.hpp"
 #include "CmdManager.hpp"
 #include "Reply.hpp"
+#include "printers.hpp"
 #include <algorithm>
 #include <sstream>
 

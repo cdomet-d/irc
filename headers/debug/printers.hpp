@@ -16,4 +16,9 @@
 namespace print {
 	void charByChar(const std::string &buf);
 	void cmdParam(const stringVec &obj, std::string where);
+	void modeEnumToString(e_mdeset set_, e_mdetype type_);
+	void modeArgs(const stringVec &mdestr, const stringVec &modeargs,
+				  const std::string &where);
+	void argument(const stringVec::const_iterator &it, size_t width);
+	size_t getLargerArg(const stringVec &arr);
 } // namespace print

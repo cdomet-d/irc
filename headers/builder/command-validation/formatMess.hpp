@@ -27,7 +27,9 @@ namespace formatMess {
 		std::string removeNewlines(std::string &input);
 		std::string::size_type evaluateTermination(const std::string &input);
 		void formatMode(Client &sender);
+		
 	} // namespace priv
 }; // namespace formatMess
 
 #endif
+
