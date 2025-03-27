@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/26 15:19:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 09:59:36 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,8 +145,8 @@ void Server::acceptClient() {
 		clients_.insert(clientPair(newCli->getFd(), newCli));
 		usedNicks_.insert(nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
 		std::stringstream ss;
-		ss << "Client [" << newCli->getFd() << "] connected";
-		std::cout << ss << std::endl;
+		ss << "Client [" << newCli->getFd() << "] connected\n";
+		reply::log(reply::INFO, ss.str()); 
 	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
 }
 
@@ -158,8 +158,9 @@ bool Server::handleData(int fd) {
 	Client *curCli = clients_.find(fd)->second;
 	//TODO: handle -1 differently
 	if (bytes == 0) {
-		curCli->mess.setBuffer("QUIT\n");
+		curCli->mess.setBuffer("QUIT");
 		formatMess::assess(*curCli);
+		return (true);
 	} else if (bytes == -1)
 		return (true);
 	else if (bytes == -1)
@@ -177,6 +178,7 @@ bool Server::handleData(int fd) {
 			}
 		}
 	}
+	std::cout << "about to return true handleData" << std::endl;
 	return (true);
 }
 

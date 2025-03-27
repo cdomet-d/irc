@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:37:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/26 15:19:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 09:55:51 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void reply::log(e_level level, std::string message) {
 	if (serv.logfile.is_open()) {
 		switch (level) {
 		case INFO:
-			serv.logfile << "[" << timeStamp() << "] INFO " << message;
+			serv.logfile << "[" << timeStamp() << "] INFO  " << message;
 			break;
 		case ERROR:
 			serv.logfile << "[" << timeStamp() << "] ERROR " << message;
@@ -54,7 +54,7 @@ void reply::log(e_level level, std::string message, std::string verbose) {
 	if (serv.logfile.is_open()) {
 		switch (level) {
 		case (INFO):
-			serv.logfile << "[" << timeStamp() << "] INFO " << message
+			serv.logfile << "[" << timeStamp() << "] INFO  " << message
 						 << verbose;
 			break;
 		case (ERROR):
