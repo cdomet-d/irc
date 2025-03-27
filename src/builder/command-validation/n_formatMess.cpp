@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/27 11:01:31 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/27 17:39:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,24 +23,25 @@
 
 //TODO: handle single buffer for CAP NICK USER
 bool format_mess::assess(Client &sender) {
-	std::string message = sender.mess.getBuffer();
-
-	while (!message.empty()) {
-		std::string cmd = priv::removeNewlines(message);
-		if (cmd.find("CAP") != std::string::npos)
+	while (!sender.mess.emptyBuff()) {
+		sender.mess.removeNewlines();
+		if (sender.mess.isCap())
 			continue;
-		// std::cout << "Extracted	[" + cmd + "]" << std::endl;
-		// std::cout << "Remainder	" + message << std::endl;
-		if (priv::lenIsValid(cmd, sender) == false)
+		if (!sender.mess.lenIsValid(sender))
 			return false;
-		if (priv::hasPrefix(cmd, sender.cliInfo.getPrefix()) == false)
+		if (sender.mess.hasPrefix(sender.cliInfo.getPrefix()) == false)
 			return false;
-		sender.mess.setCmdParam(vectorSplit(cmd, ' '));
+		sender.mess.hasTrailing();
+		std::string buffer = sender.mess.getMess();
+		sender.mess.setCmdParam(vectorSplit(buffer, ' '));
+		print::cmdParam(sender.mess.getCmdParam(), "afterSplit");
 		if (sender.mess.getCmd() == "MODE")
-			priv::formatMode(sender);
-
+			sender.mess.formatMode();
+		sender.mess.updateMess();
 		CmdManager &manager = CmdManager::getManagerInstance();
 		try {
+		
+			std::cout << sender.mess.getCmd() << std::endl;
 			manager.executeCm(
 				manager.findCmd(sender.mess.getCmd()).process(sender));
 
@@ -49,6 +50,7 @@ bool format_mess::assess(Client &sender) {
 						ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
 										   sender.mess.getCmd()));
 		}
+		
 	}
 	return true;
 }
@@ -57,106 +59,9 @@ stringVec format_mess::vectorSplit(std::string &s, char del) {
 	stringVec result;
 	std::string token, trailing;
 
-	priv::hasTrailing(s, trailing);
 	std::istringstream stream(s);
 	while (std::getline(stream, token, del))
 		result.push_back(token);
-	if (!trailing.empty())
-		result.push_back(trailing);
 	return (result);
 }
 
-void format_mess::priv::formatMode(Client &sender) {
-	stringVec mode = sender.mess.getCmdParam();
-	if (mode.size() < 2)
-		return;
-	stringVec modeFormat;
-	std::string flagformat, paramformat;
-
-	modeFormat.push_back(mode.at(0));
-	modeFormat.push_back(mode.at(1));
-
-	for (stringVec::iterator i = mode.begin() + 2; i != mode.end(); ++i) {
-		if (!i->empty()) {
-			const char firstChar = (*i)[0];
-			if (firstChar == '+' || firstChar == '-') {
-				std::string flags = *i;
-				for (size_t j = 1; j < flags.size(); ++j) {
-					flagformat += firstChar;
-					flagformat += (*i)[j];
-					flagformat += ',';
-				}
-			} else {
-				paramformat += *i;
-				paramformat += ' ';
-			}
-		}
-	}
-	if (!flagformat.empty())
-		modeFormat.push_back(flagformat);
-	if (!paramformat.empty())
-		modeFormat.push_back(paramformat);
-	sender.mess.clearCmdParam();
-	sender.mess.setCmdParam(modeFormat);
-	print::cmdParam(sender.mess.getCmdParam(), "mode:");
-}
-
-bool format_mess::priv::hasPrefix(std::string &mess,
-								 const std::string &cliPrefix) {
-	if (mess.at(0) == ':') {
-		std::string::size_type sep = mess.find(" ");
-		if (sep != std::string::npos) {
-			std::string prefix = mess.substr(1, (sep - 1));
-			if (prefix != cliPrefix)
-				return false;
-			else
-				mess.erase(0, (sep + 1));
-		}
-	}
-	return true;
-}
-
-bool format_mess::priv::hasTrailing(std::string &mess, std::string &trailing) {
-	std::string::size_type trail = mess.find(" :");
-
-	if (trail != std::string::npos) {
-		trailing = mess.substr((trail), mess.size());
-		mess.erase(trail);
-		return true;
-	}
-	return false;
-}
-
-bool format_mess::priv::lenIsValid(const std::string &mess,
-								  const Client &sender) {
-	if (mess.empty())
-		return false;
-	if (mess.size() > 512) {
-		reply::send(sender.getFd(), ERR_INPUTTOOLONG(sender.cliInfo.getNick()));
-		return false;
-	}
-	return true;
-}
-
-std::string::size_type
-format_mess::priv::evaluateTermination(const std::string &mess) {
-	if (mess.find("\r\n") != std::string::npos)
-		return 2;
-	if (mess.find("\n") != std::string::npos)
-		return 1;
-	return std::string::npos;
-}
-
-std::string format_mess::priv::removeNewlines(std::string &mess) {
-
-	std::string::size_type termSize = evaluateTermination(mess);
-	if (termSize == std::string::npos) {
-		mess.clear();
-		return mess;
-	}
-	std::string::size_type newline =
-		(termSize == 2 ? mess.find("\r\n") : mess.find("\n"));
-	std::string result = mess.substr(0, newline);
-	mess.erase(mess.begin(), (mess.begin() + newline + termSize));
-	return result;
-}

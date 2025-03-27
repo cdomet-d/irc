@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 11:35:27 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 16:47:32 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void partAllChans(Client *sender) {
 
 void quit(CmdSpec &cmd) {
     Client *sender = &cmd.getSender();
-	sender->mess.clearBuffer();
+	sender->mess.clearMess();
 	partAllChans(sender);
     checkOnlyOperator(sender->getFd());
 	reply::send(sender->getFd(), RPL_BYEYBE());

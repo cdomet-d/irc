@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/26 10:12:58 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/27 17:20:28 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ bool Server::servRun() {
 	std::cout << "Server listening on port " << port_
 			  << " | IP adress: " << inet_ntoa(servAddr_.sin_addr) << std::endl;
 	while (gSign == false) {
+		std::cout << "I am running" << std::endl;
 		nbFds = epoll_wait(epollFd_, events_, MAX_EVENTS, -1);
 		if (nbFds == -1 && gSign == false)
 			return (false);
@@ -152,10 +153,8 @@ void Server::acceptClient() {
 bool Server::handleData(int fd) {
 	char tmpBuf[1024];
 	memset(tmpBuf, 0, sizeof(tmpBuf));
-	// std::cout << "In handle data" << std::endl;
 	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, MSG_DONTWAIT);
 
-	// std::cout << bytes << std::endl;
 	Client *curCli = clients_.find(fd)->second;
 	//TODO: handle -1 differently
 	if (bytes == 0)
@@ -165,12 +164,13 @@ bool Server::handleData(int fd) {
 	else if (bytes == -1)
 		perror("HandleData:");
 	else {
-		std::string inputCli = curCli->mess.getBuffer();
+		std::string inputCli = curCli->mess.getMess();
 		inputCli.append(tmpBuf);
-		curCli->mess.setBuffer(inputCli);
-		if (curCli->mess.getBuffer().find('\n') != std::string::npos) {
+		std::cout << inputCli << std::endl;
+		curCli->mess.setMess(inputCli);
+		if (curCli->mess.getMess().find('\n') != std::string::npos) {
 			format_mess::assess(*curCli);
-			curCli->mess.clearBuffer();
+			curCli->mess.clearMess();
 			curCli->mess.clearCmdParam();
 		}
 	}
