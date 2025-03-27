@@ -30,7 +30,7 @@
 :servername 433 * chacham :Nickname is already in use
 :servername NOTICE * :Introducing new nick "bobby"
 :servername NOTICE * :Registration complete
-:bobyy!~b@hostname JOIN #chan
-:servername 353 bobyy @ #chan :bobyy @chacham
-:servername 366 bobyy #chan :End of /NAMES list.
+:bobby!~b@hostname JOIN #chan
+:servername 353 bobby @ #chan :bobby @chacham
+:servername 366 bobby #chan :End of /NAMES list.
 :chacham!~c@hostname NICK :sweet

@@ -20,45 +20,45 @@
 :servername 353 chacham @ #chan :@chacham
 :servername 366 chacham #chan :End of /NAMES list.
 :chacham!~c@hostname MODE #chan +k key
-:bobyy!~b@hostname JOIN #chan
+:bobby!~b@hostname JOIN #chan
 :chacham!~c@hostname JOIN #chan2
-:servername 353 chacham @ #chan2 :chacham @bobyy
+:servername 353 chacham @ #chan2 :chacham @bobby
 :servername 366 chacham #chan2 :End of /NAMES list.
 :chacham!~c@hostname JOIN #chan3
-:servername 353 chacham @ #chan3 :chacham @bobyy
+:servername 353 chacham @ #chan3 :chacham @bobby
 :servername 366 chacham #chan3 :End of /NAMES list.
 :chacham!~c@hostname MODE #chan +i
-:servername 341 chacham bobyy #chan
-:bobyy!~b@hostname JOIN #chan
-:osmium.libera.chat 443 chacham bobyy #chan :is already on channel
-:bobyy!~b@hostname PART #chan
+:servername 341 chacham bobby #chan
+:bobby!~b@hostname JOIN #chan
+:osmium.libera.chat 443 chacham bobby #chan :is already on channel
+:bobby!~b@hostname PART #chan
 :chacham!~c@hostname MODE #chan -ik+l * 1
 :servername NOTICE * : Valid password ! You may register
 :servername NOTICE * :Introducing new nick "bobby"
-:servername NOTICE * :Registration complete
-:servername 475 bobyy #chan :Cannot join channel (+k) - bad key
-:servername 475 bobyy #chan :Cannot join channel (+k) - bad key
-:bobyy!~b@hostname JOIN #chan
-:servername 353 bobyy @ #chan :bobyy @chacham
-:servername 366 bobyy #chan :End of /NAMES list.
-:bobyy!~b@hostname JOIN #chan2
+:servername NOTICE bobby :Registration complete
+:servername 475 bobby #chan :Cannot join channel (+k) - bad key
+:servername 475 bobby #chan :Cannot join channel (+k) - bad key
+:bobby!~b@hostname JOIN #chan
+:servername 353 bobby @ #chan :bobby @chacham
+:servername 366 bobby #chan :End of /NAMES list.
+:bobby!~b@hostname JOIN #chan2
 :servername MODE #chan2 +t
-:servername 353 bobyy @ #chan2 :@bobyy
-:servername 366 bobyy #chan2 :End of /NAMES list.
-:bobyy!~b@hostname JOIN #chan3
+:servername 353 bobby @ #chan2 :@bobby
+:servername 366 bobby #chan2 :End of /NAMES list.
+:bobby!~b@hostname JOIN #chan3
 :servername MODE #chan3 +t
-:servername 353 bobyy @ #chan3 :@bobyy
-:servername 366 bobyy #chan3 :End of /NAMES list.
-:bobyy!~b@hostname MODE #chan3 +k key
+:servername 353 bobby @ #chan3 :@bobby
+:servername 366 bobby #chan3 :End of /NAMES list.
+:bobby!~b@hostname MODE #chan3 +k key
 :chacham!~c@hostname JOIN #chan2
 :chacham!~c@hostname JOIN #chan3
-:bobyy!~b@hostname PART #chan
-:bobyy!~b@hostname PART #chan2
-:bobyy!~b@hostname PART #chan3
-:chacham!~c@hostname INVITE bobyy :#chan
-:servername 475 bobyy #chan :Cannot join channel (+k) - bad key
-:bobyy!~b@hostname JOIN #chan
-:servername 353 bobyy @ #chan :bobyy @chacham
-:servername 366 bobyy #chan :End of /NAMES list.
-:bobyy!~b@hostname PART #chan
-:servername 471 bobyy #chan :Cannot join channel (+l) - channel is full, try again later
+:bobby!~b@hostname PART #chan
+:bobby!~b@hostname PART #chan2
+:bobby!~b@hostname PART #chan3
+:chacham!~c@hostname INVITE bobby :#chan
+:servername 475 bobby #chan :Cannot join channel (+k) - bad key
+:bobby!~b@hostname JOIN #chan
+:servername 353 bobby @ #chan :bobby @chacham
+:servername 366 bobby #chan :End of /NAMES list.
+:bobby!~b@hostname PART #chan
+:servername 471 bobby #chan :Cannot join channel (+l) - channel is full, try again later
