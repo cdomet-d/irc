@@ -164,6 +164,8 @@ void CmdManager::generateCmds() {
 			.addChecker(hasChanPriv) //(only if mode +t is set)
 			.CmExecutor(topic)
 			.build());
+
+//TODO: add WHO
 }
 
 void CmdManager::log(CmdSpec *cm) {
