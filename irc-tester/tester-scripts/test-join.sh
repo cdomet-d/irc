@@ -57,27 +57,24 @@ sleep 0.5
 cat <<EOF >&${client1_in_fd}
 JOIN #chan2,#chan3,#chan ,key
 MODE #chan +i
-INVITE bobby #chan
 EOF
 
 sleep 0.5
 
-#tests JOIN 0 + tests if having an invite makes key unnecessary
+#tests JOIN 0
 cat <<EOF >&${client2_in_fd}
 JOIN 0
-JOIN #chan
 EOF
 
 sleep 0.5
 
-#client1 joins several channels at once and tries to join #chan though he's already in it
 cat <<EOF >&${client1_in_fd}
 INVITE bobby #chan
 EOF
 
 sleep 0.5
 
-#tests JOIN 0 + tests if having an invite makes key unnecessary
+#tests if having an invite makes key unnecessary
 cat <<EOF >&${client2_in_fd}
 JOIN #chan
 JOIN #chan key
@@ -88,7 +85,7 @@ sleep 0.5
 
 #tests channel client limit
 cat <<EOF >&${client1_in_fd}
-MODE #chan -ik +l key 1
+MODE #chan -ik+l key 1
 EOF
 
 sleep 0.5
