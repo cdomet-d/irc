@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:04 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/21 13:47:30 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/24 12:33:21 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ namespace formatMess {
 		std::string removeNewlines(std::string &input);
 		std::string::size_type evaluateTermination(const std::string &input);
 		void formatMode(Client &sender);
+		
 	} // namespace priv
 }; // namespace formatMess
 
 #endif
+
