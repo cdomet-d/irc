@@ -69,6 +69,7 @@ sleep 0.5
 cat <<EOF >&${client2_in_fd}
 JOIN #chan
 KICK juju
+KICK #chan juju
 EOF
 
 sleep 0.5

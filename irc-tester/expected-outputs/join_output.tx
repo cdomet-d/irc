@@ -30,7 +30,7 @@
 :chacham!~c@hostname MODE #chan +i
 :servername 341 chacham bobby #chan
 :bobby!~b@hostname JOIN #chan
-:osmium.libera.chat 443 chacham bobby #chan :is already on channel
+:servername 443 chacham bobby #chan :is already on channel
 :bobby!~b@hostname PART #chan
 :chacham!~c@hostname MODE #chan -ik+l * 1
 :servername NOTICE * : Valid password ! You may register
