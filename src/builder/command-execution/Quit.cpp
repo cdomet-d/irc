@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/26 15:19:19 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 10:53:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void quit(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 	sender->mess.clearBuffer();
 	partAllChans(sender);
-	reply::send(sender->getFd(), RPL_BYEYBE());
+	reply::send(sender->getFd(), RPL_BYEYBE(sender->cliInfo.getNick()));
 	std::stringstream ss;
 	ss << "Client [" << sender->getFd() << "] deconnected";
 	std::cout << ss << std::endl;

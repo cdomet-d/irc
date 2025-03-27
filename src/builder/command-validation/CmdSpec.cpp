@@ -50,7 +50,7 @@ bool CmdSpec::checkRegistrationStage(void) {
 			else
 				reply::send(sender_->getFd(), "Please enter nickname\r\n");
 		} else if (name_ != "PASS")
-			reply::send(sender_->getFd(), ERR_NOTREGISTERED);
+			reply::send(sender_->getFd(), ERR_NOTREGISTERED());
 		return (false);
 	}
 	return (true);

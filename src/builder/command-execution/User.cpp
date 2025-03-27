@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:48:49 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/26 15:19:20 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 10:51:04 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,5 @@ void user(CmdSpec &cmd) {
 	sender->cliInfo.setPrefix();
 	reply::send(cmd.getSender().getFd(),
 				RPL_USER(sender->cliInfo.getUsername()));
-	reply::send(sender->getFd(), REG_COMPLETE());
+	reply::send(sender->getFd(), REG_COMPLETE(sender->cliInfo.getNick()));
 }
