@@ -20,6 +20,7 @@ sleep 0.2
 #tries PART before registration
 #tries PART with wrong params
 #parts from several channels at once with a comment
+#tests if channel is correctly deleted if all clients leave
 cat <<EOF >&${client1_in_fd}
 PART
 PASS 0
@@ -46,14 +47,6 @@ USER b b b b
 PART #chan
 JOIN #chan
 PART #chan
-EOF
-
-sleep 0.5
-
-#tests if channel is correctly deleted if all clients leave
-cat <<EOF >&${client1_in_fd}
-PART #chan
-JOIN #chan
 EOF
 
 sleep 0.5
