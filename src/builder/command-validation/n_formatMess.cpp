@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   n_formatMess.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/25 15:12:19 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/27 09:50:31 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "n_formatMess.hpp"
 #include "CmdManager.hpp"
 #include "Reply.hpp"
+#include "printers.hpp"
 #include <algorithm>
 #include <sstream>
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 10:49:26 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/25 16:39:04 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void join(CmdSpec &cmd)
         return;
     }
 
-    for (size_t nbChan = 0; nbChan < cmd[channel_].getSize(); nbChan++) {
+    for (size_t nbChan = 0; nbChan < cmd[channel_].size(); nbChan++) {
         Channel *curChan = createChan(cmd[channel_][nbChan]);
         curChan->addClientToChan(curChan, sender);
     }

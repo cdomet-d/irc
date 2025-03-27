@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   n_checkJoin.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 17:53:59 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/24 16:16:31 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/27 09:50:24 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool checkJoin::hasInvite(Channel &chan, Client &sender) {
 
 bool checkJoin::validKey(Channel &chan, CmdParam &keys, size_t i,
 						 Client &sender) {
-	if (i < keys.getSize() && chan.getPassword() == keys[i])
+	if (i < keys.size() && chan.getPassword() == keys[i])
 		return (true);
 	reply::send(sender.getFd(),
 				ERR_BADCHANNELKEY(sender.cliInfo.getNick(), chan.getName()));

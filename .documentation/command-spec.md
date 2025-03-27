@@ -1,34 +1,35 @@
 # Command specifications analysis
 
 - [Command specifications analysis](#command-specifications-analysis)
-	- [PASS](#pass)
-		- [Parsing rules](#parsing-rules)
-			- [Failure strategy](#failure-strategy)
-			- [Success strategy](#success-strategy)
-		- [Attributes](#attributes)
-		- [Methods](#methods)
-		- [Tests with libera.chat](#tests-with-liberachat)
-	- [NICK](#nick)
-		- [Parsing rules](#parsing-rules-1)
-			- [Failure strategy](#failure-strategy-1)
-			- [Success strategy](#success-strategy-1)
-	- [tests with libera.chat :](#tests-with-liberachat-)
-	- [USER](#user)
-	- [tests with libera.chat :](#tests-with-liberachat--1)
-	- [INVITE](#invite)
-	- [tests with libera.chat :](#tests-with-liberachat--2)
-	- [JOIN](#join)
-	- [tests with libera.chat :](#tests-with-liberachat--3)
-	- [KICK](#kick)
-	- [tests with libera.chat :](#tests-with-liberachat--4)
-	- [MODE](#mode)
-	- [tests with libera.chat :](#tests-with-liberachat--5)
-	- [PART](#part)
-	- [tests with libera.chat :](#tests-with-liberachat--6)
-	- [PRIVMSG](#privmsg)
-	- [QUIT](#quit)
-	- [TOPIC](#topic)
-	- [tests with libera.chat :](#tests-with-liberachat--7)
+  - [PASS](#pass)
+    - [Parsing rules](#parsing-rules)
+      - [Failure strategy](#failure-strategy)
+      - [Success strategy](#success-strategy)
+    - [Attributes](#attributes)
+    - [Methods](#methods)
+    - [Tests with libera.chat](#tests-with-liberachat)
+  - [NICK](#nick)
+    - [Parsing rules](#parsing-rules-1)
+      - [Failure strategy](#failure-strategy-1)
+      - [Success strategy](#success-strategy-1)
+  - [tests with libera.chat](#tests-with-liberachat-1)
+  - [USER](#user)
+  - [tests with libera.chat](#tests-with-liberachat-2)
+  - [INVITE](#invite)
+  - [tests with libera.chat](#tests-with-liberachat-3)
+  - [JOIN](#join)
+  - [tests with libera.chat](#tests-with-liberachat-4)
+  - [KICK](#kick)
+  - [tests with libera.chat](#tests-with-liberachat-5)
+  - [MODE](#mode)
+  - [tests with libera.chat](#tests-with-liberachat-6)
+  - [PART](#part)
+  - [tests with libera.chat](#tests-with-liberachat-7)
+- [JOIN #tosti key](#join-tosti-key)
+  - [PRIVMSG](#privmsg)
+  - [QUIT](#quit)
+  - [TOPIC](#topic)
+  - [tests with libera.chat](#tests-with-liberachat-8)
 
 ## PASS
 
@@ -125,6 +126,7 @@ NICK : <nickname>
     NICK amelie
     REPLY: amelie38 changed their nickname to amelie
 ```
+
 //requirement
 password is set
 
@@ -143,14 +145,15 @@ channel object
 validNick() -> checks if nickname characters are valid or not \
                 (1) if no nickname is given display ERR_NONICKNAMEGIVEN \
                 (2) if invalid characters display ERR_ERRONEUSNICKNAME \
-                (3)	if nickname is already in use display ERR_NICKNAMEINUSE
+                (3) if nickname is already in use display ERR_NICKNAMEINUSE
 
 -- executors --
 setNick() -> sets client nickname to given string \
                 send "<old nickname> [ ["!" user] "@"host ]" message \
-                to the concerned client	and if in a channel send to all the channel's clients
+                to the concerned client and if in a channel send to all the channel's clients
 
-## tests with libera.chat :
+## tests with libera.chat
+
 NICK
 :erbium.libera.chat 431 chacham :No nickname given
 NICK 0cha
@@ -158,13 +161,13 @@ NICK 0cha
 NICK chacha
 :erbium.libera.chat 433 chacham chacha :Nickname is already in use.
 NICK chacham
-:chacha!~perle@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr NICK :chacham
+:chacha!~<perle@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> NICK :chacham
 NICK chacham
 //se passe rien
 
 NICK gg
-:lol!~rrrrrrrrr@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr NICK :gg
-:NickServ!NickServ@services.libera.chat NOTICE gg :This nickname is registered. Please choose a different nickname, or identify via /msg NickServ IDENTIFY gurki <password>
+:lol!~<rrrrrrrrr@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> NICK :gg
+:NickServ!<NickServ@services.libera.chat> NOTICE gg :This nickname is registered. Please choose a different nickname, or identify via /msg NickServ IDENTIFY gurki <password>
 //
 👉 Le pseudo gg est enregistré auprès de NickServ (le service d'enregistrement des pseudos).
 🔹 Si c'est ton pseudo → Tu dois t'identifier avec /msg NickServ IDENTIFY <password>.
@@ -177,15 +180,16 @@ NICK i
 🔹 Ce pseudo peut être enregistré ou non, mais il est déjà pris.
 🔹 Tu ne peux pas l'utiliser tant que l'autre utilisateur ne se déconnecte pas.
 
-
 ## USER
+
 //requirements
+
 - nickname is set
 - registration not complete, if so display ERR_ALREADYREGISTERED
 
 //parsing
 4 arguments
-<username> 0 * <realname> 
+<username> 0 * <realname>
 
 //attributes
 command name : NICK
@@ -205,7 +209,8 @@ client object
 -- executors --
 setUser() -> sets client's username, realname, (hostname, servername) \
 
-## tests with libera.chat :
+## tests with libera.chat
+
 USER
 :mercury.libera.chat 461 hihi USER :Not enough parameters
 USER #yo 0 jaj lo
@@ -214,10 +219,10 @@ ERROR :Closing Link: lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr (Invalid username 
 
 USER rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr 0 * etoile de mer
 NICK moijesuis
-:nickname!~rrrrrrrrr@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr NICK :moijesuis //username has been truncated !!!!
-
+:nickname!~<rrrrrrrrr@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> NICK :moijesuis //username has been truncated !!!!
 
 ## INVITE
+
 //requirement
 registration succeeded
 
@@ -240,7 +245,7 @@ list of all clients to find the target and send him the invite
 (3) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
 (4) onChan() -> checks if the client belongs to the channel \
-            if not display ERR_NOTONCHANNEL 
+            if not display ERR_NOTONCHANNEL
 
 (5) validInvite() -> checks if the target user is already on the channel \
                     if so display ERR_USERONCHANNEL
@@ -248,13 +253,13 @@ list of all clients to find the target and send him the invite
 (6) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
                     if not display ERR_CHANOPRIVSNEEDED
 
-
 -- executors --
 inviteUser() -> add the target user to the channel \
                 send a RPL_INVITING to the command issuer \
                 send an INVITE message with the issuer as <source> to the target user
 
-## tests with libera.chat :
+## tests with libera.chat
+
 INVITE #chaaaa bobyy
 :lithium.libera.chat 401 chacham #chaaaa :No such nick/channel
 INVITE bobyy #chaaaa
@@ -263,14 +268,14 @@ INVITE bobyy #chaaaa
 INVITE bobyy #loooool
 :lithium.libera.chat 403 chacham #loooool :No such channel
 JOIN #loli
-:bobyy!~cha@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #loli
+:bobyy!~<cha@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> JOIN #loli
 :platinum.libera.chat MODE #loli +Cnst
 :platinum.libera.chat 353 bobyy @ #loli :@bobyy
 :platinum.libera.chat 366 bobyy #loli :End of /NAMES list.
 INVITE bobyy #loli
 :lithium.libera.chat 442 chacham #loli :You're not on that channel
 JOIN #loli
-:chacham!~chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #loli
+:chacham!~<chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> JOIN #loli
 :lithium.libera.chat 353 chacham @ #loli :chacham @bobyy
 :lithium.libera.chat 366 chacham #loli :End of /NAMES list.
 INVITE chacham #loli
@@ -282,8 +287,8 @@ INVITE meee #loli (loli n'est pas en mode +i)
 INVITE plouk #loli
 :lithium.libera.chat 401 chacham plouk :No such nick/channel
 
-
 ## JOIN
+
 //requirement
 registration succeeded
 
@@ -306,7 +311,7 @@ channel object
 (2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL (si pas les bons charactere dans le nom ex : cha sans le #) \
                     different pour les autres commandes, qui elles regardent juste si le channel existe alors que pour join il regarde s'il est correcte
 
-(3) joinChanRequest() -> checks : 
+(3) joinChanRequest() -> checks :
                         (5) - the nbr of channels the client is in, if > limit display ERR_TOOMANYCHANNELS \
                         (4) - if the key to access the channel (if it has one) is supplied  and valid if not display ERR_BADCHANNELKEY \
                             - if client isn't banned from the channel \
@@ -316,7 +321,7 @@ channel object
                             - ERR_BADCHANMASK (not sure of the purpose of this one) Indicates the supplied channel name is not a valid. \
                                  is similar to, but stronger than, ERR_NOSUCHCHANNEL (403), which indicates that the channel does not exist, but that it may be a valid name.
                         (1)- if client is already on channel
-                        
+
 -- executors --
 addToChan() -> adds client to channel \
                 - send the 3 following messages to the client in this order : \
@@ -327,58 +332,58 @@ addToChan() -> adds client to channel \
                 - send to client message about all commands which affect channel \
                     MODE, KICK, PART, QUIT, PRIVMSG (not sure when to send this message)
                 - send a JOIN message to channel to inform other clients
-                
-## tests with libera.chat :
+
+## tests with libera.chat
+
 JOIN
 :lithium.libera.chat 461 chacham JOIN :Not enough parameters
 JOIN channel
 :lithium.libera.chat 403 chacham channel :No such channel
-JOIN #channe 
-:chacham!~chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #channe
+JOIN #channe
+:chacham!~<chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> JOIN #channe
 :lithium.libera.chat MODE #channe +Cnst
 :lithium.libera.chat 353 chacham @ #channe :@chacham
 :lithium.libera.chat 366 chacham #channe :End of /NAMES list.
 
 JOIN #cha,lolo,#hihi
 :lithium.libera.chat 403 chacham lolo :No such channel
-:chacham!~chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #cha
+:chacham!~<chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> JOIN #cha
 :lithium.libera.chat MODE #cha +Cnst
 :lithium.libera.chat 353 chacham @ #cha :@chacham
 :lithium.libera.chat 366 chacham #cha :End of /NAMES list.
-:chacham!~chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #hihi
+:chacham!~<chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> JOIN #hihi
 :lithium.libera.chat MODE #hihi +Cnst
 :lithium.libera.chat 353 chacham @ #hihi :@chacham
 :lithium.libera.chat 366 chacham #hihi :End of /NAMES list.
 
 MODE #hihi +k key
-:chacham!~chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr MODE #hihi +k key
-JOIN #hihi 
+:chacham!~<chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> MODE #hihi +k key
+JOIN #hihi
 :platinum.libera.chat 475 bobyy #hihi :Cannot join channel (+k) - bad key
 JOIN #hihi,#cha key1,key
 :platinum.libera.chat 475 bobyy #hihi :Cannot join channel (+k) - bad key
-:bobyy!~cha@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #cha
+:bobyy!~<cha@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> JOIN #cha
 :platinum.libera.chat 353 bobyy @ #cha :bobyy @chacham
 :platinum.libera.chat 366 bobyy #cha :End of /NAMES list.
 JOIN #hihi key jekfheriuhfr
-:bobyy!~cha@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #hihi
+:bobyy!~<cha@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> JOIN #hihi
 :platinum.libera.chat 353 bobyy @ #hihi :bobyy @chacham
 :platinum.libera.chat 366 bobyy #hihi :End of /NAMES list.
 
-
 JOIN #chaaaa
-:chacham!~chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #chaaaa
+:chacham!~<chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> JOIN #chaaaa
 :lithium.libera.chat MODE #chaaaa +Cnst
 :lithium.libera.chat 353 chacham @ #chaaaa :@chacham
 :lithium.libera.chat 366 chacham #chaaaa :End of /NAMES list.
 MODE #chaaaa +i
-:chacham!~chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr MODE #chaaaa +i
+:chacham!~<chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> MODE #chaaaa +i
 JOIN #chaaaa
 :platinum.libera.chat 473 bobyy #chaaaa :Cannot join channel (+i) - you must be invited
 INVITE bobyy #chaaaa
 :lithium.libera.chat 341 chacham bobyy #chaaaa
-:chacham!~chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr INVITE bobyy :#chaaaa
+:chacham!~<chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> INVITE bobyy :#chaaaa
 JOIN #chaaaa
-:bobyy!~cha@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #chaaaa
+:bobyy!~<cha@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> JOIN #chaaaa
 :platinum.libera.chat 353 bobyy @ #chaaaa :bobyy @chacham
 :platinum.libera.chat 366 bobyy #chaaaa :End of /NAMES list.
 
@@ -387,8 +392,8 @@ JOIN #loli kekeeke
 JOIN #loli key
 :lithium.libera.chat 473 chacham #loli :Cannot join channel (+i) - you must be invited
 
-
 ## KICK
+
 //requirement
 registration succeeded
 
@@ -411,7 +416,7 @@ channel object
 (2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
 (3) onChan() -> checks if the client belongs to the channel \
-            if not display ERR_NOTONCHANNEL 
+            if not display ERR_NOTONCHANNEL
 
 (4) hasChanPriv() -> checks if client has the appropriate channel privileges to execute command \
                     if not display ERR_CHANOPRIVSNEEDED
@@ -421,13 +426,13 @@ channel object
 (6) validKick() -> checks if target user is in the channel \
                 if not display ERR_USERNOTINCHANNEL
 
-
 -- executors --
 kickUser() -> remove target user from channel \
                 send KICK message to channel with <source> being the client who sent the kick, \
                 the channel and the comment (if given otherwise a default message)
 
-## tests with libera.chat :
+## tests with libera.chat
+
 KICK #loli urghghri
 :lithium.libera.chat 442 chacham #loli :You're not on that channel
 
@@ -440,7 +445,7 @@ KICK #loli ufhzrubz
 KICK #loli zeufhzoir,chacham
 :platinum.libera.chat 401 bobyy zeufhzoir :No such nick/channel (s'arrete au premier mauvais user)
 KICK #loli chacham,oziefheif
-:bobyy!~cha@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr KICK #loli chacham :chacham
+:bobyy!~<cha@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> KICK #loli chacham :chacham
 
 KICK
 :lithium.libera.chat 461 chacham KICK :Not enough parameters
@@ -453,7 +458,7 @@ KICK loli ueirfhozrieh
 KICK #loli zoiefheoz
 :lithium.libera.chat 442 chacham #loli :You're not on that channel
 JOIN #loli key
-:chacham!~chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #loli
+:chacham!~<chalortte@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> JOIN #loli
 :lithium.libera.chat 353 chacham @ #loli :chacham @bobyy
 :lithium.libera.chat 366 chacham #loli :End of /NAMES list.
 KICK #loli zefuherb
@@ -461,12 +466,12 @@ KICK #loli zefuherb
 KICK #loli rferere
 :platinum.libera.chat 401 bobyy rferere :No such nick/channel
 KICK #loli chacham
-:bobyy!~cha@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr KICK #loli chacham :chacham
+:bobyy!~<cha@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> KICK #loli chacham :chacham
 KICK #loli chacham
 :platinum.libera.chat 441 bobyy chacham #loli :They aren't on that channel
 
-
 ## MODE
+
 //requirement
 registration succeeded
 
@@ -499,22 +504,23 @@ command issuer client object
 pour -+o verifier que le target existe et qu'il soit sur le channel
 pour -+i si ce mode a deja ete active et que le client refait un +i, ne rien faire
 pour -+k si aucune key n'est donné ne rien faire que ce soit pour le set ou remove car pour remove il faut donner la clé qui a ete set
-pour -+t 
-pour -+l si on met pas le nombre limite ERR_NEEDMOREPARAMS. la limite doit au mois etre 1 
+pour -+t
+pour -+l si on met pas le nombre limite ERR_NEEDMOREPARAMS. la limite doit au mois etre 1
 
 -- executors --
 changeMode() -> sets or removes given mode \
                     if <modestring> is not given display RPL_CHANNELMODEIS \
                     followed by RPL_CREATIONTIME
 
-## tests with libera.chat :
-MODE #tosti +k key +i
-:chacham!~char@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr MODE #tosti +k key // +i n'a pas fonctionné
-MODE #tosti +i-k key
-:chacham!~char@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr MODE #tosti +i-k *
+## tests with libera.chat
 
+MODE #tosti +k key +i
+:chacham!~<char@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> MODE #tosti +k key // +i n'a pas fonctionné
+MODE #tosti +i-k key
+:chacham!~<char@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> MODE #tosti +i-k *
 
 ## PART
+
 //requirement
 registration succeeded
 
@@ -536,7 +542,7 @@ channel object
 (2) validChan() -> checks if channel exists if not display ERR_NOSUCHCHANNEL
 
 (3) onChan() -> checks if the client belongs to the channel \
-            if not display ERR_NOTONCHANNEL 
+            if not display ERR_NOTONCHANNEL
 
 -- executors --
 rmFromChan() -> removes client from channel \
@@ -544,22 +550,23 @@ rmFromChan() -> removes client from channel \
                 (optionnal?) send a message to the other clients of the channel \
                 saying that the client left
 
-## tests with libera.chat :
+## tests with libera.chat
+
 PART #tosti bye bye (n'a pas pris le message entier car pas les deux points ":" devant)
-:bobyy!~boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr PART #tosti :bye
-#JOIN #tosti key
+:bobyy!~<boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> PART #tosti :bye
+# JOIN #tosti key
 :lithium.libera.chat 421 bobyy #JOIN :Unknown command
 JOIN #tosti key
-:bobyy!~boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #tosti
+:bobyy!~<boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> JOIN #tosti
 :lithium.libera.chat 332 bobyy #tosti :pizza
-:lithium.libera.chat 333 bobyy #tosti bobyy!~boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr 1741120314
+:lithium.libera.chat 333 bobyy #tosti bobyy!~<boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> 1741120314
 :lithium.libera.chat 353 bobyy @ #tosti :bobyy @chacham
 :lithium.libera.chat 366 bobyy #tosti :End of /NAMES list.
 PART #tosti :by ebye bye
-:bobyy!~boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr PART #tosti :by ebye bye
-
+:bobyy!~<boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> PART #tosti :by ebye bye
 
 ## PRIVMSG
+
 //requirements
 registration succeeded
 
@@ -585,7 +592,6 @@ if target is a channel : \
     - check channel modes because they can affect the message \ (we don't have modes that can affect a message)
             if it cannot be delivered to channel display ERR_CANNOTSENDTOCHAN \
 
-
 -- executors --
 sendMess() -> send <text to be sent> to target \
                 if target is a channel, check for a prefixe and send message only to clients with appropriate status \
@@ -595,8 +601,8 @@ sendMess() -> send <text to be sent> to target \
                     ex : PRIVMSG @#tosti hey
                 (tips : on saura que c'est un channel grace au #)
 
-
 ## QUIT
+
 //requirements
 registration 0
 
@@ -615,8 +621,8 @@ cutConnexion() -> send ERROR message to client then rm client from struct epoll 
                 else \
                     message will explain why this connection broke
 
-
 ## TOPIC
+
 //requirement
 registration succeeded
 
@@ -649,7 +655,8 @@ changeTopic() -> if topic (can be NULL) is given change the channel's topic \
 displayTopic() -> display RPL_TOPIC followed by RPL_TOPICWHOTIME \
                     or RPL_NOTOPIC if channel lacks a topic
 
-## tests with libera.chat :
+## tests with libera.chat
+
 TOPIC
 :lithium.libera.chat 461 chacham TOPIC :Not enough parameters
 TOPIC tosti
@@ -660,13 +667,13 @@ TOPIC #lizerhleikj
 TOPIC #tosti
 :lithium.libera.chat 442 bobyy #tosti :You're not on that channel
 
-TOPIC #tosti 
+TOPIC #tosti
 :lithium.libera.chat 331 bobyy #tosti :No topic is set.
 TOPIC #tosti pizza
 :lithium.libera.chat 482 bobyy #tosti :You're not a channel operator
-:chacham!~char@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr MODE #tosti -t 
+:chacham!~<char@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> MODE #tosti -t
 TOPIC #tosti pizza
-:bobyy!~boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr TOPIC #tosti :pizza
+:bobyy!~<boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> TOPIC #tosti :pizza
 TOPIC #tosti
 :lithium.libera.chat 332 bobyy #tosti :pizza
-:lithium.libera.chat 333 bobyy #tosti bobyy!~boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr 1741120314
+:lithium.libera.chat 333 bobyy #tosti bobyy!~<boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> 1741120314

@@ -58,12 +58,12 @@ bool CmdSpec::checkRegistrationStage(void) {
 }
 
 bool CmdSpec::enoughParams() {
-	if (name_ == "INVITE" && !(*this)[target_].getSize() &&
-		!(*this)[channel_].getSize())
+	if (name_ == "INVITE" && !(*this)[target_].size() &&
+		!(*this)[channel_].size())
 		return (true);
 	for (size_t i = 0; i < params_.size(); i++) {
 		CmdParam &innerParam = *params_[i].second;
-		if (!innerParam.getOpt() && !innerParam.getSize()) {
+		if (!innerParam.getOpt() && !innerParam.size()) {
 			if (name_ == "NICK") {
 				reply::send((*sender_).getFd(), ERR_NONICKNAMEGIVEN(sender_->cliInfo.getNick()));
 			} else if (name_ == "PRIVMSG") {
@@ -164,7 +164,7 @@ void CmdSpec::displayParams(void) {
 	std::cout << "Params in BuilderPattern :\n";
 	for (paramMap::iterator i = params_.begin(); i != params_.end(); i++) {
 		try {
-			for (size_t index = 0; index < (*i->second).getSize(); index++) {
+			for (size_t index = 0; index < (*i->second).size(); index++) {
 				std::cout << "param[" << enumToString(i->first) << "]"
 						  << "[" << index << "] : " << (*i->second)[index]
 						  << std::endl;

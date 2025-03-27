@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/21 11:36:40 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/25 16:39:04 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void topic(CmdSpec &cmd)
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 
 	//if no params (= topic is empty) after chanName, client only checks the topic
-	if (!cmd[topic_].getSize()) {
+	if (!cmd[topic_].size()) {
 		checkTopic(curChan, sender);
 		return;
 	}

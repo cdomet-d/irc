@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 14:11:58 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/25 16:39:04 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void kick(CmdSpec &cmd)
 	Client *sender = &cmd.getSender();
 	Client *target = NULL;
 
-	for (size_t nbTarget = 0; nbTarget < cmd[target_].getSize(); nbTarget++) {
+	for (size_t nbTarget = 0; nbTarget < cmd[target_].size(); nbTarget++) {
 		for (clientMapIt targetIt = curChan.getCliInChan().begin();
 			 targetIt != curChan.getCliInChan().end(); ++targetIt) {
 			if (targetIt->second->cliInfo.getNick() == cmd[target_][nbTarget]) {
@@ -43,7 +43,7 @@ void kick(CmdSpec &cmd)
 				break;
 			}
 		}
-		if (cmd[message_].getSize())
+		if (cmd[message_].size())
 			sendMessageChannel(
 				curChan.getCliInChan(),
 				RPL_KICK(sender->cliInfo.getPrefix(), curChan.getName(),

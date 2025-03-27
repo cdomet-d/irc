@@ -26,17 +26,18 @@ class CmdParam {
 	~CmdParam(void);
 
 	/*                               METHODS                                  */
-	std::string &operator[](unsigned int i);
+	bool empty();
 	CmdParam &operator=(const CmdParam &rhs);
-	void rmParam(unsigned int pos);
-	void rmParam(stringVec::iterator begin, stringVec::iterator end);
+	size_t size(void) const;
+	std::string &operator[](unsigned int i);
 	void addOne(unsigned int pos);
 	void clean(void);
+	void rmParam(stringVec::iterator begin, stringVec::iterator end);
+	void rmParam(unsigned int pos);
 
 	/*                               GETTERS                                  */
 	bool getOpt(void) const;
 	char getDelim() const;
-	size_t getSize(void) const;
 	const stringVec &getInnerParam(void) const;
 
 	/*                               SETTERS                                  */
