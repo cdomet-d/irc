@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/24 18:40:14 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/27 17:29:08 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,3 +87,5 @@ namespace reply {
 
 } // namespace reply
 #endif //REPLY_H
+
+//TODO: add BADCHANMASK ??

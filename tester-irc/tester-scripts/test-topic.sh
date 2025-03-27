@@ -47,7 +47,7 @@ TOPIC #chan
 TOPIC #chan,#chan2 lol
 EOF
 
-#TODO: split sur les virgules peu importe si l'argument attends une liste
+#TODO: split sur les virgules peu importe si l'argument attends une liste ?
 sleep 0.5
 
 #client1
