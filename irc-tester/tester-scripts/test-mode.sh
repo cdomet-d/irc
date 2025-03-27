@@ -55,7 +55,7 @@ MODE #chan +l hehehe
 MODE #chan +o dontexist
 KICK #chan bobby
 MODE #chan +o bobby
-MODE #chan +i -i he he
+MODE #chan +i-i he he
 EOF
 
 sleep 0.5
