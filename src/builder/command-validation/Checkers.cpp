@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/27 14:20:10 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 15:59:26 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ bool validUser(CmdSpec &cmd) {
 
 bool validChan(CmdSpec &cmd) {
 	stringVec param = cmd[channel_].getInnerParam();
-	print::cmdParam(param, "innerParam");
+	//print::cmdParam(param, "innerParam");
 	return (true);
 }
 
