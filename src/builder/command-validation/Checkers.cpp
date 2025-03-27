@@ -6,15 +6,15 @@
 /*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/27 09:50:08 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/27 10:16:29 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Checkers.hpp"
-#include "n_checkJoin.hpp"
-#include "printers.hpp"
-#include "n_syntaxCheck.hpp"
 #include "Reply.hpp"
+#include "n_checkJoin.hpp"
+#include "n_syntaxCheck.hpp"
+#include "printers.hpp"
 
 bool RegStageDone(CmdSpec &cmd) {
 	if (cmd.getSender().cliInfo.getRegistration() <=
@@ -122,6 +122,7 @@ bool validInvite(CmdSpec &cmd) {
 
 bool onChan(CmdSpec &cmd) {
 	const stringVec &joinedChans = cmd.getSender().getJoinedChans();
+
 	for (size_t i = 0; i < joinedChans.size(); i++) {
 		if (joinedChans[i] == cmd[channel_][0])
 			return (true);

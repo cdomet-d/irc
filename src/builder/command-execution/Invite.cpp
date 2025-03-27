@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/20 14:11:41 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 10:24:36 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,10 @@
 
 void invite(CmdSpec &cmd)
 {
+	if (cmd[channel_].empty()) {
+		//TODO: print invite list
+		return ;
+	}
 	static Server &server = Server::GetServerInstance(0, "");
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 	Client *sender = &cmd.getSender();

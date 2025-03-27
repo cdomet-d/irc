@@ -83,8 +83,8 @@ void CmdManager::generateCmds() {
 	log(CmdSpec::CmdBuilder()
 			.Name("INVITE")
 			.Registration(3)
-			.addParam(target_, new CmdParam())
-			.addParam(channel_, new CmdParam())
+			.addParam(target_, new CmdParam()) //can be empty
+			.addParam(channel_, new CmdParam()) //can be empty
 			.addChecker(validTarget)
 			.addChecker(validChan)
 			.addChecker(onChan)

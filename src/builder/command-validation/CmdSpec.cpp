@@ -49,8 +49,7 @@ bool CmdSpec::checkRegistrationStage(void) {
 				reply::send(sender_->getFd(), "Please enter password\r\n");
 			else
 				reply::send(sender_->getFd(), "Please enter nickname\r\n");
-		}
-		else if (name_ != "PASS")
+		} else if (name_ != "PASS")
 			reply::send(sender_->getFd(), ERR_NOTREGISTERED);
 		return (false);
 	}
@@ -58,14 +57,12 @@ bool CmdSpec::checkRegistrationStage(void) {
 }
 
 bool CmdSpec::enoughParams() {
-	if (name_ == "INVITE" && !(*this)[target_].size() &&
-		!(*this)[channel_].size())
-		return (true);
 	for (size_t i = 0; i < params_.size(); i++) {
 		CmdParam &innerParam = *params_[i].second;
 		if (!innerParam.getOpt() && !innerParam.size()) {
 			if (name_ == "NICK") {
-				reply::send((*sender_).getFd(), ERR_NONICKNAMEGIVEN(sender_->cliInfo.getNick()));
+				reply::send((*sender_).getFd(),
+							ERR_NONICKNAMEGIVEN(sender_->cliInfo.getNick()));
 			} else if (name_ == "PRIVMSG") {
 				reply::send((*sender_).getFd(), ERR_NOTEXTTOSEND());
 			} else {
@@ -106,6 +103,9 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	if (!checkRegistrationStage())
 		return (*this);
 	setParam();
+	if (name_ == "INVITE" && !(*this)[target_].size() &&
+		!(*this)[channel_].size())
+		return (*this);
 	if (!enoughParams())
 		return (*this);
 	hasParamList();
@@ -200,7 +200,7 @@ const paramMap &CmdSpec::getParams(void) const {
 }
 
 int CmdSpec::getRegistrationStage() const {
-	return  (registrationStage_);
+	return (registrationStage_);
 }
 
 /* ************************************************************************** */
