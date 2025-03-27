@@ -7,25 +7,27 @@
 :servername MODE #chan +t
 :servername 353 chacham @ #chan :@chacham
 :servername 366 chacham #chan :End of /NAMES list.
-:chacham!~c@hostname MODE #tosti +i
+:chacham!~c@hostname MODE #chan +i
 :servername 461 chacham INVITE :Not enough parameters
 :servername 401 chacham dontexist :No such nick/channel
 :servername 403 chacham #dontexist :No such channel
 :servername 401 chacham dontexist :No such nick/channel
-:servername 341 chacham bobyy #tosti
-:servername 341 chacham bobyy #tosti
-:chacham!~c@hostname MODE #tosti -i
-:bobyy!~b@hotsname PART #tosti
+:servername 341 chacham bobyy #chan
+:servername 341 chacham bobyy #chan
+:chacham!~c@hostname MODE #chan -i
+:bobyy!~b@hotsname PART #chan
 :servername NOTICE * : Valid password ! You may register
 :servername NOTICE * :Introducing new nick "bobby"
 :servername NOTICE * :Registration complete
-:servername 473 bobyy #tosti :Cannot join channel (+i) - you must be invited
-:chacham!~c@hostname INVITE bobyy :#tosti
-:bobyy!~b@hostname JOIN #tosti
-:servername 353 bobyy @ #tosti :bobyy @chacham
-:servername 366 bobyy #tosti :End of /NAMES list.
-:servername 482 bobyy #tosti :You're not a channel operator
-:chacham!~c@hotsname MODE #tosti -i
-:servername 482 bobyy #tosti :You're not a channel operator
-:bobyy!~b@hotsname PART #tosti
-:servername 442 bobyy #tosti :You're not on that channel
+:servername 473 bobyy #chan :Cannot join channel (+i) - you must be invited
+:chacham!~c@hostname INVITE bobyy :#chan
+:servername 346 bobyy #chan :You have been invited
+:servername 347 bobyy :End of INVITE list
+:bobyy!~b@hostname JOIN #chan
+:servername 353 bobyy @ #chan :bobyy @chacham
+:servername 366 bobyy #chan :End of /NAMES list.
+:servername 482 bobyy #chan :You're not a channel operator
+:chacham!~c@hotsname MODE #chan -i
+:servername 482 bobyy #chan :You're not a channel operator
+:bobyy!~b@hotsname PART #chan
+:servername 442 bobyy #chan :You're not on that channel

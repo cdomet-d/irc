@@ -64,7 +64,7 @@ sleep 0.5
 #tries using INVITE with incorrect parameters
 #TODO: INVITE sans parametre envoie la liste des channel auquels est invite le sender
 cat <<EOF >&${client1_in_fd}
-INVITE
+INVITE #chan
 INVITE dontexist #chan
 INVITE bobby #dontexist
 INVITE dontexist #dontexist
@@ -76,6 +76,7 @@ sleep 0.5
 # ➤ client2
 #tries inviting someone but isn't an operator (with mode +i on #chan)
 cat <<EOF >&${client2_in_fd}
+INVITE
 JOIN #chan
 INVITE juju #chan
 EOF

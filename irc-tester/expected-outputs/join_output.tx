@@ -4,7 +4,7 @@
 :servername NOTICE * :Introducing new nick "chacham"
 :servername NOTICE chacham :Registration complete
 :servername 461 chacham JOIN :Not enough parameters
-:servername 479 chacham #tosti with space :Illegal channel name
+:servername 479 chacham #chan with space :Illegal channel name
 :chacham!~c@hostname JOIN #chan
 :servername MODE #chan +Cnst
 :servername 353 chacham @ #chan :@chacham
