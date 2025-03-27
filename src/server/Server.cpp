@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/24 16:22:03 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/27 09:08:56 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ bool Server::handleData(int fd) {
 	Client *curCli = clients_.find(fd)->second;
 	//TODO: handle -1 differently
 	if (bytes == 0)
-		return (disconnectCli(fd));
+		return (false);
 	else if (bytes == -1 && (errno == EAGAIN || errno == EWOULDBLOCK))
 		return true;
 	else if (bytes == -1)
@@ -169,12 +169,29 @@ bool Server::handleData(int fd) {
 		inputCli.append(tmpBuf);
 		curCli->mess.setBuffer(inputCli);
 		if (curCli->mess.getBuffer().find('\n') != std::string::npos) {
+			std::string temp = curCli->mess.getBuffer();
 			formatMess::assess(*curCli);
-			curCli->mess.clearBuffer();
-			curCli->mess.clearCmdParam();
+			if (temp.find("QUIT") == std::string::npos) {
+				curCli->mess.clearBuffer();
+				curCli->mess.clearCmdParam();
+			}
 		}
 	}
 	return (true);
+}
+
+bool Server::disconnectCli(int fd) {
+	clientMapIt it = clients_.find(fd);
+	if (it != clients_.end()) {
+		std::stringstream ss;
+		ss << "Client [" << it->second->getFd() << "] deconnected";
+		reply::log(reply::INFO, ss.str());
+		delete it->second;
+		clients_.erase(fd);
+		close(fd);
+		return true;
+	}
+	return false;
 }
 
 bool checkOnlyOperator(int fd) {
@@ -200,27 +217,15 @@ bool checkOnlyOperator(int fd) {
 	}
 	return (false);
 }
-
-bool Server::disconnectCli(int fd) {
-	std::cout << "DisconnectCli" << std::endl;
-	clientMapIt it = clients_.find(fd);
-	if (it != clients_.end()) {
-		epoll_ctl(epollFd_, EPOLL_CTL_DEL, fd, it->second->getCliEpoll());
-		reply::log(reply::INFO,"Client was disconnected");
-		delete it->second;
-		clients_.erase(fd);
-		close(fd);
-		return true;
-	}
-	return false;
-}
-
 void Server::addChan(Channel *curChan) {
 	channels_.insert(std::pair<std::string, Channel *>(curChan->getName(), curChan));
 }
 
 void Server::removeChan(Channel *curChan) {
 	channels_.erase(curChan->getName());
+}
+void Server::removeCli(Client *curCli) {
+	clients_.erase(curCli->getFd());
 }
 /* ************************************************************************** */
 /*                               EXCEPTIONS                                   */
