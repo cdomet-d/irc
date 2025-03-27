@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 11:38:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 14:09:52 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,10 @@
 #include "Server.hpp"
 
 void partOneChan(Client *sender, Channel &curChan) {
-	static Server &server = Server::GetServerInstance(0, "");
-
 	int targetFd = sender->getFd();
 	curChan.removeCli(ALLCLI, targetFd);
 	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end()) {
 		curChan.removeCli(OPCLI, targetFd);
-	}
-	if (curChan.getCliInChan().empty() == true) {
-		server.removeChan(&curChan);
-		delete &curChan;
 	}
 }
 
@@ -43,5 +37,5 @@ void part(CmdSpec &cmd) {
 										  curChan.getName(), cmd[message_][0]));
 	}
 	partOneChan(sender, curChan);
-	checkOnlyOperator(sender->getFd());
+	checkOnlyOperator(&curChan);
 }

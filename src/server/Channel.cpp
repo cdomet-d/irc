@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 11:38:46 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 14:16:04 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ Channel::~Channel(void) {
 void sendMessageChannel(clientMap allCliChannel, std::string message) {
 	for (clientMapIt it = allCliChannel.begin(); it != allCliChannel.end();
 		 ++it) {
-		reply::send(it->second->getFd(), message);
+		reply::sendReply(it->second->getFd(), message);
 	}
 }
 
@@ -45,18 +45,18 @@ bool Channel::addClientToChan(Channel *curChan, Client *sender) {
 
 	for (clientMapIt itCli = curChan->getCliInChan().begin();
 		 itCli != curChan->getCliInChan().end(); ++itCli) {
-		reply::send(itCli->second->getFd(),
+		reply::sendReply(itCli->second->getFd(),
 					RPL_JOIN(sender->cliInfo.getPrefix(), curChan->getName()));
 	}
 	if (curChan->getTopic().empty() == true)
-		reply::send(sender->getFd(),
+		reply::sendReply(sender->getFd(),
 					RPL_NOTOPIC(sender->cliInfo.getNick(), curChan->getName()));
 	else
-		reply::send(sender->getFd(),
+		reply::sendReply(sender->getFd(),
 					RPL_TOPIC(sender->cliInfo.getNick(), curChan->getName(),
 							  curChan->getTopic()));
 	if (curChan->getOpCli().empty()) {
-		reply::send(sender->getFd(),
+		reply::sendReply(sender->getFd(),
 					RPL_CHANOPE(sender->cliInfo.getNick(), curChan->getName()));
 		curChan->addCli(OPCLI, sender);
 	}

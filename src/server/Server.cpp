@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 11:38:46 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 14:17:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,34 +181,19 @@ bool Server::handleData(int fd) {
 	return (true);
 }
 
-bool checkOnlyOperator(int fd) {
+void checkOnlyOperator(Channel *curChan) {
 	static Server &server = Server::GetServerInstance(0, "");
 
-	clientMap::const_iterator curCli = server.getAllCli().find(fd);
-	for (stringVec::iterator curChanName =
-			 curCli->second->getJoinedChans().begin();
-		 curChanName != curCli->second->getJoinedChans().end(); ++curChanName) {
-		channelMapIt curChan = server.getAllChan().find(*curChanName);
-		if (!curChan->second->getOpCli().size()) {
-			if (curChan->second->getCliInChan().size() >= 1) {
-				curChan->second->addCli(
-					OPCLI, curChan->second->getCliInChan().begin()->second);
-				reply::send(
-					curChan->second->getCliInChan().begin()->second->getFd(),
-					RPL_CHANOPE(curChan->second->getCliInChan()
-									.begin()
-									->second->cliInfo.getNick(),
-								curChan->second->getName()));
-				return (true);
-			}
-			//delete chan if the disconnected cli was the one cli in chan
-			if (curChan->second->getCliInChan().empty() == true) {
-				server.removeChan(curChan->second);
-				delete curChan->second;
-			}
+	if (!curChan->getOpCli().size()) {
+		if (curChan->getCliInChan().size() >= 1) {
+			curChan->addCli(OPCLI, curChan->getCliInChan().begin()->second);
+			reply::sendReply(curChan->getCliInChan().begin()->second->getFd(), RPL_CHANOPE(curChan->getCliInChan().begin()->second->cliInfo.getNick(), curChan->getName()));
 		}
 	}
-	return (false);
+	if (curChan->getCliInChan().empty() == true) {
+		server.removeChan(curChan);
+		delete curChan;
+	}
 }
 
 void Server::addChan(Channel *curChan) {

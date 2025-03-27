@@ -21,14 +21,14 @@ bool syntaxCheck::nick::isValid(const std::string &nick, const CmdSpec &cmd) {
 	std::string::const_iterator start = nick.begin();
 
 	if (!isalpha(*start)) {
-		reply::send(cmd.getSender().getFd(),
+		reply::sendReply(cmd.getSender().getFd(),
 					ERR_ERRONEUSNICKNAME(nick + badFirst + *start));
 		return false;
 	}
 	start += 1;
 	while (start != nick.end()) {
 		if (!syntaxCheck::nick::priv::isValidChar(*start)) {
-			reply::send(cmd.getSender().getFd(),
+			reply::sendReply(cmd.getSender().getFd(),
 						ERR_ERRONEUSNICKNAME(nick + illegal + *start));
 			return false;
 		}
@@ -58,6 +58,6 @@ bool conflictCheck::nick::inUse(const std::string &nick, const nickMap &regCli,
 	nickMap::const_iterator inUse = regCli.find(nick);
 	if (inUse == regCli.end())
 		return false;
-	reply::send(senderFd, ERR_NICKNAMEINUSE(nick));
+	reply::sendReply(senderFd, ERR_NICKNAMEINUSE(nick));
 	return true;
 }

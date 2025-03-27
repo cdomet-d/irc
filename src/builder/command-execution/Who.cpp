@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 11:38:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 14:16:04 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@ bool who(CmdSpec &cmd) {
 
 	//is there enough params
 	if (channel.empty() == true) {
-		reply::send(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->cliInfo.getNick(), command));
+		reply::sendReply(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->cliInfo.getNick(), command));
 		return (false);
 	}
 
 	//does channel exists
 	channelMapIt curChan = server.getAllChan().find(channel);
 	if (curChan == server.getAllChan().end()) {
-		reply::send(curCli->getFd(),
+		reply::sendReply(curCli->getFd(),
 				  ERR_NOSUCHCHANNEL(curCli->cliInfo.getNick(), channel));
 		return (false);
 	}
@@ -43,7 +43,7 @@ bool who(CmdSpec &cmd) {
 	clientMapIt senderIt =
 		curChan->second->getCliInChan().find(curCli->getFd());
 	if (senderIt == curChan->second->getCliInChan().end()) {
-		reply::send(curCli->getFd(),
+		reply::sendReply(curCli->getFd(),
 				  ERR_NOTONCHANNEL(curCli->cliInfo.getNick(), channel));
 		return (false);
 	}
@@ -66,9 +66,9 @@ bool who(CmdSpec &cmd) {
 	}
 
 	// Send the full list
-	reply::send(curCli->getFd(),
+	reply::sendReply(curCli->getFd(),
 			  RPL_NAMREPLY(curCli->cliInfo.getNick(), "=", channel, nickList));
-	reply::send(curCli->getFd(),
+	reply::sendReply(curCli->getFd(),
 			  RPL_ENDOFNAMES(curCli->cliInfo.getNick(), channel)); */
 
 	return (true);

@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:08:25 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 11:38:47 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 13:11:30 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void quit(CmdSpec &cmd);
 //UTILS
 Channel &findCurChan(std::string chanName);
 Channel *createChan(const std::string &chanName);
-bool checkOnlyOperator(int fd);
+void checkOnlyOperator(Channel *curChan);
 void partOneChan(Client *sender, Channel &curChan);
 void partAllChans(Client *sender);
 

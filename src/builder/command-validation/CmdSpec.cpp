@@ -43,14 +43,14 @@ bool CmdSpec::checkRegistrationStage(void) {
 	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
 		valid_ = false;
 		if (name_ == "NICK")
-			reply::send(sender_->getFd(), "Please enter password\r\n");
+			reply::sendReply(sender_->getFd(), "Please enter password\r\n");
 		else if (name_ == "USER") {
 			if (sender_->cliInfo.getRegistration() == 0)
-				reply::send(sender_->getFd(), "Please enter password\r\n");
+				reply::sendReply(sender_->getFd(), "Please enter password\r\n");
 			else
-				reply::send(sender_->getFd(), "Please enter nickname\r\n");
+				reply::sendReply(sender_->getFd(), "Please enter nickname\r\n");
 		} else if (name_ != "PASS")
-			reply::send(sender_->getFd(), ERR_NOTREGISTERED());
+			reply::sendReply(sender_->getFd(), ERR_NOTREGISTERED());
 		return (false);
 	}
 	return (true);
@@ -64,11 +64,11 @@ bool CmdSpec::enoughParams() {
 		CmdParam &innerParam = *params_[i].second;
 		if (!innerParam.getOpt() && !innerParam.getSize()) {
 			if (name_ == "NICK") {
-				reply::send((*sender_).getFd(), ERR_NONICKNAMEGIVEN());
+				reply::sendReply((*sender_).getFd(), ERR_NONICKNAMEGIVEN());
 			} else if (name_ == "PRIVMSG") {
-				reply::send((*sender_).getFd(), ERR_NOTEXTTOSEND());
+				reply::sendReply((*sender_).getFd(), ERR_NOTEXTTOSEND());
 			} else {
-				reply::send(
+				reply::sendReply(
 					(*sender_).getFd(),
 					ERR_NEEDMOREPARAMS(sender_->cliInfo.getNick(), name_));
 			}

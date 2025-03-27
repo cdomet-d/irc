@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 11:38:52 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 14:16:04 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ void mode(CmdSpec &cmd) {
 	std::string newMaxCli = "";
 
 	if (!cmd[flag_].getSize()) {
-		reply::send(sender->getFd(),
+		reply::sendReply(sender->getFd(),
 					RPL_UMODEIS(sender->cliInfo.getNick(), curChan.getModes()));
 		return;
 	}
