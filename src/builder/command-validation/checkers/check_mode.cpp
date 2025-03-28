@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 11:34:24 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 12:59:59 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ bool check::mode_::flagIsValid(e_mdeset &set, e_mdetype &type,
 		type = check::mode_::typeIsValid(flag.at(1));
 	} catch (std::exception &e) { return false; }
 	if (!set || !type) {
-		reply::send(cli.getFd(),
+		reply::send_(cli.getFd(),
 					ERR_UNKNOWNMODE(cli.cliInfo.getNick(),
 									(!set ? flag.at(0) : flag.at(1))));
 		return false;
@@ -91,7 +91,7 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 			i++;
 	}
 	if (cmd[flag_].empty()) {
-		reply::send(
+		reply::send_(
 			cmd.getSender().getFd(),
 			ERR_NEEDMOREPARAMS(cmd.getSender().cliInfo.getNick(), "Mode"));
 		return false;

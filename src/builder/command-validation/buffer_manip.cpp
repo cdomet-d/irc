@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 11:35:10 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 14:01:53 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <sstream>
 
 bool buffer_manip::prepareCommand(Client &sender) {
+	sender.mess.trimSpaces();
 	while (!sender.mess.emptyBuff()) {
 		sender.mess.removeNewlines();
 		if (sender.mess.isCap()) {
@@ -32,16 +33,22 @@ bool buffer_manip::prepareCommand(Client &sender) {
 		sender.mess.setCmdParam(vectorSplit(buffer, ' '));
 		if (sender.mess.getCmd() == "MODE")
 			sender.mess.formatMode();
-		sender.mess.updateMess();
 		CmdManager &manager = CmdManager::getManagerInstance();
 		try {
+			if (sender.mess.getCmd() == "QUIT") {
+				manager.executeCm(
+					manager.findCmd(sender.mess.getCmd()).process(sender));
+				return true;
+			}
 			manager.executeCm(
 				manager.findCmd(sender.mess.getCmd()).process(sender));
+
 		} catch (const CmdManager::CmdNotFoundException &e) {
-			reply::send(sender.getFd(),
-						ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
-										   sender.mess.getCmd()));
+			reply::send_(sender.getFd(),
+						 ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
+											sender.mess.getCmd()));
 		}
+		sender.mess.updateMess();
 	}
 	return true;
 }

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/27 13:07:18 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 12:59:59 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool check::chans_::isOnChan(CmdSpec &cmd) {
 			return (true);
 	}
 	if (cmd.getName() != "JOIN")
-		reply::send(cmd.getSender().getFd(),
+		reply::send_(cmd.getSender().getFd(),
 					ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
 									 cmd[channel_][0]));
 	return (false);
@@ -41,7 +41,7 @@ bool check::chans_::hasChanAuthorisations(CmdSpec &cmd) {
 
 	itCl = chan.getOpCli().find(cmd.getSender().getFd());
 	if (itCl == chan.getOpCli().end()) {
-		reply::send(cmd.getSender().getFd(),
+		reply::send_(cmd.getSender().getFd(),
 					ERR_CHANOPRIVSNEEDED(cmd.getSender().cliInfo.getNick(),
 										 chan.getName()));
 		return (false);

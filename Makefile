@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/28 12:52:17 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/28 13:25:03 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -176,11 +176,11 @@ info:
 run: all
 	./$(NAME) 4444 0
 
-VFLAGS:= --leak-check=full --show-leak-kinds=all
+VFLAGS:= --leak-check=full --show-leak-kinds=all --track-fds=yes
 drun: debug
-	valgrind ./$(DEBUG_NAME) 4444 0
+	valgrind $(VFLAGS) ./$(DEBUG_NAME) 4444 0
 
-# $(VFLAGS)
+
 
 # ----------------------------- FORMAT ------------------------------------------ #
 

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 14:20:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/28 12:56:33 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ void mode(CmdSpec &cmd) {
 	std::string newMaxCli = "";
 
 	if (!cmd[flag_].size()) {
-		reply::send(sender->getFd(),
+		reply::send_(sender->getFd(),
 				  RPL_UMODEIS(sender->cliInfo.getNick(), curChan.getModes()));
 		return;
 	}

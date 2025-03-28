@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 12:51:47 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 13:46:44 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ class Message {
 	void clearMess();
 	void formatMode();
 	void removeNewlines();
+	void trimSpaces();
 	void updateMess();
 
   private:

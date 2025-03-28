@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 11:34:37 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 12:59:59 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool check::nick(CmdSpec &cmd) {
 	if (check::nick_::isUnique(nick, cmd.server_.getUsedNick(),
 							   cmd.getSender().getFd()))
 		return false;
-	reply::send(cmd.getSender().getFd(),
+	reply::send_(cmd.getSender().getFd(),
 				cmd[nickname_][0] + " is valid nickname\n");
 	return true;
 }
@@ -40,14 +40,14 @@ bool check::nick_::syntaxIsValid(const std::string &nick, const CmdSpec &cmd) {
 	std::string::const_iterator start = nick.begin();
 
 	if (!isalpha(*start)) {
-		reply::send(cmd.getSender().getFd(),
+		reply::send_(cmd.getSender().getFd(),
 					ERR_ERRONEUSNICKNAME(nick + badFirst + *start));
 		return false;
 	}
 	start += 1;
 	while (start != nick.end()) {
 		if (!check::nick_::isAllowed(*start)) {
-			reply::send(cmd.getSender().getFd(),
+			reply::send_(cmd.getSender().getFd(),
 						ERR_ERRONEUSNICKNAME(nick + illegal + *start));
 			return false;
 		}
@@ -77,6 +77,6 @@ bool check::nick_::isUnique(const std::string &nick, const nickMap &regCli,
 	nickMap::const_iterator unique = regCli.find(nick);
 	if (unique == regCli.end())
 		return false;
-	reply::send(senderFd, ERR_NICKNAMEINUSE(nick));
+	reply::send_(senderFd, ERR_NICKNAMEINUSE(nick));
 	return true;
 }

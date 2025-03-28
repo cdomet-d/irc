@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 12:52:00 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 13:00:56 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #define ERR_USERNOTINCHANNEL(nickname, channel) (":irc.bitchat.net 441 " + nickname + " " + channel + " :They aren't on that channel\r\n") //TODO : not used
 #define ERR_USERONCHANNEL(nickname, channel) (":irc.bitchat.net 443 " + nickname + " " + channel + " :is already on channel\r\n") //TODO : not used
 #define ERR_CANNOTSENDTOCHAN(nickname, channel) (":irc.bitchat.net 404 " + nickname + " " + channel + " :Cannot send to channel\r\n") //TODO : not used
+
 //input_err_replies
 #define ERR_NORECIPIENT(command) (":irc.bitchat.net 411 :No recipient given (" + command + ")\r\n")
 #define ERR_NOTEXTTOSEND() (":irc.bitchat.net 412 :No text to send\r\n")
@@ -39,6 +40,7 @@
 #define ERR_NEEDMOREPARAMS(nickname, command)(":irc.bitchat.net 461 " + nickname + " " + command + " :Not enough parameters\r\n")
 #define ERR_UNKNOWNMODE(nickname, modechar) (":irc.bitchat.net 472 " + nickname + " " + modechar + " :is unknown mode char to me" + "\r\n") //TODO : not used
 #define ERR_TOOMANYTARGETS(nickname, target) (":irc.bitchat.net 407 " + nickname + " " + target + " :Too many targets\r\n") //TODO : not used
+
 //registration_err_replies
 #define ERR_NICKNAMEINUSE(newNick) (":irc.bitchat.net 433 " + newNick + " :Nickname is already in use\r\n")
 #define ERR_NOTREGISTERED() ":irc.bitchat.net 451 * :You have not registered\r\n"
@@ -53,12 +55,14 @@
 #define RPL_CREATED(date) (":irc.bitchat.net 003 :This server was created " + date + "\r\n") //TODO : not used
 #define RPL_MYINFO(nickname) (":irc.bitchat.net 004 " + nickname + " Bitchat 1.0 o klit klo Bitchat IRC | Modes: o,k,l,i,t | Max nick: 9 chars\r\n") //TODO : not used
 #define RPL_ISUPPORT() ":irc.bitchat.net 005 Nickname CHANMODES=k,l,i,t CHANNELLEN=200 NICKLEN=9 MAXTARGETS=1 TOPICLEN=307 KICKLEN=307 MODES NETWORK=YourNetwork :are supported by this server"
+
 //channel_replies
 #define RPL_CHANNELMODEIS(nickname, channel, modes) (":irc.bitchat.net 324 " + nickname + " " + channel + " :" + modes + "\r\n")
 #define RPL_ENDOFNAMES(nickname, channel) (":irc.bitchat.net 366 " + nickname + " " + channel + " :End of /NAMES list\r\n")
 #define RPL_INVITING(nickname, channel, target) (":irc.bitchat.net 341 " + nickname + " " + channel + " " + target + "\r\n")
 #define RPL_NOTOPIC(nickname, channel) (":irc.bitchat.net 331 " + nickname + " " + channel + " :No topic is set" + "\r\n")
 #define RPL_TOPIC(nickname, channel, topic) (":irc.bitchat.net 332 " + nickname + " " + channel + " " + topic + "\r\n")
+
 //client_replies
 #define RPL_NAMREPLY(nickname, channel_type, channel, nicks) (":irc.bitchat.net 353 " + nickname + " " + channel_type + " " + channel + " :" + nicks + "\r\n")
 #define RPL_UMODEIS(nickname, modes) (":irc.bitchat.net 221 " + nickname + " " + modes + "\r\n")
