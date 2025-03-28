@@ -42,8 +42,10 @@ PASS 0
 NICK bobby
 USER b b b b
 TOPIC #chan
+TOPIC #chan pizza
 JOIN #chan
 TOPIC #chan
+TOPIC #chan lol
 TOPIC #chan,#chan2 lol
 EOF
 
@@ -59,10 +61,12 @@ sleep 0.5
 
 #client2
 #should be able to change it caus mode t was removed
-#TODO: second command should clear the topic
+#TODO: third command should clear the topic
 cat <<EOF >&${client2_in_fd}
 TOPIC #chan lol
+TOPIC #chan
 TOPIC #chan :
+TOPIC #chan
 EOF
 
 sleep 0.5
