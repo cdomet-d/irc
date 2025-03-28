@@ -6,7 +6,7 @@
 /*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 17:58:16 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/28 18:10:12 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ bool check::join(CmdSpec &cmd) {
 }
 
 bool check::join_::assessRequest(Channel chan, CmdSpec &cmd, size_t i) {
-	// if (check::chans_::isOnChan(cmd))
-	// 	return (false);
+	if (findString(cmd.getSender().getJoinedChans(), cmd[channel_][i]))
+		return (false);
 	if (check::join_::chanHasRoom(chan, cmd.getSender()))
 		return (false);
 	if (chan.getModes().find("i") != std::string::npos &&
