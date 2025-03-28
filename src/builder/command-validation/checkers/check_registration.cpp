@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   check_registration.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:45:57 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 12:59:59 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 15:41:06 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
 
 bool check::register_::stageDone(CmdSpec &cmd) {
+	//TODO: can there be only on if else ?
 	if (cmd.getSender().cliInfo.getRegistration() <=
 			cmd.getRegistrationStage() ||
 		cmd.getSender().cliInfo.getRegistration() == 3)
