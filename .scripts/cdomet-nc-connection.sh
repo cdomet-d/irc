@@ -1,7 +1,7 @@
 #!/bin/bash
 
 (
+echo "PASS 0"
 echo "NICK coco"
-echo "USER cdomet"
-echo "JOIN #test"
+echo "USER coco 0 0 :delanight"
 ) | nc 0.0.0.0 80
