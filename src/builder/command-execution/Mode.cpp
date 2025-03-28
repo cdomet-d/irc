@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/31 11:15:43 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/31 15:23:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void executeI(std::string flag, std::string param, Channel &curChan) {
 		curChan.setModes();
 	}
 	if (flag == "-i" && curChan.getInviteOnly() == true) {
+		std::cout << "we here captain" << std::endl;
 		curChan.setInviteOnly(false);
 		curChan.setModes();
 	}

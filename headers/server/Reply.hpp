@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/31 13:53:59 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/31 15:23:21 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,10 @@
 #define PASS_SUCCESS() (":irc.bitchat.net NOTICE : Valid password ! You may register\r\n")
 #define RPL_NICK(nickname) (":irc.bitchat.net NOTICE : The nickname " + nickname + " is valid and saved !\r\n")
 #define RPL_USER(username) (":irc.bitchat.net NOTICE : The Username " + username + " is valid and saved !\r\n")
-#define REG_COMPLETE(nickname) (":irc.bitchat.net NOTICE " + nickname + " : Registration complete! You can join channels and start chatting !\r\n")
-#define RPL_CHANOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " : You are operator of " + channel + "\r\n")
-#define RPL_BYEYBE(nickname) (":irc.bitchat.net " + nickname + " You quit the server, see you next time !\r\n")
+#define REG_COMPLETE(nickname) (":irc.bitchat.net NOTICE " + nickname + " : Registration completed, you can join channels and start chatting !\r\n")
+#define RPL_CHANOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " : You're operator of " + channel + "\r\n")
+#define RPL_CHANOPENOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " : You're no longer operator of " + channel + "\r\n")
+#define RPL_BYEYBE(nickname) (":irc.bitchat.net " + nickname + " You quitted the server, see you next time !\r\n")
 //command_replies (uses prefix)
 #define RPL_INVITE(prefix, target, channel) (":" + prefix + " INVITE " + target + " :" + channel + "\r\n")
 #define RPL_JOIN(prefix, channel) (":" + prefix + " JOIN :" + channel + "\r\n")
