@@ -6,7 +6,7 @@
 /*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 10:30:00 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/28 15:35:39 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,13 @@ void invite(CmdSpec &cmd)
 		}
 	}
 
-	reply::send(sender->getFd(),
-			  RPL_INVITING(targetCli->cliInfo.getNick(), cmd[channel_][0]));
-	reply::send(targetCli->getFd(),
-			  RPL_INVITE(sender->cliInfo.getNick(), targetCli->cliInfo.getNick(), cmd[channel_][0]));
+	reply::send_(sender->getFd(), RPL_INVITING(sender->cliInfo.getNick(),
+												   targetCli->cliInfo.getNick(),
+												   cmd[channel_][0]));
+	reply::send_(targetCli->getFd(),
+					 RPL_INVITE(sender->cliInfo.getPrefix(),
+								targetCli->cliInfo.getNick(),
+								cmd[channel_][0]));
 
 	curChan.addCli(INVITECLI, targetCli);
 }

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/19 15:36:44 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 13:46:44 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,38 @@ class Message {
 
 	/*                               GETTERS                                  */
 	size_t getSize() const;
-	const std::string getBuffer() const;
+	const std::string getMess() const;
+	const std::string getLeft() const;
 	const std::string getCmd() const;
 	const stringVec &getCmdParam();
 
 	/*                               SETTERS                                  */
-	void setBuffer(std::string buffer);
+	void setMess(std::string buffer);
 	void setCmdParam(const stringVec &splitBuffer);
 	void setTrailingParam(const std::string &trail);
 
 	/*                               METHODS                                  */
+	bool emptyBuff();
+	bool hasPrefix(const std::string &cliPrefix);
+	bool hasTrailing();
+	bool isCap();
+	bool lenIsValid(const Client &sender);
+	std::string::size_type evaluateTermination() const;
 	void clearCmdParam();
-	void clearBuffer();
+	void clearMess();
+	void formatMode();
+	void removeNewlines();
+	void trimSpaces();
+	void updateMess();
 
   private:
 	Message(const Message &rhs);
 	Message &operator=(const Message &rhs);
 
 	// members
-	std::string buffer_;
+	std::string message_;
+	std::string leftover_;
+	std::string trailing_;
 	stringVec cmdParam_;
 };
 

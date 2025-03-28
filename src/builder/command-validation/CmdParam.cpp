@@ -75,7 +75,6 @@ const stringVec &CmdParam::getInnerParam(void) const {
 	return (innerParam_);
 }
 
-
 bool CmdParam::getOpt(void) const {
 	return (opt_);
 }

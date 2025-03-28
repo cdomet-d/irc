@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/18 17:01:02 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/28 12:53:11 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,11 @@
 Client::Client(void) {}
 Client::~Client() {}
 
-Client::Client(const Client &rhs)
-{
+Client::Client(const Client &rhs) {
 	static_cast< void >(rhs);
 }
 
-Client &Client::operator=(const Client &rhs)
-{
+Client &Client::operator=(const Client &rhs) {
 	static_cast< void >(rhs);
 	return *this;
 }
@@ -35,18 +33,15 @@ Client &Client::operator=(const Client &rhs)
 /*                               GETTERS                                      */
 /* ************************************************************************** */
 
-int Client::getFd() const
-{
+int Client::getFd() const {
 	return cliFd_;
 }
 
-stringVec &Client::getJoinedChans()
-{
+stringVec &Client::getJoinedChans() {
 	return (joinedChans_);
 }
 
-struct epoll_event *Client::getCliEpoll()
-{
+struct epoll_event *Client::getCliEpoll() {
 	return (&cliEpoll_);
 }
 
@@ -54,13 +49,11 @@ struct epoll_event *Client::getCliEpoll()
 /*                               SETTERS                                      */
 /* ************************************************************************** */
 
-void Client::setFd(int fd)
-{
+void Client::setFd(int fd) {
 	cliFd_ = fd;
 }
 
-void Client::setCliEpoll(struct epoll_event epoll)
-{
+void Client::setCliEpoll(struct epoll_event epoll) {
 	cliEpoll_.events = epoll.events;
 	cliEpoll_.data.fd = epoll.data.fd;
 }

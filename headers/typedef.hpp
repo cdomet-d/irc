@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 13:59:33 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/25 15:49:19 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 12:51:30 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef std::pair< int, Client * > clientPair;
 typedef std::pair< std::string, int > nickPair;
 typedef std::vector< std::string > stringVec;
 
+/* assess the type of the mode flag */
 typedef enum {
 	/* TYPE_ERR: is unknown flag */
 	TYPE_ERR,
@@ -42,30 +43,25 @@ typedef enum {
 	D
 } e_mdetype;
 
+/* assess whether the mode is being set '+' or unset '-' */
 typedef enum {
-	SET_ERR, 
-	SET, 
+	SET_ERR,
+	SET,
 	UNSET,
 } e_mdeset;
 
 // -------------------------------- IRC UTILS ------------------------------- //
 
 #define MAX_EVENTS 100
+#define MAX_CHAN_PER_CLI 50
 
 // -------------------------------- DEBUG ----------------------------------- //
 
 #define BLACK "\033[30m"
 #define RED "\033[31m"
 #define GREEN "\033[32m"
-#define YELLOW "\033[33m"
-#define BLUE "\033[34m"
-#define MAGENTA "\033[35m"
-#define CYAN "\033[36m"
-#define WHITE "\033[37m"
-#define BG_BLACK "\033[40m"
-#define BG_RED "\033[41m"
-#define BG_GREEN "\033[42m"
-#define BG_YELLOW "\033[43m"
+#define YELLOW "\033[33m"Oui vas-y si ca te deranges pas, vraiment mb
+
 #define BG_BLUE "\033[44m"
 #define BG_MAGENTA "\033[45m"
 #define BG_CYAN "\033[46m"
