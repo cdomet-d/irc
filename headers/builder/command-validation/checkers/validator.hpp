@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validator.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:30 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 18:06:46 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/28 18:25:15 by csweetin        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ namespace check {
 		std::string trim(const std::string &nick);
 		bool isAllowed(const char &c);
 		bool isSpecial(const char &c);
-		bool syntaxIsValid(const std::string &nick, const CmdSpec &cmd);
+		bool syntaxIsValid(const std::string &nick, const int &senderFd);
 	} // namespace nick_
 
 	namespace join_ {
