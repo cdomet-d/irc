@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 11:36:22 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 12:54:25 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,51 +34,47 @@ Channel::~Channel(void) {
 void sendMessageChannel(clientMap allCliChannel, std::string message) {
 	for (clientMapIt it = allCliChannel.begin(); it != allCliChannel.end();
 		 ++it) {
-		reply::send(it->second->getFd(), message);
+		reply::send_(it->second->getFd(), message);
 	}
 }
 
-bool Channel::addClientToChan(Channel *curChan, Client *curCli) {
+bool Channel::addClientToChan(Channel *curChan, Client *sender) {
+	curChan->addCli(ALLCLI, sender);
 
-	// reply::log(reply::DEBUG, "-----addClientToChan-----");
-
-	std::map< int, Client * > clients = curChan->getCliInChan();
-	for (clientMapIt it = clients.begin(); it != clients.end(); ++it)
-		if (curCli == it->second) {
-			// reply::INFO, "Client already in channel");
-			return (false);
-		}
-	if (curChan->getCliInChan().empty())
-		curChan->addCli(OPCLI, curCli);
-	curChan->addCli(ALLCLI, curCli);
-
-	curCli->getJoinedChans().push_back(curChan->getName());
+	sender->getJoinedChans().push_back(curChan->getName());
 
 	for (clientMapIt itCli = curChan->getCliInChan().begin();
 		 itCli != curChan->getCliInChan().end(); ++itCli) {
-		reply::send(itCli->second->getFd(),
-					RPL_JOIN(curCli->cliInfo.getNick(), curChan->getName()));
+		reply::send_(
+			itCli->second->getFd(),
+			RPL_JOIN(sender->cliInfo.getPrefix(), curChan->getName()));
 	}
 	if (curChan->getTopic().empty() == true)
-		reply::send(curCli->getFd(),
-					RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan->getName()));
+		reply::send_(sender->getFd(), RPL_NOTOPIC(sender->cliInfo.getNick(),
+													  curChan->getName()));
 	else
-		reply::send(curCli->getFd(),
-					RPL_TOPIC(curCli->cliInfo.getNick(), curChan->getName(),
-							  curChan->getTopic()));
+		reply::send_(sender->getFd(),
+						 RPL_TOPIC(sender->cliInfo.getNick(),
+								   curChan->getName(), curChan->getTopic()));
+	if (curChan->getOpCli().empty()) {
+		reply::send_(sender->getFd(), RPL_CHANOPE(sender->cliInfo.getNick(),
+													  curChan->getName()));
+		curChan->addCli(OPCLI, sender);
+	}
+
 	return (true);
 }
 
-void Channel::addCli(mapChan curMap, Client *curCli) {
+void Channel::addCli(mapChan curMap, Client *sender) {
 	switch (curMap) {
 	case ALLCLI:
-		cliInChan_.insert(clientPair(curCli->getFd(), curCli));
+		cliInChan_.insert(clientPair(sender->getFd(), sender));
 		break;
 	case OPCLI:
-		cliIsOperator_.insert(clientPair(curCli->getFd(), curCli));
+		cliIsOperator_.insert(clientPair(sender->getFd(), sender));
 		break;
 	case INVITECLI:
-		cliInvited_.insert(clientPair(curCli->getFd(), curCli));
+		cliInvited_.insert(clientPair(sender->getFd(), sender));
 	}
 }
 

@@ -6,11 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 11:36:35 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 12:55:33 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "CmdExecution.hpp"
+#include "Reply.hpp"
 #include "printers.hpp"
 #include <cerrno>
 #include <sstream>
@@ -118,11 +120,10 @@ void Server::acceptClient() {
 		char hostname[NI_MAXHOST];
 		int result = getnameinfo((struct sockaddr *)&newCli->cliAddr_, cliLen,
 								 hostname, NI_MAXHOST, NULL, 0, 0);
-		if (result == 0) {
+		if (result == 0)
 			newCli->cliInfo.setHostname(hostname);
-		} else {
+		else
 			newCli->cliInfo.setHostname(client_ip); // Use IP as fallback
-		}
 
 		//TODO: not throw an exeption when a client cannot connect: it can't kill the server.
 		if (fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK) == -1) {
@@ -130,7 +131,6 @@ void Server::acceptClient() {
 			throw Server::InitFailed(
 				const_cast< const char * >(strerror(errno)));
 		}
-
 		cliEpollTemp.events = EPOLLIN | EPOLLOUT;
 		cliEpollTemp.data.fd = newCli->getFd();
 		newCli->setCliEpoll(cliEpollTemp);
@@ -145,7 +145,8 @@ void Server::acceptClient() {
 		clients_.insert(clientPair(newCli->getFd(), newCli));
 		usedNicks_.insert(nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
 		std::stringstream ss;
-		ss << "Client [" << newCli->getFd() << "] connected";
+		ss << "Client [" << newCli->getFd() << "] connected\n";
+		reply::log(reply::INFO, ss.str());
 	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
 }
 
@@ -156,10 +157,12 @@ bool Server::handleData(int fd) {
 
 	Client *curCli = clients_.find(fd)->second;
 	//TODO: handle -1 differently
-	if (bytes == 0)
-		return (disconnectCli(fd));
-	else if (bytes == -1 && (errno == EAGAIN || errno == EWOULDBLOCK))
-		return true;
+	if (bytes == 0) {
+		curCli->mess.setBuffer("QUIT");
+		formatMess::assess(*curCli);
+		return (true);
+	} else if (bytes == -1)
+		return (true);
 	else if (bytes == -1)
 		perror("HandleData:");
 	else {
@@ -168,50 +171,34 @@ bool Server::handleData(int fd) {
 		std::cout << inputCli << std::endl;
 		curCli->mess.setMess(inputCli);
 		if (curCli->mess.getMess().find('\n') != std::string::npos) {
+			std::string temp = curCli->mess.getMess();
 			buffer_manip::prepareCommand(*curCli);
-			curCli->mess.clearMess();
-			curCli->mess.clearCmdParam();
+			if (strncmp(temp.c_str(), "QUIT", 4)) {
+				curCli->mess.clearMess();
+				curCli->mess.clearCmdParam();
+			}
 		}
 	}
 	return (true);
 }
 
-bool checkOnlyOperator(int fd) {
+void checkOnlyOperator(Channel *curChan) {
 	static Server &server = Server::GetServerInstance(0, "");
 
-	clientMap::const_iterator curCli = server.getAllCli().find(fd);
-	for (stringVec::iterator curChanName =
-			 curCli->second->getJoinedChans().begin();
-		 curChanName != curCli->second->getJoinedChans().end(); ++curChanName) {
-		channelMapIt curChan = server.getAllChan().find(*curChanName);
-		if (!curChan->second->getOpCli().size()) {
-			if (curChan->second->getCliInChan().size() >= 1) {
-				curChan->second->addCli(
-					OPCLI, curChan->second->getCliInChan().begin()->second);
-				return (true);
-			}
-			//delete chan if the disconnected cli was the one cli in chan
-			if (curChan->second->getCliInChan().empty() == true) {
-				server.removeChan(curChan->second);
-				delete curChan->second;
-			}
+	if (!curChan->getOpCli().size()) {
+		if (curChan->getCliInChan().size() >= 1) {
+			curChan->addCli(OPCLI, curChan->getCliInChan().begin()->second);
+			reply::send_(
+				curChan->getCliInChan().begin()->second->getFd(),
+				RPL_CHANOPE(
+					curChan->getCliInChan().begin()->second->cliInfo.getNick(),
+					curChan->getName()));
 		}
 	}
-	return (false);
-}
-
-bool Server::disconnectCli(int fd) {
-	std::cout << "DisconnectCli" << std::endl;
-	clientMapIt it = clients_.find(fd);
-	if (it != clients_.end()) {
-		epoll_ctl(epollFd_, EPOLL_CTL_DEL, fd, it->second->getCliEpoll());
-		reply::log(reply::INFO, "Client was disconnected");
-		delete it->second;
-		clients_.erase(fd);
-		close(fd);
-		return true;
+	if (curChan->getCliInChan().empty() == true) {
+		server.removeChan(curChan);
+		delete curChan;
 	}
-	return false;
 }
 
 void Server::addChan(Channel *curChan) {
@@ -221,6 +208,9 @@ void Server::addChan(Channel *curChan) {
 
 void Server::removeChan(Channel *curChan) {
 	channels_.erase(curChan->getName());
+}
+void Server::removeCli(Client *curCli) {
+	clients_.erase(curCli->getFd());
 }
 /* ************************************************************************** */
 /*                               EXCEPTIONS                                   */

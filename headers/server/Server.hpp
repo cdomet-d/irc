@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 11:33:00 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 12:52:10 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,10 @@
 #include "Channel.hpp"
 #include "typedef.hpp"
 #include <arpa/inet.h>
-#include <cstring>
 #include <fstream>
 #include <netinet/in.h>
-#include <poll.h>
 #include <sys/epoll.h>
 #include <sys/socket.h>
-#include <unistd.h>
 
 extern int gSign;
 
@@ -54,7 +51,7 @@ class Server {
 	void acceptClient();
 	void addChan(Channel *curChan);
 	void removeChan(Channel *curChan);
-	bool disconnectCli(int fd);
+	void removeCli(Client *curCli);
 
 	/*                               GETTERS                                  */
 	const nickMap &getUsedNick() const;

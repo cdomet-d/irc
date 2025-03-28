@@ -1,22 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Pass.cpp                                           :+:      :+:    :+:   */
+/*   JoinRequestCheck.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 09:04:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 09:04:23 by aljulien         ###   ########.fr       */
+/*   Created: 2025/03/19 17:50:33 by csweetin          #+#    #+#             */
+/*   Updated: 2025/03/27 14:20:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "CmdExecution.hpp"
-#include "CmdSpec.hpp"
-#include "Reply.hpp"
-#include "Server.hpp"
+#ifndef JOINREQUESTCHECK_HPP
+#define JOINREQUESTCHECK_HPP
 
-void pass(CmdSpec &cmd) {
-	Client *sender = &cmd.getSender();
-	reply::send_(sender->getFd(), PASS_SUCCESS());
-	sender->cliInfo.setRegistration(1);
-}
+#include "CmdSpec.hpp"
+
+namespace joinCheck {
+	bool reachedChanLimit(Channel &chan, Client &sender);
+	bool hasInvite(Channel &chan, Client &sender);
+	bool validKey(Channel &chan, CmdParam &keys, size_t i, Client &sender);
+	bool reachedCliChanLimit(Channel &chan, Client &sender);
+}; // namespace joinCheck
+
+#endif
