@@ -96,7 +96,7 @@ void CmdManager::generateCmds() {
 	log(CmdSpec::CmdBuilder()
 			.Name("KICK")
 			.Registration(3)
-			.addParam(channel_, new CmdParam()) //add list
+			.addParam(channel_, new CmdParam())
 			.addParam(target_, new CmdParam(false, ','))
 			.addParam(message_, new CmdParam(true, '\0'))
 			.addChecker(validChan)
