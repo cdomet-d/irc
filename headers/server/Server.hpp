@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 12:52:10 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 16:15:00 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ class Server {
 	bool servRun();
 	void acceptClient();
 	void addChan(Channel *curChan);
+	void addNickToUsedNicks(const std::string &newNick, int fd);
+	void removeNickFromUsedNicks(const std::string &toRemove);
 	void removeChan(Channel *curChan);
 	void removeCli(Client *curCli);
 
@@ -60,6 +62,7 @@ class Server {
 
 	/*                               MEMBERS                                  */
 	std::ofstream logfile;
+
 
 	const clientMap &getAllCli() const;
 	const channelMap &getAllChan() const;
