@@ -6,33 +6,25 @@
 /*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 17:43:35 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/28 18:06:03 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
-
-bool findString(stringVec array, std::string& strToFind) {
-	for (size_t i = 0; i < array.size(); i++) {
-		if (array[i] == strToFind)
-			return (true);
-	}
-	return (false);
-}
 
 bool check::chans_::isOnChan(CmdSpec &cmd) {
 	stringVec joinedChans = cmd.getSender().getJoinedChans();
 
 	size_t i = 0;
 	while (i < cmd[channel_].size()) {
-		if (findString(joinedChans, cmd[channel_][i]))
-			i++;
-		else {
+		if (!findString(joinedChans, cmd[channel_][i])) {
 			reply::send_(cmd.getSender().getFd(),
 						 ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
 										  cmd[channel_][i]));
 			cmd[channel_].rmParam(i);
+			continue;
 		}
+		i++;
 	}
 	if (!cmd[channel_].size())
 		return (false);

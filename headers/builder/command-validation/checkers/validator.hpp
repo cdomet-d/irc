@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validator.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:30 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/27 13:24:39 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 18:06:46 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,7 @@ namespace check {
 		bool pwMatch(CmdSpec &cmd);
 	} // namespace register_
 } // namespace check
+
+bool findString(stringVec array, std::string &strToFind);
 
 #endif
