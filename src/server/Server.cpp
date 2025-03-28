@@ -6,7 +6,7 @@
 /*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 15:24:58 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/28 18:45:28 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,8 +209,21 @@ void Server::removeChan(Channel *curChan) {
 	channels_.erase(curChan->getName());
 }
 void Server::removeCli(Client *curCli) {
+	removeNickFromUsedNicks(curCli->cliInfo.getNick());
 	clients_.erase(curCli->getFd());
 }
+
+void Server::addNickToUsedNicks(const std::string &newNick, int fd) {
+	usedNicks_.insert(nickPair(newNick, fd));
+}
+
+void Server::removeNickFromUsedNicks(const std::string &toRemove) {
+	nickMap::iterator nickToRm = usedNicks_.find(toRemove);
+	if (nickToRm == usedNicks_.end())
+		return;
+	usedNicks_.erase(nickToRm);
+}
+
 /* ************************************************************************** */
 /*                               EXCEPTIONS                                   */
 /* ************************************************************************** */

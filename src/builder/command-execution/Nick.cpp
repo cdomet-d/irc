@@ -6,7 +6,7 @@
 /*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:20:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 15:35:20 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/28 18:45:23 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,14 @@
 
 void nick(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
+	
 	if (sender->cliInfo.getNick().empty() == true)
 		sender->cliInfo.setRegistration(2);
+	if (!sender->cliInfo.getNick().empty())
+		cmd.server_.removeNickFromUsedNicks(sender->cliInfo.getNick());
 	sender->cliInfo.setNick(cmd[nickname_][0]);
 	sender->cliInfo.setPrefix();
+	cmd.server_.addNickToUsedNicks(cmd[nickname_][0], sender->getFd());
 	reply::send_(cmd.getSender().getFd(),
 					 RPL_NICK(sender->cliInfo.getNick()));
 	// Client &sender = cmd.getSender();
