@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/25 13:33:47 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/27 14:20:06 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,10 @@
 #include "formatMess.hpp"
 #include "typedef.hpp"
 #include <arpa/inet.h>
-#include <cstring>
 #include <fstream>
 #include <netinet/in.h>
-#include <poll.h>
 #include <sys/epoll.h>
 #include <sys/socket.h>
-#include <unistd.h>
 
 extern int gSign;
 
@@ -55,7 +52,6 @@ class Server {
 	void addChan(Channel *curChan);
 	void removeChan(Channel *curChan);
 	void removeCli(Client *curCli);
-	bool disconnectCli(int fd);
 
 	/*                               GETTERS                                  */
 	const nickMap &getUsedNick() const;
@@ -64,7 +60,7 @@ class Server {
 
 	/*                               MEMBERS                                  */
 	std::ofstream logfile;
-	
+
 	const clientMap &getAllCli() const;
 	const channelMap &getAllChan() const;
 

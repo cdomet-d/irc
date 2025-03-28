@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 09:11:38 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 09:04:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "CmdExecution.hpp"
+#include "Reply.hpp"
 #include "printers.hpp"
 #include <cerrno>
 #include <sstream>
@@ -71,7 +73,7 @@ bool Server::servInit() {
 	if (listen(servFd_, SOMAXCONN) == -1)
 		return (false);
 	servPoll_.data.fd = servFd_;
-	servPoll_.events = POLLIN;
+	servPoll_.events = EPOLLIN | EPOLLOUT;
 	if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, servFd_, &servPoll_) == -1)
 		return 0;
 	return (true);
@@ -118,18 +120,18 @@ void Server::acceptClient() {
 		char hostname[NI_MAXHOST];
 		int result = getnameinfo((struct sockaddr *)&newCli->cliAddr_, cliLen,
 								 hostname, NI_MAXHOST, NULL, 0, 0);
-		if (result == 0) {
+		if (result == 0)
 			newCli->cliInfo.setHostname(hostname);
-		} else {
+		else
 			newCli->cliInfo.setHostname(client_ip); // Use IP as fallback
-		}
+
 		//TODO: not throw an exeption when a client cannot connect: it can't kill the server.
 		if (fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK) == -1) {
 			close(newCli->getFd());
 			throw Server::InitFailed(
 				const_cast< const char * >(strerror(errno)));
 		}
-		cliEpollTemp.events = EPOLLIN;
+		cliEpollTemp.events = EPOLLIN | EPOLLOUT;
 		cliEpollTemp.data.fd = newCli->getFd();
 		newCli->setCliEpoll(cliEpollTemp);
 
@@ -143,23 +145,24 @@ void Server::acceptClient() {
 		clients_.insert(clientPair(newCli->getFd(), newCli));
 		usedNicks_.insert(nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
 		std::stringstream ss;
-		ss << "Client [" << newCli->getFd() << "] connected";
+		ss << "Client [" << newCli->getFd() << "] connected\n";
+		reply::log(reply::INFO, ss.str());
 	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
 }
 
 bool Server::handleData(int fd) {
 	char tmpBuf[1024];
 	memset(tmpBuf, 0, sizeof(tmpBuf));
-	// std::cout << "In handle data" << std::endl;
 	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, MSG_DONTWAIT);
 
-	// std::cout << bytes << std::endl;
 	Client *curCli = clients_.find(fd)->second;
 	//TODO: handle -1 differently
-	if (bytes == 0)
-		return (false);
-	else if (bytes == -1 && (errno == EAGAIN || errno == EWOULDBLOCK))
-		return true;
+	if (bytes == 0) {
+		curCli->mess.setBuffer("QUIT");
+		formatMess::assess(*curCli);
+		return (true);
+	} else if (bytes == -1)
+		return (true);
 	else if (bytes == -1)
 		perror("HandleData:");
 	else {
@@ -169,7 +172,7 @@ bool Server::handleData(int fd) {
 		if (curCli->mess.getBuffer().find('\n') != std::string::npos) {
 			std::string temp = curCli->mess.getBuffer();
 			formatMess::assess(*curCli);
-			if (temp.find("QUIT") == std::string::npos) {
+			if (strncmp(temp.c_str(), "QUIT", 4)) {
 				curCli->mess.clearBuffer();
 				curCli->mess.clearCmdParam();
 			}
@@ -178,46 +181,28 @@ bool Server::handleData(int fd) {
 	return (true);
 }
 
-bool Server::disconnectCli(int fd) {
-	clientMapIt it = clients_.find(fd);
-	if (it != clients_.end()) {
-		std::stringstream ss;
-		ss << "Client [" << it->second->getFd() << "] deconnected";
-		reply::log(reply::INFO, ss.str());
-		delete it->second;
-		clients_.erase(fd);
-		close(fd);
-		return true;
-	}
-	return false;
-}
-
-bool checkOnlyOperator(int fd) {
+void checkOnlyOperator(Channel *curChan) {
 	static Server &server = Server::GetServerInstance(0, "");
 
-	clientMap::const_iterator curCli = server.getAllCli().find(fd);
-	for (stringVec::iterator curChanName =
-			 curCli->second->getJoinedChans().begin();
-		 curChanName != curCli->second->getJoinedChans().end();
-		 ++curChanName) {
-		channelMapIt curChan = server.getAllChan().find(*curChanName);
-		if (!curChan->second->getOpCli().size()) {
-			if (curChan->second->getCliInChan().size() >= 1) {
-				curChan->second->addCli(OPCLI, curChan->second->getCliInChan().begin()->second);
-				return (true);
-			}
-			//delete chan if the disconnected cli was the one cli in chan
-			if (curChan->second->getCliInChan().empty() == true) {
-				server.removeChan(curChan->second);
-				delete curChan->second;
-			}
+	if (!curChan->getOpCli().size()) {
+		if (curChan->getCliInChan().size() >= 1) {
+			curChan->addCli(OPCLI, curChan->getCliInChan().begin()->second);
+			reply::send_(
+				curChan->getCliInChan().begin()->second->getFd(),
+				RPL_CHANOPE(
+					curChan->getCliInChan().begin()->second->cliInfo.getNick(),
+					curChan->getName()));
 		}
 	}
-	return (false);
+	if (curChan->getCliInChan().empty() == true) {
+		server.removeChan(curChan);
+		delete curChan;
+	}
 }
 
 void Server::addChan(Channel *curChan) {
-	channels_.insert(std::pair<std::string, Channel *>(curChan->getName(), curChan));
+	channels_.insert(
+		std::pair< std::string, Channel * >(curChan->getName(), curChan));
 }
 
 void Server::removeChan(Channel *curChan) {
@@ -241,12 +226,10 @@ Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
 /*                               GETTERS                                      */
 /* ************************************************************************** */
 
-const clientMap &Server::getAllCli() const
-{
+const clientMap &Server::getAllCli() const {
 	return (clients_);
 }
-const channelMap &Server::getAllChan() const
-{
+const channelMap &Server::getAllChan() const {
 	return (channels_);
 }
 

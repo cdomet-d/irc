@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   JoinRequestCheck.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 17:50:33 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/19 18:36:19 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/03/27 14:20:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef JOINREQUESTCHECK_HPP
-# define JOINREQUESTCHECK_HPP
+#define JOINREQUESTCHECK_HPP
 
-# include "CmdSpec.hpp"
+#include "CmdSpec.hpp"
 
 namespace joinCheck {
 	bool reachedChanLimit(Channel &chan, Client &sender);
 	bool hasInvite(Channel &chan, Client &sender);
 	bool validKey(Channel &chan, CmdParam &keys, size_t i, Client &sender);
 	bool reachedCliChanLimit(Channel &chan, Client &sender);
-};
+}; // namespace joinCheck
 
 #endif
