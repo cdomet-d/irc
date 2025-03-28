@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:37:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 14:20:08 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/28 09:04:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static std::string timeStamp() {
 	return (time_buf);
 }
 
-void reply::sendReply(int fd, std::string reply) {
+void reply::send_(int fd, std::string reply) {
 	reply::log(reply::REPLY, reply);
 	size_t bytes = send(fd, reply.c_str(), strlen(reply.c_str()),
 						MSG_EOR | MSG_DONTWAIT | MSG_NOSIGNAL);

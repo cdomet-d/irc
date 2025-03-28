@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 14:20:08 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/28 09:04:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,7 @@ void checkOnlyOperator(Channel *curChan) {
 	if (!curChan->getOpCli().size()) {
 		if (curChan->getCliInChan().size() >= 1) {
 			curChan->addCli(OPCLI, curChan->getCliInChan().begin()->second);
-			reply::sendReply(
+			reply::send_(
 				curChan->getCliInChan().begin()->second->getFd(),
 				RPL_CHANOPE(
 					curChan->getCliInChan().begin()->second->cliInfo.getNick(),

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 14:20:13 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/28 09:04:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 
 void checkTopic(Channel &curChan, Client *curCli) {
 	if (curChan.getTopic().empty() == true) {
-		reply::sendReply(curCli->getFd(), RPL_NOTOPIC(curCli->cliInfo.getNick(),
+		reply::send_(curCli->getFd(), RPL_NOTOPIC(curCli->cliInfo.getNick(),
 													  curChan.getName()));
 		return;
 	}
-	reply::sendReply(curCli->getFd(),
+	reply::send_(curCli->getFd(),
 					 RPL_TOPIC(curCli->cliInfo.getNick(), curChan.getName(),
 							   curChan.getTopic()));
 	return;

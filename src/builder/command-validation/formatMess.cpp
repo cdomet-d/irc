@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/27 14:20:11 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/28 09:04:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ bool formatMess::assess(Client &sender) {
 			manager.executeCm(
 				manager.findCmd(sender.mess.getCmd()).process(sender));
 		} catch (const CmdManager::CmdNotFoundException &e) {
-			reply::sendReply(sender.getFd(),
+			reply::send_(sender.getFd(),
 							 ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
 												sender.mess.getCmd()));
 		}
@@ -130,7 +130,7 @@ bool formatMess::priv::lenIsValid(const std::string &mess,
 	if (mess.empty())
 		return false;
 	if (mess.size() > 512) {
-		reply::sendReply(sender.getFd(),
+		reply::send_(sender.getFd(),
 						 ERR_INPUTTOOLONG(sender.cliInfo.getNick()));
 		return false;
 	}

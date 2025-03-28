@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 14:20:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/28 09:04:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void privmsg(CmdSpec &cmd) {
 		for (clientMapIt itTarget = server.getAllCli().begin();
 			 itTarget != server.getAllCli().end(); ++itTarget) {
 			if (itTarget->second->cliInfo.getNick() == cmd[target_][0]) {
-				reply::sendReply(
+				reply::send_(
 					itTarget->first,
 					RPL_PRIVMSG(sender->cliInfo.getPrefix(),
 								itTarget->second->cliInfo.getNick(),
@@ -36,7 +36,7 @@ void privmsg(CmdSpec &cmd) {
 	for (clientMapIt itCli = curChan.getCliInChan().begin();
 		 itCli != curChan.getCliInChan().end(); ++itCli) {
 		if (itCli->first != sender->getFd())
-			reply::sendReply(itCli->second->getFd(),
+			reply::send_(itCli->second->getFd(),
 							 RPL_PRIVMSG(sender->cliInfo.getPrefix(),
 										 curChan.getName(), cmd[message_][0]));
 	}

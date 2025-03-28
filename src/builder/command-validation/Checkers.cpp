@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/27 15:59:26 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/28 09:04:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,20 +23,20 @@ bool RegStageDone(CmdSpec &cmd) {
 		return (true);
 	if (cmd.getName() == "PASS") {
 		if (cmd.getSender().cliInfo.getRegistration() == 1)
-			reply::sendReply(cmd.getSender().getFd(),
+			reply::send_(cmd.getSender().getFd(),
 							 "Please enter nickname\r\n");
 		else
-			reply::sendReply(cmd.getSender().getFd(),
+			reply::send_(cmd.getSender().getFd(),
 							 "Please enter username\r\n");
 	}
 	if (cmd.getName() == "NICK")
-		reply::sendReply(cmd.getSender().getFd(), "Please enter username\r\n");
+		reply::send_(cmd.getSender().getFd(), "Please enter username\r\n");
 	return (false);
 }
 
 bool pwMatch(CmdSpec &cmd) {
 	if (cmd[password_][0] != cmd.server_.getPass()) {
-		reply::sendReply(cmd.getSender().getFd(),
+		reply::send_(cmd.getSender().getFd(),
 						 ERR_PASSWDMISMATCH(cmd.getSender().cliInfo.getNick()));
 		return (false);
 	}
@@ -45,7 +45,7 @@ bool pwMatch(CmdSpec &cmd) {
 
 bool isRegistered(CmdSpec &cmd) {
 	if (cmd.getSender().cliInfo.getRegistration() == 3) {
-		reply::sendReply(
+		reply::send_(
 			cmd.getSender().getFd(),
 			ERR_ALREADYREGISTRED(cmd.getSender().cliInfo.getNick()));
 		return (false);
@@ -128,7 +128,7 @@ bool onChan(CmdSpec &cmd) {
 			return (true);
 	}
 	if (cmd.getName() != "JOIN")
-		reply::sendReply(cmd.getSender().getFd(),
+		reply::send_(cmd.getSender().getFd(),
 						 ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
 										  cmd[channel_][0]));
 	return (false);
@@ -150,7 +150,7 @@ bool hasChanPriv(CmdSpec &cmd) {
 
 	itCl = chan.getOpCli().find(cmd.getSender().getFd());
 	if (itCl == chan.getOpCli().end()) {
-		reply::sendReply(cmd.getSender().getFd(),
+		reply::send_(cmd.getSender().getFd(),
 						 ERR_CHANOPRIVSNEEDED(cmd.getSender().cliInfo.getNick(),
 											  chan.getName()));
 		return (false);

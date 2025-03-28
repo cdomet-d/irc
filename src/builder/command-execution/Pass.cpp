@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 09:04:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 14:20:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/28 09:04:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,6 @@
 
 void pass(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
-	reply::sendReply(sender->getFd(), PASS_SUCCESS());
+	reply::send_(sender->getFd(), PASS_SUCCESS());
 	sender->cliInfo.setRegistration(1);
 }
