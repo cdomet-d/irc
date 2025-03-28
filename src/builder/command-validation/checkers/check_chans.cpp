@@ -3,26 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   check_chans.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 12:59:59 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 18:06:03 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
 
 bool check::chans_::isOnChan(CmdSpec &cmd) {
-	const stringVec &joinedChans = cmd.getSender().getJoinedChans();
-	for (size_t i = 0; i < joinedChans.size(); i++) {
-		if (joinedChans[i] == cmd[channel_][0])
-			return (true);
+	stringVec joinedChans = cmd.getSender().getJoinedChans();
+
+	size_t i = 0;
+	while (i < cmd[channel_].size()) {
+		if (!findString(joinedChans, cmd[channel_][i])) {
+			reply::send_(cmd.getSender().getFd(),
+						 ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
+										  cmd[channel_][i]));
+			cmd[channel_].rmParam(i);
+			continue;
+		}
+		i++;
 	}
-	if (cmd.getName() != "JOIN")
-		reply::send_(cmd.getSender().getFd(),
-					ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
-									 cmd[channel_][0]));
-	return (false);
+	if (!cmd[channel_].size())
+		return (false);
+	return (true);
 }
 
 bool check::chans_::hasChanAuthorisations(CmdSpec &cmd) {
@@ -42,8 +48,8 @@ bool check::chans_::hasChanAuthorisations(CmdSpec &cmd) {
 	itCl = chan.getOpCli().find(cmd.getSender().getFd());
 	if (itCl == chan.getOpCli().end()) {
 		reply::send_(cmd.getSender().getFd(),
-					ERR_CHANOPRIVSNEEDED(cmd.getSender().cliInfo.getNick(),
-										 chan.getName()));
+					 ERR_CHANOPRIVSNEEDED(cmd.getSender().cliInfo.getNick(),
+										  chan.getName()));
 		return (false);
 	}
 	return (true);

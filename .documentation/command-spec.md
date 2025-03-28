@@ -585,8 +585,8 @@ command issuer client object
 -- checkers --
 validMess() -> check : \
                 (1) - if there is a text to be sent, if not display ERR_NOTEXTTOSEND \
-                (2) - if there is a target, if not display ERR_NORECIPIENT
-                (3) - validTarget() -> check if nickname exists, if not display     ERR_NOSUCHNICK. si le target est un channel appeler isOnChan pour verifier si le client est dans le channel
+                (2) - if there is a target, if not display ERR_NORECIPIENT \
+                (3) - validTarget() -> check if nickname exists, if not display     ERR_NOSUCHNICK. si le target est un channel appeler validChan() et isOnChan() pour verifier si le client est dans le channel
 
 if target is a channel : \
     - check channel modes because they can affect the message \ (we don't have modes that can affect a message)

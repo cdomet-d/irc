@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 12:54:25 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 16:00:55 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 /* ************************************************************************** */
 
 Channel::Channel(std::string name)
-	: inviteOnly_(true), isPassMatch_(false), topicRestrict_(true), maxCli_(-1),
+	: inviteOnly_(false), isPassMatch_(false), topicRestrict_(true), maxCli_(-1),
 	  name_(name), topic_("") {
 	setModes();
 }

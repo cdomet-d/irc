@@ -57,12 +57,9 @@ bool CmdSpec::checkRegistrationStage(void) {
 }
 
 bool CmdSpec::enoughParams() {
-	if (name_ == "INVITE" && !(*this)[target_].size() &&
-		!(*this)[channel_].size())
-		return (true);
 	for (size_t i = 0; i < params_.size(); i++) {
 		CmdParam &innerParam = *params_[i].second;
-		if (!innerParam.getOpt() && !innerParam.size()) {
+		if (!innerParam.isOpt() && !innerParam.size()) {
 			if (name_ == "NICK") {
 				reply::send_((*sender_).getFd(), ERR_NONICKNAMEGIVEN());
 			} else if (name_ == "PRIVMSG") {
@@ -90,10 +87,10 @@ void CmdSpec::setParam(void) {
 void CmdSpec::hasParamList(void) {
 	for (size_t i = 0; i < params_.size(); i++) {
 		CmdParam &innerParam = *params_[i].second;
-		if (innerParam.getDelim()) {
+		if (innerParam.isList()) {
 			try {
-				innerParam.setParamList(buffer_manip::vectorSplit(
-					innerParam[0], innerParam.getDelim()));
+				innerParam.setParamList(
+					buffer_manip::vectorSplit(innerParam[0], ','));
 			} catch (const std::out_of_range &e) {};
 		}
 	}
@@ -105,6 +102,9 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	if (!checkRegistrationStage())
 		return (*this);
 	setParam();
+	if (name_ == "INVITE" && !(*this)[target_].size() &&
+		!(*this)[channel_].size())
+		return (*this);
 	if (!enoughParams())
 		return (*this);
 	hasParamList();

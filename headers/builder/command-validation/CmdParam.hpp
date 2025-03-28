@@ -22,11 +22,14 @@ class CmdParam {
   public:
 	/*                               CONSTRUCTORS                             */
 	CmdParam(void);
-	CmdParam(const bool opt, const char delim);
+	CmdParam(const bool opt, const bool list);
+	CmdParam(const CmdParam &rhs);
 	~CmdParam(void);
 
 	/*                               METHODS                                  */
 	bool empty();
+	bool isList() const;
+	bool isOpt(void) const;
 	CmdParam &operator=(const CmdParam &rhs);
 	size_t size(void) const;
 	std::string &operator[](unsigned int i);
@@ -36,8 +39,6 @@ class CmdParam {
 	void rmParam(unsigned int pos);
 
 	/*                               GETTERS                                  */
-	bool getOpt(void) const;
-	char getDelim() const;
 	const stringVec &getInnerParam(void) const;
 
 	/*                               SETTERS                                  */
@@ -47,11 +48,8 @@ class CmdParam {
   private:
 	/*                               MEMBERS                                  */
 	bool opt_;
-	char delim_;
+	bool list_;
 	stringVec innerParam_;
-
-	// private constructor
-	CmdParam(const CmdParam &rhs);
 };
 
 #endif
