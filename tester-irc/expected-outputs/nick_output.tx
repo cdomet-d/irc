@@ -29,7 +29,7 @@
 :servername NOTICE * : Valid password ! You may register
 :servername 433 * chacham :Nickname is already in use
 :servername NOTICE * :Introducing new nick "bobby"
-:servername NOTICE * :Registration complete
+:servername NOTICE bobby :Registration complete
 :bobby!~b@hostname JOIN #chan
 :servername 353 bobby @ #chan :bobby @chacham
 :servername 366 bobby #chan :End of /NAMES list.

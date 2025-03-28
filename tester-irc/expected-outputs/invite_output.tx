@@ -18,7 +18,7 @@
 :bobby!~b@hotsname PART #chan
 :servername NOTICE * : Valid password ! You may register
 :servername NOTICE * :Introducing new nick "bobby"
-:servername NOTICE * :Registration complete
+:servername NOTICE bobby :Registration complete
 :servername 473 bobby #chan :Cannot join channel (+i) - you must be invited
 :chacham!~c@hostname INVITE bobby :#chan
 :servername 346 bobby #chan :You have been invited

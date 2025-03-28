@@ -29,7 +29,7 @@ PASS 0
 NICK chacham
 USER c c c c
 JOIN #chan
-JOIN #chan1
+JOIN #chan2
 
 EOF
 
@@ -41,7 +41,7 @@ PASS 0
 NICK bobby
 USER b b b b
 JOIN #chan
-JOIN #chan1
+JOIN #chan2
 EOF
 
 sleep 0.5
@@ -65,9 +65,9 @@ PRIVMSG #dontexist hey
 PRIVMSG bobby :hey how are you
 PRIVMSG bobby,juju hey
 PRIVMSG #chan yo whats up
-PRIVMSG #chan,#chan1 :hey how are you
-PART #chan1
-PRIVMSG #chan1 hey
+PRIVMSG #chan,#chan2 :hey how are you
+PART #chan2
+PRIVMSG #chan2 hey
 EOF
 
 sleep 0.5
@@ -87,6 +87,7 @@ wait $PID3 2>/dev/null
 
 cat outputs/client1_out > outputs/output.txt &
 cat outputs/client2_out.txt >> outputs/output.txt &
+cat outputs/client3_out.txt >> outputs/output.txt &
 
 sleep 0.5
 
