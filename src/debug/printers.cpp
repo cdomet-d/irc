@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   printers.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 13:42:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/27 14:20:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/28 12:53:46 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void print::charByChar(const std::string &buf) {
 		else
 			std::cout << buf[i];
 	}
-	std::cout << std::endl;
 }
 
 void print::cmdParam(const stringVec &obj, std::string where) {

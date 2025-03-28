@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 09:04:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/28 12:58:47 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void partAllChans(Client *sender) {
 	for (stringVec::iterator currChanName = sender->getJoinedChans().begin();
 		 currChanName != sender->getJoinedChans().end(); ++currChanName) {
 		std::string tempMess = "PART " + *currChanName + "\n\r";
-		sender->mess.setBuffer(tempMess);
-		formatMess::assess(*sender);
+		sender->mess.setMess(tempMess);
+		buffer_manip::prepareCommand(*sender);
 	}
 	sender->getJoinedChans().clear();
 }
@@ -30,7 +30,7 @@ void quit(CmdSpec &cmd) {
 	static Server &server = Server::GetServerInstance(0, "");
 
 	Client *sender = &cmd.getSender();
-	sender->mess.clearBuffer();
+	sender->mess.clearMess();
 	partAllChans(sender);
 	reply::send_(sender->getFd(), RPL_BYEYBE(sender->cliInfo.getNick()));
 	std::stringstream ss;

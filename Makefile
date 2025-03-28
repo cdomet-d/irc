@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+         #
+#    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/27 14:19:59 by aljulien         ###   ########.fr        #
+#    Updated: 2025/03/28 13:25:03 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ H:=  -I headers/ \
 	-I headers/server/ \
 	-I headers/builder/command-execution/ \
 	-I headers/builder/command-validation/ \
+	-I headers/builder/command-validation/checkers/ \
 	-I headers/builder/manager/ \
 	-I headers/client/ \
 	-I headers/debug/ \
@@ -35,6 +36,7 @@ SRC_DIR:= src/
 
 BUILD_EXE_DIR:= $(SRC_DIR)builder/command-execution/
 BUILD_VAL_DIR:= $(SRC_DIR)builder/command-validation/
+BUILD_CHECK_DIR:= $(SRC_DIR)builder/command-validation/checkers/
 BUILD_MAN_DIR:= $(SRC_DIR)builder/manager/
 
 CLI_DIR:= $(SRC_DIR)client/
@@ -51,30 +53,34 @@ CLI_SRC:=			Client.cpp \
 					Message.cpp \
 					UserInfo.cpp \
 
-BUILD_EXE_SRC:=			Join.cpp \
-						Privmsg.cpp \
-						Topic.cpp \
-						Part.cpp \
-						Mode.cpp \
-						Invite.cpp \
-						Kick.cpp \
-						Who.cpp \
-						Pass.cpp \
-						Nick.cpp \
-						User.cpp \
-						Quit.cpp \
+BUILD_EXE_SRC:=		Join.cpp \
+					Privmsg.cpp \
+					Topic.cpp \
+					Part.cpp \
+					Mode.cpp \
+					Invite.cpp \
+					Kick.cpp \
+					Who.cpp \
+					Pass.cpp \
+					Nick.cpp \
+					User.cpp \
+					Quit.cpp \
 
-BUILD_VAL_SRC:=		CmdManager.cpp \
-					CmdSpec.cpp \
-					CmdParam.cpp \
-					Checkers.cpp \
-					JoinRequestCheck.cpp \
-					formatMess.cpp \
-					syntaxCheck.cpp \
+BUILD_VAL_SRC:=		buffer_manip.cpp \
+					CmdManager.cpp \
+					CmdParam.cpp  \
+					CmdSpec.cpp  \
+
+BUILD_CHECK_SRC:=	check_mode.cpp \
+					check_registration.cpp \
+					check_nick.cpp \
+					check_join.cpp \
+					check.cpp \
+					check_chans.cpp \
 
 BUILD_MAN_SRC:=	\
 
-DEBUG_SRC:=	printers.cpp \
+DEBUG_SRC:=			printers.cpp \
 
 SRC_ROOT:=			main.cpp \
 
@@ -84,6 +90,7 @@ SRC:= $(addprefix $(SRC_DIR), $(SRC_ROOT))
 SRC+= $(addprefix $(BUILD_EXE_DIR), $(BUILD_EXE_SRC))
 SRC+= $(addprefix $(BUILD_MAN_DIR), $(BUILD_MAN_SRC))
 SRC+= $(addprefix $(BUILD_VAL_DIR), $(BUILD_VAL_SRC))
+SRC+= $(addprefix $(BUILD_CHECK_DIR), $(BUILD_CHECK_SRC))
 SRC+= $(addprefix $(CLI_DIR), $(CLI_SRC))
 SRC+= $(addprefix $(DEBUG_DIR), $(DEBUG_SRC))
 SRC+= $(addprefix $(SERV_DIR), $(SERV_SRC))
@@ -169,11 +176,14 @@ info:
 run: all
 	./$(NAME) 4444 0
 
-VFLAGS:= --leak-check=full --show-leak-kinds=all
+VFLAGS:= --leak-check=full --show-leak-kinds=all --track-fds=yes
 drun: debug
-	valgrind ./$(DEBUG_NAME) 4444 0
+	valgrind $(VFLAGS) ./$(DEBUG_NAME) 4444 0
 
-# $(VFLAGS)
+
+
+# ----------------------------- FORMAT ------------------------------------------ #
+
 # ---------------------------------------------------------------------------- #
 
 .PHONY: all clean info fclean re debug redebug run drun

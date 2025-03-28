@@ -92,7 +92,7 @@ void CmdSpec::hasParamList(void) {
 		CmdParam &innerParam = *params_[i].second;
 		if (innerParam.getDelim()) {
 			try {
-				innerParam.setParamList(formatMess::vectorSplit(
+				innerParam.setParamList(buffer_manip::vectorSplit(
 					innerParam[0], innerParam.getDelim()));
 			} catch (const std::out_of_range &e) {};
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 09:04:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/28 14:02:19 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,22 +158,22 @@ bool Server::handleData(int fd) {
 	Client *curCli = clients_.find(fd)->second;
 	//TODO: handle -1 differently
 	if (bytes == 0) {
-		curCli->mess.setBuffer("QUIT");
-		formatMess::assess(*curCli);
+		curCli->mess.setMess("QUIT");
+		buffer_manip::prepareCommand(*curCli);
 		return (true);
 	} else if (bytes == -1)
 		return (true);
 	else if (bytes == -1)
 		perror("HandleData:");
 	else {
-		std::string inputCli = curCli->mess.getBuffer();
+		std::string inputCli = curCli->mess.getMess();
 		inputCli.append(tmpBuf);
-		curCli->mess.setBuffer(inputCli);
-		if (curCli->mess.getBuffer().find('\n') != std::string::npos) {
-			std::string temp = curCli->mess.getBuffer();
-			formatMess::assess(*curCli);
+		curCli->mess.setMess(inputCli);
+		if (curCli->mess.getMess().find('\n') != std::string::npos) {
+			std::string temp = curCli->mess.getMess();
+			buffer_manip::prepareCommand(*curCli);
 			if (strncmp(temp.c_str(), "QUIT", 4)) {
-				curCli->mess.clearBuffer();
+				curCli->mess.clearMess();
 				curCli->mess.clearCmdParam();
 			}
 		}

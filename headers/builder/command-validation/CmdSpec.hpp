@@ -13,7 +13,6 @@
 #ifndef CMDSPEC_HPP
 #define CMDSPEC_HPP
 
-#include "Checkers.hpp"
 #include "CmdParam.hpp"
 #include "Server.hpp"
 #include <iostream>
