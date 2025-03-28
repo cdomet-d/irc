@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:37:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/19 14:27:30 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 11:36:31 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void reply::send(int fd, std::string reply) {
 }
 
 void reply::log(e_level level, std::string message) {
-	Server& serv = Server::GetServerInstance(0, "");
+	Server &serv = Server::GetServerInstance(0, "");
 	if (serv.logfile.is_open()) {
 		switch (level) {
 		case INFO:
@@ -47,7 +47,7 @@ void reply::log(e_level level, std::string message) {
 }
 
 void reply::log(e_level level, std::string message, std::string verbose) {
-	Server& serv = Server::GetServerInstance(0, "");
+	Server &serv = Server::GetServerInstance(0, "");
 	if (serv.logfile.is_open()) {
 		switch (level) {
 		case (INFO):

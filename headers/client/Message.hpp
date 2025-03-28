@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/27 17:38:51 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 10:29:11 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ class Message {
 	/*                               GETTERS                                  */
 	size_t getSize() const;
 	const std::string getMess() const;
+	const std::string getLeft() const;
 	const std::string getCmd() const;
 	const stringVec &getCmdParam();
 

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 13:59:33 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/26 09:59:38 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 11:33:25 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,15 @@ typedef enum {
 
 /* assess whether the mode is being set '+' or unset '-' */
 typedef enum {
-	SET_ERR, 
-	SET, 
+	SET_ERR,
+	SET,
 	UNSET,
 } e_mdeset;
 
 // -------------------------------- IRC UTILS ------------------------------- //
 
 #define MAX_EVENTS 100
+#define MAX_CHAN_PER_CLI 50
 
 // -------------------------------- DEBUG ----------------------------------- //
 

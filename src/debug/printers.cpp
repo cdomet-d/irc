@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 13:42:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/25 15:02:32 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 11:23:27 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void print::charByChar(const std::string &buf) {
 		else
 			std::cout << buf[i];
 	}
-	std::cout << std::endl;
 }
 
 void print::cmdParam(const stringVec &obj, std::string where) {

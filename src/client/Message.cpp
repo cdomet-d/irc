@@ -6,14 +6,12 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/27 17:40:09 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 11:24:15 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Message.hpp"
 #include "Server.hpp"
-#include "printers.hpp"
-#include <iostream>
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
@@ -37,11 +35,6 @@ const stringVec &Message::getCmdParam() {
 	return cmdParam_;
 }
 
-/* the current command, extracted from the buffer, before being processed to CmdParam */
-// const std::string Message::getcurCmd() const {
-// 	return curCmd_;
-// }
-
 /* the command being processed */
 const std::string Message::getCmd() const {
 	return cmdParam_.at(0);
@@ -50,6 +43,11 @@ const std::string Message::getCmd() const {
 /* the unprocessed message */
 const std::string Message::getMess() const {
 	return message_;
+}
+
+/* in the event where several messages separated by /r/n were sent, the leftover part of the raw message */
+const std::string Message::getLeft() const {
+	return leftover_;
 }
 
 size_t Message::getSize() const {
@@ -166,7 +164,6 @@ std::string::size_type Message::evaluateTermination() const {
 }
 
 void Message::removeNewlines() {
-
 	std::string::size_type termSize = evaluateTermination();
 	if (termSize == std::string::npos) {
 		message_.clear();
@@ -174,13 +171,8 @@ void Message::removeNewlines() {
 	}
 	std::string::size_type newline =
 		(termSize == 2 ? message_.find("\r\n") : message_.find("\n"));
-	leftover_ = message_.substr(newline + termSize, (message_.size() - newline + termSize));
-	message_.erase(message_.begin() + newline + termSize, message_.end());
-
-	std::cout << "----------- command: " << std::endl;
-	print::charByChar(message_);
-	std::cout << "----------- leftover: ";
-	print::charByChar(leftover_);
+	leftover_ = message_.substr(newline + termSize);
+	message_.erase(message_.begin() + newline, message_.end());
 	return;
 }
 

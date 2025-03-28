@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "CmdExecution.hpp"
 #include "CmdManager.hpp"
+#include "CmdExecution.hpp"
 #include "Server.hpp"
 #include "typedef.hpp"
 #include "validator.hpp"
@@ -160,7 +160,8 @@ void CmdManager::generateCmds() {
 			.addParam(topic_, new CmdParam(true, '\0'))
 			.addChecker(check::chan)
 			.addChecker(check::chans_::isOnChan)
-			.addChecker(check::chans_::hasChanAuthorisations) //(only if mode +t is set)
+			.addChecker(
+				check::chans_::hasChanAuthorisations) //(only if mode +t is set)
 			.CmExecutor(topic)
 			.build());
 }

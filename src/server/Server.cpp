@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 17:20:28 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 11:36:35 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ bool Server::servRun() {
 	std::cout << "Server listening on port " << port_
 			  << " | IP adress: " << inet_ntoa(servAddr_.sin_addr) << std::endl;
 	while (gSign == false) {
-		std::cout << "I am running" << std::endl;
 		nbFds = epoll_wait(epollFd_, events_, MAX_EVENTS, -1);
 		if (nbFds == -1 && gSign == false)
 			return (false);
@@ -124,14 +123,14 @@ void Server::acceptClient() {
 		} else {
 			newCli->cliInfo.setHostname(client_ip); // Use IP as fallback
 		}
-		
+
 		//TODO: not throw an exeption when a client cannot connect: it can't kill the server.
 		if (fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK) == -1) {
 			close(newCli->getFd());
 			throw Server::InitFailed(
 				const_cast< const char * >(strerror(errno)));
 		}
-		
+
 		cliEpollTemp.events = EPOLLIN | EPOLLOUT;
 		cliEpollTemp.data.fd = newCli->getFd();
 		newCli->setCliEpoll(cliEpollTemp);
@@ -169,7 +168,7 @@ bool Server::handleData(int fd) {
 		std::cout << inputCli << std::endl;
 		curCli->mess.setMess(inputCli);
 		if (curCli->mess.getMess().find('\n') != std::string::npos) {
-			format_mess::assess(*curCli);
+			buffer_manip::prepareCommand(*curCli);
 			curCli->mess.clearMess();
 			curCli->mess.clearCmdParam();
 		}
@@ -183,12 +182,12 @@ bool checkOnlyOperator(int fd) {
 	clientMap::const_iterator curCli = server.getAllCli().find(fd);
 	for (stringVec::iterator curChanName =
 			 curCli->second->getJoinedChans().begin();
-		 curChanName != curCli->second->getJoinedChans().end();
-		 ++curChanName) {
+		 curChanName != curCli->second->getJoinedChans().end(); ++curChanName) {
 		channelMapIt curChan = server.getAllChan().find(*curChanName);
 		if (!curChan->second->getOpCli().size()) {
 			if (curChan->second->getCliInChan().size() >= 1) {
-				curChan->second->addCli(OPCLI, curChan->second->getCliInChan().begin()->second);
+				curChan->second->addCli(
+					OPCLI, curChan->second->getCliInChan().begin()->second);
 				return (true);
 			}
 			//delete chan if the disconnected cli was the one cli in chan
@@ -206,7 +205,7 @@ bool Server::disconnectCli(int fd) {
 	clientMapIt it = clients_.find(fd);
 	if (it != clients_.end()) {
 		epoll_ctl(epollFd_, EPOLL_CTL_DEL, fd, it->second->getCliEpoll());
-		reply::log(reply::INFO,"Client was disconnected");
+		reply::log(reply::INFO, "Client was disconnected");
 		delete it->second;
 		clients_.erase(fd);
 		close(fd);
@@ -216,7 +215,8 @@ bool Server::disconnectCli(int fd) {
 }
 
 void Server::addChan(Channel *curChan) {
-	channels_.insert(std::pair<std::string, Channel *>(curChan->getName(), curChan));
+	channels_.insert(
+		std::pair< std::string, Channel * >(curChan->getName(), curChan));
 }
 
 void Server::removeChan(Channel *curChan) {
@@ -237,12 +237,10 @@ Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
 /*                               GETTERS                                      */
 /* ************************************************************************** */
 
-const clientMap &Server::getAllCli() const
-{
+const clientMap &Server::getAllCli() const {
 	return (clients_);
 }
-const channelMap &Server::getAllChan() const
-{
+const channelMap &Server::getAllChan() const {
 	return (channels_);
 }
 

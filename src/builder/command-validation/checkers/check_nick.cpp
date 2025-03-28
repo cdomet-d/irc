@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   valid_nick.cpp                                     :+:      :+:    :+:   */
+/*   check_nick.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/27 10:46:56 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 11:34:37 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool check::nick(CmdSpec &cmd) {
 	if (!check::nick_::syntaxIsValid(nick, cmd))
 		return false;
 	if (check::nick_::isUnique(nick, cmd.server_.getUsedNick(),
-								   cmd.getSender().getFd()))
+							   cmd.getSender().getFd()))
 		return false;
 	reply::send(cmd.getSender().getFd(),
 				cmd[nickname_][0] + " is valid nickname\n");
@@ -41,14 +41,14 @@ bool check::nick_::syntaxIsValid(const std::string &nick, const CmdSpec &cmd) {
 
 	if (!isalpha(*start)) {
 		reply::send(cmd.getSender().getFd(),
-				  ERR_ERRONEUSNICKNAME(nick + badFirst + *start));
+					ERR_ERRONEUSNICKNAME(nick + badFirst + *start));
 		return false;
 	}
 	start += 1;
 	while (start != nick.end()) {
 		if (!check::nick_::isAllowed(*start)) {
 			reply::send(cmd.getSender().getFd(),
-					  ERR_ERRONEUSNICKNAME(nick + illegal + *start));
+						ERR_ERRONEUSNICKNAME(nick + illegal + *start));
 			return false;
 		}
 		++start;
@@ -72,8 +72,8 @@ bool check::nick_::isSpecial(const char &c) {
 	return true;
 }
 
-bool check::nick_::isUnique(const std::string &nick,
-								const nickMap &regCli, const int &senderFd) {
+bool check::nick_::isUnique(const std::string &nick, const nickMap &regCli,
+							const int &senderFd) {
 	nickMap::const_iterator unique = regCli.find(nick);
 	if (unique == regCli.end())
 		return false;

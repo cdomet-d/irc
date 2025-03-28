@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   n_formatMess.hpp                                   :+:      :+:    :+:   */
+/*   buffer_manip.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:04 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/27 13:53:16 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 11:27:50 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,9 @@
 #include "Client.hpp"
 #include "typedef.hpp"
 
-namespace format_mess {
-	bool assess(Client &sender);
+namespace buffer_manip {
+	bool prepareCommand(Client &sender);
 	stringVec vectorSplit(std::string &s, char del);
-
-	namespace priv {
-
-	} // namespace priv
-}; // namespace format_mess
+}; // namespace buffer_manip
 
 #endif

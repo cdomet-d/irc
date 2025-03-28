@@ -49,8 +49,7 @@ bool CmdSpec::checkRegistrationStage(void) {
 				reply::send(sender_->getFd(), "Please enter password\r\n");
 			else
 				reply::send(sender_->getFd(), "Please enter nickname\r\n");
-		}
-		else if (name_ != "PASS")
+		} else if (name_ != "PASS")
 			reply::send(sender_->getFd(), ERR_NOTREGISTERED);
 		return (false);
 	}
@@ -93,7 +92,7 @@ void CmdSpec::hasParamList(void) {
 		CmdParam &innerParam = *params_[i].second;
 		if (innerParam.getDelim()) {
 			try {
-				innerParam.setParamList(format_mess::vectorSplit(
+				innerParam.setParamList(buffer_manip::vectorSplit(
 					innerParam[0], innerParam.getDelim()));
 			} catch (const std::out_of_range &e) {};
 		}
@@ -199,7 +198,7 @@ const paramMap &CmdSpec::getParams(void) const {
 }
 
 int CmdSpec::getRegistrationStage() const {
-	return  (registrationStage_);
+	return (registrationStage_);
 }
 
 /* ************************************************************************** */

@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/03/27 13:19:45 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/03/28 11:29:18 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,8 +66,8 @@ BUILD_EXE_SRC:=		Join.cpp \
 					User.cpp \
 					Quit.cpp \
 
-BUILD_VAL_SRC:=		CmdManager.cpp \
-					n_formatMess.cpp \
+BUILD_VAL_SRC:=		buffer_manip.cpp \
+					CmdManager.cpp \
 					CmdParam.cpp  \
 					CmdSpec.cpp  \
 
@@ -181,6 +181,9 @@ drun: debug
 	valgrind ./$(DEBUG_NAME) 4444 0
 
 # $(VFLAGS)
+
+# ----------------------------- FORMAT ------------------------------------------ #
+
 # ---------------------------------------------------------------------------- #
 
 .PHONY: all clean info fclean re debug redebug run drun

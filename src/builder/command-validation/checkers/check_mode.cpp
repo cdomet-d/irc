@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/27 13:19:59 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 11:34:24 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 	size_t size;
 	for (size_t i = 0; i < cmd[flag_].size();) {
 		size = cmd[flag_].size();
-		if (!check::mode_::flagIsValid(set, type, cmd[flag_][i], cmd.getSender()))
+		if (!check::mode_::flagIsValid(set, type, cmd[flag_][i],
+									   cmd.getSender()))
 			return false;
 		// if we MUST have a param and we don't, erase the flag
 		if (((type == B) || (type == C && set == SET)) &&
