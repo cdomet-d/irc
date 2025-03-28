@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 16:38:27 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 16:53:01 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@
 #define RPL_YOURHOST() (":irc.bitchat.net 002 :Your host is Bitchat, running version 1.0 \r\n")
 #define RPL_CREATED(date) (":irc.bitchat.net 003 :This server was created " + date + "\r\n") //TODO : not used
 #define RPL_MYINFO(nickname) (":irc.bitchat.net 004 " + nickname + " Bitchat 1.0 o klit klo Bitchat IRC | Modes: o,k,l,i,t | Max nick: 9 chars\r\n") //TODO : not used
-#define RPL_ISUPPORT() ":irc.bitchat.net 005 Nickname CHANMODES=k,l,i,t CHANNELLEN=200 NICKLEN=9 MAXTARGETS=1 TOPICLEN=307 KICKLEN=307 MODES NETWORK=YourNetwork :are supported by this server"
+//TODO: ask where these values come from
+#define RPL_ISUPPORT() ":irc.bitchat.net 005 Nickname\n CHANMODES=k,l,i,t\n CHANNELLEN=200\n NICKLEN=9\n MAXTARGETS=1\n TOPICLEN=307\n KICKLEN=307\n MODES\n NETWORK=YourNetwork :are supported by this server\r\n"
 
 //channel_replies
 #define RPL_CHANNELMODEIS(nickname, channel, modes) (":irc.bitchat.net 324 " + nickname + " " + channel + " :" + modes + "\r\n")
@@ -74,8 +75,8 @@
 #define PASS_SUCCESS() (":irc.bitchat.net NOTICE : Valid password ! You may register\r\n")
 #define RPL_NICK(nickname) (":irc.bitchat.net NOTICE : The nickname " + nickname + " is valid and saved !\r\n")
 #define RPL_USER(username) (":irc.bitchat.net NOTICE : The Username " + username + " is valid and saved !\r\n")
-#define REG_COMPLETE(nickname) (":irc.bitchat.net NOTICE " + nickname + " : Registration completed, you can join channels and start chatting !\r\n")
-#define RPL_CHANOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " : You're operator of " + channel + "\r\n")
+#define REG_COMPLETE(nickname) (":irc.bitchat.net NOTICE " + nickname + " : Registration complete! You can join channels and start chatting !\r\n")
+#define RPL_CHANOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " : You are operator of " + channel + "\r\n")
 #define RPL_BYEYBE(nickname) (":irc.bitchat.net " + nickname + " You quit the server, see you next time !\r\n")
 //command_replies (uses prefix)
 #define RPL_INVITE(prefix, target, channel) (":" + prefix + " INVITE " + target + " :" + channel + "\r\n")
