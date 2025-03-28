@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 13:53:54 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 14:58:04 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,11 +105,11 @@ void Message::formatMode() {
 				for (size_t j = 1; j < flags.size(); ++j) {
 					flagformat += firstChar;
 					flagformat += (*i)[j];
-					flagformat += ',';
+					flagformat += ' ';
 				}
 			} else {
 				paramformat += *i;
-				paramformat += ',';
+				paramformat += ' ';
 			}
 		}
 	}

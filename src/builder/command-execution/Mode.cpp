@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 12:56:33 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 15:23:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <limits>
 
+//TODO : do we remove a ope if it's the only OP left of the channel
 void executeO(std::string flag, std::string param, Channel &curChan) {
 	Client *targetCli;
 
@@ -28,10 +29,15 @@ void executeO(std::string flag, std::string param, Channel &curChan) {
 			break;
 		}
 	}
-	if (flag == "+o")
-		curChan.addCli(OPCLI, targetCli);
-	if (flag == "-o")
+	if (flag == "+o") {
+		curChan.addCli(OPCLI, targetCli); 
+		reply::send_(targetCli->getFd(), RPL_CHANOPE(targetCli->cliInfo.getNick(), curChan.getName()));
+	}
+	if (flag == "-o") {
 		curChan.removeCli(OPCLI, targetCli->getFd());
+		reply::send_(targetCli->getFd(), RPL_CHANOPENOPE(targetCli->cliInfo.getNick(), curChan.getName()));
+
+	}
 }
 
 void executeI(std::string flag, std::string param, Channel &curChan) {
@@ -42,6 +48,7 @@ void executeI(std::string flag, std::string param, Channel &curChan) {
 		curChan.setModes();
 	}
 	if (flag == "-i" && curChan.getInviteOnly() == true) {
+		std::cout << "we here captain" << std::endl;
 		curChan.setInviteOnly(false);
 		curChan.setModes();
 	}
@@ -135,6 +142,7 @@ void mode(CmdSpec &cmd) {
 		return;
 	}
 	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
+	std::cout << "cmd[flag_][nbFlag] = " << cmd[flag_][nbFlag] << std::endl << "cmd[flagArg_][nbFlag] = " << cmd[flagArg_][nbFlag] << std::endl; 
 		if (cmd[flag_][nbFlag] == "+l")
 			newMaxCli = cmd[flagArg_][nbFlag];
 		executeFlag(cmd[flag_][nbFlag], cmd[flagArg_][nbFlag], curChan);
@@ -145,4 +153,5 @@ void mode(CmdSpec &cmd) {
 	sendMessageChannel(curChan.getCliInChan(),
 					   RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
 										 curChan.getName(), newModes));
+	curChan.setModes();
 }
