@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_join.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 13:03:16 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 17:58:16 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,18 @@
 
 bool check::join(CmdSpec &cmd) {
 	channelMap::const_iterator itChan;
+	size_t i = 0;
 
-	for (size_t i = 0; i < cmd[channel_].size(); i++) {
+	while (i < cmd[channel_].size()) {
 		//TODO: call coralie's function to check syntax of channel
 		itChan = cmd.server_.getAllChan().find(cmd[channel_][i]);
-		if (itChan == cmd.server_.getAllChan().end())
-			continue;
-		if (!check::join_::assessRequest(*itChan->second, cmd, i))
-			cmd[channel_].rmParam(i);
+		if (itChan != cmd.server_.getAllChan().end()) {
+			if (!check::join_::assessRequest(*itChan->second, cmd, i)) {
+				cmd[channel_].rmParam(i);
+				continue;
+			}
+		}
+		i++;
 	}
 	if (!cmd[channel_].size())
 		return (false);
@@ -29,8 +33,8 @@ bool check::join(CmdSpec &cmd) {
 }
 
 bool check::join_::assessRequest(Channel chan, CmdSpec &cmd, size_t i) {
-	if (check::chans_::isOnChan(cmd))
-		return (false);
+	// if (check::chans_::isOnChan(cmd))
+	// 	return (false);
 	if (check::join_::chanHasRoom(chan, cmd.getSender()))
 		return (false);
 	if (chan.getModes().find("i") != std::string::npos &&
