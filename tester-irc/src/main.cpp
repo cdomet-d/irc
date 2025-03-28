@@ -6,7 +6,7 @@
 /*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 15:40:59 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/27 10:00:09 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/28 19:25:32 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,23 @@ int main() {
 	//JOIN
 	if (test("tester-scripts/test-join.sh", "expected-outputs/join_output.tx", "JOIN:"))
 		return (1);
-	// //KICK
-	// if (test("tester-scripts/test-kick.sh", "expected-outputs/kick_output.tx", "KICK:"))
-	// 	return (1);
-	// //MODE
-	// if (test("tester-scripts/test-mode.sh", "expected-outputs/mode_output.tx", "MODE:"))
-	// 	return (1);
-	// //PART
-	// if (test("tester-scripts/test-part.sh", "expected-outputs/part_output.tx", "PART:"))
-	// 	return (1);
-	// //QUIT
-	// if (test("tester-scripts/test-quit.sh", "expected-outputs/quit_output.tx", "QUIT:"))
-	// 	return (1);
+	//KICK
+	if (test("tester-scripts/test-kick.sh", "expected-outputs/kick_output.tx", "KICK:"))
+		return (1);
+	//MODE
+	if (test("tester-scripts/test-mode.sh", "expected-outputs/mode_output.tx", "MODE:"))
+		return (1);
+	//PART
+	if (test("tester-scripts/test-part.sh", "expected-outputs/part_output.tx", "PART:"))
+		return (1);
+	//QUIT
+	if (test("tester-scripts/test-quit.sh", "expected-outputs/quit_output.tx", "QUIT:"))
+		return (1);
+	//PRIVMSG
+	if (test("tester-scripts/test-privmsg.sh", "expected-outputs/privmsg_output.tx", "PRIVMSG:"))
+		return (1);
+	//TOPIC
+	if (test("tester-scripts/test-topic.sh", "expected-outputs/topic_output.tx", "TOPIC:"))
+		return (1);
 	return (0);
 }
