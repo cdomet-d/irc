@@ -47,6 +47,7 @@ void CmdManager::generateCmds() {
 			.addParam(password_, new CmdParam())
 			.addChecker(check::register_::stageDone)
 			.addChecker(check::register_::isRegistered)
+			.addChecker(check::enoughParams)
 			.addChecker(check::register_::pwMatch)
 			.CmExecutor(pass)
 			.build());
@@ -68,6 +69,7 @@ void CmdManager::generateCmds() {
 			.addParam(servername_, new CmdParam())
 			.addParam(realname_, new CmdParam())
 			.addChecker(check::register_::isRegistered)
+			.addChecker(check::enoughParams)
 			.addChecker(check::user)
 			.CmExecutor(user)
 			.build());
@@ -77,6 +79,7 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.addParam(channel_, new CmdParam(false, true))
 			.addParam(key_, new CmdParam(true, true))
+			.addChecker(check::enoughParams)
 			.addChecker(check::join)
 			.CmExecutor(join)
 			.build());
@@ -86,6 +89,7 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.addParam(target_, new CmdParam())
 			.addParam(channel_, new CmdParam())
+			.addChecker(check::enoughParams)
 			.addChecker(check::target)
 			.addChecker(check::chan)
 			.addChecker(check::chans_::isOnChan)
@@ -100,11 +104,12 @@ void CmdManager::generateCmds() {
 			.addParam(channel_, new CmdParam())
 			.addParam(target_, new CmdParam(false, true))
 			.addParam(message_, new CmdParam(true, false))
+			.addChecker(check::enoughParams)
 			.addChecker(check::chan)
 			.addChecker(check::chans_::isOnChan)
 			.addChecker(check::chans_::hasChanAuthorisations)
-			.addChecker(check::target)
-			.addChecker(check::kick)
+			.addListChecker(check::target)
+			.addListChecker(check::kick)
 			.CmExecutor(kick)
 			.build());
 
@@ -114,6 +119,7 @@ void CmdManager::generateCmds() {
 			.addParam(channel_, new CmdParam())
 			.addParam(flag_, new CmdParam(true, true))
 			.addParam(flagArg_, new CmdParam(true, true))
+			.addChecker(check::enoughParams)
 			.addChecker(check::chan)
 			.addChecker(check::chans_::isOnChan)
 			.addChecker(check::chans_::hasChanAuthorisations)
@@ -126,8 +132,9 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.addParam(channel_, new CmdParam(false, true))
 			.addParam(message_, new CmdParam(true, false))
-			.addChecker(check::chan)
-			.addChecker(check::chans_::isOnChan)
+			.addChecker(check::enoughParams)
+			.addListChecker(check::chan)
+			.addListChecker(check::chans_::isOnChan)
 			.CmExecutor(part)
 			.build());
 
@@ -136,7 +143,6 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.addParam(target_, new CmdParam(false, true))
 			.addParam(message_, new CmdParam())
-			//TODO: regarder si le target commence par un #, si oui faire validChan et isOnChan si non faire validTarget
 			.addChecker(check::mess)
 			.CmExecutor(privmsg)
 			.build());
@@ -153,6 +159,7 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.addParam(channel_, new CmdParam())
 			.addParam(topic_, new CmdParam(true, false))
+			.addChecker(check::enoughParams)
 			.addChecker(check::chan)
 			.addChecker(check::chans_::isOnChan)
 			.addChecker(check::chans_::hasChanAuthorisations)
@@ -164,6 +171,7 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.addParam(channel_, new CmdParam())
 			.addParam(flag_, new CmdParam(true, false))
+			.addChecker(check::enoughParams)
 			.addChecker(check::chan)
 			.addChecker(check::chans_::isOnChan)
 			//TODO: add checker for flag "o"

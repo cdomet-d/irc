@@ -17,10 +17,11 @@
 /* ************************************************************************** */
 CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
 				 std::vector< bool (*)(CmdSpec &) > checkers,
+				 std::vector< bool (*)(CmdSpec &cmd) > listCheckers,
 				 void (*cmExecutor)(CmdSpec &cmd))
 	: server_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
 	  name_(name), registrationStage_(registrationStage), params_(params),
-	  checkers_(checkers), cmExecutor_(cmExecutor) {}
+	  checkers_(checkers), listCheckers_(listCheckers), cmExecutor_(cmExecutor) {}
 
 CmdSpec::~CmdSpec(void) {
 	for (paramMap::iterator it = params_.begin(); it != params_.end(); it++) {
@@ -43,35 +44,18 @@ bool CmdSpec::checkRegistrationStage(void) {
 	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
 		valid_ = false;
 		if (name_ == "NICK")
-			reply::send_(sender_->getFd(), ERR_NEEDPASS(sender_->cliInfo.getNick()));
+			reply::send_(sender_->getFd(),
+						 ERR_NEEDPASS(sender_->cliInfo.getNick()));
 		else if (name_ == "USER") {
 			if (sender_->cliInfo.getRegistration() == 0)
-				reply::send_(sender_->getFd(), ERR_NEEDPASS(sender_->cliInfo.getNick()));
+				reply::send_(sender_->getFd(),
+							 ERR_NEEDPASS(sender_->cliInfo.getNick()));
 			else
-				reply::send_(sender_->getFd(), ERR_NEEDNICK(sender_->cliInfo.getNick()));
+				reply::send_(sender_->getFd(),
+							 ERR_NEEDNICK(sender_->cliInfo.getNick()));
 		} else if (name_ != "PASS")
 			reply::send_(sender_->getFd(), ERR_NOTREGISTERED());
 		return (false);
-	}
-	return (true);
-}
-
-bool CmdSpec::enoughParams() {
-	for (size_t i = 0; i < params_.size(); i++) {
-		CmdParam &innerParam = *params_[i].second;
-		if (!innerParam.isOpt() && !innerParam.size()) {
-			if (name_ == "NICK") {
-				reply::send_((*sender_).getFd(), ERR_NONICKNAMEGIVEN());
-			} else if (name_ == "PRIVMSG") {
-				reply::send_((*sender_).getFd(), ERR_NOTEXTTOSEND());
-			} else {
-				reply::send_(
-					(*sender_).getFd(),
-					ERR_NEEDMOREPARAMS(sender_->cliInfo.getNick(), name_));
-			}
-			valid_ = false;
-			return (false);
-		}
 	}
 	return (true);
 }
@@ -102,10 +86,9 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	if (!checkRegistrationStage())
 		return (*this);
 	setParam();
+	//TODO: move invite condition in enoughParams ?
 	if (name_ == "INVITE" && !(*this)[target_].size() &&
 		!(*this)[channel_].size())
-		return (*this);
-	if (!enoughParams())
 		return (*this);
 	hasParamList();
 	// displayParams();
@@ -115,6 +98,7 @@ CmdSpec &CmdSpec::process(Client &sender) {
 			return (*this);
 		}
 	}
+	//add loop on list checkers
 	return (*this);
 }
 
@@ -245,6 +229,11 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(bool (*ft)(CmdSpec &cmd)) {
 	return (*this);
 }
 
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addListChecker(bool (*ft)(CmdSpec &cmd)) {
+	listCheckers_.push_back(ft);
+	return (*this);
+}
+
 CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::CmExecutor(void (*ft)(CmdSpec &cmd)) {
 	cmExecutor_ = ft;
 	return (*this);
@@ -252,5 +241,5 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::CmExecutor(void (*ft)(CmdSpec &cmd)) {
 
 CmdSpec *CmdSpec::CmdBuilder::build() {
 	return (new CmdSpec(name_, registrationStage_, params_, checkers_,
-						cmExecutor_));
+						listCheckers_, cmExecutor_));
 }

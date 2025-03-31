@@ -51,7 +51,6 @@ class CmdSpec {
 	/*                               METHODS                                  */
 	CmdParam &operator[](e_param type);
 	CmdSpec &process(Client &sender);
-	bool enoughParams(void);
 	void cleanAll(void);
 	bool checkRegistrationStage(void);
 
@@ -59,7 +58,6 @@ class CmdSpec {
 
 	/*                               GETTERS                                  */
 	bool getValid(void) const;
-	//TODO: remettre en const
 	Client &getSender(void) const;
 	const paramMap &getParams(void) const;
 	const std::string &getName(void) const;
@@ -80,6 +78,7 @@ class CmdSpec {
 
 		//methods
 		CmdBuilder &addChecker(bool (*ft)(CmdSpec &cmd));
+		CmdBuilder &addListChecker(bool (*ft)(CmdSpec &cmd));
 		CmdBuilder &CmExecutor(void (*ft)(CmdSpec &cmd));
 		CmdBuilder &Name(const std::string &name);
 		CmdBuilder &addParam(e_param type, CmdParam *param);
@@ -91,6 +90,8 @@ class CmdSpec {
 		paramMap params_;
 		std::string name_;
 		std::vector< bool (*)(CmdSpec &cmd) > checkers_;
+		std::vector< bool (*)(CmdSpec &cmd) > listCheckers_;
+		//TODO: change proto by adding int idx
 		void (*cmExecutor_)(CmdSpec &cmd);
 	};
 
@@ -102,11 +103,14 @@ class CmdSpec {
 	int registrationStage_;
 	paramMap params_;
 	std::vector< bool (*)(CmdSpec &cmd) > checkers_;
+	std::vector< bool (*)(CmdSpec &cmd) > listCheckers_;
+	//TODO: change proto by adding int idx
 	void (*cmExecutor_)(CmdSpec &cmd);
 
 	// private constructor
 	CmdSpec(const std::string name, int registrationStage, paramMap params,
 			std::vector< bool (*)(CmdSpec &) > checkers,
+			std::vector< bool (*)(CmdSpec &cmd) > listCheckers_,
 			void (*cmExecutor)(CmdSpec &cmd));
 };
 

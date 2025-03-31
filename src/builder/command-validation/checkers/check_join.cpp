@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_join.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 18:28:24 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/31 18:03:17 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ bool check::join(CmdSpec &cmd) {
 }
 
 bool check::join_::assessRequest(Channel chan, CmdSpec &cmd, size_t i) {
-	if (findString(cmd.getSender().getJoinedChans(), cmd[channel_][i]))
+	if (check::findString(cmd.getSender().getJoinedChans(), cmd[channel_][i]))
 		return (false);
 	if (!check::join_::chanHasRoom(chan, cmd.getSender()))
 		return (false);

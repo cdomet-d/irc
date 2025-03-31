@@ -3,21 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   check_chans.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/31 09:36:56 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/31 18:41:16 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
 
 bool check::chans_::isOnChan(CmdSpec &cmd) {
+	//TODO: rm boucle
 	stringVec joinedChans = cmd.getSender().getJoinedChans();
 	size_t i = 0;
 
 	while (i < cmd[channel_].size()) {
-		if (!findString(joinedChans, cmd[channel_][i])) {
+		if (!check::findString(joinedChans, cmd[channel_][i])) {
 			reply::send_(cmd.getSender().getFd(),
 						 ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
 										  cmd[channel_][i]));

@@ -25,6 +25,8 @@ namespace check {
 	bool target(CmdSpec &cmd);
 	bool user(CmdSpec &cmd);
 	bool join(CmdSpec &cmd);
+	bool enoughParams(CmdSpec &cmd);
+	bool findString(stringVec array, std::string &strToFind);
 
 	namespace mode_ {
 		bool formatArgs(CmdSpec &cmd);
@@ -61,7 +63,5 @@ namespace check {
 		bool pwMatch(CmdSpec &cmd);
 	} // namespace register_
 } // namespace check
-
-bool findString(stringVec array, std::string &strToFind);
 
 #endif
