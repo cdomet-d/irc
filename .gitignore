@@ -1,9 +1,10 @@
 .bdir/
 .dbdir/
 .vscode/
+*.log
 *.mk
 *.txt
 d-ircserv
 ircserv
-todo.md
 notes.txt
+todo.md

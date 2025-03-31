@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/28 17:20:06 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/31 10:35:33 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,12 @@ bool check::kick(CmdSpec &cmd) {
 bool check::mess(CmdSpec &cmd) {
 	(void)cmd;
 	return (true);
+}
+
+bool findString(stringVec array, std::string &strToFind) {
+	for (size_t i = 0; i < array.size(); i++) {
+		if (array[i] == strToFind)
+			return (true);
+	}
+	return (false);
 }
