@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/31 10:55:15 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/31 11:15:43 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void executeI(std::string flag, std::string param, Channel &curChan) {
 		curChan.setModes();
 	}
 	if (flag == "-i" && curChan.getInviteOnly() == true) {
-		std::cout << "we here captain" << std::endl;
 		curChan.setInviteOnly(false);
 		curChan.setModes();
 	}
@@ -138,15 +137,20 @@ void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 	std::string negMode = "-";
 	std::string posMode = "+";
 	bool posFirst = false;
+	std::string newPassMaxCli = " ";
 
 	if (cmd[flag_][0].find("+") != std::string::npos)
 		posFirst = true;
 	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
-		if (cmd[flag_][nbFlag].find("+") != std::string::npos)
+		if (cmd[flag_][nbFlag].find("+") != std::string::npos) {
+			if (cmd[flag_][nbFlag] == "+l" || cmd[flag_][nbFlag] == "+k")
+				newPassMaxCli.append(cmd[flagArg_][nbFlag] + " ");
 			posMode += cmd[flag_][nbFlag][1];
+		}
 		if (cmd[flag_][nbFlag].find("-") != std::string::npos)
 			negMode += cmd[flag_][nbFlag][1];
 	}
+	posMode.append(newPassMaxCli);
 	if (!strcmp("-", negMode.c_str()) && negMode.size() == 1) {
 		sendMessageChannel(curChan.getCliInChan(), RPL_CHANNELMODEIS(sender->cliInfo.getNick(), curChan.getName(), posMode));
 		return ;
@@ -166,7 +170,6 @@ void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 void mode(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 	Channel &curChan = findCurChan(cmd[channel_][0]);
-	std::string newMaxCli = "";
 
 	if (!cmd[flag_].size()) {
 		reply::send_(sender->getFd(),
@@ -175,8 +178,6 @@ void mode(CmdSpec &cmd) {
 	}
 	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
 	std::cout << "cmd[flag_][nbFlag] = " << cmd[flag_][nbFlag] << std::endl << "cmd[flagArg_][nbFlag] = " << cmd[flagArg_][nbFlag] << std::endl; 
-		if (cmd[flag_][nbFlag] == "+l")
-			newMaxCli = cmd[flagArg_][nbFlag];
 		executeFlag(cmd[flag_][nbFlag], cmd[flagArg_][nbFlag], curChan);
 	}
 	buildNewModeString(cmd, curChan, sender);
