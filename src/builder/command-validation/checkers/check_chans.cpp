@@ -38,8 +38,8 @@ bool check::chans_::hasChanAuthorisations(CmdSpec &cmd) {
 	Channel chan = *itChan->second;
 
 	if (cmd.getName() == "TOPIC" &&
-		(!cmd[topic_].getInnerParam().empty() ||
-		 (chan.getModes().find('t') == std::string::npos))) {
+		(cmd[topic_].empty() ||
+		 chan.getModes().find('t') == std::string::npos)) {
 		return (true);
 	}
 

@@ -88,7 +88,7 @@
 #define RPL_PARTNOREASON(prefix, channel) (":" + prefix + " PART " + channel + "\r\n")
 #define RPL_PARTREASON(prefix, channel, reason) (":" + prefix + " PART " + channel + " " + reason + "\r\n")
 #define RPL_PRIVMSG(prefix, target, message) (":" + prefix + " PRIVMSG " + target + " " + message + "\r\n")
-#define RPL_TOPICCHANGED(prefix, channel, topic) (":" + prefix + " TOPIC " + channel + topic + "\r\n")
+#define RPL_TOPICCHANGED(prefix, channel, topic) (":" + prefix + " TOPIC " + channel + " " + topic + "\r\n")
 #define RPL_CHANGEMODE(prefix, channel, mode) (":" + prefix + " MODE " + channel + " " + mode + "\r\n") //TODO : not used
 
 namespace reply {
