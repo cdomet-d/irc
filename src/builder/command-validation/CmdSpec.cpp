@@ -59,7 +59,7 @@ bool CmdSpec::checkRegistrationStage(void) {
 bool CmdSpec::enoughParams() {
 	for (size_t i = 0; i < params_.size(); i++) {
 		CmdParam &innerParam = *params_[i].second;
-		if (!innerParam.getOpt() && !innerParam.size()) {
+		if (!innerParam.isOpt() && !innerParam.size()) {
 			if (name_ == "NICK") {
 				reply::send_((*sender_).getFd(), ERR_NONICKNAMEGIVEN());
 			} else if (name_ == "PRIVMSG") {
@@ -87,10 +87,10 @@ void CmdSpec::setParam(void) {
 void CmdSpec::hasParamList(void) {
 	for (size_t i = 0; i < params_.size(); i++) {
 		CmdParam &innerParam = *params_[i].second;
-		if (innerParam.getDelim()) {
+		if (innerParam.isList()) {
 			try {
-				innerParam.setParamList(buffer_manip::vectorSplit(
-					innerParam[0], innerParam.getDelim()));
+				innerParam.setParamList(
+					buffer_manip::vectorSplit(innerParam[0], ','));
 			} catch (const std::out_of_range &e) {};
 		}
 	}

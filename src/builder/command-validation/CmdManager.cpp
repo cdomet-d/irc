@@ -75,8 +75,8 @@ void CmdManager::generateCmds() {
 	log(CmdSpec::CmdBuilder()
 			.Name("JOIN")
 			.Registration(3)
-			.addParam(channel_, new CmdParam(false, ','))
-			.addParam(key_, new CmdParam(true, ','))
+			.addParam(channel_, new CmdParam(false, true))
+			.addParam(key_, new CmdParam(true, true))
 			.addChecker(check::join)
 			.CmExecutor(join)
 			.build());
@@ -98,8 +98,8 @@ void CmdManager::generateCmds() {
 			.Name("KICK")
 			.Registration(3)
 			.addParam(channel_, new CmdParam())
-			.addParam(target_, new CmdParam(false, ','))
-			.addParam(message_, new CmdParam(true, '\0'))
+			.addParam(target_, new CmdParam(false, true))
+			.addParam(message_, new CmdParam(true, false))
 			.addChecker(check::chan)
 			.addChecker(check::chans_::isOnChan)
 			.addChecker(check::chans_::hasChanAuthorisations)
@@ -112,31 +112,29 @@ void CmdManager::generateCmds() {
 			.Name("MODE")
 			.Registration(3)
 			.addParam(channel_, new CmdParam())
-			.addParam(flag_, new CmdParam(true, ' ')) //TODO: replace with coma. can remove var delim ?
-			.addParam(flagArg_, new CmdParam(true, ' '))
+			.addParam(flag_, new CmdParam(true, true))
+			.addParam(flagArg_, new CmdParam(true, true))
 			.addChecker(check::chan)
-			.addChecker(check::chans_::isOnChan) //TODO: verif if necessary
+			.addChecker(check::chans_::isOnChan)
 			.addChecker(check::chans_::hasChanAuthorisations)
 			.addChecker(check::mode)
-			// .addChecker(validArg) ?
 			.CmExecutor(mode)
 			.build());
 
 	log(CmdSpec::CmdBuilder()
 			.Name("PART")
 			.Registration(3)
-			.addParam(channel_, new CmdParam(false, ','))
-			.addParam(message_, new CmdParam(true, '\0'))
+			.addParam(channel_, new CmdParam(false, true))
+			.addParam(message_, new CmdParam(true, false))
 			.addChecker(check::chan)
 			.addChecker(check::chans_::isOnChan)
 			.CmExecutor(part)
 			.build());
 
-	//we want ERR_NORECIPIENT not ERR_NEEDMOREPARAMS
 	log(CmdSpec::CmdBuilder()
 			.Name("PRIVMSG")
 			.Registration(3)
-			.addParam(target_, new CmdParam(false, ','))
+			.addParam(target_, new CmdParam(false, true))
 			.addParam(message_, new CmdParam())
 			.addChecker(check::mess)
 			.addChecker(check::target)
@@ -146,7 +144,7 @@ void CmdManager::generateCmds() {
 	log(CmdSpec::CmdBuilder()
 			.Name("QUIT")
 			.Registration(0)
-			.addParam(message_, new CmdParam(true, '\0'))
+			.addParam(message_, new CmdParam(true, false))
 			.CmExecutor(quit)
 			.build());
 
@@ -154,11 +152,10 @@ void CmdManager::generateCmds() {
 			.Name("TOPIC")
 			.Registration(3)
 			.addParam(channel_, new CmdParam())
-			.addParam(topic_, new CmdParam(true, '\0'))
+			.addParam(topic_, new CmdParam(true, false))
 			.addChecker(check::chan)
 			.addChecker(check::chans_::isOnChan)
-			.addChecker(
-				check::chans_::hasChanAuthorisations) //(only if mode +t is set)
+			.addChecker(check::chans_::hasChanAuthorisations)
 			.CmExecutor(topic)
 			.build());
 

@@ -6,7 +6,7 @@
 /*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 15:35:39 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/31 09:31:33 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 #include "Reply.hpp"
 #include "Server.hpp"
 
-void invite(CmdSpec &cmd)
-{
+void invite(CmdSpec &cmd) {
 	if (cmd[target_].empty()) {
 		//TODO: print invite list
 		return ;

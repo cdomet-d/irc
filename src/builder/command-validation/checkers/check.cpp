@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/28 11:35:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/28 18:06:12 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,12 @@ bool check::kick(CmdSpec &cmd) {
 bool check::mess(CmdSpec &cmd) {
 	(void)cmd;
 	return (true);
+}
+
+bool findString(stringVec array, std::string &strToFind) {
+	for (size_t i = 0; i < array.size(); i++) {
+		if (array[i] == strToFind)
+			return (true);
+	}
+	return (false);
 }

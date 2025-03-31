@@ -15,14 +15,14 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdParam::CmdParam(void) : opt_(false), delim_('\0') {}
+CmdParam::CmdParam(void) : opt_(false), list_(false) {}
 
-CmdParam::CmdParam(const bool opt, const char delim)
-	: opt_(opt), delim_(delim) {}
+CmdParam::CmdParam(const bool opt, const bool list)
+	: opt_(opt), list_(list) {}
 
-// CmdParam::CmdParam(const CmdParam &rhs) {
-// 	*this = rhs;
-// }
+CmdParam::CmdParam(const CmdParam &rhs) {
+	*this = rhs;
+}
 
 CmdParam::~CmdParam(void) {}
 
@@ -37,8 +37,8 @@ std::string &CmdParam::operator[](unsigned int i) {
 
 CmdParam &CmdParam::operator=(const CmdParam &rhs) {
 	if (this != &rhs) {
-		opt_ = rhs.getOpt();
-		delim_ = rhs.getDelim();
+		opt_ = rhs.isOpt();
+		list_ = rhs.isList();
 		innerParam_ = rhs.getInnerParam();
 	}
 	return (*this);
@@ -68,19 +68,19 @@ void CmdParam::clean(void) {
 	innerParam_.clear();
 }
 
+bool CmdParam::isOpt(void) const {
+	return (opt_);
+}
+
+bool CmdParam::isList(void) const {
+	return (list_);
+}
+
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
 const stringVec &CmdParam::getInnerParam(void) const {
 	return (innerParam_);
-}
-
-bool CmdParam::getOpt(void) const {
-	return (opt_);
-}
-
-char CmdParam::getDelim(void) const {
-	return (delim_);
 }
 
 /* ************************************************************************** */
