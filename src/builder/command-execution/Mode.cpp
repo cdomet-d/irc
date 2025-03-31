@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 15:23:14 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/31 10:55:15 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void executeFlag(std::string flag, std::string param, Channel &curChan) {
 	if (flagLevel != -1)
 		flagExecutor[flagLevel](flag, param, curChan);
 	else
-		reply::log(reply::DEBUG, "Invalid flag");
+		reply::log(reply::DEBUG, "Invalid flag : ", flag);
 }
 
 Channel &findCurChan(std::string chanName) {
@@ -129,11 +129,43 @@ Channel &findCurChan(std::string chanName) {
 	return (*curChanIt->second);
 }
 
+void sendModeMessages(std::string &first, std::string &second, Channel &curChan, std::string nick) {
+	std::string messages = RPL_CHANNELMODEIS(nick, curChan.getName(), first) + RPL_CHANNELMODEIS(nick, curChan.getName(), second);
+	sendMessageChannel(curChan.getCliInChan(), messages);
+}
+
+void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
+	std::string negMode = "-";
+	std::string posMode = "+";
+	bool posFirst = false;
+
+	if (cmd[flag_][0].find("+") != std::string::npos)
+		posFirst = true;
+	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
+		if (cmd[flag_][nbFlag].find("+") != std::string::npos)
+			posMode += cmd[flag_][nbFlag][1];
+		if (cmd[flag_][nbFlag].find("-") != std::string::npos)
+			negMode += cmd[flag_][nbFlag][1];
+	}
+	if (!strcmp("-", negMode.c_str()) && negMode.size() == 1) {
+		sendMessageChannel(curChan.getCliInChan(), RPL_CHANNELMODEIS(sender->cliInfo.getNick(), curChan.getName(), posMode));
+		return ;
+	}
+
+	if (!strcmp("-", posMode.c_str()) && posMode.size() == 1) {
+		sendMessageChannel(curChan.getCliInChan(), RPL_CHANNELMODEIS(sender->cliInfo.getNick(), curChan.getName(), negMode));
+		return ;
+	}
+
+	(cmd[flag_][0][0] == '+') 
+        ? sendModeMessages(posMode, negMode, curChan, sender->cliInfo.getNick())
+        : sendModeMessages(negMode, posMode, curChan, sender->cliInfo.getNick());
+}
+
 //the modes of a channel need to be empty if no moe is activated and +<modes> if any
 void mode(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 	Channel &curChan = findCurChan(cmd[channel_][0]);
-	std::string newModes;
 	std::string newMaxCli = "";
 
 	if (!cmd[flag_].size()) {
@@ -146,12 +178,7 @@ void mode(CmdSpec &cmd) {
 		if (cmd[flag_][nbFlag] == "+l")
 			newMaxCli = cmd[flagArg_][nbFlag];
 		executeFlag(cmd[flag_][nbFlag], cmd[flagArg_][nbFlag], curChan);
-		newModes.append(cmd[flag_][nbFlag]);
 	}
-	newModes.append(" ");
-	newModes.append(newMaxCli);
-	sendMessageChannel(curChan.getCliInChan(),
-					   RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
-										 curChan.getName(), newModes));
+	buildNewModeString(cmd, curChan, sender);
 	curChan.setModes();
 }
