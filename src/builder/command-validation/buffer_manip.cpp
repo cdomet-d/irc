@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 14:01:53 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/31 11:49:18 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ bool buffer_manip::prepareCommand(Client &sender) {
 			}
 			manager.executeCm(
 				manager.findCmd(sender.mess.getCmd()).process(sender));
-
+			sender.mess.clearCmdParam();
+			sender.mess.clearMess();
 		} catch (const CmdManager::CmdNotFoundException &e) {
 			reply::send_(sender.getFd(),
 						 ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),

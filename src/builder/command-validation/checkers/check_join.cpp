@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_join.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 18:28:24 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/31 11:44:40 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@ bool check::join(CmdSpec &cmd) {
 	channelMap::const_iterator itChan;
 	size_t i = 0;
 
+	if (!check::chan(cmd))
+		return false;
 	while (i < cmd[channel_].size()) {
-		//TODO: call coralie's function to check syntax of channel
 		itChan = cmd.server_.getAllChan().find(cmd[channel_][i]);
 		if (itChan != cmd.server_.getAllChan().end()) {
 			if (!check::join_::assessRequest(*itChan->second, cmd, i)) {

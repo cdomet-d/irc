@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 12:59:59 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/31 11:03:36 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,3 +104,8 @@ bool check::mode(CmdSpec &cmd) {
 		return false;
 	return true;
 }
+
+//TODO: check if there is a target and that the client is on it.
+//TODO: +l: block if arg is not an interger
+//TODO: +o: check client exist and is on channel
+//TODO: +k: check that 26 > len > 8 

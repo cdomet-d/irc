@@ -6,14 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 16:44:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/31 11:42:18 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
 
 bool check::nick(CmdSpec &cmd) {
-	std::cout << "In nick checker" << std::endl;
 	std::string nick = cmd[nickname_][0];
 	if (nick.size() > 9) {
 		nick = check::nick_::trim(nick);
@@ -71,13 +70,10 @@ bool check::nick_::isSpecial(const char &c) {
 
 bool check::nick_::isUnique(const std::string &nick, const nickMap &regCli,
 							const int &senderFd) {
-	std::cout << "IsUnique" << std::endl;
 	nickMap::const_iterator unique = regCli.find(nick);
 	if (unique == regCli.end()) {
-		std::cout << "No match found: nick is unique" << std::endl;
 		return true;
 	}
-	std::cout << "A match found: nick is not unique" << std::endl;
 	reply::send_(senderFd, ERR_NICKNAMEINUSE(nick));
 	return false;
 }

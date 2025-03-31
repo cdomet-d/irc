@@ -6,14 +6,29 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/31 10:35:33 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/31 11:43:57 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
+#include "printers.hpp"
 
 bool check::chan(CmdSpec &cmd) {
-	stringVec param = cmd[channel_].getInnerParam();
+	size_t i = 0;
+	print::cmdParam(cmd[channel_].getInnerParam(), "channels");
+	while (i < cmd[channel_].size()) {
+		if (cmd[channel_][i][0] != '#') {
+			std::cout << cmd[channel_][i] << std::endl;
+			reply::send_(cmd.getSender().getFd(),
+						 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
+										   cmd[channel_][i]));
+			cmd[channel_].rmParam(i);
+			continue;
+		}
+		i++;
+	}
+	if (!cmd[channel_].size())
+		return false;
 	return (true);
 }
 
