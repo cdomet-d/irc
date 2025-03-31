@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 12:51:53 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/31 15:54:21 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ class Channel {
 
 	/*                               METHODS                                  */
 	bool addClientToChan(Channel *curChan, Client *curCli);
-	void printMapValues();
 	void addCli(mapChan curMap, Client *curCli);
 	void removeCli(mapChan curMap, int fdCli);
 

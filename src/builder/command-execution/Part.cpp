@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/27 14:20:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/31 16:10:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void partOneChan(Client *sender, Channel &curChan) {
 	curChan.removeCli(ALLCLI, targetFd);
 	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end()) {
 		curChan.removeCli(OPCLI, targetFd);
+		sender->removeOneChan(curChan.getName());
 	}
 }
 

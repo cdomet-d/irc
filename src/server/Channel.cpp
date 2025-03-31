@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 16:00:55 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/31 16:12:35 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void sendMessageChannel(clientMap allCliChannel, std::string message) {
 bool Channel::addClientToChan(Channel *curChan, Client *sender) {
 	curChan->addCli(ALLCLI, sender);
 
-	sender->getJoinedChans().push_back(curChan->getName());
+	sender->addOneChan(curChan->getName());
 
 	for (clientMapIt itCli = curChan->getCliInChan().begin();
 		 itCli != curChan->getCliInChan().end(); ++itCli) {

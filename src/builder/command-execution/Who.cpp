@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/31 15:25:44 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/31 15:35:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,11 @@ void who(CmdSpec &cmd) {
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 	std::string nickList;
 
-	if (cmd[flag_][0] == "o")
-		nickList = buildNickList(curChan.getOpCli(), sender, curChan);		
+	//TODO : faire un try catch ou !empty ?
+	//if (cmd[flag_][0] == "o") {
+	//	nickList = buildNickList(curChan.getOpCli(), sender, curChan);
+	//	return ;
+	//}
 	nickList = buildNickList(curChan.getCliInChan(), sender, curChan);		
 
 	// Send the full list
@@ -49,5 +52,4 @@ void who(CmdSpec &cmd) {
 	reply::send_(sender->getFd(),
 			  RPL_ENDOFNAMES(sender->cliInfo.getNick(), curChan.getName()));
 
-	return (true);
 }

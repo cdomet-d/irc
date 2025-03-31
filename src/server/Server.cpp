@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 16:33:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/31 15:31:36 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,8 +184,8 @@ bool Server::handleData(int fd) {
 void checkOnlyOperator(Channel *curChan) {
 	static Server &server = Server::GetServerInstance(0, "");
 
-	if (!curChan->getOpCli().size()) {
-		if (curChan->getCliInChan().size() >= 1) {
+	if (curChan->getCliInChan().size() >= 1) {
+		if (!curChan->getOpCli().size()) {
 			curChan->addCli(OPCLI, curChan->getCliInChan().begin()->second);
 			reply::send_(
 				curChan->getCliInChan().begin()->second->getFd(),
