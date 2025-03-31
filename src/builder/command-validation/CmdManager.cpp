@@ -136,8 +136,8 @@ void CmdManager::generateCmds() {
 			.Registration(3)
 			.addParam(target_, new CmdParam(false, true))
 			.addParam(message_, new CmdParam())
-			.addChecker(check::mess)
 			//TODO: regarder si le target commence par un #, si oui faire validChan et isOnChan si non faire validTarget
+			.addChecker(check::mess)
 			.CmExecutor(privmsg)
 			.build());
 
@@ -166,6 +166,7 @@ void CmdManager::generateCmds() {
 			.addParam(flag_, new CmdParam(true, false))
 			.addChecker(check::chan)
 			.addChecker(check::chans_::isOnChan)
+			//TODO: add checker for flag "o"
 			.CmExecutor(who)
 			.build());
 }
