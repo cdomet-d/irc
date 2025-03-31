@@ -6,7 +6,7 @@
 /*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 18:06:03 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/31 09:36:56 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 bool check::chans_::isOnChan(CmdSpec &cmd) {
 	stringVec joinedChans = cmd.getSender().getJoinedChans();
-
 	size_t i = 0;
+
 	while (i < cmd[channel_].size()) {
 		if (!findString(joinedChans, cmd[channel_][i])) {
 			reply::send_(cmd.getSender().getFd(),
@@ -38,8 +38,8 @@ bool check::chans_::hasChanAuthorisations(CmdSpec &cmd) {
 	Channel chan = *itChan->second;
 
 	if (cmd.getName() == "TOPIC" &&
-		(!cmd[topic_].getInnerParam().empty() ||
-		 (chan.getModes().find('t') == std::string::npos))) {
+		(cmd[topic_].empty() ||
+		 chan.getModes().find('t') == std::string::npos)) {
 		return (true);
 	}
 
