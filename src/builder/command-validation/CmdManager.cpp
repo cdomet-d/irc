@@ -158,6 +158,15 @@ void CmdManager::generateCmds() {
 			.addChecker(check::chans_::hasChanAuthorisations)
 			.CmExecutor(topic)
 			.build());
+	
+	log(CmdSpec::CmdBuilder()
+			.Name("WHO")
+			.Registration(3)
+			.addParam(channel_, new CmdParam())
+			.addChecker(check::chan)
+			.addChecker(check::chans_::isOnChan)
+			.CmExecutor(who)
+			.build());
 }
 
 void CmdManager::log(CmdSpec *cm) {
