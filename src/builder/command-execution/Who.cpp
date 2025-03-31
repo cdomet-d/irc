@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Who.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/31 09:40:18 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/31 15:22:34 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,61 +15,39 @@
 #include "Server.hpp"
 #include <sstream>
 
+std::string buildNickList(clientMap curMap, Client *sender, Channel &curChan) {
+	std::string list;
+
+	for (clientMapIt it = curMap.begin(); it != curMap.end(); ++it) {
+	   if (it->first == sender->getFd())
+		   continue;
+	   std::string prefix = "";
+	   if (curChan.getOpCli().find(it->first) != curChan.getOpCli().end()) {
+		   prefix = "@";
+	   }
+	   if (!list.empty()) {
+		   list += " ";
+	   }
+	   list += prefix + it->second->cliInfo.getNick();
+	}
+	return (list);
+}
+
 void who(CmdSpec &cmd) {
 	(void)cmd;
-	/* 	static Server &server = Server::GetServerInstance(0, "");
-
-	std::istringstream iss(params);
-	std::string channel;
-	std::string command = "WHO";
-
-	iss >> channel;
-
-	//is there enough params
-	if (channel.empty() == true) {
-		reply::send_(curCli->getFd(), ERR_NEEDMOREPARAMS(curCli->cliInfo.getNick(), command));
-		return (false);
-	}
-
-	//does channel exists
-	channelMapIt curChan = server.getAllChan().find(channel);
-	if (curChan == server.getAllChan().end()) {
-		reply::send_(curCli->getFd(),
-				  ERR_NOSUCHCHANNEL(curCli->cliInfo.getNick(), channel));
-		return (false);
-	}
-
-	//is client sending the command on the channel
-	clientMapIt senderIt =
-		curChan->second->getCliInChan().find(curCli->getFd());
-	if (senderIt == curChan->second->getCliInChan().end()) {
-		reply::send_(curCli->getFd(),
-				  ERR_NOTONCHANNEL(curCli->cliInfo.getNick(), channel));
-		return (false);
-	}
-
-	// Build the nickname list first
+	Client *sender = &cmd.getSender();
+	Channel &curChan = findCurChan(cmd[channel_][0]);
 	std::string nickList;
-	for (clientMapIt it = curChan->second->getCliInChan().begin();
-		 it != curChan->second->getCliInChan().end(); ++it) {
-		if (it->first == curCli->getFd())
-			continue;
-		std::string prefix = "";
-		if (curChan->second->getOpCli().find(it->first) !=
-			curChan->second->getOpCli().end()) {
-			prefix = "@";
-		}
-		if (!nickList.empty()) {
-			nickList += " ";
-		}
-		nickList += prefix + it->second->cliInfo.getNick();
-	}
+
+	if (cmd[flag_][0] == "o")
+		nickList = buildNickList(curChan.getOpCli(), sender, curChan);		
+	nickList = buildNickList(curChan.getCliInChan(), sender, curChan);		
 
 	// Send the full list
-	reply::send_(curCli->getFd(),
-			  RPL_NAMREPLY(curCli->cliInfo.getNick(), "=", channel, nickList));
-	reply::send_(curCli->getFd(),
-			  RPL_ENDOFNAMES(curCli->cliInfo.getNick(), channel)); */
+	reply::send_(sender->getFd(),
+			  RPL_NAMREPLY(sender->cliInfo.getNick(), "=", curChan.getName(), nickList));
+	reply::send_(sender->getFd(),
+			  RPL_ENDOFNAMES(sender->cliInfo.getNick(), curChan.getName()));
 
-	// return (true);
+	return (true);
 }
