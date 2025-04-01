@@ -13,26 +13,31 @@
 #include "validator.hpp"
 
 bool check::chan(CmdSpec &cmd, int idx) {
+	(void)idx;
 	stringVec param = cmd[channel_].getInnerParam();
 	return (true);
 }
 
 bool check::user(CmdSpec &cmd, int idx) {
+	(void)idx;
 	(void)cmd;
 	return (true);
 }
 
 bool check::target(CmdSpec &cmd, int idx) {
 	(void)cmd;
+	(void)idx;
 	return (true);
 }
 
 bool check::invite(CmdSpec &cmd, int idx) {
 	(void)cmd;
+	(void)idx;
 	return (true);
 }
 
 bool check::mess(CmdSpec &cmd, int idx) {
+	(void)idx;
 	if (cmd[target_].empty()) {
 		reply::send_(
 			cmd.getSender().getFd(),
@@ -46,7 +51,9 @@ bool check::mess(CmdSpec &cmd, int idx) {
 	}
 	size_t i = 0;
 	while (i < cmd[target_].size()) {
-		if (cmd[target_][i][0] != '#' || cmd[target_][i][0] != '@') {
+		if (cmd[target_][i][0] != '#' ||
+			(cmd[target_][i][0] != '@' &&
+			 (cmd[target_][i].size() > 1 && cmd[target_][i][1] != '#'))) {
 			if (!check::target(cmd, i)) {
 				cmd[channel_].rmParam(i);
 				continue;
@@ -68,6 +75,7 @@ bool check::mess(CmdSpec &cmd, int idx) {
 }
 
 bool check::enoughParams(CmdSpec &cmd, int idx) {
+	(void)idx;
 	for (size_t i = 0; i < cmd.getParams().size(); i++) {
 		CmdParam &innerParam = *cmd.getParams()[i].second;
 		if (!innerParam.isOpt() && innerParam.empty()) {
