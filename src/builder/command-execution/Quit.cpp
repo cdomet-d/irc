@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 12:58:47 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:13:36 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@
 #include <sstream>
 
 void partAllChans(Client *sender) {
-	for (stringVec::iterator currChanName = sender->getJoinedChans().begin();
+	for (stringVecItConst currChanName = sender->getJoinedChans().begin();
 		 currChanName != sender->getJoinedChans().end(); ++currChanName) {
 		std::string tempMess = "PART " + *currChanName + "\n\r";
 		sender->mess.setMess(tempMess);
 		buffer_manip::prepareCommand(*sender);
+		sender->removeOneChan(*currChanName);
 	}
-	sender->getJoinedChans().clear();
 }
 
 void quit(CmdSpec &cmd) {

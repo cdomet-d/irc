@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/31 16:12:35 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:08:59 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,7 @@ class Client {
 
 	/*                               GETTERS                                  */
 	int getFd() const;
-	stringVec &getJoinedChans();
-	void removeOneChan(std::string chanName);
-	void addOneChan(std::string chanName);
+	const stringVec &getJoinedChans() const;
 	struct epoll_event *getCliEpoll();
 
 	/*                               SETTERS                                  */
@@ -41,6 +39,9 @@ class Client {
 	void setFd(int fd);
 
 	/*                               MEMBERS                                  */
+	void removeOneChan(std::string chanName);
+	void addOneChan(std::string chanName);
+
 	Message mess;
 	struct sockaddr_in cliAddr_;
 	UserInfo cliInfo;
