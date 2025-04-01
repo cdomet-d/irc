@@ -100,6 +100,7 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 }
 
 bool check::mode(CmdSpec &cmd, int idx) {
+	(void)idx;
 	if (!check::mode_::formatArgs(cmd))
 		return false;
 	return true;
