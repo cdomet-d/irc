@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/31 15:35:09 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:31:29 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void who(CmdSpec &cmd) {
 	//}
 	nickList = buildNickList(curChan.getCliInChan(), sender, curChan);		
 
-	// Send the full list
 	reply::send_(sender->getFd(),
 			  RPL_NAMREPLY(sender->cliInfo.getNick(), "=", curChan.getName(), nickList));
 	reply::send_(sender->getFd(),

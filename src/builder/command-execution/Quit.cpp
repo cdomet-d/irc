@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/01 08:13:36 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:30:58 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ void partAllChans(Client *sender) {
 }
 
 void quit(CmdSpec &cmd) {
-	static Server &server = Server::GetServerInstance(0, "");
-
 	Client *sender = &cmd.getSender();
 	sender->mess.clearMess();
 	partAllChans(sender);
@@ -36,7 +34,7 @@ void quit(CmdSpec &cmd) {
 	std::stringstream ss;
 	ss << "Client [" << sender->getFd() << "] deconnected";
 	reply::log(reply::INFO, ss.str());
-	server.removeCli(sender);
+	cmd.server_.removeCli(sender);
 	close(sender->getFd());
 	delete sender;
 }

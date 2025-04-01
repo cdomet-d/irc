@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/31 15:31:36 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:18:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ bool Server::servInit() {
 	servPoll_.data.fd = servFd_;
 	servPoll_.events = EPOLLIN | EPOLLOUT;
 	if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, servFd_, &servPoll_) == -1)
-		return 0;
+		return (0);
 	return (true);
 }
 
@@ -92,7 +92,7 @@ bool Server::servRun() {
 			if (events_[i].data.fd == servFd_)
 				acceptClient();
 			else if (handleData(events_[i].data.fd) == false)
-				return true;
+				return (true);
 		}
 	}
 	return (true);
@@ -220,7 +220,8 @@ void Server::addNickToUsedNicks(const std::string &newNick, int fd) {
 void Server::removeNickFromUsedNicks(const std::string &toRemove) {
 	nickMap::iterator nickToRm = usedNicks_.find(toRemove);
 	if (nickToRm == usedNicks_.end())
-		return;
+		return ;
+	std::cout << "client got remove from usedNicks map in server" << std::endl;
 	usedNicks_.erase(nickToRm);
 }
 
@@ -230,7 +231,7 @@ void Server::removeNickFromUsedNicks(const std::string &toRemove) {
 
 const char *Server::InitFailed::what() const throw() {
 	std::cerr << "irc: ";
-	return errMessage;
+	return (errMessage);
 }
 
 Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
@@ -254,7 +255,7 @@ int Server::getFdFromNick(const std::string &nick) const {
 	nickMap::const_iterator nickInMap = usedNicks_.find(nick);
 	if (nickInMap != usedNicks_.end())
 		return nickInMap->second;
-	return -1;
+	return (-1);
 }
 
 const std::string Server::getPass() const {
