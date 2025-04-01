@@ -30,6 +30,12 @@ bool check::target(CmdSpec &cmd, int idx) {
 	return (true);
 }
 
+bool targetIsOnChan(CmdSpec &cmd, int idx) {
+	(void)cmd;
+	(void)idx;
+	return (true);
+}
+
 bool check::invite(CmdSpec &cmd, int idx) {
 	(void)cmd;
 	(void)idx;

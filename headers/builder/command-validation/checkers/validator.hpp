@@ -24,6 +24,7 @@ namespace check {
 	bool mode(CmdSpec &cmd, int idx);
 	bool nick(CmdSpec &cmd, int idx);
 	bool target(CmdSpec &cmd, int idx);
+	bool targetIsOnChan(CmdSpec &cmd, int idx);
 	bool user(CmdSpec &cmd, int idx);
 	bool join(CmdSpec &cmd, int idx);
 	bool enoughParams(CmdSpec &cmd, int idx);
