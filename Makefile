@@ -77,6 +77,7 @@ BUILD_CHECK_SRC:=	check_mode.cpp \
 					check_join.cpp \
 					check.cpp \
 					check_chans.cpp \
+					check_mess.cpp \
 					extended_checkers.cpp \
 
 BUILD_MAN_SRC:=	\
