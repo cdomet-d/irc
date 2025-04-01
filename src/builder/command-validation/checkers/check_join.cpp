@@ -12,7 +12,7 @@
 
 #include "validator.hpp"
 
-bool check::join(CmdSpec &cmd) {
+bool check::join(CmdSpec &cmd, int idx) {
 	channelMap::const_iterator itChan;
 	size_t i = 0;
 

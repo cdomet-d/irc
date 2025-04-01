@@ -16,16 +16,17 @@
 #include "CmdSpec.hpp"
 
 namespace check {
-	bool chan(CmdSpec &cmd);
-	bool invite(CmdSpec &cmd);
-	bool kick(CmdSpec &cmd);
-	bool mess(CmdSpec &cmd);
-	bool mode(CmdSpec &cmd);
-	bool nick(CmdSpec &cmd);
-	bool target(CmdSpec &cmd);
-	bool user(CmdSpec &cmd);
-	bool join(CmdSpec &cmd);
-	bool enoughParams(CmdSpec &cmd);
+	bool chan(CmdSpec &cmd, int idx);
+	bool invite(CmdSpec &cmd, int idx);
+	bool kick(CmdSpec &cmd, int idx);
+	bool part(CmdSpec &cmd, int idx);
+	bool mess(CmdSpec &cmd, int idx);
+	bool mode(CmdSpec &cmd, int idx);
+	bool nick(CmdSpec &cmd, int idx);
+	bool target(CmdSpec &cmd, int idx);
+	bool user(CmdSpec &cmd, int idx);
+	bool join(CmdSpec &cmd, int idx);
+	bool enoughParams(CmdSpec &cmd, int idx);
 	bool findString(stringVec array, std::string &strToFind);
 
 	namespace mode_ {
@@ -54,13 +55,13 @@ namespace check {
 	} // namespace join_
 
 	namespace chans_ {
-		bool isOnChan(CmdSpec &cmd);
-		bool hasChanAuthorisations(CmdSpec &cmd);
+		bool isOnChan(CmdSpec &cmd, int idx);
+		bool hasChanAuthorisations(CmdSpec &cmd, int idx);
 	} // namespace chans_
 	namespace register_ {
-		bool isRegistered(CmdSpec &cmd);
-		bool stageDone(CmdSpec &cmd);
-		bool pwMatch(CmdSpec &cmd);
+		bool isRegistered(CmdSpec &cmd, int idx);
+		bool stageDone(CmdSpec &cmd, int idx);
+		bool pwMatch(CmdSpec &cmd, int idx);
 	} // namespace register_
 } // namespace check
 

@@ -16,12 +16,11 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
-				 std::vector< bool (*)(CmdSpec &) > checkers,
-				 std::vector< bool (*)(CmdSpec &cmd) > listCheckers,
+				 std::vector< bool (*)(CmdSpec &, int) > checkers,
 				 void (*cmExecutor)(CmdSpec &cmd))
 	: server_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
 	  name_(name), registrationStage_(registrationStage), params_(params),
-	  checkers_(checkers), listCheckers_(listCheckers), cmExecutor_(cmExecutor) {}
+	  checkers_(checkers), cmExecutor_(cmExecutor) {}
 
 CmdSpec::~CmdSpec(void) {
 	for (paramMap::iterator it = params_.begin(); it != params_.end(); it++) {
@@ -60,45 +59,23 @@ bool CmdSpec::checkRegistrationStage(void) {
 	return (true);
 }
 
-void CmdSpec::setParam(void) {
-	for (size_t i = 0; i < params_.size() && i < sender_->mess.getSize(); i++) {
-		try {
-			(*params_[i].second).setOneParam(sender_->mess[i + 1]);
-		} catch (const std::out_of_range &e) {}
-	}
-}
-
-void CmdSpec::hasParamList(void) {
-	for (size_t i = 0; i < params_.size(); i++) {
-		CmdParam &innerParam = *params_[i].second;
-		if (innerParam.isList()) {
-			try {
-				innerParam.setParamList(
-					buffer_manip::vectorSplit(innerParam[0], ','));
-			} catch (const std::out_of_range &e) {};
-		}
-	}
-}
-
 CmdSpec &CmdSpec::process(Client &sender) {
 
 	setSender(sender);
 	if (!checkRegistrationStage())
 		return (*this);
 	setParam();
-	//TODO: move invite condition in enoughParams ?
 	if (name_ == "INVITE" && !(*this)[target_].size() &&
 		!(*this)[channel_].size())
 		return (*this);
 	hasParamList();
 	// displayParams();
 	for (size_t i = 0; i < checkers_.size(); i++) {
-		if (!checkers_[i](*this)) {
+		if (!checkers_[i](*this, 0)) {
 			valid_ = false;
 			return (*this);
 		}
 	}
-	//add loop on list checkers
 	return (*this);
 }
 
@@ -192,8 +169,24 @@ void CmdSpec::setSender(Client &sender) {
 	sender_ = &sender;
 }
 
-void CmdSpec::setValid(bool valid) {
-	valid_ = valid;
+void CmdSpec::setParam(void) {
+	for (size_t i = 0; i < params_.size() && i < sender_->mess.getSize(); i++) {
+		try {
+			(*params_[i].second).setOneParam(sender_->mess[i + 1]);
+		} catch (const std::out_of_range &e) {}
+	}
+}
+
+void CmdSpec::hasParamList(void) {
+	for (size_t i = 0; i < params_.size(); i++) {
+		CmdParam &innerParam = *params_[i].second;
+		if (innerParam.isList()) {
+			try {
+				innerParam.setParamList(
+					buffer_manip::vectorSplit(innerParam[0], ','));
+			} catch (const std::out_of_range &e) {};
+		}
+	}
 }
 
 /* ************************************************************************** */
@@ -224,13 +217,8 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addParam(e_param type,
 	return (*this);
 }
 
-CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(bool (*ft)(CmdSpec &cmd)) {
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(bool (*ft)(CmdSpec &cmd, int idx)) {
 	checkers_.push_back(ft);
-	return (*this);
-}
-
-CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addListChecker(bool (*ft)(CmdSpec &cmd)) {
-	listCheckers_.push_back(ft);
 	return (*this);
 }
 
@@ -241,5 +229,5 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::CmExecutor(void (*ft)(CmdSpec &cmd)) {
 
 CmdSpec *CmdSpec::CmdBuilder::build() {
 	return (new CmdSpec(name_, registrationStage_, params_, checkers_,
-						listCheckers_, cmExecutor_));
+						cmExecutor_));
 }

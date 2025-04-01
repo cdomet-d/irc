@@ -12,7 +12,7 @@
 
 #include "validator.hpp"
 
-bool check::chans_::isOnChan(CmdSpec &cmd) {
+bool check::chans_::isOnChan(CmdSpec &cmd, int idx) {
 	//TODO: rm boucle
 	stringVec joinedChans = cmd.getSender().getJoinedChans();
 	size_t i = 0;
@@ -32,7 +32,7 @@ bool check::chans_::isOnChan(CmdSpec &cmd) {
 	return (true);
 }
 
-bool check::chans_::hasChanAuthorisations(CmdSpec &cmd) {
+bool check::chans_::hasChanAuthorisations(CmdSpec &cmd, int idx) {
 	channelMap::const_iterator itChan;
 
 	itChan = cmd.server_.getAllChan().find(cmd[channel_][0]);

@@ -12,7 +12,7 @@
 
 #include "validator.hpp"
 
-bool check::nick(CmdSpec &cmd) {
+bool check::nick(CmdSpec &cmd, int idx) {
 	if (cmd[nickname_].empty()) {
 		reply::send_(cmd.getSender().getFd(), ERR_NONICKNAMEGIVEN());
 		return (false);

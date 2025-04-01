@@ -108,8 +108,8 @@ void CmdManager::generateCmds() {
 			.addChecker(check::chan)
 			.addChecker(check::chans_::isOnChan)
 			.addChecker(check::chans_::hasChanAuthorisations)
-			.addListChecker(check::target)
-			.addListChecker(check::kick)
+			// .addChecker(check::target)
+			.addChecker(check::kick)
 			.CmExecutor(kick)
 			.build());
 
@@ -133,8 +133,9 @@ void CmdManager::generateCmds() {
 			.addParam(channel_, new CmdParam(false, true))
 			.addParam(message_, new CmdParam(true, false))
 			.addChecker(check::enoughParams)
-			.addListChecker(check::chan)
-			.addListChecker(check::chans_::isOnChan)
+			.addChecker(check::part)
+			// .addChecker(check::chan)
+			// .addChecker(check::chans_::isOnChan)
 			.CmExecutor(part)
 			.build());
 

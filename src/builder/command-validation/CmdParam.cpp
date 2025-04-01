@@ -56,10 +56,6 @@ void CmdParam::rmParam(unsigned int pos) {
 	innerParam_.erase(innerParam_.begin() + pos);
 }
 
-void CmdParam::rmParam(stringVec::iterator begin, stringVec::iterator end) {
-	innerParam_.erase(begin, end);
-}
-
 void CmdParam::addOne(unsigned int pos) {
 	innerParam_.insert(innerParam_.begin() + pos, "");
 }
