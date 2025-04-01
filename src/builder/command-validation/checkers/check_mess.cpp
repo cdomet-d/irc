@@ -14,15 +14,10 @@ bool check::mess(CmdSpec &cmd, int idx) {
 				cmd[channel_].rmParam(i);
 				continue;
 			}
-		} else {
-			if (!check::chan(cmd, i) || !check::chans_::isOnChan(cmd, i)) {
+		} else if (!check::chan(cmd, i) || !check::chans_::isOnChan(cmd, i)) {
 				cmd[channel_].rmParam(i);
 				continue;
 			}
-			if (cmd[target_][i][0] == '@') {
-				//TODO: add bool only op et rm le @
-			}
-		}
 		i++;
 	}
 	if (!cmd[channel_].size())
