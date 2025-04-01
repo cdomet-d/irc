@@ -16,13 +16,13 @@
 
 void checkTopic(Channel &curChan, Client *curCli) {
 	if (curChan.getTopic().empty() == true) {
-		reply::send_(curCli->getFd(), RPL_NOTOPIC(curCli->cliInfo.getNick(),
-													  curChan.getName()));
+		reply::send_(curCli->getFd(),
+					 RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan.getName()));
 		return;
 	}
 	reply::send_(curCli->getFd(),
-					 RPL_TOPIC(curCli->cliInfo.getNick(), curChan.getName(),
-							   curChan.getTopic()));
+				 RPL_TOPIC(curCli->cliInfo.getNick(), curChan.getName(),
+						   curChan.getTopic()));
 	return;
 }
 

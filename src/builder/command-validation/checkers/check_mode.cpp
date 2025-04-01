@@ -53,8 +53,8 @@ bool check::mode_::flagIsValid(e_mdeset &set, e_mdetype &type,
 	} catch (std::exception &e) { return false; }
 	if (!set || !type) {
 		reply::send_(cli.getFd(),
-					ERR_UNKNOWNMODE(cli.cliInfo.getNick(),
-									(!set ? flag.at(0) : flag.at(1))));
+					 ERR_UNKNOWNMODE(cli.cliInfo.getNick(),
+									 (!set ? flag.at(0) : flag.at(1))));
 		return false;
 	}
 	return true;

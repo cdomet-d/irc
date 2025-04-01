@@ -17,8 +17,7 @@
 /* ************************************************************************** */
 CmdParam::CmdParam(void) : opt_(false), list_(false) {}
 
-CmdParam::CmdParam(const bool opt, const bool list)
-	: opt_(opt), list_(list) {}
+CmdParam::CmdParam(const bool opt, const bool list) : opt_(opt), list_(list) {}
 
 CmdParam::CmdParam(const CmdParam &rhs) {
 	*this = rhs;

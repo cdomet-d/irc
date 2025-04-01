@@ -22,11 +22,10 @@ void privmsg(CmdSpec &cmd) {
 		for (clientMapIt itTarget = server.getAllCli().begin();
 			 itTarget != server.getAllCli().end(); ++itTarget) {
 			if (itTarget->second->cliInfo.getNick() == cmd[target_][0]) {
-				reply::send_(
-					itTarget->first,
-					RPL_PRIVMSG(sender->cliInfo.getPrefix(),
-								itTarget->second->cliInfo.getNick(),
-								cmd[message_][0]));
+				reply::send_(itTarget->first,
+							 RPL_PRIVMSG(sender->cliInfo.getPrefix(),
+										 itTarget->second->cliInfo.getNick(),
+										 cmd[message_][0]));
 				return;
 			}
 		}
@@ -37,7 +36,7 @@ void privmsg(CmdSpec &cmd) {
 		 itCli != curChan.getCliInChan().end(); ++itCli) {
 		if (itCli->first != sender->getFd())
 			reply::send_(itCli->second->getFd(),
-							 RPL_PRIVMSG(sender->cliInfo.getPrefix(),
-										 curChan.getName(), cmd[message_][0]));
+						 RPL_PRIVMSG(sender->cliInfo.getPrefix(),
+									 curChan.getName(), cmd[message_][0]));
 	}
 }

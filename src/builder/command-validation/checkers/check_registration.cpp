@@ -20,12 +20,14 @@ bool check::register_::stageDone(CmdSpec &cmd, int idx) {
 		return (true);
 	if (cmd.getName() == "PASS" &&
 		cmd.getSender().cliInfo.getRegistration() == 1)
-		reply::send_(cmd.getSender().getFd(), ERR_NEEDNICK(cmd.getSender().cliInfo.getNick()));
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_NEEDNICK(cmd.getSender().cliInfo.getNick()));
 	else
-		reply::send_(cmd.getSender().getFd(), ERR_NEEDUSER(cmd.getSender().cliInfo.getNick()));
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_NEEDUSER(cmd.getSender().cliInfo.getNick()));
 	return (false);
 }
-     
+
 bool check::register_::pwMatch(CmdSpec &cmd, int idx) {
 	(void)idx;
 	if (cmd[password_][0] != cmd.server_.getPass()) {

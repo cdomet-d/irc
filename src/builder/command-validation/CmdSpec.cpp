@@ -217,7 +217,8 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addParam(e_param type,
 	return (*this);
 }
 
-CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(bool (*ft)(CmdSpec &cmd, int idx)) {
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(bool (*ft)(CmdSpec &cmd,
+																int idx)) {
 	checkers_.push_back(ft);
 	return (*this);
 }

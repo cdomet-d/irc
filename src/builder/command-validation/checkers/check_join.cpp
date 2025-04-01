@@ -73,13 +73,15 @@ bool check::join_::chanHasRoom(Channel &chan, Client &sender) {
 	if (chan.getModes().find('l') == std::string::npos ||
 		chan.getCliInChan().size() < chan.getMaxCli())
 		return (true);
-	reply::send_(sender.getFd(), ERR_CHANNELISFULL(sender.cliInfo.getNick(), chan.getName()));
+	reply::send_(sender.getFd(),
+				 ERR_CHANNELISFULL(sender.cliInfo.getNick(), chan.getName()));
 	return (false);
 }
 
 bool check::join_::cliHasMaxChans(Channel &chan, Client &sender) {
 	if (sender.getJoinedChans().size() < MAX_CHAN_PER_CLI)
 		return (false);
-	reply::send_(sender.getFd(), ERR_TOOMANYCHANNELS(sender.cliInfo.getNick(), chan.getName()));
+	reply::send_(sender.getFd(),
+				 ERR_TOOMANYCHANNELS(sender.cliInfo.getNick(), chan.getName()));
 	return (true);
 }

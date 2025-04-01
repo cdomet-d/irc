@@ -17,8 +17,8 @@ bool check::chans_::isOnChan(CmdSpec &cmd, int idx) {
 
 	if (!check::findString(joinedChans, cmd[channel_][idx])) {
 		reply::send_(cmd.getSender().getFd(),
-						ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
-										cmd[channel_][idx]));
+					 ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
+									  cmd[channel_][idx]));
 		cmd[channel_].rmParam(idx);
 		return (false);
 	}
