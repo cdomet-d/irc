@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 16:15:00 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:34:12 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include "buffer_manip.hpp"
 #include "Channel.hpp"
+#include "buffer_manip.hpp"
 #include "typedef.hpp"
 #include <arpa/inet.h>
 #include <fstream>
@@ -62,7 +62,6 @@ class Server {
 
 	/*                               MEMBERS                                  */
 	std::ofstream logfile;
-
 
 	const clientMap &getAllCli() const;
 	const channelMap &getAllChan() const;

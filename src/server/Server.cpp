@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/01 08:18:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:34:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,7 +220,7 @@ void Server::addNickToUsedNicks(const std::string &newNick, int fd) {
 void Server::removeNickFromUsedNicks(const std::string &toRemove) {
 	nickMap::iterator nickToRm = usedNicks_.find(toRemove);
 	if (nickToRm == usedNicks_.end())
-		return ;
+		return;
 	std::cout << "client got remove from usedNicks map in server" << std::endl;
 	usedNicks_.erase(nickToRm);
 }

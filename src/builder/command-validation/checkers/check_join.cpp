@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_join.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 18:28:24 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/04/01 08:34:19 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,15 @@ bool check::join_::chanHasRoom(Channel &chan, Client &sender) {
 	if (chan.getModes().find('l') == std::string::npos ||
 		chan.getCliInChan().size() < chan.getMaxCli())
 		return (true);
-	reply::send_(sender.getFd(), ERR_CHANNELISFULL(sender.cliInfo.getNick(), chan.getName()));
+	reply::send_(sender.getFd(),
+				 ERR_CHANNELISFULL(sender.cliInfo.getNick(), chan.getName()));
 	return (false);
 }
 
 bool check::join_::cliHasMaxChans(Channel &chan, Client &sender) {
 	if (sender.getJoinedChans().size() < MAX_CHAN_PER_CLI)
 		return (false);
-	reply::send_(sender.getFd(), ERR_TOOMANYCHANNELS(sender.cliInfo.getNick(), chan.getName()));
+	reply::send_(sender.getFd(),
+				 ERR_TOOMANYCHANNELS(sender.cliInfo.getNick(), chan.getName()));
 	return (true);
 }

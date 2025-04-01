@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_registration.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:45:57 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 12:59:59 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:34:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,14 @@ bool check::register_::stageDone(CmdSpec &cmd) {
 		return (true);
 	if (cmd.getName() == "PASS" &&
 		cmd.getSender().cliInfo.getRegistration() == 1)
-		reply::send_(cmd.getSender().getFd(), ERR_NEEDNICK(cmd.getSender().cliInfo.getNick()));
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_NEEDNICK(cmd.getSender().cliInfo.getNick()));
 	else
-		reply::send_(cmd.getSender().getFd(), ERR_NEEDUSER(cmd.getSender().cliInfo.getNick()));
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_NEEDUSER(cmd.getSender().cliInfo.getNick()));
 	return (false);
 }
-     
+
 bool check::register_::pwMatch(CmdSpec &cmd) {
 	if (cmd[password_][0] != cmd.server_.getPass()) {
 		reply::send_(cmd.getSender().getFd(),

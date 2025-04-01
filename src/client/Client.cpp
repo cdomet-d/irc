@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/01 08:13:25 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:34:12 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void Client::removeOneChan(std::string chanName) {
 	for (stringVecIt it = joinedChans_.begin(); it != joinedChans_.end(); ++it)
 		if (*it == chanName) {
 			joinedChans_.erase(it);
-			return ;
+			return;
 		}
 }
 
@@ -70,7 +70,7 @@ void Client::addOneChan(std::string chanName) {
 	stringVecItConst it;
 	for (it = joinedChans_.begin(); it != joinedChans_.end(); ++it) {
 		if (*it == chanName)
-			return ;
+			return;
 	}
 	joinedChans_.push_back(chanName);
 }

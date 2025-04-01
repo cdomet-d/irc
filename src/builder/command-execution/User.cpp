@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:48:49 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 09:04:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:34:18 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ static std::string timeStamp() {
 }
 
 void registrationCompleted(Client *sender) {
-	reply::send_(sender->getFd(), RPL_WELCOME(sender->cliInfo.getNick(), sender->cliInfo.getPrefix()));
+	reply::send_(sender->getFd(), RPL_WELCOME(sender->cliInfo.getNick(),
+											  sender->cliInfo.getPrefix()));
 	reply::send_(sender->getFd(), RPL_YOURHOST());
 	reply::send_(sender->getFd(), RPL_CREATED(timeStamp()));
 	reply::send_(sender->getFd(), RPL_MYINFO(sender->cliInfo.getNick()));
@@ -37,6 +38,6 @@ void user(CmdSpec &cmd) {
 	sender->cliInfo.setRegistration(3);
 	sender->cliInfo.setPrefix();
 	reply::send_(cmd.getSender().getFd(),
-					 RPL_USER(sender->cliInfo.getUsername()));
-	registrationCompleted(sender);	
+				 RPL_USER(sender->cliInfo.getUsername()));
+	registrationCompleted(sender);
 }

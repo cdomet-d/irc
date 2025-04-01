@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:37:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 17:25:42 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:34:13 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,20 @@ void reply::log(e_level level, std::string message) {
 	if (serv.logfile.is_open()) {
 		switch (level) {
 		case INFO:
-			serv.logfile << "[" << timeStamp() << "] INFO  " << message << std::flush;
+			serv.logfile << "[" << timeStamp() << "] INFO  " << message
+						 << std::flush;
 			break;
 		case ERROR:
-			serv.logfile << "[" << timeStamp() << "] ERROR " << message << std::flush;
+			serv.logfile << "[" << timeStamp() << "] ERROR " << message
+						 << std::flush;
 			break;
 		case DEBUG:
-			serv.logfile << "[" << timeStamp() << "] DEBUG " << message << std::flush;
+			serv.logfile << "[" << timeStamp() << "] DEBUG " << message
+						 << std::flush;
 			break;
 		case REPLY:
-			serv.logfile << "[" << timeStamp() << "] REPLY " << message << std::flush;
+			serv.logfile << "[" << timeStamp() << "] REPLY " << message
+						 << std::flush;
 			break;
 		}
 	}
@@ -55,20 +59,20 @@ void reply::log(e_level level, std::string message, std::string verbose) {
 	if (serv.logfile.is_open()) {
 		switch (level) {
 		case (INFO):
-			serv.logfile << "[" << timeStamp() << "] INFO  " << message << std::flush
-						 << verbose;
+			serv.logfile << "[" << timeStamp() << "] INFO  " << message
+						 << std::flush << verbose;
 			break;
 		case (ERROR):
-			serv.logfile << "[" << timeStamp() << "] ERROR " << message << std::flush
-						 << verbose;
+			serv.logfile << "[" << timeStamp() << "] ERROR " << message
+						 << std::flush << verbose;
 			break;
 		case (DEBUG):
-			serv.logfile << "[" << timeStamp() << "] DEBUG " << message << std::flush
-						 << verbose;
+			serv.logfile << "[" << timeStamp() << "] DEBUG " << message
+						 << std::flush << verbose;
 			break;
 		case (REPLY):
-			serv.logfile << "[" << timeStamp() << "] REPLY " << message << std::flush
-						 << verbose;
+			serv.logfile << "[" << timeStamp() << "] REPLY " << message
+						 << std::flush << verbose;
 			break;
 		}
 	}

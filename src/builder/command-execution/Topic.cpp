@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 09:04:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:34:17 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@
 
 void checkTopic(Channel &curChan, Client *curCli) {
 	if (curChan.getTopic().empty() == true) {
-		reply::send_(curCli->getFd(), RPL_NOTOPIC(curCli->cliInfo.getNick(),
-													  curChan.getName()));
+		reply::send_(curCli->getFd(),
+					 RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan.getName()));
 		return;
 	}
 	reply::send_(curCli->getFd(),
-					 RPL_TOPIC(curCli->cliInfo.getNick(), curChan.getName(),
-							   curChan.getTopic()));
+				 RPL_TOPIC(curCli->cliInfo.getNick(), curChan.getName(),
+						   curChan.getTopic()));
 	return;
 }
 

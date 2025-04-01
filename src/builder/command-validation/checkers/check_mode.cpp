@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_mode.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 12:59:59 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:34:20 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ bool check::mode_::flagIsValid(e_mdeset &set, e_mdetype &type,
 	} catch (std::exception &e) { return false; }
 	if (!set || !type) {
 		reply::send_(cli.getFd(),
-					ERR_UNKNOWNMODE(cli.cliInfo.getNick(),
-									(!set ? flag.at(0) : flag.at(1))));
+					 ERR_UNKNOWNMODE(cli.cliInfo.getNick(),
+									 (!set ? flag.at(0) : flag.at(1))));
 		return false;
 	}
 	return true;

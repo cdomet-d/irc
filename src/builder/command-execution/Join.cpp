@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/01 08:29:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:34:16 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ void join(CmdSpec &cmd) {
 		return;
 	}
 
-    for (size_t nbChan = 0; nbChan < cmd[channel_].size(); nbChan++) {
-        Channel *curChan = createChan(cmd[channel_][nbChan]);
-        curChan->addClientToChan(curChan, sender);
-    }
-    return;
+	for (size_t nbChan = 0; nbChan < cmd[channel_].size(); nbChan++) {
+		Channel *curChan = createChan(cmd[channel_][nbChan]);
+		curChan->addClientToChan(curChan, sender);
+	}
+	return;
 }

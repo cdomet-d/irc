@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 13:59:33 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/01 08:13:14 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:34:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ typedef std::map< std::string, Channel * >::const_iterator channelMapIt;
 typedef std::pair< int, Client * > clientPair;
 typedef std::pair< std::string, int > nickPair;
 typedef std::vector< std::string > stringVec;
-typedef std::vector <std::string >::const_iterator stringVecItConst;
-typedef std::vector <std::string >::iterator stringVecIt;
+typedef std::vector< std::string >::const_iterator stringVecItConst;
+typedef std::vector< std::string >::iterator stringVecIt;
 
 /* assess the type of the mode flag */
 typedef enum {

@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/01 08:31:29 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:34:18 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@ std::string buildNickList(clientMap curMap, Client *sender, Channel &curChan) {
 	std::string list;
 
 	for (clientMapIt it = curMap.begin(); it != curMap.end(); ++it) {
-	   if (it->first == sender->getFd())
-		   continue;
-	   std::string prefix = "";
-	   if (curChan.getOpCli().find(it->first) != curChan.getOpCli().end()) {
-		   prefix = "@";
-	   }
-	   if (!list.empty()) {
-		   list += " ";
-	   }
-	   list += prefix + it->second->cliInfo.getNick();
+		if (it->first == sender->getFd())
+			continue;
+		std::string prefix = "";
+		if (curChan.getOpCli().find(it->first) != curChan.getOpCli().end()) {
+			prefix = "@";
+		}
+		if (!list.empty()) {
+			list += " ";
+		}
+		list += prefix + it->second->cliInfo.getNick();
 	}
 	return (list);
 }
@@ -44,11 +44,10 @@ void who(CmdSpec &cmd) {
 	//	nickList = buildNickList(curChan.getOpCli(), sender, curChan);
 	//	return ;
 	//}
-	nickList = buildNickList(curChan.getCliInChan(), sender, curChan);		
+	nickList = buildNickList(curChan.getCliInChan(), sender, curChan);
 
+	reply::send_(sender->getFd(), RPL_NAMREPLY(sender->cliInfo.getNick(), "=",
+											   curChan.getName(), nickList));
 	reply::send_(sender->getFd(),
-			  RPL_NAMREPLY(sender->cliInfo.getNick(), "=", curChan.getName(), nickList));
-	reply::send_(sender->getFd(),
-			  RPL_ENDOFNAMES(sender->cliInfo.getNick(), curChan.getName()));
-
+				 RPL_ENDOFNAMES(sender->cliInfo.getNick(), curChan.getName()));
 }

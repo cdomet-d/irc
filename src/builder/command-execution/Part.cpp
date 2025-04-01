@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/31 16:10:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:34:17 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void part(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 
-  if (!cmd[message_].size())
+	if (!cmd[message_].size())
 		sendMessageChannel(
 			curChan.getCliInChan(),
 			RPL_PARTNOREASON(sender->cliInfo.getPrefix(), curChan.getName()));

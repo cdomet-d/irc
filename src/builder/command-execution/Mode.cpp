@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/31 15:24:59 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/01 08:34:16 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,16 @@ void executeO(std::string flag, std::string param, Channel &curChan) {
 		}
 	}
 	if (flag == "+o") {
-		curChan.addCli(OPCLI, targetCli); 
-		reply::send_(targetCli->getFd(), RPL_CHANOPE(targetCli->cliInfo.getNick(), curChan.getName()));
+		curChan.addCli(OPCLI, targetCli);
+		reply::send_(
+			targetCli->getFd(),
+			RPL_CHANOPE(targetCli->cliInfo.getNick(), curChan.getName()));
 	}
 	if (flag == "-o") {
 		curChan.removeCli(OPCLI, targetCli->getFd());
-		reply::send_(targetCli->getFd(), RPL_CHANOPENOPE(targetCli->cliInfo.getNick(), curChan.getName()));
-
+		reply::send_(
+			targetCli->getFd(),
+			RPL_CHANOPENOPE(targetCli->cliInfo.getNick(), curChan.getName()));
 	}
 }
 
@@ -128,8 +131,10 @@ Channel &findCurChan(std::string chanName) {
 	return (*curChanIt->second);
 }
 
-void sendModeMessages(std::string &first, std::string &second, Channel &curChan, std::string nick) {
-	std::string messages = RPL_CHANNELMODEIS(nick, curChan.getName(), first) + RPL_CHANNELMODEIS(nick, curChan.getName(), second);
+void sendModeMessages(std::string &first, std::string &second, Channel &curChan,
+					  std::string nick) {
+	std::string messages = RPL_CHANNELMODEIS(nick, curChan.getName(), first) +
+						   RPL_CHANNELMODEIS(nick, curChan.getName(), second);
 	sendMessageChannel(curChan.getCliInChan(), messages);
 }
 
@@ -152,18 +157,23 @@ void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 	}
 	posMode.append(newPassMaxCli);
 	if (!strcmp("-", negMode.c_str()) && negMode.size() == 1) {
-		sendMessageChannel(curChan.getCliInChan(), RPL_CHANNELMODEIS(sender->cliInfo.getNick(), curChan.getName(), posMode));
-		return ;
+		sendMessageChannel(curChan.getCliInChan(),
+						   RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
+											 curChan.getName(), posMode));
+		return;
 	}
 
 	if (!strcmp("-", posMode.c_str()) && posMode.size() == 1) {
-		sendMessageChannel(curChan.getCliInChan(), RPL_CHANNELMODEIS(sender->cliInfo.getNick(), curChan.getName(), negMode));
-		return ;
+		sendMessageChannel(curChan.getCliInChan(),
+						   RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
+											 curChan.getName(), negMode));
+		return;
 	}
 
-	(cmd[flag_][0][0] == '+') 
-        ? sendModeMessages(posMode, negMode, curChan, sender->cliInfo.getNick())
-        : sendModeMessages(negMode, posMode, curChan, sender->cliInfo.getNick());
+	(cmd[flag_][0][0] == '+')
+		? sendModeMessages(posMode, negMode, curChan, sender->cliInfo.getNick())
+		: sendModeMessages(negMode, posMode, curChan,
+						   sender->cliInfo.getNick());
 }
 
 //the modes of a channel need to be empty if no moe is activated and +<modes> if any
@@ -172,12 +182,14 @@ void mode(CmdSpec &cmd) {
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 
 	if (!cmd[flag_].size()) {
-		reply::send_(sender->getFd(),
-				  RPL_UMODEIS(sender->cliInfo.getNick(), curChan.getModes()));
+		reply::send_(sender->getFd(), RPL_UMODEIS(sender->cliInfo.getNick(),
+												  curChan.getModes()));
 		return;
 	}
 	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
-	std::cout << "cmd[flag_][nbFlag] = " << cmd[flag_][nbFlag] << std::endl << "cmd[flagArg_][nbFlag] = " << cmd[flagArg_][nbFlag] << std::endl; 
+		std::cout << "cmd[flag_][nbFlag] = " << cmd[flag_][nbFlag] << std::endl
+				  << "cmd[flagArg_][nbFlag] = " << cmd[flagArg_][nbFlag]
+				  << std::endl;
 		executeFlag(cmd[flag_][nbFlag], cmd[flagArg_][nbFlag], curChan);
 	}
 	buildNewModeString(cmd, curChan, sender);
