@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_nick.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 16:44:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/31 09:47:02 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ bool check::nick(CmdSpec &cmd) {
 	if (!check::nick_::isUnique(nick, cmd.server_.getUsedNick(),
 								cmd.getSender().getFd()))
 		return false;
-	reply::send_(cmd.getSender().getFd(),
-				 cmd[nickname_][0] + " is valid nickname\n");
 	return true;
 }
 
