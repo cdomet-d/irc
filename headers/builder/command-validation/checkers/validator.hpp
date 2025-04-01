@@ -59,11 +59,17 @@ namespace check {
 		bool isOnChan(CmdSpec &cmd, int idx);
 		bool hasChanAuthorisations(CmdSpec &cmd, int idx);
 	} // namespace chans_
+
 	namespace register_ {
 		bool isRegistered(CmdSpec &cmd, int idx);
 		bool stageDone(CmdSpec &cmd, int idx);
 		bool pwMatch(CmdSpec &cmd, int idx);
 	} // namespace register_
-} // namespace check
+
+	namespace mess_ {
+		bool params(CmdSpec &cmd);
+		bool isNick(std::string& target);
+	} // namespace mess_
+} // namespace check 
 
 #endif
