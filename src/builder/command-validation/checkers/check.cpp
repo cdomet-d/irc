@@ -6,13 +6,15 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/31 11:43:57 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/01 10:11:44 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
 #include "printers.hpp"
 
+/* checks that channel syntax is valid */
+//TODO: remove loop, move to join namespace, rename to join::chanSyntaxIsValid
 bool check::chan(CmdSpec &cmd) {
 	size_t i = 0;
 	print::cmdParam(cmd[channel_].getInnerParam(), "channels");
@@ -32,21 +34,29 @@ bool check::chan(CmdSpec &cmd) {
 	return (true);
 }
 
+/* checks that channel exists */
+// bool check::chan(CmdSpec &cmd) 
+
+
+/* checks that username syntax is valid */
 bool check::user(CmdSpec &cmd) {
 	(void)cmd;
 	return (true);
 }
 
+/* checks that user exists */
 bool check::target(CmdSpec &cmd) {
 	(void)cmd;
 	return (true);
 }
 
+/* loops on target list to ensure they exist and are not on the channel */
 bool check::invite(CmdSpec &cmd) {
 	(void)cmd;
 	return (true);
 }
 
+/* loops on target list to ensure they exist and are on the channel */
 bool check::kick(CmdSpec &cmd) {
 	(void)cmd;
 	return (true);
