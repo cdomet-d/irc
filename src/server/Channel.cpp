@@ -18,8 +18,8 @@
 /* ************************************************************************** */
 
 Channel::Channel(std::string name)
-	: inviteOnly_(false), isPassMatch_(false), topicRestrict_(true), maxCli_(-1),
-	  name_(name), topic_("") {
+	: inviteOnly_(false), isPassMatch_(false), topicRestrict_(true),
+	  maxCli_(-1), name_(name), topic_("") {
 	setModes();
 }
 
@@ -45,20 +45,19 @@ bool Channel::addClientToChan(Channel *curChan, Client *sender) {
 
 	for (clientMapIt itCli = curChan->getCliInChan().begin();
 		 itCli != curChan->getCliInChan().end(); ++itCli) {
-		reply::send_(
-			itCli->second->getFd(),
-			RPL_JOIN(sender->cliInfo.getPrefix(), curChan->getName()));
+		reply::send_(itCli->second->getFd(),
+					 RPL_JOIN(sender->cliInfo.getPrefix(), curChan->getName()));
 	}
 	if (curChan->getTopic().empty() == true)
 		reply::send_(sender->getFd(), RPL_NOTOPIC(sender->cliInfo.getNick(),
-													  curChan->getName()));
+												  curChan->getName()));
 	else
 		reply::send_(sender->getFd(),
-						 RPL_TOPIC(sender->cliInfo.getNick(),
-								   curChan->getName(), curChan->getTopic()));
+					 RPL_TOPIC(sender->cliInfo.getNick(), curChan->getName(),
+							   curChan->getTopic()));
 	if (curChan->getOpCli().empty()) {
 		reply::send_(sender->getFd(), RPL_CHANOPE(sender->cliInfo.getNick(),
-													  curChan->getName()));
+												  curChan->getName()));
 		curChan->addCli(OPCLI, sender);
 	}
 

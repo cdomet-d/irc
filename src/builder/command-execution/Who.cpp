@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Who.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 09:04:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/03/31 09:40:18 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "Server.hpp"
 #include <sstream>
 
-bool who(CmdSpec &cmd) {
+void who(CmdSpec &cmd) {
 	(void)cmd;
 	/* 	static Server &server = Server::GetServerInstance(0, "");
 
@@ -71,5 +71,5 @@ bool who(CmdSpec &cmd) {
 	reply::send_(curCli->getFd(),
 			  RPL_ENDOFNAMES(curCli->cliInfo.getNick(), channel)); */
 
-	return (true);
+	// return (true);
 }

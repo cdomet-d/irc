@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserInfo.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 12:53:39 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/31 10:27:08 by charlotte        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 /* ************************************************************************** */
 
 UserInfo::UserInfo(void)
-	: registration_(0), name_(""), nick_(""), pass_(""), realName_("") {}
+	: registration_(0), name_(""), nick_("*"), pass_(""), realName_("") {}
 UserInfo::~UserInfo(void) {}
 
 UserInfo::UserInfo(const UserInfo &rhs) {

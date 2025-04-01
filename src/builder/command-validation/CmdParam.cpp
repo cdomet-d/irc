@@ -17,8 +17,7 @@
 /* ************************************************************************** */
 CmdParam::CmdParam(void) : opt_(false), list_(false) {}
 
-CmdParam::CmdParam(const bool opt, const bool list)
-	: opt_(opt), list_(list) {}
+CmdParam::CmdParam(const bool opt, const bool list) : opt_(opt), list_(list) {}
 
 CmdParam::CmdParam(const CmdParam &rhs) {
 	*this = rhs;
@@ -54,10 +53,6 @@ size_t CmdParam::size(void) const {
 
 void CmdParam::rmParam(unsigned int pos) {
 	innerParam_.erase(innerParam_.begin() + pos);
-}
-
-void CmdParam::rmParam(stringVec::iterator begin, stringVec::iterator end) {
-	innerParam_.erase(begin, end);
 }
 
 void CmdParam::addOne(unsigned int pos) {

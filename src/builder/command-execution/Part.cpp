@@ -27,7 +27,7 @@ void part(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 
-  if (!cmd[message_].size())
+	if (!cmd[message_].size())
 		sendMessageChannel(
 			curChan.getCliInChan(),
 			RPL_PARTNOREASON(sender->cliInfo.getPrefix(), curChan.getName()));

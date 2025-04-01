@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/31 11:31:11 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/01 14:31:19 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@
 #define ERR_CANNOTSENDTOCHAN(nickname, channel) (":irc.bitchat.net 404 " + nickname + " " + channel + " :Cannot send to channel\r\n") //TODO : not used
 
 //input_err_replies
-#define ERR_NORECIPIENT(command) (":irc.bitchat.net 411 :No recipient given (" + command + ")\r\n")
-#define ERR_NOTEXTTOSEND() (":irc.bitchat.net 412 :No text to send\r\n")
+#define ERR_NORECIPIENT(nickname, command) (":irc.bitchat.net 411 " + nickname + " :No recipient given (" + command + ")\r\n")
+#define ERR_NOTEXTTOSEND(nickname) (":irc.bitchat.net 412 " + nickname + " :No text to send\r\n")
 #define ERR_INPUTTOOLONG(nickname) (":irc.bitchat.net 417 " + nickname + " :Input line was too long\r\n")
 #define ERR_UNKNOWNCOMMAND(nickname, command) (":irc.bitchat.net 421 " + nickname + " " + command + " :Unknown command\r\n")
 #define ERR_NONICKNAMEGIVEN() (":irc.bitchat.net 431 :No nickname given\r\n")
@@ -47,6 +47,9 @@
 #define ERR_ALREADYREGISTRED(nickname) (":irc.bitchat.net 462 " + nickname + " :You may not reregister\r\n")
 #define ERR_PASSWDMISMATCH(nickname) (":irc.bitchat.net 464 " + nickname + " :Password incorrect\r\n")
 #define ERR_NOSUCHNICK(nickname) (":irc.bitchat.net 401 " + nickname + " :No such nick/channel\r\n") //TODO : not used
+#define ERR_NEEDPASS(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter password\r\n")
+#define ERR_NEEDNICK(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter nickname\r\n")
+#define ERR_NEEDUSER(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter username\r\n")
 
 //RESPONDS_REPLIES
 //server_replies
@@ -85,7 +88,7 @@
 #define RPL_PARTNOREASON(prefix, channel) (":" + prefix + " PART " + channel + "\r\n")
 #define RPL_PARTREASON(prefix, channel, reason) (":" + prefix + " PART " + channel + " " + reason + "\r\n")
 #define RPL_PRIVMSG(prefix, target, message) (":" + prefix + " PRIVMSG " + target + " " + message + "\r\n")
-#define RPL_TOPICCHANGED(prefix, channel, topic) (":" + prefix + " TOPIC " + channel + topic + "\r\n")
+#define RPL_TOPICCHANGED(prefix, channel, topic) (":" + prefix + " TOPIC " + channel + " " + topic + "\r\n")
 #define RPL_CHANGEMODE(prefix, channel, mode) (":" + prefix + " MODE " + channel + " " + mode + "\r\n") //TODO : not used
 
 namespace reply {
