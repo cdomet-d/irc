@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   check_chans.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/31 18:41:16 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/01 17:17:00 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
+#include "printers.hpp"
 
 bool check::chans_::isOnChan(CmdSpec &cmd, int idx) {
 	stringVec joinedChans = cmd.getSender().getJoinedChans();
@@ -48,4 +49,13 @@ bool check::chans_::hasChanAuthorisations(CmdSpec &cmd, int idx) {
 		return (false);
 	}
 	return (true);
+}
+
+bool check::chans_::exists(CmdSpec &cmd, int idx) {
+	print::map(cmd.server_.getAllChan(), "channels");
+	channelMapIt chanExists = cmd.server_.getAllChan().find(cmd[channel_][idx]);
+	if (chanExists == cmd.server_.getAllChan().end()) {
+		return false;
+	}
+	return true;
 }

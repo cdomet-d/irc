@@ -53,11 +53,13 @@ namespace check {
 		bool validKey(Channel &chan, CmdParam &keys, size_t i, Client &sender);
 		bool chanHasRoom(Channel &chan, Client &sender);
 		bool cliHasMaxChans(Channel &chan, Client &sender);
+		bool syntaxIsValid(CmdSpec &cmd, int idx);
 	} // namespace join_
 
 	namespace chans_ {
 		bool isOnChan(CmdSpec &cmd, int idx);
 		bool hasChanAuthorisations(CmdSpec &cmd, int idx);
+		bool exists(CmdSpec &cmd, int idx);
 	} // namespace chans_
 
 	namespace register_ {

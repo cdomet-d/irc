@@ -6,12 +6,11 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 13:42:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/28 12:53:46 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/01 17:52:27 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printers.hpp"
-#include <iomanip>
 
 void print::charByChar(const std::string &buf) {
 	for (std::string::size_type i = 0; i < buf.size(); ++i) {
@@ -26,7 +25,7 @@ void print::charByChar(const std::string &buf) {
 
 void print::cmdParam(const stringVec &obj, std::string where) {
 	if (obj.empty())
-		return std::cout << "[ ... ]" << std::endl, (void)false;
+		return std::cout << where + ": [ ... ]" << std::endl, (void)false;
 	std::cout << "[" << std::endl;
 	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it) {
 		if ((*it).empty())
@@ -127,3 +126,16 @@ void print::modeArgs(const stringVec &mdestr, const stringVec &modeargs,
 	}
 	std::cout << "]" << std::endl;
 }
+
+// template < typename MapType >
+// void print::map(const MapType &map, const std::string &what) {
+// 	std::cout << "[" + what + "]" << std::endl;
+// 	typedef typename MapType::key_type key;
+// 	typedef typename MapType::value_type val;
+// 	for (typename MapType::const_iterator it = map.begin(); it != map.end(); ++it) {
+
+// 		const key &k = it->first;
+// 		const val &v = it->second;
+// 		std::cout << std::setw(20) << k << " | " << v << std::endl;
+// 	}
+// }

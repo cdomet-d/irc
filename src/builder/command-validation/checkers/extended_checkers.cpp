@@ -1,18 +1,20 @@
 //HEADER
 
 #include "validator.hpp"
+#include "printers.hpp"
 
 bool check::part(CmdSpec &cmd, int idx) {
 	(void)idx;
 	size_t i = 0;
 
 	while (i < cmd[channel_].size()) {
-		if (!check::chan(cmd, i) || !check::chans_::isOnChan(cmd, i)) {
+		if (!check::chans_::exists(cmd, i) || !check::chans_::isOnChan(cmd, i)) {
 			cmd[channel_].rmParam(i);
 			continue;
 		}
 		i++;
 	}
+	print::cmdParam(cmd[channel_].getInnerParam(), "part");
 	if (cmd[channel_].empty())
 		return (false);
 	return (true);

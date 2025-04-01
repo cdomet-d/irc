@@ -14,7 +14,7 @@ bool check::mess(CmdSpec &cmd, int idx) {
 				cmd[channel_].rmParam(i);
 				continue;
 			}
-		} else if (!check::chan(cmd, i) || !check::chans_::isOnChan(cmd, i)) {
+		} else if (!check::chans_::exists(cmd, i) || !check::chans_::isOnChan(cmd, i)) {
 				cmd[channel_].rmParam(i);
 				continue;
 			}

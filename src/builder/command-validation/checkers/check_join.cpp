@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/01 14:31:24 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/01 16:45:10 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,17 @@ bool check::join(CmdSpec &cmd, int idx) {
 	channelMap::const_iterator itChan;
 	size_t i = 0;
 
-	if (!check::chan(cmd))
-		return false;
 	while (i < cmd[channel_].size()) {
 		itChan = cmd.server_.getAllChan().find(cmd[channel_][i]);
 		if (itChan != cmd.server_.getAllChan().end()) {
 			if (!check::join_::assessRequest(*itChan->second, cmd, i)) {
+				std::cout << "Couldnt join channel" << std::endl;
 				cmd[channel_].rmParam(i);
 				continue;
 			}
+		} else if (!check::join_::syntaxIsValid(cmd, i)) {
+			cmd[channel_].rmParam(i);
+			continue;
 		}
 		i++;
 	}
@@ -85,4 +87,15 @@ bool check::join_::cliHasMaxChans(Channel &chan, Client &sender) {
 	reply::send_(sender.getFd(),
 				 ERR_TOOMANYCHANNELS(sender.cliInfo.getNick(), chan.getName()));
 	return (true);
+}
+
+bool check::join_::syntaxIsValid(CmdSpec &cmd, int idx) {
+	if (cmd[channel_][idx][0] != '#') {
+		std::cout << cmd[channel_][idx] << std::endl;
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
+									   cmd[channel_][idx]));
+		return false;
+	}
+	return true;
 }
