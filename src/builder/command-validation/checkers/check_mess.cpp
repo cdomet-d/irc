@@ -38,10 +38,10 @@ bool check::mess_::params(CmdSpec &cmd) {
 bool check::mess_::prefix(CmdSpec &cmd, std::string &target) {
 	if (target.size() > 1 && target[1] == '#') {
 		if (target[0] != '@') {
-			// reply::send();
+			reply::send_(cmd.getSender().getFd(), ERR_BADCHANMASK(target));
 			return (false);
 		}
-		//trim prefix
+		//TODO: trim prefix (add function trim in CmdParam)
 		cmd.setOnlyOp();
 	}
 	return (true);
