@@ -53,7 +53,7 @@ bool CmdSpec::checkRegistrationStage(void) {
 				reply::send_(sender_->getFd(),
 							 ERR_NEEDNICK(sender_->cliInfo.getNick()));
 		} else if (name_ != "PASS")
-			reply::send_(sender_->getFd(), ERR_NOTREGISTERED());
+			reply::send_(sender_->getFd(), ERR_NOTREGISTERED(sender_->cliInfo.getNick()));
 		return (false);
 	}
 	return (true);
