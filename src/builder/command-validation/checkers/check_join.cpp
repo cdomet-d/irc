@@ -6,13 +6,14 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/01 08:34:19 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/02 14:22:10 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
 
-bool check::join(CmdSpec &cmd) {
+bool check::join(CmdSpec &cmd, int idx) {
+	(void)idx;
 	channelMap::const_iterator itChan;
 	size_t i = 0;
 
@@ -33,7 +34,7 @@ bool check::join(CmdSpec &cmd) {
 }
 
 bool check::join_::assessRequest(Channel chan, CmdSpec &cmd, size_t i) {
-	if (findString(cmd.getSender().getJoinedChans(), cmd[channel_][i]))
+	if (check::findString(cmd.getSender().getJoinedChans(), cmd[channel_][i]))
 		return (false);
 	if (!check::join_::chanHasRoom(chan, cmd.getSender()))
 		return (false);

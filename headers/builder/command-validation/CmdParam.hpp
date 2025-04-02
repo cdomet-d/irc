@@ -35,7 +35,6 @@ class CmdParam {
 	std::string &operator[](unsigned int i);
 	void addOne(unsigned int pos);
 	void clean(void);
-	void rmParam(stringVec::iterator begin, stringVec::iterator end);
 	void rmParam(unsigned int pos);
 
 	/*                               GETTERS                                  */
