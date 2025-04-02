@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/31 16:35:59 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/02 17:51:32 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@
 #define RPL_PARTNOREASON(prefix, channel) (":" + prefix + " PART " + channel + "\r\n")
 #define RPL_PARTREASON(prefix, channel, reason) (":" + prefix + " PART " + channel + " " + reason + "\r\n")
 #define RPL_PRIVMSG(prefix, target, message) (":" + prefix + " PRIVMSG " + target + " " + message + "\r\n")
-#define RPL_TOPICCHANGED(prefix, channel, topic) (":" + prefix + " TOPIC " + channel + " " + topic + "\r\n")
+#define RPL_TOPICCHANGED(prefix, channel, topic) (":" + prefix + " TOPIC " + channel + " :" + topic + "\r\n")
 #define RPL_CHANGEMODE(prefix, channel, mode) (":" + prefix + " MODE " + channel + " " + mode + "\r\n") //TODO : not used
 
 namespace reply {
