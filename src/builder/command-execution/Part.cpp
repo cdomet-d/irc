@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/01 08:34:17 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/02 14:04:46 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,8 @@
 void partOneChan(Client *sender, Channel &curChan) {
 	int targetFd = sender->getFd();
 	curChan.removeCli(ALLCLI, targetFd);
-	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end()) {
+	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end())
 		curChan.removeCli(OPCLI, targetFd);
-		sender->removeOneChan(curChan.getName());
-	}
 }
 
 void part(CmdSpec &cmd) {

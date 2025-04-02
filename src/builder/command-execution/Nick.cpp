@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:20:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/01 08:34:16 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/02 10:01:45 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void nick(CmdSpec &cmd) {
 
 	if (sender.cliInfo.getRegistration() != 3)
 		sender.cliInfo.setRegistration(2);
-	if (!sender.cliInfo.getNick().empty())
+	if (sender.cliInfo.getNick() == "")
 		cmd.server_.removeNickFromUsedNicks(sender.cliInfo.getNick());
 	sender.cliInfo.setNick(cmd[nickname_][0]);
 	sender.cliInfo.setPrefix();

@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/01 08:34:14 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/02 10:48:18 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,13 +158,12 @@ bool Server::handleData(int fd) {
 	Client *curCli = clients_.find(fd)->second;
 	//TODO: handle -1 differently
 	if (bytes == 0) {
-		curCli->mess.setMess("QUIT");
+		std::cout << "sending QUIT command" << std::endl;
+		curCli->mess.setMess("QUIT\n");
 		buffer_manip::prepareCommand(*curCli);
 		return (true);
-	} else if (bytes == -1)
+	} else if (bytes == -1) 
 		return (true);
-	else if (bytes == -1)
-		perror("HandleData:");
 	else {
 		std::string inputCli = curCli->mess.getMess();
 		inputCli.append(tmpBuf);
@@ -221,7 +220,6 @@ void Server::removeNickFromUsedNicks(const std::string &toRemove) {
 	nickMap::iterator nickToRm = usedNicks_.find(toRemove);
 	if (nickToRm == usedNicks_.end())
 		return;
-	std::cout << "client got remove from usedNicks map in server" << std::endl;
 	usedNicks_.erase(nickToRm);
 }
 

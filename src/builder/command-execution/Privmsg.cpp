@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/01 08:34:17 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/02 13:55:37 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,22 @@ void privmsg(CmdSpec &cmd) {
 		}
 	}
 	Channel &curChan = findCurChan(cmd[target_][0]);
+
+	for (clientMapIt itCli = curChan.getOpCli().begin();
+		 itCli != curChan.getOpCli().end(); ++itCli) {
+		std::cout << itCli->second->cliInfo.getNick() << std::endl;
+	}
+
+	if (cmd[target_][0].find("@") != cmd[target_][0].npos) {
+		for (clientMapIt itCli = curChan.getOpCli().begin();
+			 itCli != curChan.getOpCli().end(); ++itCli) {
+			//	if (itCli->first != sender->getFd())
+			reply::send_(itCli->second->getFd(),
+						 RPL_PRIVMSG(sender->cliInfo.getPrefix(),
+									 curChan.getName(), cmd[message_][0]));
+		}
+		return;
+	}
 
 	for (clientMapIt itCli = curChan.getCliInChan().begin();
 		 itCli != curChan.getCliInChan().end(); ++itCli) {

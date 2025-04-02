@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/01 08:34:16 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/02 14:05:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,24 @@
 #include <cstdlib>
 #include <limits>
 
-//TODO : do we remove a ope if it's the only OP left of the channel
 void executeO(std::string flag, std::string param, Channel &curChan) {
 	Client *targetCli;
+	std::string targ = param.erase(param.size() - 1, 1);
 
-	//find instance of target
 	for (clientMapIt targetIt = curChan.getCliInChan().begin();
 		 targetIt != curChan.getCliInChan().end(); ++targetIt) {
-		if (targetIt->second->cliInfo.getNick() == param) {
+		if (targetIt->second->cliInfo.getNick() == targ) {
 			targetCli = targetIt->second;
 			break;
 		}
 	}
-	if (flag == "+o") {
+	if (flag == "+o ") {
+		std::cout << targetCli->getFd() << targetCli->cliInfo.getNick() << std::endl;
 		curChan.addCli(OPCLI, targetCli);
 		reply::send_(
 			targetCli->getFd(),
 			RPL_CHANOPE(targetCli->cliInfo.getNick(), curChan.getName()));
+		
 	}
 	if (flag == "-o") {
 		curChan.removeCli(OPCLI, targetCli->getFd());
@@ -176,7 +177,7 @@ void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 						   sender->cliInfo.getNick());
 }
 
-//the modes of a channel need to be empty if no moe is activated and +<modes> if any
+//the modes of a channel need to be empty if no more is activated and +<modes> if any
 void mode(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 	Channel &curChan = findCurChan(cmd[channel_][0]);
@@ -187,9 +188,9 @@ void mode(CmdSpec &cmd) {
 		return;
 	}
 	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
-		std::cout << "cmd[flag_][nbFlag] = " << cmd[flag_][nbFlag] << std::endl
-				  << "cmd[flagArg_][nbFlag] = " << cmd[flagArg_][nbFlag]
-				  << std::endl;
+	//	std::cout << "cmd[flag_][nbFlag] = " << cmd[flag_][nbFlag] << "$" << std::endl
+	//			  << "cmd[flagArg_][nbFlag] = " << cmd[flagArg_][nbFlag] << "$"
+	//			  << std::endl;
 		executeFlag(cmd[flag_][nbFlag], cmd[flagArg_][nbFlag], curChan);
 	}
 	buildNewModeString(cmd, curChan, sender);
