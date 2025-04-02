@@ -57,6 +57,7 @@ class CmdSpec {
 	void displayParams(void); //to be removed
 
 	/*                               GETTERS                                  */
+	bool getOnlyOp(void) const;
 	bool getValid(void) const;
 	Client &getSender(void) const;
 	const paramMap &getParams(void) const;
@@ -65,6 +66,7 @@ class CmdSpec {
 	void (*getExecutor(void) const)(CmdSpec &cmd);
 
 	/*                               SETTERS                                  */
+	void setOnlyOp(void);
 	void setSender(Client &sender);
 	void setParam(void);
 	void hasParamList(void);
@@ -93,6 +95,7 @@ class CmdSpec {
 
   private:
 	/*                               MEMBERS                                  */
+	bool onlyOp_;
 	bool valid_;
 	Client *sender_;
 	const std::string name_;
