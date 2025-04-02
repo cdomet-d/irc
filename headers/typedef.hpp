@@ -60,7 +60,7 @@ typedef enum {
 #define BLACK "\033[30m"
 #define RED "\033[31m"
 #define GREEN "\033[32m"
-#define YELLOW "\033[33m"Oui vas-y si ca te deranges pas, vraiment mb
+#define YELLOW "\033[33m"
 
 #define BG_BLUE "\033[44m"
 #define BG_MAGENTA "\033[45m"

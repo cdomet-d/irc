@@ -36,9 +36,9 @@ void join(CmdSpec &cmd) {
 		return;
 	}
 
-    for (size_t nbChan = 0; nbChan < cmd[channel_].size(); nbChan++) {
-        Channel *curChan = createChan(cmd[channel_][nbChan]);
-        curChan->addClientToChan(curChan, sender);
-    }
-    return;
+	for (size_t nbChan = 0; nbChan < cmd[channel_].size(); nbChan++) {
+		Channel *curChan = createChan(cmd[channel_][nbChan]);
+		curChan->addClientToChan(curChan, sender);
+	}
+	return;
 }

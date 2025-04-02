@@ -16,7 +16,7 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
-				 std::vector< bool (*)(CmdSpec &) > checkers,
+				 std::vector< bool (*)(CmdSpec &, int) > checkers,
 				 void (*cmExecutor)(CmdSpec &cmd))
 	: server_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
 	  name_(name), registrationStage_(registrationStage), params_(params),
@@ -43,57 +43,20 @@ bool CmdSpec::checkRegistrationStage(void) {
 	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
 		valid_ = false;
 		if (name_ == "NICK")
-			reply::send_(sender_->getFd(), ERR_NEEDPASS(sender_->cliInfo.getNick()));
+			reply::send_(sender_->getFd(),
+						 ERR_NEEDPASS(sender_->cliInfo.getNick()));
 		else if (name_ == "USER") {
 			if (sender_->cliInfo.getRegistration() == 0)
-				reply::send_(sender_->getFd(), ERR_NEEDPASS(sender_->cliInfo.getNick()));
+				reply::send_(sender_->getFd(),
+							 ERR_NEEDPASS(sender_->cliInfo.getNick()));
 			else
-				reply::send_(sender_->getFd(), ERR_NEEDNICK(sender_->cliInfo.getNick()));
+				reply::send_(sender_->getFd(),
+							 ERR_NEEDNICK(sender_->cliInfo.getNick()));
 		} else if (name_ != "PASS")
 			reply::send_(sender_->getFd(), ERR_NOTREGISTERED());
 		return (false);
 	}
 	return (true);
-}
-
-bool CmdSpec::enoughParams() {
-	for (size_t i = 0; i < params_.size(); i++) {
-		CmdParam &innerParam = *params_[i].second;
-		if (!innerParam.isOpt() && !innerParam.size()) {
-			if (name_ == "NICK") {
-				reply::send_((*sender_).getFd(), ERR_NONICKNAMEGIVEN());
-			} else if (name_ == "PRIVMSG") {
-				reply::send_((*sender_).getFd(), ERR_NOTEXTTOSEND());
-			} else {
-				reply::send_(
-					(*sender_).getFd(),
-					ERR_NEEDMOREPARAMS(sender_->cliInfo.getNick(), name_));
-			}
-			valid_ = false;
-			return (false);
-		}
-	}
-	return (true);
-}
-
-void CmdSpec::setParam(void) {
-	for (size_t i = 0; i < params_.size() && i < sender_->mess.getSize(); i++) {
-		try {
-			(*params_[i].second).setOneParam(sender_->mess[i + 1]);
-		} catch (const std::out_of_range &e) {}
-	}
-}
-
-void CmdSpec::hasParamList(void) {
-	for (size_t i = 0; i < params_.size(); i++) {
-		CmdParam &innerParam = *params_[i].second;
-		if (innerParam.isList()) {
-			try {
-				innerParam.setParamList(
-					buffer_manip::vectorSplit(innerParam[0], ','));
-			} catch (const std::out_of_range &e) {};
-		}
-	}
 }
 
 CmdSpec &CmdSpec::process(Client &sender) {
@@ -105,12 +68,10 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	if (name_ == "INVITE" && !(*this)[target_].size() &&
 		!(*this)[channel_].size())
 		return (*this);
-	if (!enoughParams())
-		return (*this);
 	hasParamList();
 	// displayParams();
 	for (size_t i = 0; i < checkers_.size(); i++) {
-		if (!checkers_[i](*this)) {
+		if (!checkers_[i](*this, 0)) {
 			valid_ = false;
 			return (*this);
 		}
@@ -127,34 +88,20 @@ void CmdSpec::cleanAll(void) {
 
 static std::string enumToString(e_param color) {
 	switch (color) {
-	case 0:
-		return "channel";
-	case 1:
-		return "hostname";
-	case 2:
-		return "key";
-	case 3:
-		return "message";
-	case 4:
-		return "flag";
-	case 5:
-		return "flagArg";
-	case 6:
-		return "nickname";
-	case 7:
-		return "password";
-	case 8:
-		return "realname";
-	case 9:
-		return "servername";
-	case 10:
-		return "target";
-	case 11:
-		return "topic";
-	case 12:
-		return "username";
-	default:
-		return "Unknown";
+	case 0:	return "channel";
+	case 1:	return "hostname";
+	case 2:	return "key";
+	case 3:	return "message";
+	case 4:	return "flag";
+	case 5:	return "flagArg";
+	case 6:	return "nickname";
+	case 7:	return "password";
+	case 8:	return "realname";
+	case 9:	return "servername";
+	case 10: return "target";
+	case 11: return "topic";
+	case 12: return "username";
+	default: return "Unknown";
 	}
 }
 
@@ -208,8 +155,24 @@ void CmdSpec::setSender(Client &sender) {
 	sender_ = &sender;
 }
 
-void CmdSpec::setValid(bool valid) {
-	valid_ = valid;
+void CmdSpec::setParam(void) {
+	for (size_t i = 0; i < params_.size() && i < sender_->mess.getSize(); i++) {
+		try {
+			(*params_[i].second).setOneParam(sender_->mess[i + 1]);
+		} catch (const std::out_of_range &e) {}
+	}
+}
+
+void CmdSpec::hasParamList(void) {
+	for (size_t i = 0; i < params_.size(); i++) {
+		CmdParam &innerParam = *params_[i].second;
+		if (innerParam.isList()) {
+			try {
+				innerParam.setParamList(
+					buffer_manip::vectorSplit(innerParam[0], ','));
+			} catch (const std::out_of_range &e) {};
+		}
+	}
 }
 
 /* ************************************************************************** */
@@ -240,7 +203,8 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addParam(e_param type,
 	return (*this);
 }
 
-CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(bool (*ft)(CmdSpec &cmd)) {
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(bool (*ft)(CmdSpec &cmd,
+																int idx)) {
 	checkers_.push_back(ft);
 	return (*this);
 }

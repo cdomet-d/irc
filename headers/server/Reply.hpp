@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 16:53:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/31 16:35:59 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@
 #define ERR_CANNOTSENDTOCHAN(nickname, channel) (":irc.bitchat.net 404 " + nickname + " " + channel + " :Cannot send to channel\r\n") //TODO : not used
 
 //input_err_replies
-#define ERR_NORECIPIENT(command) (":irc.bitchat.net 411 :No recipient given (" + command + ")\r\n")
-#define ERR_NOTEXTTOSEND() (":irc.bitchat.net 412 :No text to send\r\n")
+#define ERR_NORECIPIENT(nickname, command) (":irc.bitchat.net 411 " + nickname + " :No recipient given (" + command + ")\r\n")
+#define ERR_NOTEXTTOSEND(nickname) (":irc.bitchat.net 412 " + nickname + " :No text to send\r\n")
 #define ERR_INPUTTOOLONG(nickname) (":irc.bitchat.net 417 " + nickname + " :Input line was too long\r\n")
 #define ERR_UNKNOWNCOMMAND(nickname, command) (":irc.bitchat.net 421 " + nickname + " " + command + " :Unknown command\r\n")
 #define ERR_NONICKNAMEGIVEN() (":irc.bitchat.net 431 :No nickname given\r\n")

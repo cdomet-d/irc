@@ -130,8 +130,8 @@ void mode(CmdSpec &cmd) {
 	std::string newMaxCli = "";
 
 	if (!cmd[flag_].size()) {
-		reply::send_(sender->getFd(),
-				  RPL_UMODEIS(sender->cliInfo.getNick(), curChan.getModes()));
+		reply::send_(sender->getFd(), RPL_UMODEIS(sender->cliInfo.getNick(),
+												  curChan.getModes()));
 		return;
 	}
 	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {

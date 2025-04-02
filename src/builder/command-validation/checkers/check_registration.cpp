@@ -12,20 +12,24 @@
 
 #include "validator.hpp"
 
-bool check::register_::stageDone(CmdSpec &cmd) {
+bool check::register_::stageDone(CmdSpec &cmd, int idx) {
+	(void)idx;
 	if (cmd.getSender().cliInfo.getRegistration() <=
 			cmd.getRegistrationStage() ||
 		cmd.getSender().cliInfo.getRegistration() == 3)
 		return (true);
 	if (cmd.getName() == "PASS" &&
 		cmd.getSender().cliInfo.getRegistration() == 1)
-		reply::send_(cmd.getSender().getFd(), ERR_NEEDNICK(cmd.getSender().cliInfo.getNick()));
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_NEEDNICK(cmd.getSender().cliInfo.getNick()));
 	else
-		reply::send_(cmd.getSender().getFd(), ERR_NEEDUSER(cmd.getSender().cliInfo.getNick()));
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_NEEDUSER(cmd.getSender().cliInfo.getNick()));
 	return (false);
 }
-     
-bool check::register_::pwMatch(CmdSpec &cmd) {
+
+bool check::register_::pwMatch(CmdSpec &cmd, int idx) {
+	(void)idx;
 	if (cmd[password_][0] != cmd.server_.getPass()) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_PASSWDMISMATCH(cmd.getSender().cliInfo.getNick()));
@@ -34,7 +38,8 @@ bool check::register_::pwMatch(CmdSpec &cmd) {
 	return (true);
 }
 
-bool check::register_::isRegistered(CmdSpec &cmd) {
+bool check::register_::isRegistered(CmdSpec &cmd, int idx) {
+	(void)idx;
 	if (cmd.getSender().cliInfo.getRegistration() == 3) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_ALREADYREGISTRED(cmd.getSender().cliInfo.getNick()));
