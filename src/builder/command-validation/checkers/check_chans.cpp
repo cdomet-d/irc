@@ -3,35 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   check_chans.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/31 09:36:56 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/31 18:41:16 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
 
-bool check::chans_::isOnChan(CmdSpec &cmd) {
+bool check::chans_::isOnChan(CmdSpec &cmd, int idx) {
 	stringVec joinedChans = cmd.getSender().getJoinedChans();
-	size_t i = 0;
 
-	while (i < cmd[channel_].size()) {
-		if (!findString(joinedChans, cmd[channel_][i])) {
-			reply::send_(cmd.getSender().getFd(),
-						 ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
-										  cmd[channel_][i]));
-			cmd[channel_].rmParam(i);
-			continue;
-		}
-		i++;
-	}
-	if (!cmd[channel_].size())
+	if (!check::findString(joinedChans, cmd[channel_][idx])) {
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
+									  cmd[channel_][idx]));
+		cmd[channel_].rmParam(idx);
 		return (false);
+	}
 	return (true);
 }
 
-bool check::chans_::hasChanAuthorisations(CmdSpec &cmd) {
+bool check::chans_::hasChanAuthorisations(CmdSpec &cmd, int idx) {
+	(void)idx;
 	channelMap::const_iterator itChan;
 
 	itChan = cmd.server_.getAllChan().find(cmd[channel_][0]);

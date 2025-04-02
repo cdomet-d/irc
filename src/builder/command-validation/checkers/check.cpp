@@ -3,46 +3,60 @@
 /*                                                        :::      ::::::::   */
 /*   check.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/31 10:35:33 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/03/31 19:01:42 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
 
-bool check::chan(CmdSpec &cmd) {
+bool check::chan(CmdSpec &cmd, int idx) {
+	(void)idx;
 	stringVec param = cmd[channel_].getInnerParam();
 	return (true);
 }
 
-bool check::user(CmdSpec &cmd) {
+bool check::user(CmdSpec &cmd, int idx) {
+	(void)idx;
 	(void)cmd;
 	return (true);
 }
 
-bool check::target(CmdSpec &cmd) {
+bool check::target(CmdSpec &cmd, int idx) {
 	(void)cmd;
+	(void)idx;
 	return (true);
 }
 
-bool check::invite(CmdSpec &cmd) {
+bool check::targetIsOnChan(CmdSpec &cmd, int idx) {
 	(void)cmd;
+	(void)idx;
 	return (true);
 }
 
-bool check::kick(CmdSpec &cmd) {
+bool check::invite(CmdSpec &cmd, int idx) {
 	(void)cmd;
+	(void)idx;
 	return (true);
 }
 
-bool check::mess(CmdSpec &cmd) {
-	(void)cmd;
+bool check::enoughParams(CmdSpec &cmd, int idx) {
+	(void)idx;
+	for (size_t i = 0; i < cmd.getParams().size(); i++) {
+		CmdParam &innerParam = *cmd.getParams()[i].second;
+		if (!innerParam.isOpt() && innerParam.empty()) {
+			reply::send_(cmd.getSender().getFd(),
+						 ERR_NEEDMOREPARAMS(cmd.getSender().cliInfo.getNick(),
+											cmd.getName()));
+			return (false);
+		}
+	}
 	return (true);
 }
 
-bool findString(stringVec array, std::string &strToFind) {
+bool check::findString(stringVec array, std::string &strToFind) {
 	for (size_t i = 0; i < array.size(); i++) {
 		if (array[i] == strToFind)
 			return (true);

@@ -13,8 +13,8 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include "buffer_manip.hpp"
 #include "Channel.hpp"
+#include "buffer_manip.hpp"
 #include "typedef.hpp"
 #include <arpa/inet.h>
 #include <fstream>
@@ -62,7 +62,6 @@ class Server {
 
 	/*                               MEMBERS                                  */
 	std::ofstream logfile;
-
 
 	const clientMap &getAllCli() const;
 	const channelMap &getAllChan() const;

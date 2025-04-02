@@ -35,16 +35,20 @@ void reply::log(e_level level, std::string message) {
 	if (serv.logfile.is_open()) {
 		switch (level) {
 		case INFO:
-			serv.logfile << "[" << timeStamp() << "] INFO  " << message << std::flush;
+			serv.logfile << "[" << timeStamp() << "] INFO  " << message
+						 << std::flush;
 			break;
 		case ERROR:
-			serv.logfile << "[" << timeStamp() << "] ERROR " << message << std::flush;
+			serv.logfile << "[" << timeStamp() << "] ERROR " << message
+						 << std::flush;
 			break;
 		case DEBUG:
-			serv.logfile << "[" << timeStamp() << "] DEBUG " << message << std::flush;
+			serv.logfile << "[" << timeStamp() << "] DEBUG " << message
+						 << std::flush;
 			break;
 		case REPLY:
-			serv.logfile << "[" << timeStamp() << "] REPLY " << message << std::flush;
+			serv.logfile << "[" << timeStamp() << "] REPLY " << message
+						 << std::flush;
 			break;
 		}
 	}
@@ -55,20 +59,20 @@ void reply::log(e_level level, std::string message, std::string verbose) {
 	if (serv.logfile.is_open()) {
 		switch (level) {
 		case (INFO):
-			serv.logfile << "[" << timeStamp() << "] INFO  " << message << std::flush
-						 << verbose;
+			serv.logfile << "[" << timeStamp() << "] INFO  " << message
+						 << std::flush << verbose;
 			break;
 		case (ERROR):
-			serv.logfile << "[" << timeStamp() << "] ERROR " << message << std::flush
-						 << verbose;
+			serv.logfile << "[" << timeStamp() << "] ERROR " << message
+						 << std::flush << verbose;
 			break;
 		case (DEBUG):
-			serv.logfile << "[" << timeStamp() << "] DEBUG " << message << std::flush
-						 << verbose;
+			serv.logfile << "[" << timeStamp() << "] DEBUG " << message
+						 << std::flush << verbose;
 			break;
 		case (REPLY):
-			serv.logfile << "[" << timeStamp() << "] REPLY " << message << std::flush
-						 << verbose;
+			serv.logfile << "[" << timeStamp() << "] REPLY " << message
+						 << std::flush << verbose;
 			break;
 		}
 	}

@@ -3,17 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   check_nick.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/31 09:47:02 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/03/31 17:59:47 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
 
-bool check::nick(CmdSpec &cmd) {
-	std::cout << "In nick checker" << std::endl;
+bool check::nick(CmdSpec &cmd, int idx) {
+	(void)idx;
+	if (cmd[nickname_].empty()) {
+		reply::send_(cmd.getSender().getFd(), ERR_NONICKNAMEGIVEN());
+		return (false);
+	}
 	std::string nick = cmd[nickname_][0];
 	if (nick.size() > 9) {
 		nick = check::nick_::trim(nick);
