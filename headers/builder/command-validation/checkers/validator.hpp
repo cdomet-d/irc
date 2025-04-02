@@ -68,7 +68,6 @@ namespace check {
 
 	namespace mess_ {
 		bool params(CmdSpec &cmd);
-		bool prefix(CmdSpec &cmd, int idx);
 	} // namespace mess_
 } // namespace check 
 

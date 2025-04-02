@@ -1,4 +1,14 @@
-//HEADER
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_mess.cpp                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 16:42:41 by csweetin          #+#    #+#             */
+/*   Updated: 2025/04/02 16:42:43 by csweetin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "validator.hpp"
 
@@ -9,7 +19,7 @@ bool check::mess(CmdSpec &cmd, int idx) {
 
 	size_t i = 0;
 	while (i < cmd[target_].size()) {
-		if (!check::mess_::prefix(cmd, i) || !check::target(cmd, i)) {
+		if (!check::target(cmd, i)) {
 			cmd[target_].rmParam(i);
 			continue;
 		}
@@ -31,19 +41,6 @@ bool check::mess_::params(CmdSpec &cmd) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_NOTEXTTOSEND(cmd.getSender().cliInfo.getNick()));
 		return (false);
-	}
-	return (true);
-}
-
-bool check::mess_::prefix(CmdSpec &cmd, int idx) {
-	if (cmd[target_][idx].size() > 1 && cmd[target_][idx][1] == '#') {
-		if (cmd[target_][idx][0] != '@') {
-			reply::send_(cmd.getSender().getFd(),
-						 ERR_BADCHANMASK(cmd[target_][idx]));
-			return (false);
-		}
-		cmd[target_].trimParam(idx, 0, 1);
-		cmd.setOnlyOp();
 	}
 	return (true);
 }
