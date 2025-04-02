@@ -30,6 +30,7 @@
 #define ERR_USERNOTINCHANNEL(nickname, channel) (":irc.bitchat.net 441 " + nickname + " " + channel + " :They aren't on that channel\r\n") //TODO : not used
 #define ERR_USERONCHANNEL(nickname, channel) (":irc.bitchat.net 443 " + nickname + " " + channel + " :is already on channel\r\n") //TODO : not used
 #define ERR_CANNOTSENDTOCHAN(nickname, channel) (":irc.bitchat.net 404 " + nickname + " " + channel + " :Cannot send to channel\r\n") //TODO : not used
+#define ERR_BADCHANMASK(channel) (":irc.bitchat.net 476 " + channel + " :Bad Channel Mask\r\n")
 
 //input_err_replies
 #define ERR_NORECIPIENT(nickname, command) (":irc.bitchat.net 411 " + nickname + " :No recipient given (" + command + ")\r\n")
@@ -44,7 +45,7 @@
 
 //registration_err_replies
 #define ERR_NICKNAMEINUSE(newNick) (":irc.bitchat.net 433 " + newNick + " :Nickname is already in use\r\n")
-#define ERR_NOTREGISTERED() ":irc.bitchat.net 451 * :You have not registered\r\n"
+#define ERR_NOTREGISTERED(nickname) (":irc.bitchat.net 451 " + nickname + " :You have not registered\r\n")
 #define ERR_ALREADYREGISTRED(nickname) (":irc.bitchat.net 462 " + nickname + " :You may not reregister\r\n")
 #define ERR_PASSWDMISMATCH(nickname) (":irc.bitchat.net 464 " + nickname + " :Password incorrect\r\n")
 #define ERR_NOSUCHNICK(nickname) (":irc.bitchat.net 401 " + nickname + " :No such nick/channel\r\n") //TODO : not used
@@ -102,3 +103,4 @@ namespace reply {
 } // namespace reply
 #endif //REPLY_H
 
+//TODO: add BADCHANMASK ??

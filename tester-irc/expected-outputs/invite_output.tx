@@ -1,0 +1,33 @@
+:servername 451 * :You have not registered
+:servername 451 * :You have not registered
+:servername NOTICE * :Valid password ! You may register
+:servername NOTICE * :Introducing new nick "chacham"
+:servername NOTICE chacham :Registration complete
+:chacham!~c@hostname JOIN #chan
+:servername MODE #chan +t
+:servername 353 chacham @ #chan :@chacham
+:servername 366 chacham #chan :End of /NAMES list.
+:chacham!~c@hostname MODE #chan +i
+:servername 461 chacham INVITE :Not enough parameters
+:servername 401 chacham dontexist :No such nick/channel
+:servername 403 chacham #dontexist :No such channel
+:servername 401 chacham dontexist :No such nick/channel
+:servername 341 chacham bobby #chan
+:servername 341 chacham bobby #chan
+:chacham!~c@hostname MODE #chan -i
+:bobby!~b@hotsname PART #chan
+:servername NOTICE * : Valid password ! You may register
+:servername NOTICE * :Introducing new nick "bobby"
+:servername NOTICE bobby :Registration complete
+:servername 473 bobby #chan :Cannot join channel (+i) - you must be invited
+:chacham!~c@hostname INVITE bobby :#chan
+:servername 346 bobby #chan :You have been invited
+:servername 347 bobby :End of INVITE list
+:bobby!~b@hostname JOIN #chan
+:servername 353 bobby @ #chan :bobby @chacham
+:servername 366 bobby #chan :End of /NAMES list.
+:servername 482 bobby #chan :You're not a channel operator
+:chacham!~c@hotsname MODE #chan -i
+:servername 482 bobby #chan :You're not a channel operator
+:bobby!~b@hotsname PART #chan
+:servername 442 bobby #chan :You're not on that channel

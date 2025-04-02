@@ -18,7 +18,7 @@
 CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
 				 std::vector< bool (*)(CmdSpec &, int) > checkers,
 				 void (*cmExecutor)(CmdSpec &cmd))
-	: server_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
+	: server_(Server::GetServerInstance(0, "")), onlyOp_(false), valid_(true), sender_(NULL),
 	  name_(name), registrationStage_(registrationStage), params_(params),
 	  checkers_(checkers), cmExecutor_(cmExecutor) {}
 
@@ -53,7 +53,7 @@ bool CmdSpec::checkRegistrationStage(void) {
 				reply::send_(sender_->getFd(),
 							 ERR_NEEDNICK(sender_->cliInfo.getNick()));
 		} else if (name_ != "PASS")
-			reply::send_(sender_->getFd(), ERR_NOTREGISTERED());
+			reply::send_(sender_->getFd(), ERR_NOTREGISTERED(sender_->cliInfo.getNick()));
 		return (false);
 	}
 	return (true);
@@ -69,13 +69,15 @@ CmdSpec &CmdSpec::process(Client &sender) {
 		!(*this)[channel_].size())
 		return (*this);
 	hasParamList();
-	// displayParams();
+	//TODO: trim extra space before trailing// shouldn't be necessary if coralie trims trailing
+	displayParams();
 	for (size_t i = 0; i < checkers_.size(); i++) {
 		if (!checkers_[i](*this, 0)) {
 			valid_ = false;
 			return (*this);
 		}
 	}
+	displayParams();
 	return (*this);
 }
 
@@ -84,6 +86,7 @@ void CmdSpec::cleanAll(void) {
 		(*params_[i].second).clean();
 	}
 	valid_ = true;
+	onlyOp_ = false;
 }
 
 static std::string enumToString(e_param color) {
@@ -148,6 +151,10 @@ int CmdSpec::getRegistrationStage() const {
 	return (registrationStage_);
 }
 
+bool CmdSpec::getOnlyOp(void) const {
+	return (onlyOp_);
+}
+
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
@@ -173,6 +180,10 @@ void CmdSpec::hasParamList(void) {
 			} catch (const std::out_of_range &e) {};
 		}
 	}
+}
+
+void CmdSpec::setOnlyOp(void) {
+	onlyOp_ = true;
 }
 
 /* ************************************************************************** */

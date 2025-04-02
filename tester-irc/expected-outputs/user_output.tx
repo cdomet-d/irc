@@ -1,0 +1,11 @@
+:servername NOTICE * :Valid password ! You may register
+:servername NOTICE * :Introducing new nick "chacham"
+:servername 461 chacham USER :Not enough parameters
+:servername 461 chacham USER :Not enough parameters
+:servername 461 chacham USER :Not enough parameters
+:servername 461 chacham USER :Not enough parameters
+:servername 461 chacham USER :Not enough parameters
+:servername NOTICE chacham :Registration complete
+:servername 462 chacham :You may not reregister
+:servername 462 chacham :You may not reregister
+:chacham!~charlotte@hostname JOIN #chan
