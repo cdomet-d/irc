@@ -18,7 +18,7 @@
 CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
 				 std::vector< bool (*)(CmdSpec &, int) > checkers,
 				 void (*cmExecutor)(CmdSpec &cmd))
-	: server_(Server::GetServerInstance(0, "")), onlyOp_(false), valid_(true), sender_(NULL),
+	: server_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
 	  name_(name), registrationStage_(registrationStage), params_(params),
 	  checkers_(checkers), cmExecutor_(cmExecutor) {}
 
@@ -86,7 +86,6 @@ void CmdSpec::cleanAll(void) {
 		(*params_[i].second).clean();
 	}
 	valid_ = true;
-	onlyOp_ = false;
 }
 
 static std::string enumToString(e_param color) {
@@ -151,10 +150,6 @@ int CmdSpec::getRegistrationStage() const {
 	return (registrationStage_);
 }
 
-bool CmdSpec::getOnlyOp(void) const {
-	return (onlyOp_);
-}
-
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
@@ -180,10 +175,6 @@ void CmdSpec::hasParamList(void) {
 			} catch (const std::out_of_range &e) {};
 		}
 	}
-}
-
-void CmdSpec::setOnlyOp(void) {
-	onlyOp_ = true;
 }
 
 /* ************************************************************************** */
