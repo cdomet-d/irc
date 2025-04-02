@@ -18,7 +18,7 @@
 CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
 				 std::vector< bool (*)(CmdSpec &, int) > checkers,
 				 void (*cmExecutor)(CmdSpec &cmd))
-	: server_(Server::GetServerInstance(0, "")), valid_(true), onlyOp_(false), sender_(NULL),
+	: server_(Server::GetServerInstance(0, "")), onlyOp_(false), valid_(true), sender_(NULL),
 	  name_(name), registrationStage_(registrationStage), params_(params),
 	  checkers_(checkers), cmExecutor_(cmExecutor) {}
 
@@ -70,13 +70,14 @@ CmdSpec &CmdSpec::process(Client &sender) {
 		return (*this);
 	hasParamList();
 	//TODO: trim extra space before trailing// shouldn't be necessary if coralie trims trailing
-	// displayParams();
+	displayParams();
 	for (size_t i = 0; i < checkers_.size(); i++) {
 		if (!checkers_[i](*this, 0)) {
 			valid_ = false;
 			return (*this);
 		}
 	}
+	displayParams();
 	return (*this);
 }
 

@@ -9,7 +9,7 @@ bool check::mess(CmdSpec &cmd, int idx) {
 
 	size_t i = 0;
 	while (i < cmd[target_].size()) {
-		if (!check::mess_::prefix(cmd, cmd[target_][i]) || !check::target(cmd, i)) {
+		if (!check::mess_::prefix(cmd, i) || !check::target(cmd, i)) {
 			cmd[target_].rmParam(i);
 			continue;
 		}
@@ -35,13 +35,14 @@ bool check::mess_::params(CmdSpec &cmd) {
 	return (true);
 }
 
-bool check::mess_::prefix(CmdSpec &cmd, std::string &target) {
-	if (target.size() > 1 && target[1] == '#') {
-		if (target[0] != '@') {
-			reply::send_(cmd.getSender().getFd(), ERR_BADCHANMASK(target));
+bool check::mess_::prefix(CmdSpec &cmd, int idx) {
+	if (cmd[target_][idx].size() > 1 && cmd[target_][idx][1] == '#') {
+		if (cmd[target_][idx][0] != '@') {
+			reply::send_(cmd.getSender().getFd(),
+						 ERR_BADCHANMASK(cmd[target_][idx]));
 			return (false);
 		}
-		//TODO: trim prefix (add function trim in CmdParam)
+		cmd[target_].trimParam(idx, 0, 1);
 		cmd.setOnlyOp();
 	}
 	return (true);
