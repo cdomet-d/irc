@@ -106,14 +106,13 @@ static std::string enumToString(e_param color) {
 	}
 }
 
-void CmdSpec::displayParams(void) {
-	std::cout << "Params in BuilderPattern :\n";
+void CmdSpec::displayParams(const std::string &where) {
+	std::cout << "Params in:" + where + "\n";
 	for (paramMap::iterator i = params_.begin(); i != params_.end(); i++) {
 		try {
 			for (size_t index = 0; index < (*i->second).size(); index++) {
 				std::cout << "param[" << enumToString(i->first) << "]"
-						  << "[" << index << "] : " << (*i->second)[index]
-						  << std::endl;
+						  << "[" << index << "] : " << (*i->second)[index];
 			}
 		} catch (const std::out_of_range &e) {
 			std::cerr << e.what() << std::endl;

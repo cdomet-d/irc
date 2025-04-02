@@ -6,41 +6,39 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/01 15:52:47 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/02 13:26:17 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "validator.hpp"
 #include "printers.hpp"
-
-/* checks that channel syntax is valid */
-//TODO: remove loop, move to join namespace, rename to join::chanSyntaxIsValid
-
-
-/* checks that channel exists */
-// bool check::chans_::exists(CmdSpec &cmd) 
-
+#include "validator.hpp"
 
 /* checks that username syntax is valid */
-// bool check::user(CmdSpec &cmd) {
 bool check::user(CmdSpec &cmd, int idx) {
 	(void)idx;
 	(void)cmd;
 	return (true);
 }
 
+/* check that the target exists */
 bool check::target(CmdSpec &cmd, int idx) {
-	(void)cmd;
-	(void)idx;
+	cmd.displayParams("target");
+	if (!check::nick_::exists(cmd, idx, true)) {
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_NOSUCHNICK(cmd.getSender().cliInfo.getNick()));
+		return false;
+	}
 	return (true);
 }
 
+/* check that the target is on the chan */
 bool check::targetIsOnChan(CmdSpec &cmd, int idx) {
 	(void)cmd;
 	(void)idx;
 	return (true);
 }
 
+/* check that the target is not already on the chan */
 bool check::invite(CmdSpec &cmd, int idx) {
 	(void)cmd;
 	(void)idx;

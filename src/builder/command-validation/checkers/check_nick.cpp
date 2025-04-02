@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/01 14:31:47 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/02 13:03:47 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,14 @@ bool check::nick_::isUnique(const std::string &nick, const nickMap &regCli,
 	}
 	reply::send_(senderFd, ERR_NICKNAMEINUSE(nick));
 	return false;
+}
+
+bool check::nick_::exists(CmdSpec &cmd, int idx, bool silent) {
+	nickMap::const_iterator nickExists = cmd.server_.getUsedNick().find(cmd[target_][idx]);
+	if (nickExists == cmd.server_.getUsedNick().end() && !silent) {
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_NOSUCHNICK(cmd.getSender().cliInfo.getNick()));
+		return false;
+	}
+	return true;
 }

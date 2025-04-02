@@ -6,12 +6,12 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/01 17:17:00 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/02 13:05:20 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "validator.hpp"
 #include "printers.hpp"
+#include "validator.hpp"
 
 bool check::chans_::isOnChan(CmdSpec &cmd, int idx) {
 	stringVec joinedChans = cmd.getSender().getJoinedChans();
@@ -20,12 +20,10 @@ bool check::chans_::isOnChan(CmdSpec &cmd, int idx) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
 									  cmd[channel_][idx]));
-		cmd[channel_].rmParam(idx);
 		return (false);
 	}
 	return (true);
 }
-
 bool check::chans_::hasChanAuthorisations(CmdSpec &cmd, int idx) {
 	(void)idx;
 	channelMap::const_iterator itChan;
@@ -52,10 +50,21 @@ bool check::chans_::hasChanAuthorisations(CmdSpec &cmd, int idx) {
 }
 
 bool check::chans_::exists(CmdSpec &cmd, int idx) {
-	print::map(cmd.server_.getAllChan(), "channels");
-	channelMapIt chanExists = cmd.server_.getAllChan().find(cmd[channel_][idx]);
+	e_param which;
+	try {
+		cmd[channel_];
+		which = channel_;
+	} catch (std::exception &e) { 
+		which = target_;
+	}
+	std::cout << "eparam value: " << which << std::endl;
+	channelMapIt chanExists = cmd.server_.getAllChan().find(cmd[which][idx]);
 	if (chanExists == cmd.server_.getAllChan().end()) {
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
+									   cmd[channel_][idx]));
 		return false;
 	}
+	std::cout << chanExists->first << std::endl;
 	return true;
 }

@@ -11,16 +11,16 @@ bool check::mess(CmdSpec &cmd, int idx) {
 	while (i < cmd[target_].size()) {
 		if (check::mess_::isNick(cmd[target_][i])) {
 			if (!check::target(cmd, i)) {
-				cmd[channel_].rmParam(i);
+				cmd[target_].rmParam(i);
 				continue;
 			}
 		} else if (!check::chans_::exists(cmd, i) || !check::chans_::isOnChan(cmd, i)) {
-				cmd[channel_].rmParam(i);
+				cmd[target_].rmParam(i);
 				continue;
 			}
 		i++;
 	}
-	if (!cmd[channel_].size())
+	if (!cmd[target_].size())
 		return (false);
 	return (true);
 }
