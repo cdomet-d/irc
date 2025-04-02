@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/01 08:34:10 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/02 16:10:47 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ class Client {
 
 	// channels
 	stringVec joinedChans_;
+	stringVec invitedChans_;
 
 	// private constructors
 	Client &operator=(const Client &rhs);

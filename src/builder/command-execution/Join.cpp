@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/01 08:34:16 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/02 16:13:26 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "Server.hpp"
 #include <sstream>
 
+//TODO remove invite when client joined
 Channel *createChan(const std::string &chanName) {
 	static Server &server = Server::GetServerInstance(0, "");
 

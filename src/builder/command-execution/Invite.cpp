@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/02 15:41:03 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/02 16:16:32 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 
 void invite(CmdSpec &cmd) {
 	if (cmd[target_].empty()) {
-		//TODO: print invite list
+		//TODO printf list invited chan
+		//for ()
 		return;
 	}
 	Channel &curChan = findCurChan(cmd[channel_][0]);
