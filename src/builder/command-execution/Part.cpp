@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/02 14:04:46 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/03 15:51:30 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,27 @@
 void partOneChan(Client *sender, Channel &curChan) {
 	int targetFd = sender->getFd();
 	curChan.removeCli(ALLCLI, targetFd);
-	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end())
+	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end()) {
+		sender->removeOneChan(curChan.getName());
 		curChan.removeCli(OPCLI, targetFd);
+	}
 }
 
 void part(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
-	Channel &curChan = findCurChan(cmd[channel_][0]);
-
-	if (!cmd[message_].size())
-		sendMessageChannel(
-			curChan.getCliInChan(),
-			RPL_PARTNOREASON(sender->cliInfo.getPrefix(), curChan.getName()));
-	else {
-		sendMessageChannel(curChan.getCliInChan(),
-						   RPL_PARTREASON(sender->cliInfo.getPrefix(),
-										  curChan.getName(), cmd[message_][0]));
+	for (size_t nbChan = 0; nbChan < cmd[channel_].size(); nbChan++) {
+		Channel &curChan = findCurChan(cmd[channel_][nbChan]);
+		
+		if (!cmd[message_].size())
+			sendMessageChannel(
+				curChan.getCliInChan(),
+				RPL_PARTNOREASON(sender->cliInfo.getPrefix(), curChan.getName()));
+		else {
+			sendMessageChannel(curChan.getCliInChan(),
+							   RPL_PARTREASON(sender->cliInfo.getPrefix(),
+											  curChan.getName(), cmd[message_][0]));
+		}
+		partOneChan(sender, curChan);
+		checkOnlyOperator(&curChan);
 	}
-	partOneChan(sender, curChan);
-	checkOnlyOperator(&curChan);
 }

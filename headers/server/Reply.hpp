@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/03 15:36:25 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/03 15:45:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@
 #define RPL_CREATED(date) (":irc.bitchat.net 003 :This server was created " + date + "\r\n") //TODO : not used
 #define RPL_MYINFO(nickname) (":irc.bitchat.net 004 " + nickname + " Bitchat 1.0 o klit klo Bitchat IRC | Modes: o,k,l,i,t | Max nick: 9 chars\r\n")
 //TODO: ask where these values come from
-#define RPL_ISUPPORT() ":irc.bitchat.net 005 Nickname\n CHANMODES=k,l,i,t\n CHANNELLEN=200\n NICKLEN=9\nTARGMAX=JOIN:,KICK:,PART:,PRIVMSG:\n TOPICLEN=307\n KICKLEN=307\n MODES\n NETWORK=YourNetwork :are supported by this server\r\n"
+#define RPL_ISUPPORT() ":irc.bitchat.net 005 Nickname\n CHANMODES=k,l,i,t\n CHANNELLEN=200\n NICKLEN=9\n TARGMAX=JOIN:,KICK:,PART:,PRIVMSG:\n TOPICLEN=307\n KICKLEN=307\n MODES\n NETWORK=YourNetwork :are supported by this server\r\n"
 
 //channel_replies
 #define RPL_CHANNELMODEIS(nickname, channel, modes) (":irc.bitchat.net 324 " + nickname + " " + channel + " :" + modes + "\r\n")
