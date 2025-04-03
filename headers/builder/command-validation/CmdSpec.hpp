@@ -50,6 +50,7 @@ class CmdSpec {
 
 	/*                               METHODS                                  */
 	CmdParam &operator[](e_param type);
+	const CmdParam &operator[](e_param type) const;
 	CmdSpec &process(Client &sender);
 	void cleanAll(void);
 	bool checkRegistrationStage(void);

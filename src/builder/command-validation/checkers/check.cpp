@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/02 13:26:17 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/03 11:04:49 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ bool check::user(CmdSpec &cmd, int idx) {
 /* check that the target exists */
 bool check::target(CmdSpec &cmd, int idx) {
 	cmd.displayParams("target");
-	if (!check::nick_::exists(cmd, idx, true)) {
+	if (!check::exists(cmd, nickname_, cmd.server_.getUsedNick())) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_NOSUCHNICK(cmd.getSender().cliInfo.getNick()));
 		return false;

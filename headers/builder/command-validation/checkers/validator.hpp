@@ -16,63 +16,78 @@
 #include "CmdSpec.hpp"
 
 namespace check {
-	bool chan(CmdSpec &cmd, int idx);
-	bool invite(CmdSpec &cmd, int idx);
-	bool kick(CmdSpec &cmd, int idx);
-	bool part(CmdSpec &cmd, int idx);
-	bool mess(CmdSpec &cmd, int idx);
-	bool mode(CmdSpec &cmd, int idx);
-	bool nick(CmdSpec &cmd, int idx);
-	bool target(CmdSpec &cmd, int idx);
-	bool targetIsOnChan(CmdSpec &cmd, int idx);
-	bool user(CmdSpec &cmd, int idx);
-	bool join(CmdSpec &cmd, int idx);
-	bool enoughParams(CmdSpec &cmd, int idx);
-	bool findString(stringVec array, std::string &strToFind);
+    bool chan(CmdSpec &cmd, int idx);
+    bool invite(CmdSpec &cmd, int idx);
+    bool kick(CmdSpec &cmd, int idx);
+    bool part(CmdSpec &cmd, int idx);
+    bool mess(CmdSpec &cmd, int idx);
+    bool mode(CmdSpec &cmd, int idx);
+    bool nick(CmdSpec &cmd, int idx);
+    bool target(CmdSpec &cmd, int idx);
+    bool targetIsOnChan(CmdSpec &cmd, int idx);
+    bool user(CmdSpec &cmd, int idx);
+    bool join(CmdSpec &cmd, int idx);
+    bool enoughParams(CmdSpec &cmd, int idx);
+    bool findString(stringVec array, std::string &strToFind);
 
-	namespace mode_ {
-		bool formatArgs(CmdSpec &cmd);
-		bool flagIsValid(e_mdeset &set, e_mdetype &type,
-						 const std::string &flag, const Client &cli);
-		e_mdeset whichSet(const char &c);
-		e_mdetype typeIsValid(const char &c);
-	} // namespace mode_
+    template < typename MapType >
+    bool exists(const CmdSpec &cmd, e_param type, const MapType &map) {
+        typedef typename MapType::key_type key;
+        // typedef typename MapType::value_type val;
 
-	namespace nick_ {
-		bool isUnique(const std::string &nick, const nickMap &regCli,
-					  const int &senderFd);
-		std::string trim(const std::string &nick);
-		bool isAllowed(const char &c);
-		bool isSpecial(const char &c);
-		bool syntaxIsValid(const std::string &nick, const int &senderFd);
-		bool exists(CmdSpec &cmd, int idx, bool silent);
-	} // namespace nick_
+		const key &k = cmd[type].getInnerParam();
+        typename MapType::const_iterator toFind = map.find(k);
 
-	namespace join_ {
-		bool assessRequest(Channel chan, CmdSpec &cmd, size_t i);
-		bool hasInvite(Channel &chan, Client &sender);
-		bool validKey(Channel &chan, CmdParam &keys, size_t i, Client &sender);
-		bool chanHasRoom(Channel &chan, Client &sender);
-		bool cliHasMaxChans(Channel &chan, Client &sender);
-		bool syntaxIsValid(CmdSpec &cmd, int idx);
-	} // namespace join_
+        if (toFind == map.end())
+            return false;
+        return true;
 
-	namespace chans_ {
-		bool isOnChan(CmdSpec &cmd, int idx);
-		bool hasChanAuthorisations(CmdSpec &cmd, int idx);
-		bool exists(CmdSpec &cmd, int idx);
-	} // namespace chans_
+    }
 
-	namespace register_ {
-		bool isRegistered(CmdSpec &cmd, int idx);
-		bool stageDone(CmdSpec &cmd, int idx);
-		bool pwMatch(CmdSpec &cmd, int idx);
-	} // namespace register_
 
-	namespace mess_ {
-		bool params(CmdSpec &cmd);
-		bool isNick(std::string& target);
-	} // namespace mess_
+    namespace mode_ {
+        bool formatArgs(CmdSpec &cmd);
+        bool flagIsValid(e_mdeset &set, e_mdetype &type,
+                         const std::string &flag, const Client &cli);
+        e_mdeset whichSet(const char &c);
+        e_mdetype typeIsValid(const char &c);
+    } // namespace mode_
+
+    namespace nick_ {
+        bool isUnique(const std::string &nick, const nickMap &regCli,
+                      const int &senderFd);
+        std::string trim(const std::string &nick);
+        bool isAllowed(const char &c);
+        bool isSpecial(const char &c);
+        bool syntaxIsValid(const std::string &nick, const int &senderFd);
+        bool exists(CmdSpec &cmd, int idx, bool silent);
+    } // namespace nick_
+
+    namespace join_ {
+        bool assessRequest(Channel chan, CmdSpec &cmd, size_t i);
+        bool hasInvite(Channel &chan, Client &sender);
+        bool validKey(Channel &chan, CmdParam &keys, size_t i, Client &sender);
+        bool chanHasRoom(Channel &chan, Client &sender);
+        bool cliHasMaxChans(Channel &chan, Client &sender);
+        bool syntaxIsValid(CmdSpec &cmd, int idx);
+    } // namespace join_
+
+    namespace chans_ {
+        bool isOnChan(CmdSpec &cmd, int idx);
+        bool hasChanAuthorisations(CmdSpec &cmd, int idx);
+        bool exists(CmdSpec &cmd, int idx);
+    } // namespace chans_
+
+    namespace register_ {
+        bool isRegistered(CmdSpec &cmd, int idx);
+        bool stageDone(CmdSpec &cmd, int idx);
+        bool pwMatch(CmdSpec &cmd, int idx);
+    } // namespace register_
+
+    namespace mess_ {
+        bool params(CmdSpec &cmd);
+        bool isNick(std::string& target);
+    } // namespace mess_
 } // namespace check 
 
 #endif

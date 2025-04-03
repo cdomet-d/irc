@@ -37,6 +37,14 @@ CmdParam &CmdSpec::operator[](e_param type) {
 	throw std::out_of_range("Param not found");
 }
 
+const CmdParam &CmdSpec::operator[](e_param type) const {
+	for (size_t i = 0; i < params_.size(); i++) {
+		if (params_[i].first == type)
+			return ((*params_[i].second));
+	}
+	throw std::out_of_range("Param not found");
+}
+
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
