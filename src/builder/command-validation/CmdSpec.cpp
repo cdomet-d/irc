@@ -70,7 +70,7 @@ CmdSpec &CmdSpec::process(Client &sender) {
 		return (*this);
 	hasParamList();
 	//TODO: trim extra space before trailing// shouldn't be necessary if coralie trims trailing
-	displayParams();
+	//displayParams();
 	for (size_t i = 0; i < checkers_.size(); i++) {
 		if (!checkers_[i](*this, 0)) {
 			valid_ = false;

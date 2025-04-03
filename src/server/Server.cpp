@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/02 16:22:27 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/03 11:54:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,6 @@ bool Server::handleData(int fd) {
 	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, MSG_DONTWAIT);
 
 	Client *curCli = clients_.find(fd)->second;
-	//TODO: handle -1 differently
 	if (bytes == 0) {
 		std::cout << "sending QUIT command" << std::endl;
 		curCli->mess.setMess("QUIT\n");

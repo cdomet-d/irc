@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/01 08:34:18 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/03 13:28:35 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ void who(CmdSpec &cmd) {
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 	std::string nickList;
 
-	//TODO : faire un try catch ou !empty ?
-	//if (cmd[flag_][0] == "o") {
+	//if (!cmd[flag_].empty() || cmd[flag_][0] == "o") {
 	//	nickList = buildNickList(curChan.getOpCli(), sender, curChan);
 	//	return ;
 	//}
