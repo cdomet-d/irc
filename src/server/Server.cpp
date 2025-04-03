@@ -158,13 +158,11 @@ bool Server::handleData(int fd) {
 	Client *curCli = clients_.find(fd)->second;
 	//TODO: handle -1 differently
 	if (bytes == 0) {
-		curCli->mess.setMess("QUIT");
+		curCli->mess.setMess("QUIT\n");
 		buffer_manip::prepareCommand(*curCli);
 		return (true);
 	} else if (bytes == -1)
 		return (true);
-	else if (bytes == -1)
-		perror("HandleData:");
 	else {
 		std::string inputCli = curCli->mess.getMess();
 		inputCli.append(tmpBuf);
