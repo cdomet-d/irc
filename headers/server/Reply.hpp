@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/02 14:21:36 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/03 11:39:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@
 #define ERR_NONICKNAMEGIVEN() (":irc.bitchat.net 431 :No nickname given\r\n")
 #define ERR_ERRONEUSNICKNAME(newNick) (":irc.bitchat.net 432 " + newNick + " :Erroneous nickname\r\n")
 #define ERR_NEEDMOREPARAMS(nickname, command)(":irc.bitchat.net 461 " + nickname + " " + command + " :Not enough parameters\r\n")
-#define ERR_UNKNOWNMODE(nickname, modechar) (":irc.bitchat.net 472 " + nickname + " " + modechar + " :is unknown mode char to me" + "\r\n") //TODO : not used
+#define ERR_UNKNOWNMODE(nickname, modechar) (":irc.bitchat.net 472 " + nickname + " " + modechar + " :is unknown mode char to me" + "\r\n")
 #define ERR_TOOMANYTARGETS(nickname, target) (":irc.bitchat.net 407 " + nickname + " " + target + " :Too many targets\r\n") //TODO : not used
 
 //registration_err_replies
@@ -58,7 +58,7 @@
 #define RPL_WELCOME(nickname, prefix) (":irc.bitchat.net 001 " + nickname + " :Welcome to the Internet Relay Network " + prefix + "\r\n")
 #define RPL_YOURHOST() (":irc.bitchat.net 002 :Your host is Bitchat, running version 1.0 \r\n")
 #define RPL_CREATED(date) (":irc.bitchat.net 003 :This server was created " + date + "\r\n") //TODO : not used
-#define RPL_MYINFO(nickname) (":irc.bitchat.net 004 " + nickname + " Bitchat 1.0 o klit klo Bitchat IRC | Modes: o,k,l,i,t | Max nick: 9 chars\r\n") //TODO : not used
+#define RPL_MYINFO(nickname) (":irc.bitchat.net 004 " + nickname + " Bitchat 1.0 o klit klo Bitchat IRC | Modes: o,k,l,i,t | Max nick: 9 chars\r\n")
 //TODO: ask where these values come from
 #define RPL_ISUPPORT() ":irc.bitchat.net 005 Nickname\n CHANMODES=k,l,i,t\n CHANNELLEN=200\n NICKLEN=9\n MAXTARGETS=1\n TOPICLEN=307\n KICKLEN=307\n MODES\n NETWORK=YourNetwork :are supported by this server\r\n"
 
@@ -73,6 +73,8 @@
 #define RPL_NAMREPLY(nickname, channel_type, channel, nicks) (":irc.bitchat.net 353 " + nickname + " " + channel_type + " " + channel + " :" + nicks + "\r\n")
 #define RPL_UMODEIS(nickname, modes) (":irc.bitchat.net 221 " + nickname + " " + modes + "\r\n")
 #define RPL_AWAY(nickname, message) (":irc.bitchat.net 301 " + nickname + " :" + message + "\r\n") //TODO : not used
+#define RPL_INVITELIST(nickname, channel) (":irc.bitchat.net 336 " + nickname + " " + channel + "\r\n")
+#define RPL_ENDOFINVITELIST(nickname) (":irc.bitchat.net 337 " + nickname + " :End of invite list\r\n")
 
 //USER_DEFINED_REPLIES
 //notice_replies (uses nickname)
@@ -102,5 +104,3 @@ namespace reply {
 
 } // namespace reply
 #endif //REPLY_H
-
-//TODO: add BADCHANMASK ??
