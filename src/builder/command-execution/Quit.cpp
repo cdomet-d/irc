@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/02 10:41:48 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/03 15:59:33 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <sstream>
 
 void partAllChans(Client *sender) {
-	std::vector<std::string> joinedChans = sender->getJoinedChans();
+	std::vector< std::string > joinedChans = sender->getJoinedChans();
 
 	for (size_t nbChan = 0; nbChan != joinedChans.size(); nbChan++) {
 		std::string tempMess = "PART " + joinedChans[nbChan] + "\n\r";

@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:51:30 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/03 15:59:32 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,16 @@ void part(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 	for (size_t nbChan = 0; nbChan < cmd[channel_].size(); nbChan++) {
 		Channel &curChan = findCurChan(cmd[channel_][nbChan]);
-		
+
 		if (!cmd[message_].size())
-			sendMessageChannel(
-				curChan.getCliInChan(),
-				RPL_PARTNOREASON(sender->cliInfo.getPrefix(), curChan.getName()));
+			sendMessageChannel(curChan.getCliInChan(),
+							   RPL_PARTNOREASON(sender->cliInfo.getPrefix(),
+												curChan.getName()));
 		else {
 			sendMessageChannel(curChan.getCliInChan(),
 							   RPL_PARTREASON(sender->cliInfo.getPrefix(),
-											  curChan.getName(), cmd[message_][0]));
+											  curChan.getName(),
+											  cmd[message_][0]));
 		}
 		partOneChan(sender, curChan);
 		checkOnlyOperator(&curChan);

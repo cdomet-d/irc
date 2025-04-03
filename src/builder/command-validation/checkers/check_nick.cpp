@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/02 14:22:24 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/03 15:59:36 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ bool check::nick_::isUnique(const std::string &nick, const nickMap &regCli,
 	//std::cout << "IsUnique" << std::endl;
 	nickMap::const_iterator unique = regCli.find(nick);
 	if (unique == regCli.end()) {
-	//	std::cout << "No match found: nick is unique" << std::endl;
+		//	std::cout << "No match found: nick is unique" << std::endl;
 		return true;
 	}
 	//std::cout << "A match found: nick is not unique" << std::endl;

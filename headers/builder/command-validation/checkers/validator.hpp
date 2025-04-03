@@ -69,6 +69,6 @@ namespace check {
 	namespace mess_ {
 		bool params(CmdSpec &cmd);
 	} // namespace mess_
-} // namespace check 
+} // namespace check
 
 #endif

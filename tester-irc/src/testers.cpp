@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   testers.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 15:41:52 by csweetin          #+#    #+#             */
-/*   Updated: 2025/03/26 09:52:11 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/04/03 15:59:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,13 @@ void compare(std::ifstream &output, std::ifstream &expectedOutput) {
 }
 
 int test(const char *script, const char *expectedOutputFile,
-					 const char *testName) {
+		 const char *testName) {
 	std::ifstream output;
 	std::ifstream expectedOutput;
 
 	if (launchScript(script))
 		return (1);
-		
+
 	output.open("outputs/output.txt");
 	if (!output.is_open()) {
 		std::cout << "Error: could not open file 'output.txt'" << std::endl;

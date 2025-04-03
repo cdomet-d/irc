@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 11:54:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/03 15:59:16 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ bool Server::handleData(int fd) {
 		curCli->mess.setMess("QUIT\n");
 		buffer_manip::prepareCommand(*curCli);
 		return (true);
-	} else if (bytes == -1) 
+	} else if (bytes == -1)
 		return (true);
 	else {
 		std::string inputCli = curCli->mess.getMess();

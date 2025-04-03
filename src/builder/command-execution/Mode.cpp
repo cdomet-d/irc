@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 14:22:36 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/03 15:59:31 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,23 @@ void executeO(std::string flag, std::string param, Channel &curChan) {
 
 	for (clientMapIt targetIt = curChan.getCliInChan().begin();
 		 targetIt != curChan.getCliInChan().end(); ++targetIt) {
-			if (targetIt->second->cliInfo.getNick() == targ) {
+		if (targetIt->second->cliInfo.getNick() == targ) {
 			targetCli = targetIt->second;
 			break;
 		}
 	}
 
 	if (targetCli == NULL) {
-		return ;
+		return;
 	}
 
 	if (flag == "+o ") {
-		std::cout << targetCli->getFd() << targetCli->cliInfo.getNick() << std::endl;
+		std::cout << targetCli->getFd() << targetCli->cliInfo.getNick()
+				  << std::endl;
 		curChan.addCli(OPCLI, targetCli);
 		reply::send_(
 			targetCli->getFd(),
 			RPL_CHANOPE(targetCli->cliInfo.getNick(), curChan.getName()));
-		
 	}
 	if (flag == "-o") {
 		curChan.removeCli(OPCLI, targetCli->getFd());
@@ -193,9 +193,9 @@ void mode(CmdSpec &cmd) {
 		return;
 	}
 	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
-	//	std::cout << "cmd[flag_][nbFlag] = " << cmd[flag_][nbFlag] << "$" << std::endl
-	//			  << "cmd[flagArg_][nbFlag] = " << cmd[flagArg_][nbFlag] << "$"
-	//			  << std::endl;
+		//	std::cout << "cmd[flag_][nbFlag] = " << cmd[flag_][nbFlag] << "$" << std::endl
+		//			  << "cmd[flagArg_][nbFlag] = " << cmd[flagArg_][nbFlag] << "$"
+		//			  << std::endl;
 		executeFlag(cmd[flag_][nbFlag], cmd[flagArg_][nbFlag], curChan);
 	}
 	buildNewModeString(cmd, curChan, sender);
