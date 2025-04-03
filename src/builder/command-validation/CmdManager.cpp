@@ -63,7 +63,7 @@ void CmdManager::generateCmds() {
 
 	log(CmdSpec::CmdBuilder()
 			.Name("USER")
-			.Registration(2)
+			.Registration(2) //TODO: change registration level ???
 			.addParam(username_, new CmdParam())
 			.addParam(hostname_, new CmdParam())
 			.addParam(servername_, new CmdParam())
