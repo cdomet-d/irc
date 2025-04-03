@@ -18,12 +18,15 @@
 void nick(CmdSpec &cmd) {
 	Client &sender = cmd.getSender();
 
-	if (sender.cliInfo.getRegistration() != 3)
-		sender.cliInfo.setRegistration(2);
 	if (!sender.cliInfo.getNick().empty())
 		cmd.server_.removeNickFromUsedNicks(sender.cliInfo.getNick());
 	sender.cliInfo.setNick(cmd[nickname_][0]);
-	sender.cliInfo.setPrefix();
 	cmd.server_.addNickToUsedNicks(cmd[nickname_][0], sender.getFd());
+	if (sender.cliInfo.getRegistration() == 1)
+		sender.cliInfo.setRegistration(2);
+	else if (sender.cliInfo.getRegistration() == 2) {
+		registrationCompleted(sender);
+		return ;
+	}
 	reply::send_(cmd.getSender().getFd(), RPL_NICK(sender.cliInfo.getNick()));
 }

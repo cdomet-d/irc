@@ -42,17 +42,10 @@ CmdParam &CmdSpec::operator[](e_param type) {
 bool CmdSpec::checkRegistrationStage(void) {
 	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
 		valid_ = false;
-		if (name_ == "NICK")
+		if (sender_->cliInfo.getRegistration() == 0)
 			reply::send_(sender_->getFd(),
 						 ERR_NEEDPASS(sender_->cliInfo.getNick()));
-		else if (name_ == "USER") {
-			if (sender_->cliInfo.getRegistration() == 0)
-				reply::send_(sender_->getFd(),
-							 ERR_NEEDPASS(sender_->cliInfo.getNick()));
-			else
-				reply::send_(sender_->getFd(),
-							 ERR_NEEDNICK(sender_->cliInfo.getNick()));
-		} else if (name_ != "PASS")
+		else
 			reply::send_(sender_->getFd(), ERR_NOTREGISTERED(sender_->cliInfo.getNick()));
 		return (false);
 	}

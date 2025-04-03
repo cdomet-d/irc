@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:48:49 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 09:04:23 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/03 18:59:33 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,24 +22,27 @@ static std::string timeStamp() {
 	return (time_buf);
 }
 
-void registrationCompleted(Client *sender) {
-	reply::send_(sender->getFd(), RPL_WELCOME(sender->cliInfo.getNick(),
-											  sender->cliInfo.getPrefix()));
-	reply::send_(sender->getFd(), RPL_YOURHOST(sender->cliInfo.getNick()));
-	reply::send_(sender->getFd(),
-				 RPL_CREATED(sender->cliInfo.getNick(), timeStamp()));
-	reply::send_(sender->getFd(), RPL_MYINFO(sender->cliInfo.getNick()));
-	reply::send_(sender->getFd(), RPL_ISUPPORT(sender->cliInfo.getNick()));
-	reply::send_(sender->getFd(), REG_COMPLETE(sender->cliInfo.getNick()));
+void registrationCompleted(Client &sender) {
+	sender.cliInfo.setRegistration(3);
+	sender.cliInfo.setPrefix();
+	reply::send_(sender.getFd(), RPL_WELCOME(sender.cliInfo.getNick(),
+											  sender.cliInfo.getPrefix()));
+	reply::send_(sender.getFd(), RPL_YOURHOST(sender.cliInfo.getNick()));
+	reply::send_(sender.getFd(),
+				 RPL_CREATED(sender.cliInfo.getNick(), timeStamp()));
+	reply::send_(sender.getFd(), RPL_MYINFO(sender.cliInfo.getNick()));
+	reply::send_(sender.getFd(), RPL_ISUPPORT(sender.cliInfo.getNick()));
+	reply::send_(sender.getFd(), REG_COMPLETE(sender.cliInfo.getNick()));
 }
 
 void user(CmdSpec &cmd) {
-	Client *sender = &cmd.getSender();
-	sender->cliInfo.setUsername(cmd[username_][0]);
-	sender->cliInfo.setRegistration(3);
-	sender->cliInfo.setPrefix();
-	reply::send_(
-		cmd.getSender().getFd(),
-		RPL_USER(sender->cliInfo.getNick(), sender->cliInfo.getUsername()));
-	registrationCompleted(sender);
+	Client &sender = cmd.getSender();
+	sender.cliInfo.setUsername(cmd[username_][0]);
+	if (sender.cliInfo.getRegistration() == 1) {
+		sender.cliInfo.setRegistration(2);
+		reply::send_(cmd.getSender().getFd(),
+					RPL_USER(sender.cliInfo.getNick(), sender.cliInfo.getUsername()));
+	}
+	else if (sender.cliInfo.getRegistration() == 2)
+		registrationCompleted(sender);
 }

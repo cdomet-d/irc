@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:08:25 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 17:49:33 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/03 18:11:47 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,6 @@ Channel *createChan(const std::string &chanName);
 void checkOnlyOperator(Channel *curChan);
 void partOneChan(Client *sender, Channel &curChan);
 void partAllChans(Client *sender);
+void registrationCompleted(Client &sender);
 
 #endif ///CMDEXECUTION_HPP
