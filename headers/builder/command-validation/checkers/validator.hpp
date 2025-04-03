@@ -40,11 +40,11 @@ namespace check {
 
 	namespace nick_ {
 		bool isUnique(const std::string &nick, const nickMap &regCli,
-					  const int &senderFd);
+					  const Client &sender);
 		std::string trim(const std::string &nick);
 		bool isAllowed(const char &c);
 		bool isSpecial(const char &c);
-		bool syntaxIsValid(const std::string &nick, const int &senderFd);
+		bool syntaxIsValid(const std::string &nick, const Client &sender);
 	} // namespace nick_
 
 	namespace join_ {

@@ -25,10 +25,11 @@ static std::string timeStamp() {
 void registrationCompleted(Client *sender) {
 	reply::send_(sender->getFd(), RPL_WELCOME(sender->cliInfo.getNick(),
 											  sender->cliInfo.getPrefix()));
-	reply::send_(sender->getFd(), RPL_YOURHOST());
-	reply::send_(sender->getFd(), RPL_CREATED(timeStamp()));
+	reply::send_(sender->getFd(), RPL_YOURHOST(sender->cliInfo.getNick()));
+	reply::send_(sender->getFd(),
+				 RPL_CREATED(sender->cliInfo.getNick(), timeStamp()));
 	reply::send_(sender->getFd(), RPL_MYINFO(sender->cliInfo.getNick()));
-	reply::send_(sender->getFd(), RPL_ISUPPORT());
+	reply::send_(sender->getFd(), RPL_ISUPPORT(sender->cliInfo.getNick()));
 	reply::send_(sender->getFd(), REG_COMPLETE(sender->cliInfo.getNick()));
 }
 
@@ -37,7 +38,8 @@ void user(CmdSpec &cmd) {
 	sender->cliInfo.setUsername(cmd[username_][0]);
 	sender->cliInfo.setRegistration(3);
 	sender->cliInfo.setPrefix();
-	reply::send_(cmd.getSender().getFd(),
-				 RPL_USER(sender->cliInfo.getUsername()));
+	reply::send_(
+		cmd.getSender().getFd(),
+		RPL_USER(sender->cliInfo.getNick(), sender->cliInfo.getUsername()));
 	registrationCompleted(sender);
 }

@@ -17,6 +17,7 @@
 
 void pass(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
-	reply::send_(sender->getFd(), PASS_SUCCESS());
+	reply::send_(sender->getFd(),
+				 PASS_SUCCESS(cmd.getSender().cliInfo.getNick()));
 	sender->cliInfo.setRegistration(1);
 }
