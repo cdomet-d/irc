@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/04/02 10:09:12 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/04/03 13:43:47 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -177,12 +177,12 @@ info:
 
 run: all
 	$(RM) raw.log
-	./$(NAME) 6667 0
+	./$(NAME) 4444 0
 
 VFLAGS:= --leak-check=full --log-file="val.log" --show-leak-kinds=all --track-fds=yes
 drun: debug
 	$(RM) raw.log
-	valgrind $(VFLAGS) ./$(DEBUG_NAME) 6667 0
+	valgrind $(VFLAGS) ./$(DEBUG_NAME) 4444 0
 
 # ----------------------------- FORMAT --------------------------------------- #
 

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/03 11:04:49 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/03 14:41:35 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,16 @@ bool check::user(CmdSpec &cmd, int idx) {
 
 /* check that the target exists */
 bool check::target(CmdSpec &cmd, int idx) {
-	cmd.displayParams("target");
-	if (!check::exists(cmd, nickname_, cmd.server_.getUsedNick())) {
+	if (!check::exists(cmd[target_][idx], cmd.server_.getUsedNick())) {
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_NOSUCHNICK(cmd.getSender().cliInfo.getNick()));
+		return false;
+	}
+	return (true);
+}
+
+bool check::chan(CmdSpec &cmd, int idx) {
+	if (!check::exists(cmd[channel_][idx], cmd.server_.getAllChan())) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_NOSUCHNICK(cmd.getSender().cliInfo.getNick()));
 		return false;
@@ -40,9 +48,13 @@ bool check::targetIsOnChan(CmdSpec &cmd, int idx) {
 
 /* check that the target is not already on the chan */
 bool check::invite(CmdSpec &cmd, int idx) {
-	(void)cmd;
-	(void)idx;
-	return (true);
+	if (check::chans_::isOnChan(cmd, idx)) {
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_USERONCHANNEL(cmd.getSender().cliInfo.getNick(), cmd[channel_][idx]));
+		return false;
+	}
+	
+	return true;
 }
 
 bool check::enoughParams(CmdSpec &cmd, int idx) {

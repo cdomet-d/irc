@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/02 13:05:20 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/03 14:35:15 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,22 +49,22 @@ bool check::chans_::hasChanAuthorisations(CmdSpec &cmd, int idx) {
 	return (true);
 }
 
-bool check::chans_::exists(CmdSpec &cmd, int idx) {
-	e_param which;
-	try {
-		cmd[channel_];
-		which = channel_;
-	} catch (std::exception &e) { 
-		which = target_;
-	}
-	std::cout << "eparam value: " << which << std::endl;
-	channelMapIt chanExists = cmd.server_.getAllChan().find(cmd[which][idx]);
-	if (chanExists == cmd.server_.getAllChan().end()) {
-		reply::send_(cmd.getSender().getFd(),
-					 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
-									   cmd[channel_][idx]));
-		return false;
-	}
-	std::cout << chanExists->first << std::endl;
-	return true;
-}
+// bool check::chans_::exists(CmdSpec &cmd, int idx) {
+// 	e_param which;
+// 	try {
+// 		cmd[channel_];
+// 		which = channel_;
+// 	} catch (std::exception &e) { 
+// 		which = target_;
+// 	}
+// 	std::cout << "eparam value: " << which << std::endl;
+// 	channelMapIt chanExists = cmd.server_.getAllChan().find(cmd[which][idx]);
+// 	if (chanExists == cmd.server_.getAllChan().end()) {
+// 		reply::send_(cmd.getSender().getFd(),
+// 					 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
+// 									   cmd[channel_][idx]));
+// 		return false;
+// 	}
+// 	std::cout << chanExists->first << std::endl;
+// 	return true;
+// }

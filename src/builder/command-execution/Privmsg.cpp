@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/02 13:18:57 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/03 14:04:58 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void privmsg(CmdSpec &cmd) {
 	static Server &server = Server::GetServerInstance(0, "");
 	Client *sender = &cmd.getSender();
 
-	cmd.displayParams("privmsg exec");
 	if (cmd[target_][0].find("#") == cmd[target_][0].npos) {
 		for (clientMapIt itTarget = server.getAllCli().begin();
 			 itTarget != server.getAllCli().end(); ++itTarget) {

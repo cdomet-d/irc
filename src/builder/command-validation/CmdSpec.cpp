@@ -78,7 +78,7 @@ CmdSpec &CmdSpec::process(Client &sender) {
 		!(*this)[channel_].size())
 		return (*this);
 	hasParamList();
-	// displayParams();
+	displayParams("After CmdSpec::process");
 	for (size_t i = 0; i < checkers_.size(); i++) {
 		if (!checkers_[i](*this, 0)) {
 			valid_ = false;

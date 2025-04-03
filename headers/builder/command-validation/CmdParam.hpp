@@ -33,6 +33,7 @@ class CmdParam {
 	CmdParam &operator=(const CmdParam &rhs);
 	size_t size(void) const;
 	std::string &operator[](unsigned int i);
+	const std::string &operator[](unsigned int i) const;
 	void addOne(unsigned int pos);
 	void clean(void);
 	void rmParam(unsigned int pos);
