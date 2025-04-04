@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 11:02:30 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/04 13:18:47 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ bool check::join(CmdSpec &cmd, int idx) {
 	size_t i = 0;
 
 	while (i < cmd[channel_].size()) {
-		itChan = cmd.server_.getAllChan().find(cmd[channel_][i]);
-		if (itChan != cmd.server_.getAllChan().end()) {
+		itChan = cmd.serv_.getAllChan().find(cmd[channel_][i]);
+		if (itChan != cmd.serv_.getAllChan().end()) {
 			if (!check::join_::assessRequest(*itChan->second, cmd, i)) {
 				std::cout << "Couldnt join channel" << std::endl;
 				cmd[channel_].rmParam(i);
@@ -37,7 +37,7 @@ bool check::join(CmdSpec &cmd, int idx) {
 }
 
 bool check::join_::assessRequest(Channel chan, CmdSpec &cmd, size_t i) {
-	if (check::findString(cmd.getSender().getJoinedChans(), cmd[channel_][i]))
+	if (check::chans_::onChan(cmd[channel_][i], cmd.getSender().getJoinedChans()))
 		return (false);
 	if (!check::join_::chanHasRoom(chan, cmd.getSender()))
 		return (false);

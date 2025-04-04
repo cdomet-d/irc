@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 16:42:41 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/04 11:02:47 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:17:01 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@ bool check::mess(CmdSpec &cmd, int idx) {
 
 	size_t i = 0;
 	while (i < cmd[target_].size()) {
-		if (check::mess_::isNick(cmd[target_][i])) {
-			if (!check::target(cmd, i)) {
+		if (!check::target(cmd, i)) {
+			reply::send_(cmd.getSender().getFd(),
+						 ERR_NOSUCHNICK(cmd.getSender().cliInfo.getNick()));
 				cmd[target_].rmParam(i);
-				continue;
-			}
-		} else if (!check::exists(cmd[target_][idx], cmd.server_.getAllChan()) || !check::chans_::isOnChan(cmd, i)) {
-				cmd[target_].rmParam(i);
-				continue;
-			}
+			continue;
+		} else if (!check::chan(cmd, i)) {
+			cmd[target_].rmParam(i);
+			continue;
+		}
 		i++;
 	}
 	if (!cmd[target_].size())

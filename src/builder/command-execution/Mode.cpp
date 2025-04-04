@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:31 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/04 11:47:27 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,41 +145,38 @@ void sendModeMessages(std::string &first, std::string &second, Channel &curChan,
 }
 
 void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
-	std::string negMode = "-";
-	std::string posMode = "+";
-	bool posFirst = false;
-	std::string newPassMaxCli = " ";
+    std::string negMode = "-";
+    std::string posMode = "+";
+    std::string newPassMaxCli = " ";
 
-	if (cmd[flag_][0].find("+") != std::string::npos)
-		posFirst = true;
-	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
-		if (cmd[flag_][nbFlag].find("+") != std::string::npos) {
-			if (cmd[flag_][nbFlag] == "+l" || cmd[flag_][nbFlag] == "+k")
-				newPassMaxCli.append(cmd[flagArg_][nbFlag] + " ");
-			posMode += cmd[flag_][nbFlag][1];
-		}
-		if (cmd[flag_][nbFlag].find("-") != std::string::npos)
-			negMode += cmd[flag_][nbFlag][1];
-	}
-	posMode.append(newPassMaxCli);
-	if (!strcmp("-", negMode.c_str()) && negMode.size() == 1) {
-		sendMessageChannel(curChan.getCliInChan(),
-						   RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
-											 curChan.getName(), posMode));
-		return;
-	}
+    for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
+        if (cmd[flag_][nbFlag].find("+") != std::string::npos) {
+            if (cmd[flag_][nbFlag] == "+l" || cmd[flag_][nbFlag] == "+k")
+                newPassMaxCli.append(cmd[flagArg_][nbFlag] + " ");
+            posMode += cmd[flag_][nbFlag][1];
+        }
+        if (cmd[flag_][nbFlag].find("-") != std::string::npos)
+            negMode += cmd[flag_][nbFlag][1];
+    }
+    posMode.append(newPassMaxCli);
+    if (!strcmp("-", negMode.c_str()) && negMode.size() == 1) {
+        sendMessageChannel(curChan.getCliInChan(),
+                           RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
+                                             curChan.getName(), posMode));
+        return;
+    }
 
-	if (!strcmp("-", posMode.c_str()) && posMode.size() == 1) {
-		sendMessageChannel(curChan.getCliInChan(),
-						   RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
-											 curChan.getName(), negMode));
-		return;
-	}
+    if (!strcmp("-", posMode.c_str()) && posMode.size() == 1) {
+        sendMessageChannel(curChan.getCliInChan(),
+                           RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
+                                             curChan.getName(), negMode));
+        return;
+    }
 
-	(cmd[flag_][0][0] == '+')
-		? sendModeMessages(posMode, negMode, curChan, sender->cliInfo.getNick())
-		: sendModeMessages(negMode, posMode, curChan,
-						   sender->cliInfo.getNick());
+    (cmd[flag_][0][0] == '+')
+        ? sendModeMessages(posMode, negMode, curChan, sender->cliInfo.getNick())
+        : sendModeMessages(negMode, posMode, curChan,
+                           sender->cliInfo.getNick());
 }
 
 //the modes of a channel need to be empty if no more is activated and +<modes> if any

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:30 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:12:10 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ void invite(CmdSpec &cmd) {
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 	//use NickMap
 	Client *targetCli = NULL;
-	for (clientMapIt itTarget = cmd.server_.getAllCli().begin();
-		 itTarget != cmd.server_.getAllCli().end(); ++itTarget) {
+	for (clientMapIt itTarget = cmd.serv_.getAllCli().begin();
+		 itTarget != cmd.serv_.getAllCli().end(); ++itTarget) {
 		if (itTarget->second->cliInfo.getNick() == cmd[target_][0]) {
 			targetCli = itTarget->second;
 		}

@@ -6,17 +6,23 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 11:02:19 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:48:05 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printers.hpp"
 #include "validator.hpp"
+#include <algorithm>
 
-bool check::chans_::isOnChan(CmdSpec &cmd, int idx) {
-	stringVec joinedChans = cmd.getSender().getJoinedChans();
-
-	if (!check::findString(joinedChans, cmd[channel_][idx])) {
+bool check::chan(CmdSpec &cmd, int idx) {
+	if (!check::exists(cmd[channel_][idx], cmd.serv_.getAllChan())) {
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
+									   cmd[channel_][idx]));
+		return (false);
+	}
+	stringVec userChan = cmd.getSender().getJoinedChans();
+	if (!check::chans_::onChan(cmd[channel_][idx], userChan)) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
 									  cmd[channel_][idx]));
@@ -24,11 +30,16 @@ bool check::chans_::isOnChan(CmdSpec &cmd, int idx) {
 	}
 	return (true);
 }
+
+bool check::chans_::onChan(std::string arg, const stringVec &arr) {
+	return std::find(arr.begin(), arr.end(), arg) != arr.end();
+}
+
 bool check::chans_::hasChanAuthorisations(CmdSpec &cmd, int idx) {
 	(void)idx;
 	channelMap::const_iterator itChan;
 
-	itChan = cmd.server_.getAllChan().find(cmd[channel_][0]);
+	itChan = cmd.serv_.getAllChan().find(cmd[channel_][0]);
 	Channel chan = *itChan->second;
 
 	if (cmd.getName() == "TOPIC" &&
@@ -48,23 +59,3 @@ bool check::chans_::hasChanAuthorisations(CmdSpec &cmd, int idx) {
 	}
 	return (true);
 }
-
-// bool check::chans_::exists(CmdSpec &cmd, int idx) {
-// 	e_param which;
-// 	try {
-// 		cmd[channel_];
-// 		which = channel_;
-// 	} catch (std::exception &e) { 
-// 		which = target_;
-// 	}
-// 	std::cout << "eparam value: " << which << std::endl;
-// 	channelMapIt chanExists = cmd.server_.getAllChan().find(cmd[which][idx]);
-// 	if (chanExists == cmd.server_.getAllChan().end()) {
-// 		reply::send_(cmd.getSender().getFd(),
-// 					 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
-// 									   cmd[channel_][idx]));
-// 		return false;
-// 	}
-// 	std::cout << chanExists->first << std::endl;
-// 	return true;
-// }

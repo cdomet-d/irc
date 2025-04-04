@@ -14,6 +14,7 @@
 #define VALIDATOR_HPP
 
 #include "CmdSpec.hpp"
+#include <algorithm>
 
 namespace check {
 	bool chan(CmdSpec &cmd, int idx);
@@ -24,19 +25,17 @@ namespace check {
 	bool mode(CmdSpec &cmd, int idx);
 	bool nick(CmdSpec &cmd, int idx);
 	bool target(CmdSpec &cmd, int idx);
-	bool targetIsOnChan(CmdSpec &cmd, int idx);
 	bool user(CmdSpec &cmd, int idx);
 	bool join(CmdSpec &cmd, int idx);
 	bool enoughParams(CmdSpec &cmd, int idx);
-	bool findString(stringVec array, std::string &strToFind);
 
 	template < typename MapType >
 	bool exists(std::string arg, const MapType &map) {
 		typename MapType::const_iterator toFind = map.find(arg);
-		if (toFind == map.end())
-			return false;
-		return true;
+		return toFind == map.end();
 	}
+
+	
 	namespace mode_ {
 		bool formatArgs(CmdSpec &cmd);
 		bool flagIsValid(e_mdeset &set, e_mdetype &type,
@@ -46,13 +45,9 @@ namespace check {
 	} // namespace mode_
 
 	namespace nick_ {
-		bool isUnique(const std::string &nick, const nickMap &regCli,
-					  const int &senderFd);
-		std::string trim(const std::string &nick);
 		bool isAllowed(const char &c);
 		bool isSpecial(const char &c);
 		bool syntaxIsValid(const std::string &nick, const int &senderFd);
-		bool exists(CmdSpec &cmd, int idx, bool silent);
 	} // namespace nick_
 
 	namespace join_ {
@@ -65,8 +60,8 @@ namespace check {
 	} // namespace join_
 
 	namespace chans_ {
-		bool isOnChan(CmdSpec &cmd, int idx);
 		bool hasChanAuthorisations(CmdSpec &cmd, int idx);
+		bool onChan(std::string arg, const stringVec &arr);
 	} // namespace chans_
 
 	namespace register_ {
@@ -77,7 +72,6 @@ namespace check {
 
 	namespace mess_ {
 		bool params(CmdSpec &cmd);
-		bool isNick(std::string &target);
 	} // namespace mess_
 } // namespace check
 

@@ -46,7 +46,7 @@ class CmdSpec {
 	~CmdSpec(void);
 
 	/*                               MEMBERS                                  */
-	Server &server_;
+	Server &serv_;
 
 	/*                               METHODS                                  */
 	CmdParam &operator[](e_param type);

@@ -19,7 +19,7 @@
 CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
 				 std::vector< bool (*)(CmdSpec &, int) > checkers,
 				 void (*cmExecutor)(CmdSpec &cmd))
-	: server_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
+	: serv_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
 	  name_(name), registrationStage_(registrationStage), params_(params),
 	  checkers_(checkers), cmExecutor_(cmExecutor) {}
 

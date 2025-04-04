@@ -92,7 +92,6 @@ void CmdManager::generateCmds() {
 			.addChecker(check::enoughParams)
 			.addChecker(check::target)
 			.addChecker(check::chan)
-			.addChecker(check::chans_::isOnChan)
 			.addChecker(check::invite)
 			.addChecker(check::chans_::hasChanAuthorisations)
 			.CmExecutor(invite)
@@ -106,7 +105,6 @@ void CmdManager::generateCmds() {
 			.addParam(message_, new CmdParam(true, false))
 			.addChecker(check::enoughParams)
 			.addChecker(check::chan)
-			.addChecker(check::chans_::isOnChan)
 			.addChecker(check::chans_::hasChanAuthorisations)
 			.addChecker(check::kick)
 			.CmExecutor(kick)
@@ -120,7 +118,6 @@ void CmdManager::generateCmds() {
 			.addParam(flagArg_, new CmdParam(true, true))
 			.addChecker(check::enoughParams)
 			.addChecker(check::chan)
-			.addChecker(check::chans_::isOnChan)
 			.addChecker(check::chans_::hasChanAuthorisations)
 			.addChecker(check::mode)
 			.CmExecutor(mode)
@@ -159,7 +156,6 @@ void CmdManager::generateCmds() {
 			.addParam(topic_, new CmdParam(true, false))
 			.addChecker(check::enoughParams)
 			.addChecker(check::chan)
-			.addChecker(check::chans_::isOnChan)
 			.addChecker(check::chans_::hasChanAuthorisations)
 			.CmExecutor(topic)
 			.build());
@@ -171,7 +167,6 @@ void CmdManager::generateCmds() {
 			.addParam(flag_, new CmdParam(true, false))
 			.addChecker(check::enoughParams)
 			.addChecker(check::chan)
-			.addChecker(check::chans_::isOnChan)
 			//TODO: add checker for flag "o"
 			.CmExecutor(who)
 			.build());

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_registration.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:45:57 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:37 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:12:10 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ bool check::register_::stageDone(CmdSpec &cmd, int idx) {
 
 bool check::register_::pwMatch(CmdSpec &cmd, int idx) {
 	(void)idx;
-	if (cmd[password_][0] != cmd.server_.getPass()) {
+	if (cmd[password_][0] != cmd.serv_.getPass()) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_PASSWDMISMATCH(cmd.getSender().cliInfo.getNick()));
 		return (false);

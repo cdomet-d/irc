@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 13:42:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 11:03:40 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/04 11:05:08 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,16 +126,3 @@ void print::modeArgs(const stringVec &mdestr, const stringVec &modeargs,
 	}
 	std::cout << "]" << std::endl;
 }
-
-// template < typename MapType >
-// void print::map(const MapType &map, const std::string &what) {
-// 	std::cout << "[" + what + "]" << std::endl;
-// 	typedef typename MapType::key_type key;
-// 	typedef typename MapType::value_type val;
-// 	for (typename MapType::const_iterator it = map.begin(); it != map.end(); ++it) {
-
-// 		const key &k = it->first;
-// 		const val &v = it->second;
-// 		std::cout << std::setw(20) << k << " | " << v << std::endl;
-// 	}
-// }

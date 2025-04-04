@@ -8,8 +8,7 @@ bool check::part(CmdSpec &cmd, int idx) {
 	size_t i = 0;
 
 	while (i < cmd[channel_].size()) {
-		if (!check::exists(cmd[channel_][i], cmd.server_.getAllChan()) ||
-			!check::chans_::isOnChan(cmd, i)) {
+		if (!check::chan(cmd, i)) {
 			cmd[channel_].rmParam(i);
 			continue;
 		}

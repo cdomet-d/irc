@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 11:01:26 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:12:10 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@
 #define ERR_NEEDUSER(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter username\r\n")
 
 //RESPONDS_REPLIES
-//server_replies
+//serv_replies
 #define RPL_WELCOME(nickname, prefix) (":irc.bitchat.net 001 " + nickname + " :Welcome to the Internet Relay Network " + prefix + "\r\n")
 #define RPL_YOURHOST() (":irc.bitchat.net 002 :Your host is Bitchat, running version 1.0 \r\n")
 #define RPL_CREATED(date) (":irc.bitchat.net 003 :This server was created " + date + "\r\n") //TODO : not used

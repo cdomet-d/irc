@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 13:43:23 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 11:01:14 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:20:28 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ namespace print {
 			 ++it) {
 
 			const key &k = it->first;
-			// const val &v = it->second;
 			std::cout << std::setw(20) << k << std::endl;
 		}
 	}
