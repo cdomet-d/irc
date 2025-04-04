@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 12:58:47 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/03 15:59:33 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,16 @@
 #include <sstream>
 
 void partAllChans(Client *sender) {
-	for (stringVec::iterator currChanName = sender->getJoinedChans().begin();
-		 currChanName != sender->getJoinedChans().end(); ++currChanName) {
-		std::string tempMess = "PART " + *currChanName + "\n\r";
+	std::vector< std::string > joinedChans = sender->getJoinedChans();
+
+	for (size_t nbChan = 0; nbChan != joinedChans.size(); nbChan++) {
+		std::string tempMess = "PART " + joinedChans[nbChan] + "\n\r";
 		sender->mess.setMess(tempMess);
 		buffer_manip::prepareCommand(*sender);
 	}
-	sender->getJoinedChans().clear();
 }
 
 void quit(CmdSpec &cmd) {
-	static Server &server = Server::GetServerInstance(0, "");
-
 	Client *sender = &cmd.getSender();
 	sender->mess.clearMess();
 	partAllChans(sender);
@@ -36,7 +34,7 @@ void quit(CmdSpec &cmd) {
 	std::stringstream ss;
 	ss << "Client [" << sender->getFd() << "] deconnected";
 	reply::log(reply::INFO, ss.str());
-	server.removeCli(sender);
+	cmd.server_.removeCli(sender);
 	close(sender->getFd());
 	delete sender;
 }

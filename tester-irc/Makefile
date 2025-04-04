@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: csweetin <csweetin@student.42.fr>        +#+  +:+       +#+         #
+#    By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/29 15:03:27 by csweetin          #+#    #+#              #
-#    Updated: 2025/03/26 12:01:53 by csweetin        ###   ########.fr        #
+#    Updated: 2025/04/03 15:59:08 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 

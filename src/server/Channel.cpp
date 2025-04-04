@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>        +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/31 09:31:44 by csweetin        ###   ########.fr       */
+/*   Updated: 2025/04/03 15:59:13 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void sendMessageChannel(clientMap allCliChannel, std::string message) {
 bool Channel::addClientToChan(Channel *curChan, Client *sender) {
 	curChan->addCli(ALLCLI, sender);
 
-	sender->getJoinedChans().push_back(curChan->getName());
+	sender->addOneChan(curChan->getName());
 
 	for (clientMapIt itCli = curChan->getCliInChan().begin();
 		 itCli != curChan->getCliInChan().end(); ++itCli) {
@@ -60,6 +60,9 @@ bool Channel::addClientToChan(Channel *curChan, Client *sender) {
 												  curChan->getName()));
 		curChan->addCli(OPCLI, sender);
 	}
+	if (curChan->getInvitCli().find(sender->getFd()) !=
+		curChan->getInvitCli().end())
+		curChan->removeCli(INVITECLI, sender->getFd());
 
 	return (true);
 }

@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
 /*   Updated: 2025/04/03 18:25:10 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef REPLY_H
 #define REPLY_H
@@ -38,7 +39,7 @@
 #define ERR_NONICKNAMEGIVEN(nickname) (":irc.bitchat.net 431 " + nickname + " :No nickname given\r\n")
 #define ERR_ERRONEUSNICKNAME(nickname, newNick) (":irc.bitchat.net 432 " + nickname + " " + newNick + " :Erroneous nickname\r\n")
 #define ERR_NEEDMOREPARAMS(nickname, command)(":irc.bitchat.net 461 " + nickname + " " + command + " :Not enough parameters\r\n")
-#define ERR_UNKNOWNMODE(nickname, modechar) (":irc.bitchat.net 472 " + nickname + " " + modechar + " :is unknown mode char to me" + "\r\n") //TODO : not used
+#define ERR_UNKNOWNMODE(nickname, modechar) (":irc.bitchat.net 472 " + nickname + " " + modechar + " :is unknown mode char to me" + "\r\n")
 #define ERR_TOOMANYTARGETS(nickname, target) (":irc.bitchat.net 407 " + nickname + " " + target + " :Too many targets\r\n") //TODO : not used
 
 //registration_err_replies
@@ -72,6 +73,8 @@
 #define RPL_NAMREPLY(nickname, channel_type, channel, nicks) (":irc.bitchat.net 353 " + nickname + " " + channel_type + " " + channel + " :" + nicks + "\r\n")
 #define RPL_UMODEIS(nickname, modes) (":irc.bitchat.net 221 " + nickname + " " + modes + "\r\n")
 #define RPL_AWAY(nickname, message) (":irc.bitchat.net 301 " + nickname + " :" + message + "\r\n") //TODO : not used
+#define RPL_INVITELIST(nickname, channel) (":irc.bitchat.net 336 " + nickname + " " + channel + "\r\n")
+#define RPL_ENDOFINVITELIST(nickname) (":irc.bitchat.net 337 " + nickname + " :End of invite list\r\n")
 
 //USER_DEFINED_REPLIES
 //notice_replies (uses nickname)
@@ -79,9 +82,10 @@
 #define PASS_SUCCESS(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Valid password ! You may register\r\n")
 #define RPL_NICK(nickname) (":irc.bitchat.net NOTICE " + nickname + " :The nickname is valid and saved !\r\n")
 #define RPL_USER(nickname, username) (":irc.bitchat.net NOTICE " + nickname + " :The Username " + username + " is valid and saved !\r\n")
-#define REG_COMPLETE(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Registration complete! You can join channels and start chatting !\r\n")
-#define RPL_CHANOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " :You are operator of " + channel + "\r\n")
-#define RPL_BYEYBE(nickname) (":irc.bitchat.net " + nickname + " :You quit the server, see you next time !\r\n")
+#define REG_COMPLETE(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Registration completed, you can join channels and start chatting !\r\n")
+#define RPL_CHANOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " :You're operator of " + channel + "\r\n")
+#define RPL_CHANOPENOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " : You're no longer operator of " + channel + "\r\n")
+#define RPL_BYEYBE(nickname) (":irc.bitchat.net " + nickname + " :You quitted the server, see you next time !\r\n")
 //command_replies (uses prefix)
 #define RPL_INVITE(prefix, target, channel) (":" + prefix + " INVITE " + target + " :" + channel + "\r\n")
 #define RPL_JOIN(prefix, channel) (":" + prefix + " JOIN :" + channel + "\r\n")

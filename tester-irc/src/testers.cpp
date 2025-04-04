@@ -62,13 +62,13 @@ void compare(std::ifstream &output, std::ifstream &expectedOutput) {
 }
 
 int test(const char *script, const char *expectedOutputFile,
-					 const char *testName) {
+		 const char *testName) {
 	std::ifstream output;
 	std::ifstream expectedOutput;
 
 	if (launchScript(script))
 		return (1);
-		
+
 	output.open("outputs/output.txt");
 	if (!output.is_open()) {
 		std::cout << "Error: could not open file 'output.txt'" << std::endl;
