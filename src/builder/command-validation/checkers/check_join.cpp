@@ -6,13 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 13:18:47 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/04 17:56:58 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
 
-bool check::join(CmdSpec &cmd, int idx) {
+bool check::join(CmdSpec &cmd, size_t idx) {
 	(void)idx;
 	channelMap::const_iterator itChan;
 	size_t i = 0;
@@ -89,7 +89,7 @@ bool check::join_::cliHasMaxChans(Channel &chan, Client &sender) {
 	return (true);
 }
 
-bool check::join_::syntaxIsValid(CmdSpec &cmd, int idx) {
+bool check::join_::syntaxIsValid(CmdSpec &cmd, size_t idx) {
 	if (cmd[channel_][idx][0] != '#') {
 		std::cout << cmd[channel_][idx] << std::endl;
 		reply::send_(cmd.getSender().getFd(),

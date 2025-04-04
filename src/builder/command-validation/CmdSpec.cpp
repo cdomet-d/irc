@@ -17,7 +17,7 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
-				 std::vector< bool (*)(CmdSpec &, int) > checkers,
+				 std::vector< bool (*)(CmdSpec &, size_t) > checkers,
 				 void (*cmExecutor)(CmdSpec &cmd))
 	: serv_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
 	  name_(name), registrationStage_(registrationStage), params_(params),
@@ -219,7 +219,7 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addParam(e_param type,
 }
 
 CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(bool (*ft)(CmdSpec &cmd,
-																int idx)) {
+																size_t idx)) {
 	checkers_.push_back(ft);
 	return (*this);
 }

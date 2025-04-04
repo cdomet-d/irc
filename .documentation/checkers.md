@@ -10,7 +10,7 @@
 | check::**target**                        | ERR_NOSUCHNICK                      | checks if target exists                                                                |
 | check::**targetIsOnChan**                | ERR_USERNOTINCHANNEL                | checks if target is on the channel                                                     |
 | check::**user**                          | \                                   | checks USERLEN and silently trims if necessary                                         |
-| check::chans_::**hasChanAuthorisations** | ERR_CHANOPRIVSNEEDED                | checks if sender is an operator                                                        |
+| check::chans_::**isOp** | ERR_CHANOPRIVSNEEDED                | checks if sender is an operator                                                        |
 | check::chans_::**isOnChan**              | ERR_NOTONCHANNEL                    | checks if sender is in the channel                                                     |
 | check::join_::**chanHasRoom**            | ERR_CHANNELISFULL                   | if channel has +l, it checks if there is some room left                                |
 | check::join_::**cliHasMaxChans**         | ERR_TOOMANYCHANNELS                 | checks if the number of channels the sender is in hasn't reached the limit             |
@@ -41,16 +41,16 @@
 
 | Command | Checkers                                                                                                                                                                                                            |
 |---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| INVITE  | - check::**enoughParams**<br>- check::**target**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::**invite**<br>- check::chans_::**hasChanAuthorisations**                                         |
+| INVITE  | - check::**enoughParams**<br>- check::**target**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::**invite**<br>- check::chans_::**isOp**                                         |
 | JOIN    | - check::**enoughParams**<br>- check::**join**<br>- check::**findString**<br>- check::join_::**chanHasRoom**<br>- check::join_::**hasInvite**<br>- check::join_::**validKey**<br>- check::join_::**cliHasMaxChans** |
-| KICK    | - check::**enoughParams**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::chans_::**hasChanAuthorisations**<br>-  check::**kick**<br>- check::**target**<br>- check::**targetIsOnChan**           |
-| MODE    | - check::**enoughParams**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::chans_::**hasChanAuthorisations**<br>- check::**mode**<br>- check::mode_::**flagIsValid**<br>- missing checker          |
+| KICK    | - check::**enoughParams**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::chans_::**isOp**<br>-  check::**kick**<br>- check::**target**<br>- check::**targetIsOnChan**           |
+| MODE    | - check::**enoughParams**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::chans_::**isOp**<br>- check::**mode**<br>- check::mode_::**flagIsValid**<br>- missing checker          |
 | NICK    | - check::register_::**stageDone**<br>- check::**nick**<br>- check::nick_::**syntaxIsValid**<br> - check::nick_::**isUnique**                                                                                        |
 | PART    | - check::**enoughParams**<br>- check::**part**<br>- check::**chan**<br>- check::chans_::**isOnChan**                                                                                                                |
 | PASS    | - check::register_::**stageDone**<br>- check::register_::**isRegistered**<br>- check::**enoughParams**<br>- check::register_::**pwMatch**                                                                           |
 | PRIVMSG | - check::**mess**<br>- needs a solution                                                                                                                                                                             |
 | QUIT    | \                                                                                                                                                                                                                   |
-| TOPIC   | - check::**enoughParams**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::chans_::**hasChanAuthorisations**                                                                                       |
+| TOPIC   | - check::**enoughParams**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::chans_::**isOp**                                                                                       |
 | USER    | - check::register_::**isRegistered**<br>- check::**enoughParams**<br>- check::**user**                                                                                                                              |
 | WHO     | - check::**enoughParams**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::mode_::**flagIsValid** (doesn't have correct proto)                                                                     |
 

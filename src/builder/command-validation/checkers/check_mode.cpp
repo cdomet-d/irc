@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 11:02:56 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/04 17:57:07 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 	return true;
 }
 
-bool check::mode(CmdSpec &cmd, int idx) {
+bool check::mode(CmdSpec &cmd, size_t idx) {
 	(void)idx;
 	if (!check::mode_::formatArgs(cmd))
 		return false;

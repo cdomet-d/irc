@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 12:48:05 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/04 17:56:48 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "validator.hpp"
 #include <algorithm>
 
-bool check::chan(CmdSpec &cmd, int idx) {
+bool check::chan(CmdSpec &cmd, size_t idx) {
 	if (!check::exists(cmd[channel_][idx], cmd.serv_.getAllChan())) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
@@ -35,7 +35,7 @@ bool check::chans_::onChan(std::string arg, const stringVec &arr) {
 	return std::find(arr.begin(), arr.end(), arg) != arr.end();
 }
 
-bool check::chans_::hasChanAuthorisations(CmdSpec &cmd, int idx) {
+bool check::chans_::isOp(CmdSpec &cmd, size_t idx) {
 	(void)idx;
 	channelMap::const_iterator itChan;
 

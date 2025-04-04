@@ -6,13 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 16:49:14 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/04 17:57:11 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
 
-bool check::nick(CmdSpec &cmd, int idx) {
+bool check::nick(CmdSpec &cmd, size_t idx) {
 	(void)idx;
 	if (cmd[nickname_].empty()) {
 		reply::send_(cmd.getSender().getFd(),
@@ -28,7 +28,7 @@ bool check::nick(CmdSpec &cmd, int idx) {
 	if (!check::nick_::syntaxIsValid(nick, cmd.getSender()))
 		return false;
 	if (check::exists(nick, cmd.serv_.getUsedNick())) {
-		reply::send_(cmd.getSender().getFd(), ERR_NICKNAMEINUSE(nick));
+		reply::send_(cmd.getSender().getFd(), ERR_NICKNAMEINUSE(cmd.getSender().cliInfo.getNick(), nick));
 		return false;
 	}
 	return true;

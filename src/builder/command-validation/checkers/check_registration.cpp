@@ -6,13 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:45:57 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 12:12:10 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/04 17:57:13 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
 
-bool check::register_::stageDone(CmdSpec &cmd, int idx) {
+bool check::register_::stageDone(CmdSpec &cmd, size_t idx) {
 	(void)idx;
 	if (cmd.getSender().cliInfo.getRegistration() <=
 			cmd.getRegistrationStage() ||
@@ -36,7 +36,7 @@ bool check::register_::stageDone(CmdSpec &cmd, int idx) {
 	return (false);
 }
 
-bool check::register_::pwMatch(CmdSpec &cmd, int idx) {
+bool check::register_::pwMatch(CmdSpec &cmd, size_t idx) {
 	(void)idx;
 	if (cmd[password_][0] != cmd.serv_.getPass()) {
 		reply::send_(cmd.getSender().getFd(),
@@ -46,7 +46,7 @@ bool check::register_::pwMatch(CmdSpec &cmd, int idx) {
 	return (true);
 }
 
-bool check::register_::isRegistered(CmdSpec &cmd, int idx) {
+bool check::register_::isRegistered(CmdSpec &cmd, size_t idx) {
 	(void)idx;
 	if (cmd.getSender().cliInfo.getRegistration() == 3) {
 		reply::send_(cmd.getSender().getFd(),

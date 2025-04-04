@@ -6,29 +6,27 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 16:42:41 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/04 12:17:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/04 17:57:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
 
-bool check::mess(CmdSpec &cmd, int idx) {
-	(void)idx;
+bool check::mess(CmdSpec &cmd, size_t idx) {
 	if (!check::mess_::params(cmd))
 		return (false);
 
-	size_t i = 0;
-	while (i < cmd[target_].size()) {
-		if (!check::target(cmd, i)) {
-			reply::send_(cmd.getSender().getFd(),
-						 ERR_NOSUCHNICK(cmd.getSender().cliInfo.getNick()));
-				cmd[target_].rmParam(i);
-			continue;
-		} else if (!check::chan(cmd, i)) {
-			cmd[target_].rmParam(i);
+	while (idx < cmd[target_].size()) {
+		if (cmd[target_][idx][0] != '#') {
+			if (!check::target(cmd, idx)) {
+				cmd[target_].rmParam(idx);
+				continue;
+			}
+		} else if (!check::chan(cmd, idx)) {
+			cmd[target_].rmParam(idx);
 			continue;
 		}
-		i++;
+		idx++;
 	}
 	if (!cmd[target_].size())
 		return (false);
