@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/28 16:33:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/03 15:59:16 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ bool Server::servInit() {
 	servPoll_.data.fd = servFd_;
 	servPoll_.events = EPOLLIN | EPOLLOUT;
 	if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, servFd_, &servPoll_) == -1)
-		return 0;
+		return (0);
 	return (true);
 }
 
@@ -92,7 +92,7 @@ bool Server::servRun() {
 			if (events_[i].data.fd == servFd_)
 				acceptClient();
 			else if (handleData(events_[i].data.fd) == false)
-				return true;
+				return (true);
 		}
 	}
 	return (true);
@@ -156,15 +156,13 @@ bool Server::handleData(int fd) {
 	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, MSG_DONTWAIT);
 
 	Client *curCli = clients_.find(fd)->second;
-	//TODO: handle -1 differently
 	if (bytes == 0) {
-		curCli->mess.setMess("QUIT");
+		std::cout << "sending QUIT command" << std::endl;
+		curCli->mess.setMess("QUIT\n");
 		buffer_manip::prepareCommand(*curCli);
 		return (true);
 	} else if (bytes == -1)
 		return (true);
-	else if (bytes == -1)
-		perror("HandleData:");
 	else {
 		std::string inputCli = curCli->mess.getMess();
 		inputCli.append(tmpBuf);
@@ -184,8 +182,8 @@ bool Server::handleData(int fd) {
 void checkOnlyOperator(Channel *curChan) {
 	static Server &server = Server::GetServerInstance(0, "");
 
-	if (!curChan->getOpCli().size()) {
-		if (curChan->getCliInChan().size() >= 1) {
+	if (curChan->getCliInChan().size() >= 1) {
+		if (!curChan->getOpCli().size()) {
 			curChan->addCli(OPCLI, curChan->getCliInChan().begin()->second);
 			reply::send_(
 				curChan->getCliInChan().begin()->second->getFd(),
@@ -230,7 +228,7 @@ void Server::removeNickFromUsedNicks(const std::string &toRemove) {
 
 const char *Server::InitFailed::what() const throw() {
 	std::cerr << "irc: ";
-	return errMessage;
+	return (errMessage);
 }
 
 Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
@@ -254,7 +252,7 @@ int Server::getFdFromNick(const std::string &nick) const {
 	nickMap::const_iterator nickInMap = usedNicks_.find(nick);
 	if (nickInMap != usedNicks_.end())
 		return nickInMap->second;
-	return -1;
+	return (-1);
 }
 
 const std::string Server::getPass() const {

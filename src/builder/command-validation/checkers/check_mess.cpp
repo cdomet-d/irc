@@ -1,4 +1,14 @@
-//HEADER
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_mess.cpp                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 16:42:41 by csweetin          #+#    #+#             */
+/*   Updated: 2025/04/04 11:02:47 by cdomet-d         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "validator.hpp"
 
@@ -38,11 +48,4 @@ bool check::mess_::params(CmdSpec &cmd) {
 		return (false);
 	}
 	return (true);
-}
-
-bool check::mess_::isNick(std::string &target) {
-	if (target[0] != '#' ||
-		(target[0] != '@' && (target.size() > 1 && target[1] != '#')))
-		return (true);
-	return (false);
 }

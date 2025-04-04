@@ -1,0 +1,7 @@
+:servername 461 * PASS :Not enough parameters
+:servername 464 * :Password incorrect
+:servername NOTICE * :Valid password ! You may register
+:servername NOTICE * :Introducing new nick "chacham"
+:servername NOTICE chacham :Registration complete
+:servername 462 chacham :You may not reregister
+:servername 462 chacham :You may not reregister

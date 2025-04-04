@@ -37,6 +37,7 @@ class CmdParam {
 	void addOne(unsigned int pos);
 	void clean(void);
 	void rmParam(unsigned int pos);
+	void trimParam(int paramIdx, int startPos, int lenToTrim);
 
 	/*                               GETTERS                                  */
 	const stringVec &getInnerParam(void) const;
