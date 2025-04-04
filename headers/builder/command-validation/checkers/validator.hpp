@@ -47,7 +47,7 @@ namespace check {
 	namespace nick_ {
 		bool isAllowed(const char &c);
 		bool isSpecial(const char &c);
-		bool syntaxIsValid(const std::string &nick, const int &senderFd);
+		bool syntaxIsValid(const std::string &nick, const Client &sender);
 	} // namespace nick_
 
 	namespace join_ {

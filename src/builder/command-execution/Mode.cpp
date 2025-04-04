@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 11:47:27 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/04 16:46:25 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,6 @@ void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
                            sender->cliInfo.getNick());
 }
 
-//the modes of a channel need to be empty if no more is activated and +<modes> if any
 void mode(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 	Channel &curChan = findCurChan(cmd[channel_][0]);
@@ -189,12 +188,8 @@ void mode(CmdSpec &cmd) {
 												  curChan.getModes()));
 		return;
 	}
-	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
-		//	std::cout << "cmd[flag_][nbFlag] = " << cmd[flag_][nbFlag] << "$" << std::endl
-		//			  << "cmd[flagArg_][nbFlag] = " << cmd[flagArg_][nbFlag] << "$"
-		//			  << std::endl;
+	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag)
 		executeFlag(cmd[flag_][nbFlag], cmd[flagArg_][nbFlag], curChan);
-	}
 	buildNewModeString(cmd, curChan, sender);
 	curChan.setModes();
 }

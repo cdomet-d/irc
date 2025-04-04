@@ -26,4 +26,4 @@ done
 # Wait for all background processes to finish
 wait
 
-echo "Stress test completed with $CLIENT_COUNT clients." > result.log &
+echo "Stress test completed with $CLIENT_COUNT clients."

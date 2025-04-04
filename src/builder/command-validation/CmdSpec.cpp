@@ -51,19 +51,11 @@ const CmdParam &CmdSpec::operator[](e_param type) const {
 bool CmdSpec::checkRegistrationStage(void) {
 	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
 		valid_ = false;
-		if (name_ == "NICK")
+		if (sender_->cliInfo.getRegistration() == 0)
 			reply::send_(sender_->getFd(),
 						 ERR_NEEDPASS(sender_->cliInfo.getNick()));
-		else if (name_ == "USER") {
-			if (sender_->cliInfo.getRegistration() == 0)
-				reply::send_(sender_->getFd(),
-							 ERR_NEEDPASS(sender_->cliInfo.getNick()));
-			else
-				reply::send_(sender_->getFd(),
-							 ERR_NEEDNICK(sender_->cliInfo.getNick()));
-		} else if (name_ != "PASS")
-			reply::send_(sender_->getFd(),
-						 ERR_NOTREGISTERED(sender_->cliInfo.getNick()));
+		else
+			reply::send_(sender_->getFd(), ERR_NOTREGISTERED(sender_->cliInfo.getNick()));
 		return (false);
 	}
 	return (true);
@@ -79,14 +71,13 @@ CmdSpec &CmdSpec::process(Client &sender) {
 		!(*this)[channel_].size())
 		return (*this);
 	hasParamList();
-	displayParams("After CmdSpec::process");
+	// displayParams();
 	for (size_t i = 0; i < checkers_.size(); i++) {
 		if (!checkers_[i](*this, 0)) {
 			valid_ = false;
 			return (*this);
 		}
 	}
-	//displayParams();
 	return (*this);
 }
 
