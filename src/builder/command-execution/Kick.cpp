@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 12:34:47 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/04 13:40:05 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 void kickFromAllMap(Client *target, Channel &curChan) {
 	int fdTarget = target->getFd();
-	
+
 	curChan.removeCli(ALLCLI, fdTarget);
 	clientMapIt itTarget;
 	itTarget = curChan.getOpCli().find(fdTarget);
@@ -27,7 +27,6 @@ void kickFromAllMap(Client *target, Channel &curChan) {
 	if (itTarget != curChan.getInvitCli().end())
 		curChan.removeCli(INVITECLI, fdTarget);
 	target->removeOneChan(curChan.getName());
-	
 }
 
 void kick(CmdSpec &cmd) {
@@ -40,7 +39,7 @@ void kick(CmdSpec &cmd) {
 	for (size_t nbTarget = 0; nbTarget < cmd[target_].size(); nbTarget++) {
 		int fdTarget = server.getUsedNick().find(cmd[target_][0])->second;
 		target = server.getAllCli().find(fdTarget)->second;
-	
+
 		if (cmd[message_].size())
 			sendMessageChannel(
 				curChan.getCliInChan(),
