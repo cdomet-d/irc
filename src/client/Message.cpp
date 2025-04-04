@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 10:41:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/04 16:06:09 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,6 @@ void Message::setCmdParam(const stringVec &splitBuffer) {
 		cmdParam_.push_back(trailing_);
 }
 
-void Message::setTrailingParam(const std::string &trail) {
-	cmdParam_.push_back(trail);
-}
-
 void Message::setMess(std::string buffer) {
 	message_ = buffer;
 }
@@ -84,6 +80,7 @@ void Message::clearCmdParam() {
 }
 void Message::clearMess() {
 	message_.clear();
+	trailing_.clear();
 }
 
 void Message::formatMode() {
