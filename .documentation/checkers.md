@@ -25,11 +25,6 @@
 | check::register_::**stageDone**          | ERR_NEEDNICK<br>ERR_NEEDUSER        | checks if command was already done during registration                                 |
 | CmdSpec::**checkRegistrationStage**      | ERR_NOTREGISTERED                   | checks if client has appropriate registration lvl to execute command                   |
 
-## Similar checkers
-
-- check::**chan**, check::**target** and check::**nick_::isUnique**
-- check::chans_::**isOnChan**, check::**targetIsOnChan** and check::**invite**
-
 ## Extended checkers
 
 **Extended checkers** are all used by commands who have a list of a param. They loop on that list, remove any member of said list that isn't valid and at the end if the list is empty they return false
@@ -41,7 +36,6 @@
 | check::**mess**   | loops on all targets and needs to call check::**target** or  check::**chan** and check::chans_::**isOnChan**<br>-> doesn't work because of privmsg params' enum (this is where check::exists would be usefull) |
 | check::**mode**   | loops on all flags and calls check::mode_::**flagIsValid** and *missing checker*                                                                                                                               |
 | check::**part**   | loops on all channels and calls check::**chan** and check::chans_::**isOnChan**                                                                                                                                |
-
 
 ## Commands and their associated checkers
 
@@ -59,3 +53,43 @@
 | TOPIC   | - check::**enoughParams**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::chans_::**hasChanAuthorisations**                                                                                       |
 | USER    | - check::register_::**isRegistered**<br>- check::**enoughParams**<br>- check::**user**                                                                                                                              |
 | WHO     | - check::**enoughParams**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::mode_::**flagIsValid** (doesn't have correct proto)                                                                     |
+
+## Simplifying the checkers
+
+Things we need to check:
+
+- [X] que le channel existe
+- [X] que l'utilisateur existe
+- [ ] que la syntaxe est correcte, quelque qu'elle soit
+- [ ] que l'utilisateur est sur le channel
+- [ ] que l'utilisateur a les droits de ce qu'il essaye de faire
+
+And then, command specific things that will be defined later.
+
+But the most repetitive tasks imply checking that things exists and that the syntax is correct.
+
+## Proposal
+
+We should have one checker for each command, each taking a `cmdSpec`. We already have those in `validator.hpp`.
+
+Those specific checkers will be attributed in the command manager, and then proceed to call generic subcheckers.
+
+## Generic checkers
+
+### Similar checkers
+
+- check::**chan**, check::**target** and check::**nick_::isUnique**
+- check::chans_::**isOnChan**, check::**targetIsOnChan** and check::**invite**
+
+Create two functions:
+
+```cpp
+/* define a template for all the maps */
+ template < typename MapType >
+ bool exists(std::string arg, const MapType &map) {
+  typename MapType::const_iterator toFind = map.find(arg);
+  if (toFind == map.end())
+   return false;
+  return true;
+ }
+```
