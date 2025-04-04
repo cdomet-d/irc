@@ -1,4 +1,14 @@
-//HEADER
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_mess.cpp                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 16:42:41 by csweetin          #+#    #+#             */
+/*   Updated: 2025/04/03 15:59:36 by aljulien         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "validator.hpp"
 
@@ -9,18 +19,13 @@ bool check::mess(CmdSpec &cmd, int idx) {
 
 	size_t i = 0;
 	while (i < cmd[target_].size()) {
-		if (check::mess_::isNick(cmd[target_][i])) {
-			if (!check::target(cmd, i)) {
-				cmd[channel_].rmParam(i);
-				continue;
-			}
-		} else if (!check::chan(cmd, i) || !check::chans_::isOnChan(cmd, i)) {
-				cmd[channel_].rmParam(i);
-				continue;
-			}
+		if (!check::target(cmd, i)) {
+			cmd[target_].rmParam(i);
+			continue;
+		}
 		i++;
 	}
-	if (!cmd[channel_].size())
+	if (!cmd[target_].size())
 		return (false);
 	return (true);
 }
@@ -38,11 +43,4 @@ bool check::mess_::params(CmdSpec &cmd) {
 		return (false);
 	}
 	return (true);
-}
-
-bool check::mess_::isNick(std::string &target) {
-	if (target[0] != '#' ||
-		(target[0] != '@' && (target.size() > 1 && target[1] != '#')))
-		return (true);
-	return (false);
 }

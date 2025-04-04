@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charlotte <charlotte@student.42.fr>        +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:20:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/03/31 10:46:26 by charlotte        ###   ########.fr       */
+/*   Updated: 2025/04/03 15:59:32 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void nick(CmdSpec &cmd) {
 
 	if (sender.cliInfo.getRegistration() != 3)
 		sender.cliInfo.setRegistration(2);
-	if (!sender.cliInfo.getNick().empty())
+	if (sender.cliInfo.getNick() == "")
 		cmd.server_.removeNickFromUsedNicks(sender.cliInfo.getNick());
 	sender.cliInfo.setNick(cmd[nickname_][0]);
 	sender.cliInfo.setPrefix();

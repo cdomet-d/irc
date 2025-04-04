@@ -1,0 +1,31 @@
+:servername 451 * :You have not registered
+:servername NOTICE * :Valid password ! You may register
+:servername NOTICE * :Introducing new nick "chacham"
+:servername NOTICE chacham :Registration complete
+:chacham!~c@hostname JOIN #chan
+:servername MODE #chan +t
+:servername 353 chacham @ #chan :@chacham
+:servername 366 chacham #chan :End of /NAMES list.
+:servername 461 chacham KICK :Not enough parameters
+:servername 403 chacham wrongchan :No such channel
+:servername 401 chacham dontexist :No such nick/channel
+:juju!~j@hostname JOIN #chan
+:servername 441 chacham bobby #chan :They aren't on that channel
+:servername 403 chacham wrongchan :No such channel
+:bobby!~b@hostname JOIN #chan
+:chacham!~c@hostname KICK #chan bobby :bobby
+:chacham!~c@hostname KICK #chan juju :juju
+:servername 401 chacham dontexist :No such nick/channel
+:bobby!~b@hostname JOIN #chan
+:chacham!~c@hostname KICK #chan bobby :badly behaved
+:servername NOTICE * : Valid password ! You may register
+:servername NOTICE * :Introducing new nick "bobby"
+:servername NOTICE bobby :Registration complete
+:servername 442 bobby #chan :You're not on that channel
+:bobby!~b@hostname JOIN #chan
+:servername 353 bobby @ #chan :bobby @chacham
+:servername 366 bobby #chan :End of /NAMES list.
+:servername 461 bobby KICK :Not enough parameters
+:servername 482 bobby #chan :You're not a channel operator
+:chacham!~c@hostname KICK #chan bobby :bobby
+:chacham!~c@hostname KICK #chan bobby :badly behaved

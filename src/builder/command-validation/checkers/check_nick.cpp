@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_nick.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/31 17:59:47 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/03 15:59:36 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,13 @@ bool check::nick_::isSpecial(const char &c) {
 
 bool check::nick_::isUnique(const std::string &nick, const nickMap &regCli,
 							const int &senderFd) {
-	std::cout << "IsUnique" << std::endl;
+	//std::cout << "IsUnique" << std::endl;
 	nickMap::const_iterator unique = regCli.find(nick);
 	if (unique == regCli.end()) {
-		std::cout << "No match found: nick is unique" << std::endl;
+		//	std::cout << "No match found: nick is unique" << std::endl;
 		return true;
 	}
-	std::cout << "A match found: nick is not unique" << std::endl;
+	//std::cout << "A match found: nick is not unique" << std::endl;
 	reply::send_(senderFd, ERR_NICKNAMEINUSE(nick));
 	return false;
 }

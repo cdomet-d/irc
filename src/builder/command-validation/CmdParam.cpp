@@ -71,6 +71,10 @@ bool CmdParam::isList(void) const {
 	return (list_);
 }
 
+void CmdParam::trimParam(int paramIdx, int startPos, int lenToTrim) {
+	innerParam_[paramIdx].erase(startPos, lenToTrim);
+}
+
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */

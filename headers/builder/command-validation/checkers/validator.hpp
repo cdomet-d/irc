@@ -68,8 +68,7 @@ namespace check {
 
 	namespace mess_ {
 		bool params(CmdSpec &cmd);
-		bool isNick(std::string& target);
 	} // namespace mess_
-} // namespace check 
+} // namespace check
 
 #endif

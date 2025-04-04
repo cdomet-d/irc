@@ -1,0 +1,36 @@
+:servername 451 * :You have not registered
+:servername NOTICE * :Valid password ! You may register
+:servername NOTICE * :Introducing new nick "chacham"
+:servername NOTICE chacham :Registration complete
+:servername 461 chacham PART :Not enough parameters
+:servername 403 chacham #dontexist :No such channel
+:servername 403 chacham wrongchan :No such channel
+:chacham!~c@hostname JOIN #chan
+:servername MODE #chan +t
+:servername 353 chacham @ #chan :@chacham
+:servername 366 chacham #chan :End of /NAMES list.
+:chacham!~c@hostname JOIN #chan2
+:servername MODE #chan2 +t
+:servername 353 chacham @ #chan2 :@chacham
+:servername 366 chacham #chan2 :End of /NAMES list.
+:chacham!~c@hostname JOIN #chan3
+:servername MODE #chan3 +t
+:servername 353 chacham @ #chan3 :@chacham
+:servername 366 chacham #chan3 :End of /NAMES list.
+:chacham!~c@hostname PART #chan :im leaving. idiots.
+:chacham!~c@hostname PART #chan2 :im leaving. idiots.
+:chacham!~c@hostname PART #chan3 :im leaving. idiots.
+:chacham!~c@hostname JOIN #chan
+:servername MODE #chan +t
+:servername 353 chacham @ #chan :@chacham
+:servername 366 chacham #chan :End of /NAMES list.
+:bobby!~b@hostname JOIN #chan
+:bobby!~b@hostname PART #chan
+:servername NOTICE * : Valid password ! You may register
+:servername NOTICE * :Introducing new nick "bobby"
+:servername NOTICE bobby :Registration complete
+:servername 442 bobby #chan :You're not on that channel
+:bobby!~b@hostname JOIN #chan
+:servername 353 bobby @ #chan :bobby @chacham
+:servername 366 bobby #chan :End of /NAMES list.
+:bobby!~b@hostname PART #chan

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_chans.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/03/31 18:41:16 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/03 15:59:36 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ bool check::chans_::isOnChan(CmdSpec &cmd, int idx) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
 									  cmd[channel_][idx]));
-		cmd[channel_].rmParam(idx);
 		return (false);
 	}
 	return (true);
