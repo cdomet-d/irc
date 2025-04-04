@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Who.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:34 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/04 18:07:58 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,12 @@ void who(CmdSpec &cmd) {
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 	std::string nickList;
 
-	//if (!cmd[flag_].empty() || cmd[flag_][0] == "o") {
-	//	nickList = buildNickList(curChan.getOpCli(), sender, curChan);
-	//	return ;
-	//}
+	//TODO: check that flag o is functional
+
+	if (!cmd[flag_].empty() && cmd[flag_][0] == "o") {
+		nickList = buildNickList(curChan.getOpCli(), sender, curChan);
+		return;
+	}
 	nickList = buildNickList(curChan.getCliInChan(), sender, curChan);
 
 	reply::send_(sender->getFd(), RPL_NAMREPLY(sender->cliInfo.getNick(), "=",

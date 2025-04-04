@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   printers.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 13:42:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:13 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/04 11:05:08 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printers.hpp"
-#include <iomanip>
 
 void print::charByChar(const std::string &buf) {
 	for (std::string::size_type i = 0; i < buf.size(); ++i) {
@@ -26,7 +25,7 @@ void print::charByChar(const std::string &buf) {
 
 void print::cmdParam(const stringVec &obj, std::string where) {
 	if (obj.empty())
-		return std::cout << "[ ... ]" << std::endl, (void)false;
+		return std::cout << where + ": [ ... ]" << std::endl, (void)false;
 	std::cout << "[" << std::endl;
 	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it) {
 		if ((*it).empty())

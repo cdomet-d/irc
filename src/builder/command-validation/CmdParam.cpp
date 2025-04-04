@@ -34,6 +34,12 @@ std::string &CmdParam::operator[](unsigned int i) {
 	return (innerParam_[i]);
 }
 
+const std::string &CmdParam::operator[](unsigned int i) const {
+	if (i >= innerParam_.size())
+		throw std::out_of_range("Param not found");
+	return (innerParam_[i]);
+}
+
 CmdParam &CmdParam::operator=(const CmdParam &rhs) {
 	if (this != &rhs) {
 		opt_ = rhs.isOpt();

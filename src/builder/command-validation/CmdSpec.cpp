@@ -11,14 +11,15 @@
 /* ************************************************************************** */
 
 #include "CmdSpec.hpp"
+#include "printers.hpp"
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
-				 std::vector< bool (*)(CmdSpec &, int) > checkers,
+				 std::vector< bool (*)(CmdSpec &, size_t) > checkers,
 				 void (*cmExecutor)(CmdSpec &cmd))
-	: server_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
+	: serv_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
 	  name_(name), registrationStage_(registrationStage), params_(params),
 	  checkers_(checkers), cmExecutor_(cmExecutor) {}
 
@@ -29,6 +30,14 @@ CmdSpec::~CmdSpec(void) {
 }
 
 CmdParam &CmdSpec::operator[](e_param type) {
+	for (size_t i = 0; i < params_.size(); i++) {
+		if (params_[i].first == type)
+			return ((*params_[i].second));
+	}
+	throw std::out_of_range("Param not found");
+}
+
+const CmdParam &CmdSpec::operator[](e_param type) const {
 	for (size_t i = 0; i < params_.size(); i++) {
 		if (params_[i].first == type)
 			return ((*params_[i].second));
@@ -112,14 +121,13 @@ static std::string enumToString(e_param color) {
 	}
 }
 
-void CmdSpec::displayParams(void) {
-	std::cout << "Params in BuilderPattern :\n";
+void CmdSpec::displayParams(const std::string &where) {
+	std::cout << "Params in:" + where + "\n";
 	for (paramMap::iterator i = params_.begin(); i != params_.end(); i++) {
 		try {
 			for (size_t index = 0; index < (*i->second).size(); index++) {
 				std::cout << "param[" << enumToString(i->first) << "]"
-						  << "[" << index << "] : " << (*i->second)[index]
-						  << std::endl;
+						  << "[" << index << "] : " << (*i->second)[index];
 			}
 		} catch (const std::out_of_range &e) {
 			std::cerr << e.what() << std::endl;
@@ -211,7 +219,7 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addParam(e_param type,
 }
 
 CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(bool (*ft)(CmdSpec &cmd,
-																int idx)) {
+																size_t idx)) {
 	checkers_.push_back(ft);
 	return (*this);
 }
