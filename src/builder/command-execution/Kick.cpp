@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:31 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:34:47 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 void kickFromAllMap(Client *target, Channel &curChan) {
 	int fdTarget = target->getFd();
-
+	
 	curChan.removeCli(ALLCLI, fdTarget);
 	clientMapIt itTarget;
 	itTarget = curChan.getOpCli().find(fdTarget);
@@ -26,21 +26,21 @@ void kickFromAllMap(Client *target, Channel &curChan) {
 	itTarget = curChan.getInvitCli().find(fdTarget);
 	if (itTarget != curChan.getInvitCli().end())
 		curChan.removeCli(INVITECLI, fdTarget);
+	target->removeOneChan(curChan.getName());
+	
 }
 
 void kick(CmdSpec &cmd) {
+	static Server &server = Server::GetServerInstance(0, "");
+
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 	Client *sender = &cmd.getSender();
 	Client *target = NULL;
 
 	for (size_t nbTarget = 0; nbTarget < cmd[target_].size(); nbTarget++) {
-		for (clientMapIt targetIt = curChan.getCliInChan().begin();
-			 targetIt != curChan.getCliInChan().end(); ++targetIt) {
-			if (targetIt->second->cliInfo.getNick() == cmd[target_][nbTarget]) {
-				target = targetIt->second;
-				break;
-			}
-		}
+		int fdTarget = server.getUsedNick().find(cmd[target_][0])->second;
+		target = server.getAllCli().find(fdTarget)->second;
+	
 		if (cmd[message_].size())
 			sendMessageChannel(
 				curChan.getCliInChan(),
