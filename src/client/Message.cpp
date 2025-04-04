@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:13 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/04 10:41:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,13 +103,13 @@ void Message::formatMode() {
 			if (firstChar == '+' || firstChar == '-') {
 				std::string flags = *i;
 				for (size_t j = 1; j < flags.size(); ++j) {
-					flagformat += firstChar;
-					flagformat += (*i)[j];
-					flagformat += ' ';
-				}
-			} else {
-				paramformat += *i;
-				paramformat += ' ';
+                    flagformat += firstChar;
+                    flagformat += (*i)[j];
+                    flagformat += ',';
+                }
+            } else {
+                paramformat += *i;
+                paramformat += ',';
 			}
 		}
 	}
