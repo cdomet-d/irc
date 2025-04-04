@@ -21,8 +21,8 @@ This document explains the client connection handling mechanism, detailing how n
 
 ### 1. **Client Object Creation**  
 ```
-Client *newCli = new Client();
-newCli->cliInfo.setRegistration(0);
+                            Client *newCli = new Client();
+                            newCli->cliInfo.setRegistration(0);
 ```
 **Purpose**: Initializes client state  
 **Components**:  
@@ -33,7 +33,7 @@ newCli->cliInfo.setRegistration(0);
 
 ### 2. **Connection Acceptance**  
 ```
-newCli->setFd(accept(servFd_, (struct sockaddr *)&newCli->cliAddr_, &cliLen));
+                            newCli->setFd(accept(servFd_, (struct sockaddr *)&newCli->cliAddr_, &cliLen));
 ```
 **Parameters**:  
 | Parameter       | Description                          |  
@@ -53,7 +53,7 @@ newCli->setFd(accept(servFd_, (struct sockaddr *)&newCli->cliAddr_, &cliLen));
 
 #### **IP Address Resolution**  
 ```
-inet_ntop(AF_INET, &newCli->cliAddr_.sin_addr, client_ip, INET_ADDRSTRLEN);
+                            inet_ntop(AF_INET, &newCli->cliAddr_.sin_addr, client_ip, INET_ADDRSTRLEN);
 ```
 **Purpose**: Converts binary IP to human-readable string  
 **Parameters**:  
@@ -63,7 +63,7 @@ inet_ntop(AF_INET, &newCli->cliAddr_.sin_addr, client_ip, INET_ADDRSTRLEN);
 
 #### **Hostname Resolution**  
 ```
-getnameinfo((sockaddr*)&newCli->cliAddr_, cliLen, hostname, NI_MAXHOST, NULL, 0, 0);
+                            getnameinfo((sockaddr*)&newCli->cliAddr_, cliLen, hostname, NI_MAXHOST, NULL, 0, 0);
 ```
 **Purpose**: Attempts reverse DNS lookup  
 **Fallback**: Uses IP address if resolution fails  
@@ -72,7 +72,7 @@ getnameinfo((sockaddr*)&newCli->cliAddr_, cliLen, hostname, NI_MAXHOST, NULL, 0,
 
 ### 4. **Non-Blocking Configuration**  
 ```
-fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK);
+                            fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK);
 ```
 **Purpose**: Enables asynchronous I/O  
 **Critical For**:  
@@ -83,7 +83,7 @@ fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK);
 
 ### 5. **Epoll Registration**  
 ```
-epoll_ctl(epollFd_, EPOLL_CTL_ADD, newCli->getFd(), newCli->getCliEpoll());
+                            epoll_ctl(epollFd_, EPOLL_CTL_ADD, newCli->getFd(), newCli->getCliEpoll());
 ```
 **Parameters**:  
 | Parameter       | Description                          |  
@@ -100,7 +100,7 @@ epoll_ctl(epollFd_, EPOLL_CTL_ADD, newCli->getFd(), newCli->getCliEpoll());
 ---
 
 ### 6. **Client Tracking**  
-```
+
 **Parameters**:  
 | Parameter       | Description                          |  
 |------------------|--------------------------------------|  
@@ -116,9 +116,9 @@ epoll_ctl(epollFd_, EPOLL_CTL_ADD, newCli->getFd(), newCli->getCliEpoll());
 ---
 
 ### 6. **Client Tracking**  
-
-clients_.insert(clientPair(newCli->getFd(), newCli));
-usedNicks_.insert(nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
+```
+                            clients_.insert(clientPair(newCli->getFd(), newCli));
+                            usedNicks_.insert(nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
 ```
 **Data Structures**:  
 1. `clients_` (Map):  
@@ -136,7 +136,7 @@ usedNicks_.insert(nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
 
 ### 1. **Exception Hierarchy**  
 ```
-class InitFailed : public std::exception { ... };
+                            class InitFailed : public std::exception { ... };
 ```
 **Triggers**:  
 - Socket acceptance failure (`accept()`)  
@@ -145,10 +145,10 @@ class InitFailed : public std::exception { ... };
 
 ### 2. **Resource Cleanup**  
 ```
-if (fcntl() == -1) {
-close(newCli->getFd());
-throw ...;
-}
+                            if (fcntl() == -1) {
+                            close(newCli->getFd());
+                            throw ...;
+                            }
 ```
 **Guarantees**: No file descriptor leaks during failures  
 

@@ -14,7 +14,7 @@ This document explains the server initialization process implemented in `servIni
 ## Initialization Sequence  
 ### 1. **Epoll Instance Creation**  
 ```                                
-                                epollFd_ = epoll_create1(0);
+                            epollFd_ = epoll_create1(0);
 ```
 **Purpose**: Creates an epoll instance for event-driven I/O.  
 **Parameters**:  
@@ -25,9 +25,9 @@ This document explains the server initialization process implemented in `servIni
 
 ### 2. **Network Configuration**  
 ```
-                                servAddr_.sin_family = AF_INET;
-                                servAddr_.sin_port = htons(port_);
-                                servAddr_.sin_addr.s_addr = INADDR_ANY;
+                            servAddr_.sin_family = AF_INET;
+                            servAddr_.sin_port = htons(port_);
+                            servAddr_.sin_addr.s_addr = INADDR_ANY;
 ```
 **Structure**: `sockaddr_in` (IPv4 address structure)  
 **Parameters**:  
@@ -39,7 +39,7 @@ This document explains the server initialization process implemented in `servIni
 
 ### 3. **Socket Creation**  
 ```
-                                servFd_ = socket(AF_INET, SOCK_STREAM, 0);
+                            servFd_ = socket(AF_INET, SOCK_STREAM, 0);
 ```
 **Purpose**: Creates a TCP socket.  
 **Parameters**:  
@@ -52,8 +52,8 @@ This document explains the server initialization process implemented in `servIni
 ### 4. **Socket Configuration**  
 
 ```
-                                setsockopt(servFd_, SOL_SOCKET, SO_REUSEADDR, &en, sizeof(en));
-                                fcntl(servFd_, F_SETFL, O_NONBLOCK);
+                            setsockopt(servFd_, SOL_SOCKET, SO_REUSEADDR, &en, sizeof(en));
+                            fcntl(servFd_, F_SETFL, O_NONBLOCK);
 ```
 **a. `setsockopt()`**  
 - **Purpose**: Enables port reuse after server restart  
@@ -71,7 +71,7 @@ This document explains the server initialization process implemented in `servIni
 
 ### 5. **Socket Binding**  
 ```
-                                bind(servFd_, (struct sockaddr *)&servAddr_, sizeof(servAddr_));
+                            bind(servFd_, (struct sockaddr *)&servAddr_, sizeof(servAddr_));
 ```
 **Purpose**: Associates socket with IP/port configuration.  
 **Failure Modes**:  
@@ -82,7 +82,7 @@ This document explains the server initialization process implemented in `servIni
 
 ### 6. **Listening Mode**  
 ```
-                                listen(servFd_, SOMAXCONN);
+                            listen(servFd_, SOMAXCONN);
 ```
 **Purpose**: Enables incoming connection queue.  
 **Parameters**:  
@@ -93,8 +93,8 @@ This document explains the server initialization process implemented in `servIni
 
 ### 7. **Epoll Event Registration**  
 ```
-                                servPoll_.events = EPOLLIN | EPOLLOUT;
-                                epoll_ctl(epollFd_, EPOLL_CTL_ADD, servFd_, &servPoll_);
+                            servPoll_.events = EPOLLIN | EPOLLOUT;
+                            epoll_ctl(epollFd_, EPOLL_CTL_ADD, servFd_, &servPoll_);
 ```
 **a. Event Configuration**  
 - `EPOLLIN`: Monitor incoming data/connections  
@@ -140,4 +140,4 @@ This document explains the server initialization process implemented in `servIni
 6. Enable connection queue  
 7. Register socket with event system  
 
-This initialization sequence creates the foundation for an asynchronous, high-performance IRC server capable of handling numerous simultaneous clients efficiently.  
+This initialization sequence creates the foundation for an asynchronous, high-performance IRC server capable of handling numerous simultaneous clients efficiently.

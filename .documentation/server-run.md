@@ -17,8 +17,8 @@ This document explains the core event loop that drives the IRC server, detailing
 
 ### 1. **Initialization Output**  
 ```
-                                std::cout << "Server listening on port " << port_
-                                << " | IP address: " << inet_ntoa(servAddr_.sin_addr) << std::endl;
+                            std::cout << "Server listening on port " << port_
+                            << " | IP address: " << inet_ntoa(servAddr_.sin_addr) << std::endl;
 ```
 **Purpose**: Displays server's network configuration  
 **Components**:  
@@ -29,10 +29,10 @@ This document explains the core event loop that drives the IRC server, detailing
 
 ### 2. **Event Loop Structure**  
 ```
-                                while (gSign == false) {
-                                nbFds = epoll_wait(epollFd_, events_, MAX_EVENTS, -1);
-                                // ... Event handling ...
-}
+                            while (gSign == false) {
+                            nbFds = epoll_wait(epollFd_, events_, MAX_EVENTS, -1);
+                            // ... Event handling ...
+							}
 ```
 **Purpose**: Continuous event monitoring until shutdown signal (`gSign`)  
 **Flow Control**:  
@@ -43,7 +43,7 @@ This document explains the core event loop that drives the IRC server, detailing
 
 ### 3. **Epoll Event Harvesting**  
 ```
-                                nbFds = epoll_wait(epollFd_, events_, MAX_EVENTS, -1);
+                            nbFds = epoll_wait(epollFd_, events_, MAX_EVENTS, -1);
 ```
 **Purpose**: Retrieves active file descriptors with pending I/O  
 **Parameters**:  
@@ -62,8 +62,8 @@ This document explains the core event loop that drives the IRC server, detailing
 
 #### **Case 1: New Client Connection**  
 ```
-                                if (events_[i].data.fd == servFd_)
-                                acceptClient();
+                            if (events_[i].data.fd == servFd_)
+                            acceptClient();
 ```
 **Trigger**: Activity on server socket (`servFd_`)  
 **Behavior**:  
@@ -75,8 +75,8 @@ This document explains the core event loop that drives the IRC server, detailing
 #### **Case 2: Client Data Exchange**  
 
 ```
-                                else if (handleData(events_[i].data.fd) == false)
-                                return (true);
+                            else if (handleData(events_[i].data.fd) == false)
+                            return (true);
 ```
 **Trigger**: Activity on client socket  
 **Process**:  
