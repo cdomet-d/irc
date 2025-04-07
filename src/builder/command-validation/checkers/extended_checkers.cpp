@@ -36,10 +36,11 @@ bool check::kick(CmdSpec &cmd, size_t idx) {
 			cmd[target_].rmParam(idx);
 			continue;
 		}
-		if (check::chans_::onChan(cmd[channel_][idx], tChan)) {
+		if (!check::chans_::onChan(cmd[channel_][idx], tChan)) {
 			reply::send_(cmd.getSender().getFd(),
-						ERR_USERNOTINCHANNEL(cmd.getSender().cliInfo.getNick(),
-											 cmd[channel_][idx]));
+						 ERR_USERNOTINCHANNEL(cmd.getSender().cliInfo.getNick(),
+											  cmd[target_][idx],
+											  cmd[channel_][idx]));
 			cmd[target_].rmParam(idx);
 			continue;
 		}

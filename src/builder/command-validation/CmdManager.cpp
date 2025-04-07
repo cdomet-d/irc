@@ -33,11 +33,14 @@ CmdManager::~CmdManager(void) {
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-void CmdManager::executeCm(CmdSpec &cm) {
+bool CmdManager::executeCm(CmdSpec &cm) {
 	if (cm.getValid()) {
 		cm.getExecutor()(cm);
 	}
 	cm.cleanAll();
+	if (cm.getName() == "QUIT")
+		return (true);
+	return (false);
 }
 
 void CmdManager::generateCmds() {

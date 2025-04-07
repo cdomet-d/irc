@@ -37,8 +37,7 @@ bool check::register_::stageDone(CmdSpec &cmd, size_t idx) {
 }
 
 bool check::register_::pwMatch(CmdSpec &cmd, size_t idx) {
-	(void)idx;
-	if (cmd[password_][0] != cmd.serv_.getPass()) {
+	if (cmd[password_][idx] != cmd.serv_.getPass()) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_PASSWDMISMATCH(cmd.getSender().cliInfo.getNick()));
 		return (false);

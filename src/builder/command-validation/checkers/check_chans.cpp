@@ -15,17 +15,23 @@
 #include <algorithm>
 
 bool check::chan(CmdSpec &cmd, size_t idx) {
-	if (!check::exists(cmd[channel_][idx], cmd.serv_.getAllChan())) {
+	std::string channel;
+	if (cmd.getName() == "PRIVMSG")
+		channel = cmd[target_][idx];
+	else
+		channel = cmd[channel_][idx];
+
+	if (!check::exists(channel, cmd.serv_.getAllChan())) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
-									   cmd[channel_][idx]));
+									   channel));
 		return (false);
 	}
 	stringVec userChan = cmd.getSender().getJoinedChans();
-	if (!check::chans_::onChan(cmd[channel_][idx], userChan)) {
+	if (!check::chans_::onChan(channel, userChan)) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
-									  cmd[channel_][idx]));
+									  channel));
 		return (false);
 	}
 	return (true);
@@ -36,10 +42,9 @@ bool check::chans_::onChan(std::string arg, const stringVec &arr) {
 }
 
 bool check::chans_::isOp(CmdSpec &cmd, size_t idx) {
-	(void)idx;
 	channelMap::const_iterator itChan;
 
-	itChan = cmd.serv_.getAllChan().find(cmd[channel_][0]);
+	itChan = cmd.serv_.getAllChan().find(cmd[channel_][idx]);
 	Channel chan = *itChan->second;
 
 	if (cmd.getName() == "TOPIC" &&

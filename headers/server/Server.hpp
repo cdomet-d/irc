@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef serv_HPP
-#define serv_HPP
+#ifndef SERVER_HPP
+#define SERVER_HPP
 
 #include "Channel.hpp"
 #include "buffer_manip.hpp"
@@ -88,4 +88,4 @@ class Server {
 	Server(int port, std::string password);
 };
 
-#endif //serv_HPP
+#endif //SERVER_HPP

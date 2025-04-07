@@ -13,16 +13,15 @@
 #include "validator.hpp"
 
 bool check::nick(CmdSpec &cmd, size_t idx) {
-	(void)idx;
 	if (cmd[nickname_].empty()) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_NONICKNAMEGIVEN(cmd.getSender().cliInfo.getNick()));
 		return (false);
 	}
-	std::string nick = cmd[nickname_][0];
+	std::string nick = cmd[nickname_][idx];
 	if (nick.size() > 9) {
 		nick = nick.substr(0, 9);
-		cmd[nickname_].rmParam(0);
+		cmd[nickname_].rmParam(idx);
 		cmd[nickname_].setOneParam(nick);
 	}
 	if (!check::nick_::syntaxIsValid(nick, cmd.getSender()))

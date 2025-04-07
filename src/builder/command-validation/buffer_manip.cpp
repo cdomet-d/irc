@@ -35,13 +35,9 @@ bool buffer_manip::prepareCommand(Client &sender) {
 			sender.mess.formatMode();
 		CmdManager &manager = CmdManager::getManagerInstance();
 		try {
-			if (sender.mess.getCmd() == "QUIT") {
-				manager.executeCm(
-					manager.findCmd(sender.mess.getCmd()).process(sender));
+			if (manager.executeCm(
+					manager.findCmd(sender.mess.getCmd()).process(sender)))
 				return true;
-			}
-			manager.executeCm(
-				manager.findCmd(sender.mess.getCmd()).process(sender));
 			sender.mess.clearCmdParam();
 			sender.mess.clearMess();
 		} catch (const CmdManager::CmdNotFoundException &e) {
