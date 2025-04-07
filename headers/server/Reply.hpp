@@ -27,8 +27,8 @@
 #define ERR_TOOMANYCHANNELS(nickname, channel) (":irc.bitchat.net 405 " + nickname + " " + channel + " :You have joined too many channels\r\n")
 #define ERR_NOSUCHCHANNEL(nickname, channel) (":irc.bitchat.net 403 " + nickname + " " + channel + " :No such channel" + "\r\n")
 #define ERR_NOTONCHANNEL(nickname, channel) (":irc.bitchat.net 442 " + nickname + " " + channel + " :You're not on that channel" + "\r\n")
-#define ERR_USERNOTINCHANNEL(nickname, channel) (":irc.bitchat.net 441 " + nickname + " " + channel + " :They aren't on that channel\r\n")
-#define ERR_USERONCHANNEL(nickname, channel) (":irc.bitchat.net 443 " + nickname + " " + channel + " :is already on channel\r\n")
+#define ERR_USERNOTINCHANNEL(nickname, target, channel) (":irc.bitchat.net 441 " + nickname + " " + target + " " + channel + " :They aren't on that channel\r\n")
+#define ERR_USERONCHANNEL(nickname, target, channel) (":irc.bitchat.net 443 " + nickname + " " + target + " " + channel + " :is already on channel\r\n")
 #define ERR_CANNOTSENDTOCHAN(nickname, channel) (":irc.bitchat.net 404 " + nickname + " " + channel + " :Cannot send to channel\r\n") //TODO : not used
 
 //input_err_replies
@@ -103,4 +103,4 @@ namespace reply {
 	void send_(int fd, std::string reply);
 
 } // namespace reply
-#endif //REPLY_H
+#endif //REPLY_HPP

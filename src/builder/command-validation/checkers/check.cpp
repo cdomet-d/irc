@@ -41,7 +41,7 @@ bool check::invite(CmdSpec &cmd, size_t idx) {
 	if (check::chans_::onChan(cmd[channel_][idx], tChan)) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_USERONCHANNEL(cmd.getSender().cliInfo.getNick(),
-									   cmd[channel_][idx]));
+									   cmd[target_][idx], cmd[channel_][idx]));
 		return false;
 	}
 	return true;
