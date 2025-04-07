@@ -18,13 +18,21 @@ bool check::register_::stageDone(CmdSpec &cmd, int idx) {
 			cmd.getRegistrationStage() ||
 		cmd.getSender().cliInfo.getRegistration() == 3)
 		return (true);
-	if (cmd.getName() == "PASS" &&
-		cmd.getSender().cliInfo.getRegistration() == 1)
+	if (cmd.getSender().cliInfo.getRegistration() == 1)
 		reply::send_(cmd.getSender().getFd(),
-					 ERR_NEEDNICK(cmd.getSender().cliInfo.getNick()));
-	else
-		reply::send_(cmd.getSender().getFd(),
-					 ERR_NEEDUSER(cmd.getSender().cliInfo.getNick()));
+					 ERR_NEEDNICKORUSER(cmd.getSender().cliInfo.getNick()));
+	if (cmd.getSender().cliInfo.getRegistration() == 2) {
+		if (cmd.getSender().cliInfo.getNick() != "*" &&
+			(cmd.getName() == "NICK" || cmd.getName() == "PASS"))
+			reply::send_(cmd.getSender().getFd(),
+						 ERR_NEEDUSER(cmd.getSender().cliInfo.getNick()));
+		else if (!cmd.getSender().cliInfo.getUsername().empty() &&
+				 (cmd.getName() == "USER" || cmd.getName() == "PASS"))
+			reply::send_(cmd.getSender().getFd(),
+						 ERR_NEEDNICK(cmd.getSender().cliInfo.getNick()));
+		else
+			return (true);
+	}
 	return (false);
 }
 

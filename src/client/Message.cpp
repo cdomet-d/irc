@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 13:39:48 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/07 09:08:07 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,6 @@ void Message::setCmdParam(const stringVec &splitBuffer) {
 		cmdParam_.push_back(trailing_);
 }
 
-void Message::setTrailingParam(const std::string &trail) {
-	cmdParam_.push_back(trail);
-}
-
 void Message::setMess(std::string buffer) {
 	message_ = buffer;
 }
@@ -84,6 +80,7 @@ void Message::clearCmdParam() {
 }
 void Message::clearMess() {
 	message_.clear();
+	trailing_.clear();
 }
 
 void Message::formatMode() {

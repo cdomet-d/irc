@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   testers.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 15:41:52 by csweetin          #+#    #+#             */
 /*   Updated: 2025/04/04 13:39:57 by aljulien         ###   ########.fr       */

@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 13:40:09 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/07 09:07:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ bool buffer_manip::prepareCommand(Client &sender) {
 
 stringVec buffer_manip::vectorSplit(std::string &s, char del) {
 	stringVec result;
-	std::string token, trailing;
+	std::string token;
 
 	std::istringstream stream(s);
 	while (std::getline(stream, token, del))

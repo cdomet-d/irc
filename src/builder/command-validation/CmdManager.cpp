@@ -63,11 +63,12 @@ void CmdManager::generateCmds() {
 
 	log(CmdSpec::CmdBuilder()
 			.Name("USER")
-			.Registration(2)
+			.Registration(1)
 			.addParam(username_, new CmdParam())
 			.addParam(hostname_, new CmdParam())
 			.addParam(servername_, new CmdParam())
 			.addParam(realname_, new CmdParam())
+			.addChecker(check::register_::stageDone)
 			.addChecker(check::register_::isRegistered)
 			.addChecker(check::enoughParams)
 			.addChecker(check::user)

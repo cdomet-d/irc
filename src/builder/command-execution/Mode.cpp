@@ -150,6 +150,7 @@ void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 	bool posFirst = false;
 	std::string newPassMaxCli = " ";
 
+	(void)posFirst;
 	if (cmd[flag_][0].find("+") != std::string::npos)
 		posFirst = true;
 	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {

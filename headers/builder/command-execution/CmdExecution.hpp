@@ -38,5 +38,6 @@ Channel *createChan(const std::string &chanName);
 void checkOnlyOperator(Channel *curChan);
 void partOneChan(Client *sender, Channel &curChan);
 void partAllChans(Client *sender);
+void registrationCompleted(Client &sender);
 
 #endif ///CMDEXECUTION_HPP
