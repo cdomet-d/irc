@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:16 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/07 17:06:53 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,7 @@ bool Server::handleData(int fd) {
 		curCli->mess.setMess(inputCli);
 		if (curCli->mess.getMess().find('\n') != std::string::npos) {
 			std::string temp = curCli->mess.getMess();
+			reply::log(reply::GOT, temp);
 			buffer_manip::prepareCommand(*curCli);
 			if (strncmp(temp.c_str(), "QUIT", 4)) {
 				curCli->mess.clearMess();

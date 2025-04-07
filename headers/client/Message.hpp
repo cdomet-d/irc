@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 16:27:24 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/07 17:05:12 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ class Message {
 	/*                               ORTHODOX CLASS                           */
 	Message(void);
 	~Message(void);
-	std::string &operator[](unsigned int i);
+	std::string &operator[](size_t i);
 
 	/*                               GETTERS                                  */
 	size_t getSize() const;

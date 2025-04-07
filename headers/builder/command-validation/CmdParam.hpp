@@ -32,12 +32,12 @@ class CmdParam {
 	bool isOpt(void) const;
 	CmdParam &operator=(const CmdParam &rhs);
 	size_t size(void) const;
-	std::string &operator[](unsigned int i);
-	const std::string &operator[](unsigned int i) const;
-	void addOne(unsigned int pos);
+	std::string &operator[](size_t i);
+	const std::string &operator[](size_t i) const;
+	void addOne(size_t pos);
 	void clean(void);
-	void rmParam(unsigned int pos);
-	void trimParam(int paramIdx, int startPos, int lenToTrim);
+	void rmParam(size_t pos);
+	void trimParam(size_t paramIdx, size_t lenToTrim);
 
 	/*                               GETTERS                                  */
 	const stringVec &getInnerParam(void) const;

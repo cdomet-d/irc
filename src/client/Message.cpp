@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 16:06:09 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/07 17:05:12 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ Message::Message(void) {}
 
 Message::~Message(void) {}
 
-std::string &Message::operator[](unsigned int i) {
+std::string &Message::operator[](size_t i) {
 	if (i >= cmdParam_.size())
 		throw std::out_of_range("Param not found");
 	return (cmdParam_[i]);

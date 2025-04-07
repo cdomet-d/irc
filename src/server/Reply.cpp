@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:37:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:14 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/07 17:07:30 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,10 @@ void reply::log(e_level level, std::string message) {
 			serv.logfile << "[" << timeStamp() << "] REPLY " << message
 						 << std::flush;
 			break;
+		case GOT:
+			serv.logfile << "[" << timeStamp() << "] GOT " << message
+						 << std::flush;
+			break;
 		}
 	}
 }
@@ -60,19 +64,23 @@ void reply::log(e_level level, std::string message, std::string verbose) {
 		switch (level) {
 		case (INFO):
 			serv.logfile << "[" << timeStamp() << "] INFO  " << message
-						 << std::flush << verbose;
+						 << verbose << std::flush;
 			break;
 		case (ERROR):
 			serv.logfile << "[" << timeStamp() << "] ERROR " << message
-						 << std::flush << verbose;
+						 << verbose << std::flush;
 			break;
 		case (DEBUG):
 			serv.logfile << "[" << timeStamp() << "] DEBUG " << message
-						 << std::flush << verbose;
+						 << verbose << std::flush;
 			break;
 		case (REPLY):
 			serv.logfile << "[" << timeStamp() << "] REPLY " << message
-						 << std::flush << verbose;
+						 << verbose << std::flush;
+			break;
+		case GOT:
+			serv.logfile << "[" << timeStamp() << "] GOT " << message
+						 << std::flush;
 			break;
 		}
 	}

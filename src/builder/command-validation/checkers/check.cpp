@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/04 18:29:23 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/07 17:06:25 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@
 //TODO: should they be 0 *
 /* checks that username syntax is valid */
 bool check::user(CmdSpec &cmd, size_t idx) {
-	(void)idx;
-	(void)cmd;
+	cmd[username_].trimParam(idx, USERLEN);
 	return true;
 }
 

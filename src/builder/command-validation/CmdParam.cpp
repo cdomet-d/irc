@@ -28,13 +28,13 @@ CmdParam::~CmdParam(void) {}
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-std::string &CmdParam::operator[](unsigned int i) {
+std::string &CmdParam::operator[](size_t i) {
 	if (i >= innerParam_.size())
 		throw std::out_of_range("Param not found");
 	return (innerParam_[i]);
 }
 
-const std::string &CmdParam::operator[](unsigned int i) const {
+const std::string &CmdParam::operator[](size_t i) const {
 	if (i >= innerParam_.size())
 		throw std::out_of_range("Param not found");
 	return (innerParam_[i]);
@@ -57,11 +57,11 @@ size_t CmdParam::size(void) const {
 	return (innerParam_.size());
 }
 
-void CmdParam::rmParam(unsigned int pos) {
+void CmdParam::rmParam(size_t pos) {
 	innerParam_.erase(innerParam_.begin() + pos);
 }
 
-void CmdParam::addOne(unsigned int pos) {
+void CmdParam::addOne(size_t pos) {
 	innerParam_.insert(innerParam_.begin() + pos, "");
 }
 
@@ -77,8 +77,9 @@ bool CmdParam::isList(void) const {
 	return (list_);
 }
 
-void CmdParam::trimParam(int paramIdx, int startPos, int lenToTrim) {
-	innerParam_[paramIdx].erase(startPos, lenToTrim);
+void CmdParam::trimParam(size_t paramIdx, size_t lenToTrim) {
+	if ((innerParam_[paramIdx].size()) > lenToTrim)
+		innerParam_[paramIdx].erase(lenToTrim);
 }
 
 /* ************************************************************************** */

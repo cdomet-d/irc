@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/04 16:45:34 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/07 17:06:53 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@
 #define RPL_CHANGEMODE(prefix, channel, mode) (":" + prefix + " MODE " + channel + " " + mode + "\r\n") //TODO : not used
 
 namespace reply {
-	enum e_level { INFO, ERROR, DEBUG, REPLY };
+	enum e_level { INFO, ERROR, DEBUG, REPLY, GOT };
 	void log(e_level level, std::string message, std::string verbose);
 	void log(e_level level, std::string message);
 	void send_(int fd, std::string reply);

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 17:57:11 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/07 17:06:04 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,8 @@ bool check::nick(CmdSpec &cmd, size_t idx) {
 					 ERR_NONICKNAMEGIVEN(cmd.getSender().cliInfo.getNick()));
 		return (false);
 	}
-	std::string nick = cmd[nickname_][idx];
-	if (nick.size() > 9) {
-		nick = nick.substr(0, 9);
-		cmd[nickname_].rmParam(idx);
-		cmd[nickname_].setOneParam(nick);
-	}
+	cmd[nickname_].trimParam(idx, NICKLEN);
+	std::string &nick = cmd[nickname_][idx];
 	if (!check::nick_::syntaxIsValid(nick, cmd.getSender()))
 		return false;
 	if (check::exists(nick, cmd.serv_.getUsedNick())) {

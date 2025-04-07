@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   typedef.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 13:59:33 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/07 13:57:04 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ typedef enum {
 
 #define MAX_EVENTS 100
 #define MAX_CHAN_PER_CLI 50
+#define USERLEN	15
+#define NICKLEN	15
 
 // -------------------------------- DEBUG ----------------------------------- //
 
