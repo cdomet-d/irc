@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_mode.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:36 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/04 17:57:07 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,9 +99,14 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 	return true;
 }
 
-bool check::mode(CmdSpec &cmd, int idx) {
+bool check::mode(CmdSpec &cmd, size_t idx) {
 	(void)idx;
 	if (!check::mode_::formatArgs(cmd))
 		return false;
 	return true;
 }
+
+//TODO: check if there is a target and that the client is on it.
+//TODO: +l: block if arg is not an interger
+//TODO: +o: check client exist and is on channel
+//TODO: +k: check that 26 > len > 8 

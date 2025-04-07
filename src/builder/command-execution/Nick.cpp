@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:20:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:32 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/04 16:53:39 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,9 @@
 void nick(CmdSpec &cmd) {
 	Client &sender = cmd.getSender();
 
-	if (!sender.cliInfo.getNick().empty())
-		cmd.server_.removeNickFromUsedNicks(sender.cliInfo.getNick());
+	cmd.serv_.removeNickFromUsedNicks(sender.cliInfo.getNick());
 	sender.cliInfo.setNick(cmd[nickname_][0]);
-	cmd.server_.addNickToUsedNicks(cmd[nickname_][0], sender.getFd());
+	cmd.serv_.addNickToUsedNicks(cmd[nickname_][0], sender.getFd());
 	if (sender.cliInfo.getRegistration() == 1)
 		sender.cliInfo.setRegistration(2);
 	else if (sender.cliInfo.getRegistration() == 2) {

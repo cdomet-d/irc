@@ -3,46 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   check.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:35 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/04 18:29:23 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "printers.hpp"
 #include "validator.hpp"
 
-bool check::chan(CmdSpec &cmd, int idx) {
-	(void)idx;
-	stringVec param = cmd[channel_].getInnerParam();
-	return (true);
-}
-
-bool check::user(CmdSpec &cmd, int idx) {
+//TODO: check syntax rules
+//TODO: should they be 0 *
+/* checks that username syntax is valid */
+bool check::user(CmdSpec &cmd, size_t idx) {
 	(void)idx;
 	(void)cmd;
-	return (true);
+	return true;
 }
 
-bool check::target(CmdSpec &cmd, int idx) {
-	(void)cmd;
-	(void)idx;
-	return (true);
+/* check that the target exists */
+bool check::target(CmdSpec &cmd, size_t idx) {
+	if (!check::exists(cmd[target_][idx], cmd.serv_.getUsedNick())) {
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_NOSUCHNICK(cmd.getSender().cliInfo.getNick()));
+		return false;
+	}
+	return true;
 }
 
-bool check::targetIsOnChan(CmdSpec &cmd, int idx) {
-	(void)cmd;
-	(void)idx;
-	return (true);
+/* check that the target is not already on the chan */
+bool check::invite(CmdSpec &cmd, size_t idx) {
+	if (!check::target(cmd, idx))
+		return false;
+	const stringVec &tChan = check::getTargetChan(cmd[target_][idx], cmd.serv_);
+	if (check::chans_::onChan(cmd[channel_][idx], tChan)) {
+		reply::send_(cmd.getSender().getFd(),
+					 ERR_USERONCHANNEL(cmd.getSender().cliInfo.getNick(),
+									   cmd[channel_][idx]));
+		return false;
+	}
+	return true;
 }
 
-bool check::invite(CmdSpec &cmd, int idx) {
-	(void)cmd;
-	(void)idx;
-	return (true);
-}
-
-bool check::enoughParams(CmdSpec &cmd, int idx) {
+bool check::enoughParams(CmdSpec &cmd, size_t idx) {
 	(void)idx;
 	for (size_t i = 0; i < cmd.getParams().size(); i++) {
 		CmdParam &innerParam = *cmd.getParams()[i].second;
@@ -56,10 +60,9 @@ bool check::enoughParams(CmdSpec &cmd, int idx) {
 	return (true);
 }
 
-bool check::findString(stringVec array, std::string &strToFind) {
-	for (size_t i = 0; i < array.size(); i++) {
-		if (array[i] == strToFind)
-			return (true);
-	}
-	return (false);
+const stringVec &check::getTargetChan(const std::string &target,
+									  const Server &serv) {
+	return serv.getAllCli()
+		.find(serv.getFdFromNick(target))
+		->second->getJoinedChans();
 }
