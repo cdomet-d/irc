@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CmdExecution.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:08:25 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:27 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/07 15:59:23 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,7 @@ void checkOnlyOperator(Channel *curChan);
 void partOneChan(Client *sender, Channel &curChan);
 void partAllChans(Client *sender);
 void registrationCompleted(Client &sender);
+std::string buildNickList(clientMap curMap, Client *sender, Channel &curChan);
+void sendNickList(std::string &nickList, Client *sender, Channel &curChan);
 
 #endif ///CMDEXECUTION_HPP
