@@ -47,15 +47,15 @@ bool check::invite(CmdSpec &cmd, size_t idx) {
 }
 
 bool check::enoughParams(CmdSpec &cmd, size_t idx) {
-	(void)idx;
-	for (size_t i = 0; i < cmd.getParams().size(); i++) {
-		CmdParam &innerParam = *cmd.getParams()[i].second;
+	while (idx < cmd.getParams().size()) {
+		CmdParam &innerParam = *cmd.getParams()[idx].second;
 		if (!innerParam.isOpt() && innerParam.empty()) {
 			reply::send_(cmd.getSender().getFd(),
 						 ERR_NEEDMOREPARAMS(cmd.getSender().cliInfo.getNick(),
 											cmd.getName()));
 			return (false);
 		}
+		idx++;
 	}
 	return (true);
 }

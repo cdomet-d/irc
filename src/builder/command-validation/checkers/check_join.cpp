@@ -13,31 +13,28 @@
 #include "validator.hpp"
 
 bool check::join(CmdSpec &cmd, size_t idx) {
-	(void)idx;
 	channelMap::const_iterator itChan;
-	size_t i = 0;
 
-	while (i < cmd[channel_].size()) {
-		itChan = cmd.serv_.getAllChan().find(cmd[channel_][i]);
+	while (idx < cmd[channel_].size()) {
+		itChan = cmd.serv_.getAllChan().find(cmd[channel_][idx]);
 		if (itChan != cmd.serv_.getAllChan().end()) {
-			if (!check::join_::assessRequest(*itChan->second, cmd, i)) {
-				std::cout << "Couldnt join channel" << std::endl;
-				cmd[channel_].rmParam(i);
+			if (!check::join_::assessRequest(*itChan->second, cmd, idx)) {
+				cmd[channel_].rmParam(idx);
 				continue;
 			}
-		} else if (!check::join_::syntaxIsValid(cmd, i)) {
-			cmd[channel_].rmParam(i);
+		} else if (!check::join_::syntaxIsValid(cmd, idx)) {
+			cmd[channel_].rmParam(idx);
 			continue;
 		}
-		i++;
+		idx++;
 	}
 	if (!cmd[channel_].size())
 		return (false);
 	return (true);
 }
 
-bool check::join_::assessRequest(Channel chan, CmdSpec &cmd, size_t i) {
-	if (check::chans_::onChan(cmd[channel_][i], cmd.getSender().getJoinedChans()))
+bool check::join_::assessRequest(Channel chan, CmdSpec &cmd, size_t idx) {
+	if (check::chans_::onChan(cmd[channel_][idx], cmd.getSender().getJoinedChans()))
 		return (false);
 	if (!check::join_::chanHasRoom(chan, cmd.getSender()))
 		return (false);
@@ -45,7 +42,7 @@ bool check::join_::assessRequest(Channel chan, CmdSpec &cmd, size_t i) {
 		!check::join_::hasInvite(chan, cmd.getSender()))
 		return (false);
 	else if (chan.getModes().find("k") != std::string::npos &&
-			 !check::join_::validKey(chan, cmd[key_], i, cmd.getSender()))
+			 !check::join_::validKey(chan, cmd[key_], idx, cmd.getSender()))
 		return (false);
 	if (check::join_::cliHasMaxChans(chan, cmd.getSender()))
 		return (false);
@@ -63,9 +60,9 @@ bool check::join_::hasInvite(Channel &chan, Client &sender) {
 	return (false);
 }
 
-bool check::join_::validKey(Channel &chan, CmdParam &keys, size_t i,
+bool check::join_::validKey(Channel &chan, CmdParam &keys, size_t idx,
 							Client &sender) {
-	if (i < keys.size() && chan.getPassword() == keys[i])
+	if (idx < keys.size() && chan.getPassword() == keys[idx])
 		return (true);
 	reply::send_(sender.getFd(),
 				 ERR_BADCHANNELKEY(sender.cliInfo.getNick(), chan.getName()));
@@ -91,7 +88,6 @@ bool check::join_::cliHasMaxChans(Channel &chan, Client &sender) {
 
 bool check::join_::syntaxIsValid(CmdSpec &cmd, size_t idx) {
 	if (cmd[channel_][idx][0] != '#') {
-		std::cout << cmd[channel_][idx] << std::endl;
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
 									   cmd[channel_][idx]));
