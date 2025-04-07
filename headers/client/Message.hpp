@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/07 17:05:12 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/07 17:17:38 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ class Message {
 	/*                               ORTHODOX CLASS                           */
 	Message(void);
 	~Message(void);
-	std::string &operator[](size_t i);
+	std::string &operator[](unsigned int i);
 
 	/*                               GETTERS                                  */
 	size_t getSize() const;
@@ -42,6 +42,7 @@ class Message {
 	std::string::size_type evaluateTermination() const;
 	void clearCmdParam();
 	void clearMess();
+	void clear();
 	void formatMode();
 	void removeNewlines();
 	void trimSpaces();
