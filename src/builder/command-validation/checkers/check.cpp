@@ -26,7 +26,7 @@ bool check::user(CmdSpec &cmd, size_t idx) {
 bool check::target(CmdSpec &cmd, size_t idx) {
 	if (!check::exists(cmd[target_][idx], cmd.serv_.getUsedNick())) {
 		reply::send_(cmd.getSender().getFd(),
-					 ERR_NOSUCHNICK(cmd.getSender().cliInfo.getNick()));
+					 ERR_NOSUCHNICK(cmd.getSender().cliInfo.getNick(), cmd[target_][idx]));
 		return false;
 	}
 	return true;

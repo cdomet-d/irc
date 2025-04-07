@@ -27,8 +27,8 @@
 #define ERR_TOOMANYCHANNELS(nickname, channel) (":irc.bitchat.net 405 " + nickname + " " + channel + " :You have joined too many channels\r\n")
 #define ERR_NOSUCHCHANNEL(nickname, channel) (":irc.bitchat.net 403 " + nickname + " " + channel + " :No such channel" + "\r\n")
 #define ERR_NOTONCHANNEL(nickname, channel) (":irc.bitchat.net 442 " + nickname + " " + channel + " :You're not on that channel" + "\r\n")
-#define ERR_USERNOTINCHANNEL(nickname, channel) (":irc.bitchat.net 441 " + nickname + " " + channel + " :They aren't on that channel\r\n") //TODO : not used
-#define ERR_USERONCHANNEL(nickname, channel) (":irc.bitchat.net 443 " + nickname + " " + channel + " :is already on channel\r\n") //TODO : not used
+#define ERR_USERNOTINCHANNEL(nickname, channel) (":irc.bitchat.net 441 " + nickname + " " + channel + " :They aren't on that channel\r\n")
+#define ERR_USERONCHANNEL(nickname, channel) (":irc.bitchat.net 443 " + nickname + " " + channel + " :is already on channel\r\n")
 #define ERR_CANNOTSENDTOCHAN(nickname, channel) (":irc.bitchat.net 404 " + nickname + " " + channel + " :Cannot send to channel\r\n") //TODO : not used
 
 //input_err_replies
@@ -47,7 +47,7 @@
 #define ERR_NOTREGISTERED(nickname) (":irc.bitchat.net 451 " + nickname + " :You have not registered\r\n")
 #define ERR_ALREADYREGISTRED(nickname) (":irc.bitchat.net 462 " + nickname + " :You may not reregister\r\n")
 #define ERR_PASSWDMISMATCH(nickname) (":irc.bitchat.net 464 " + nickname + " :Password incorrect\r\n")
-#define ERR_NOSUCHNICK(nickname) (":irc.bitchat.net 401 " + nickname + " :No such nick/channel\r\n") //TODO : not used
+#define ERR_NOSUCHNICK(nickname, target) (":irc.bitchat.net 401 " + nickname + " " + target + " :No such nick/channel\r\n")
 #define ERR_NEEDPASS(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter password\r\n")
 #define ERR_NEEDNICK(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter nickname\r\n")
 #define ERR_NEEDUSER(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter username\r\n")
