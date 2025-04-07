@@ -33,7 +33,7 @@ namespace check {
 	template < typename MapType >
 	bool exists(std::string arg, const MapType &map) {
 		typename MapType::const_iterator toFind = map.find(arg);
-		return toFind == map.end();
+		return toFind != map.end();
 	}
 
 	namespace mode_ {
