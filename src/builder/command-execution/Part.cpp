@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 11:01:34 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/07 18:48:04 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,9 @@
 void partOneChan(Client *sender, Channel &curChan) {
 	int targetFd = sender->getFd();
 	curChan.removeCli(ALLCLI, targetFd);
-	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end()) {
-		sender->removeOneChan(curChan.getName());
+	sender->removeOneChan(curChan.getName());
+	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end())
 		curChan.removeCli(OPCLI, targetFd);
-	}
 }
 
 void part(CmdSpec &cmd) {
