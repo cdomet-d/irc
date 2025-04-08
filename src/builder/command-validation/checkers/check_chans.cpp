@@ -22,16 +22,16 @@ bool check::chan(CmdSpec &cmd, size_t idx) {
 		channel = cmd[channel_][idx];
 
 	if (!check::exists(channel, cmd.serv_.getAllChan())) {
-		reply::send_(cmd.getSender().getFd(),
-					 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
-									   channel));
+		reply::send_(
+			cmd.getSender().getFd(),
+			ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(), channel));
 		return (false);
 	}
 	stringVec userChan = cmd.getSender().getJoinedChans();
 	if (!check::chans_::onChan(channel, userChan)) {
-		reply::send_(cmd.getSender().getFd(),
-					 ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
-									  channel));
+		reply::send_(
+			cmd.getSender().getFd(),
+			ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(), channel));
 		return (false);
 	}
 	return (true);
@@ -43,18 +43,18 @@ bool check::chans_::onChan(std::string arg, const stringVec &arr) {
 
 bool check::chans_::isOp(CmdSpec &cmd, size_t idx) {
 	channelMap::const_iterator itChan;
-
 	itChan = cmd.serv_.getAllChan().find(cmd[channel_][idx]);
 	Channel chan = *itChan->second;
 
-	if (cmd.getName() == "TOPIC" &&
-		(cmd[topic_].empty() ||
-		 chan.getModes().find('t') == std::string::npos)) {
+	if ((cmd.getName() == "TOPIC" &&
+			(cmd[topic_].empty() ||
+			 chan.getModes().find('t') == std::string::npos)) ||
+		(cmd.getName() == "MODE" && cmd[flag_].empty() &&
+		 cmd[flagArg_].empty())) {
 		return (true);
 	}
 
 	clientMap::const_iterator itCl;
-
 	itCl = chan.getOpCli().find(cmd.getSender().getFd());
 	if (itCl == chan.getOpCli().end()) {
 		reply::send_(cmd.getSender().getFd(),
