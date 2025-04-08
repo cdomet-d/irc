@@ -38,13 +38,13 @@ bool buffer_manip::prepareCommand(Client &sender) {
 			if (manager.executeCm(
 					manager.findCmd(sender.mess.getCmd()).process(sender)))
 				return true;
-			sender.mess.clearCmdParam();
-			sender.mess.clearMess();
 		} catch (const CmdManager::CmdNotFoundException &e) {
 			reply::send_(sender.getFd(),
 						 ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
 											sender.mess.getCmd()));
 		}
+		sender.mess.clearCmdParam();
+		sender.mess.clearMess();
 		sender.mess.updateMess();
 	}
 	return true;
