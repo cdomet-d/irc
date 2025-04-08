@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_join.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 17:56:58 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/08 15:51:53 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,11 @@ bool check::join(CmdSpec &cmd, size_t idx) {
 }
 
 bool check::join_::assessRequest(Channel chan, CmdSpec &cmd, size_t idx) {
-	if (check::chans_::onChan(cmd[channel_][idx], cmd.getSender().getJoinedChans()))
+	if (check::chans_::onChan(cmd[channel_][idx],
+							  cmd.getSender().getJoinedChans()))
 		return (false);
-	if (!check::join_::chanHasRoom(chan, cmd.getSender()))
+	if (chan.getModes().find('l') != std::string::npos &&
+		!check::join_::chanHasRoom(chan, cmd.getSender()))
 		return (false);
 	if (chan.getModes().find("i") != std::string::npos &&
 		!check::join_::hasInvite(chan, cmd.getSender()))
@@ -70,8 +72,7 @@ bool check::join_::validKey(Channel &chan, CmdParam &keys, size_t idx,
 }
 
 bool check::join_::chanHasRoom(Channel &chan, Client &sender) {
-	if (chan.getModes().find('l') == std::string::npos ||
-		chan.getCliInChan().size() < chan.getMaxCli())
+	if (chan.getCliInChan().size() < chan.getMaxCli())
 		return (true);
 	reply::send_(sender.getFd(),
 				 ERR_CHANNELISFULL(sender.cliInfo.getNick(), chan.getName()));

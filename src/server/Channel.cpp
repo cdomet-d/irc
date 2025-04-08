@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/07 17:36:06 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/08 15:56:06 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,52 +82,66 @@ void Channel::removeCli(mapChan curMap, int fdCli) {
 std::string Channel::getName() const {
 	return (name_);
 }
+
 std::string Channel::getTopic() const {
 	return (topic_);
 }
+
 size_t Channel::getMaxCli() const {
 	return (maxCli_);
 }
+
 bool Channel::getInviteOnly() const {
 	return (inviteOnly_);
 }
+
 bool Channel::getIsPassMatch() const {
 	return (isPassMatch_);
 }
+
 bool Channel::getTopicRestrict() const {
 	return (topicRestrict_);
 }
+
 const clientMap &Channel::getCliInChan() const {
 	return (cliInChan_);
 }
+
 const clientMap &Channel::getOpCli() const {
 	return (cliIsOperator_);
 }
+
 const clientMap &Channel::getInvitCli() const {
 	return (cliInvited_);
 }
+
 std::string Channel::getPassword() const {
 	return (pass_);
 }
+
 std::string Channel::getModes() const {
 	return (modes_);
 }
+
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
 void Channel::setName(std::string name) {
 	name_ = name;
 }
+
 void Channel::setTopic(std::string topic) {
 	topic_ = topic;
 }
+
 void Channel::setPassword(std::string password) {
 	pass_ = password;
 }
+
 void Channel::setModes() {
 	std::string modes = "+";
 
-	if (getMaxCli() != 0)
+	if (static_cast<ssize_t>(getMaxCli()) != -1)
 		modes.append("l");
 	if (getInviteOnly() == true)
 		modes.append("i");
@@ -137,15 +151,20 @@ void Channel::setModes() {
 		modes.append("t");
 	modes_ = modes;
 }
+
 void Channel::setMaxCli(int maxCli) {
 	maxCli_ = maxCli;
 }
+
 void Channel::setInviteOnly(bool inviteOnly) {
 	inviteOnly_ = inviteOnly;
 }
+
 void Channel::setIsPassMatch(bool password) {
 	isPassMatch_ = password;
 }
+
 void Channel::setTopicRestrict(bool topicRestrict) {
 	topicRestrict_ = topicRestrict;
 }
+

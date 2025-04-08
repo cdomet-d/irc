@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/08 15:25:39 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/08 15:46:02 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@
 #define RPL_ISUPPORT(nickname) ":irc.bitchat.net 005 " + nickname + " CHANLIMIT=#:50 CHANMODES=k,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server\r\n"
 
 //channel_replies
-#define RPL_CHANNELMODEIS(nickname, channel, modes, modeArgs) (":irc.bitchat.net 324 " + nickname + " " + channel + " " + modes + " " + modeArgs + "\r\n") //TODO: add mode arguments
+#define RPL_CHANNELMODEIS(nickname, channel, modes, modeArgs) (":irc.bitchat.net 324 " + nickname + " " + channel + " " + modes + " " + modeArgs + "\r\n")
 #define RPL_ENDOFNAMES(nickname, channel) (":irc.bitchat.net 366 " + nickname + " " + channel + " :End of /NAMES list\r\n")
 #define RPL_INVITING(nickname, channel, target) (":irc.bitchat.net 341 " + nickname + " " + target + " " + channel + "\r\n")
 #define RPL_NOTOPIC(nickname, channel) (":irc.bitchat.net 331 " + nickname + " " + channel + " :No topic is set" + "\r\n")

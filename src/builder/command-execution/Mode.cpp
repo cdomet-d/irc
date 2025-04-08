@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/07 18:27:21 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/08 16:45:42 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <cerrno>
 #include <cstdlib>
 #include <limits>
+#include <sstream>
 
 void executeO(std::string flag, std::string param, Channel &curChan) {
 	Client *targetCli = NULL;
@@ -34,8 +35,8 @@ void executeO(std::string flag, std::string param, Channel &curChan) {
 	}
 
 	if (flag == "+o ") {
-		std::cout << targetCli->getFd() << targetCli->cliInfo.getNick()
-				  << std::endl;
+		// std::cout << targetCli->getFd() << targetCli->cliInfo.getNick()
+		// 		  << std::endl;
 		curChan.addCli(OPCLI, targetCli);
 		reply::send_(
 			targetCli->getFd(),
@@ -61,6 +62,7 @@ void executeI(std::string flag, std::string param, Channel &curChan) {
 		curChan.setModes();
 	}
 }
+
 void executeT(std::string flag, std::string param, Channel &curChan) {
 	(void)param;
 
@@ -104,8 +106,8 @@ void executeL(std::string flag, std::string param, Channel &curChan) {
 			curChan.setModes();
 		}
 	}
-	if (flag == "-l" && curChan.getMaxCli() == 0) {
-		curChan.setMaxCli(0);
+	if (flag == "-l" && static_cast< ssize_t >(curChan.getMaxCli()) != -1) {
+		curChan.setMaxCli(-1);
 		curChan.setModes();
 	}
 }
@@ -184,9 +186,23 @@ void mode(CmdSpec &cmd) {
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 
 	if (!cmd[flag_].size()) {
+		std::string modeArgs;
+
+		if (curChan.getModes().find("l") != std::string::npos) {
+			std::stringstream sstream;
+			std::string maxCli;
+			sstream << curChan.getMaxCli();
+			sstream >> maxCli;
+			modeArgs += maxCli;
+		}
+		if (curChan.getModes().find("k") != std::string::npos) {
+			modeArgs += (" " + curChan.getPassword());
+		}
+		//TODO: add arg flag o ??
 		reply::send_(sender->getFd(),
 					 RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
-									   curChan.getName(), curChan.getModes()));
+									   curChan.getName(), curChan.getModes(),
+									   modeArgs));
 		return;
 	}
 	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag)

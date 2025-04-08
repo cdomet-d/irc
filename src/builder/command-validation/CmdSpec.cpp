@@ -73,7 +73,7 @@ CmdSpec &CmdSpec::process(Client &sender) {
 		!(*this)[channel_].size())
 		return (*this);
 	hasParamList();
-	// displayParams("process");
+	displayParams("process");
 	for (size_t i = 0; i < checkers_.size(); i++) {
 		if (!checkers_[i](*this, 0)) {
 			valid_ = false;
@@ -129,7 +129,8 @@ void CmdSpec::displayParams(const std::string &where) {
 		try {
 			for (size_t index = 0; index < (*i->second).size(); index++) {
 				std::cout << "param[" << enumToString(i->first) << "]"
-						  << "[" << index << "] : " << (*i->second)[index];
+						  << "[" << index << "] : " << (*i->second)[index]
+						  << std::endl;
 			}
 		} catch (const std::out_of_range &e) {
 			std::cerr << e.what() << std::endl;
