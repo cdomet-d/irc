@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/07 19:14:07 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/08 15:25:39 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,9 @@
 #define RPL_ISUPPORT(nickname) ":irc.bitchat.net 005 " + nickname + " CHANLIMIT=#:50 CHANMODES=k,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server\r\n"
 
 //channel_replies
-#define RPL_CHANNELMODEIS(nickname, channel, modes) (":irc.bitchat.net 324 " + nickname + " " + channel + " " + modes + "\r\n") //TODO: add mode arguments
+#define RPL_CHANNELMODEIS(nickname, channel, modes, modeArgs) (":irc.bitchat.net 324 " + nickname + " " + channel + " " + modes + " " + modeArgs + "\r\n") //TODO: add mode arguments
 #define RPL_ENDOFNAMES(nickname, channel) (":irc.bitchat.net 366 " + nickname + " " + channel + " :End of /NAMES list\r\n")
-#define RPL_INVITING(nickname, channel, target) (":irc.bitchat.net 341 " + nickname + " " + channel + " " + target + "\r\n")
+#define RPL_INVITING(nickname, channel, target) (":irc.bitchat.net 341 " + nickname + " " + target + " " + channel + "\r\n")
 #define RPL_NOTOPIC(nickname, channel) (":irc.bitchat.net 331 " + nickname + " " + channel + " :No topic is set" + "\r\n")
 #define RPL_TOPIC(nickname, channel, topic) (":irc.bitchat.net 332 " + nickname + " " + channel + " :" + topic + "\r\n")
 
@@ -74,8 +74,7 @@
 #define RPL_UMODEIS(nickname, modes) (":irc.bitchat.net 221 " + nickname + " " + modes + "\r\n") //TODO : not used
 #define RPL_AWAY(nickname, message) (":irc.bitchat.net 301 " + nickname + " :" + message + "\r\n") //TODO : not used
 #define RPL_INVITELIST(nickname, channel) (":irc.bitchat.net 336 " + nickname + " " + channel + "\r\n")
-#define RPL_ENDOFINVITELIST(nickname) (":irc.bitchat.net 337 " + nickname + " :End of invite list\r\n")
-#define RPL_MODE(source, channel, modes) (source + " MODE " + channel + " " + modes + "\r\n")
+#define RPL_ENDOFINVITELIST(nickname) (":irc.bitchat.net 337 " + nickname + " :End of /INVITE list\r\n")
 
 //USER_DEFINED_REPLIES
 //notice_replies (uses nickname)
@@ -95,7 +94,7 @@
 #define RPL_PARTREASON(prefix, channel, reason) (":" + prefix + " PART " + channel + " " + reason + "\r\n")
 #define RPL_PRIVMSG(prefix, target, message) (":" + prefix + " PRIVMSG " + target + " " + message + "\r\n")
 #define RPL_TOPICCHANGED(prefix, channel, topic) (":" + prefix + " TOPIC " + channel + " :" + topic + "\r\n")
-#define RPL_CHANGEMODE(prefix, channel, mode) (":" + prefix + " MODE " + channel + " " + mode + "\r\n") //TODO : not used
+#define RPL_MODE(prefix, channel, mode) (":" + prefix + " MODE " + channel + " " + mode + "\r\n")
 
 namespace reply {
 	enum e_level { INFO, ERROR, DEBUG, REPLY };
