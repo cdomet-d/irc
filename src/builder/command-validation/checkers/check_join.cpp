@@ -88,6 +88,8 @@ bool check::join_::cliHasMaxChans(Channel &chan, Client &sender) {
 }
 
 bool check::join_::syntaxIsValid(CmdSpec &cmd, size_t idx) {
+	if (cmd[channel_][idx].size() == 1 && cmd[channel_][idx][0] == '0')
+		return (true);
 	if (cmd[channel_][idx][0] != '#') {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),

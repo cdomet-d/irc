@@ -52,7 +52,7 @@ void joinMess(Channel *curChan, Client *sender) {
 void join(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 	if (cmd[channel_][0] == "0") {
-		partAllChans(sender);
+		partAllChans(cmd, "");
 		return;
 	}
 

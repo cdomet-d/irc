@@ -37,9 +37,10 @@ Channel &findCurChan(std::string chanName);
 Channel *createChan(const std::string &chanName);
 void checkOnlyOperator(Channel *curChan);
 void partOneChan(Client *sender, Channel &curChan);
-void partAllChans(Client *sender);
+void partAllChans(CmdSpec &cmd, const std::string &message);
 void registrationCompleted(Client &sender);
 std::string buildNickList(clientMap curMap, Client *sender, Channel &curChan);
 void sendNickList(std::string &nickList, Client *sender, Channel &curChan);
+void partMess(Client *sender, Channel &curChan, const std::string &message);
 
 #endif ///CMDEXECUTION_HPP

@@ -94,6 +94,7 @@
 #define RPL_PRIVMSG(prefix, target, message) (":" + prefix + " PRIVMSG " + target + " " + message + "\r\n")
 #define RPL_TOPICCHANGED(prefix, channel, Topic) (":" + prefix + " TOPIC " + channel + " :" + Topic + "\r\n")
 #define RPL_MODE(prefix, channel, Mode, modeArgs) (":" + prefix + " MODE " + channel + " " + Mode + " " + modeArgs + "\r\n")
+#define RPL_QUIT(prefix, message) (":" + prefix + " :Client Quit " + message + "\r\n")
 
 namespace reply {
 	enum e_level { INFO, ERROR, DEBUG, REPLY };
