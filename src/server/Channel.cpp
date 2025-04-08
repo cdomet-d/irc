@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:13 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/07 17:36:06 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,30 +40,12 @@ void sendMessageChannel(clientMap allCliChannel, std::string message) {
 
 bool Channel::addClientToChan(Channel *curChan, Client *sender) {
 	curChan->addCli(ALLCLI, sender);
-
 	sender->addOneChan(curChan->getName());
-
-	for (clientMapIt itCli = curChan->getCliInChan().begin();
-		 itCli != curChan->getCliInChan().end(); ++itCli) {
-		reply::send_(itCli->second->getFd(),
-					 RPL_JOIN(sender->cliInfo.getPrefix(), curChan->getName()));
-	}
-	if (curChan->getTopic().empty() == true)
-		reply::send_(sender->getFd(), RPL_NOTOPIC(sender->cliInfo.getNick(),
-												  curChan->getName()));
-	else
-		reply::send_(sender->getFd(),
-					 RPL_TOPIC(sender->cliInfo.getNick(), curChan->getName(),
-							   curChan->getTopic()));
-	if (curChan->getOpCli().empty()) {
-		reply::send_(sender->getFd(), RPL_CHANOPE(sender->cliInfo.getNick(),
-												  curChan->getName()));
+	if (curChan->getOpCli().empty())
 		curChan->addCli(OPCLI, sender);
-	}
 	if (curChan->getInvitCli().find(sender->getFd()) !=
 		curChan->getInvitCli().end())
 		curChan->removeCli(INVITECLI, sender->getFd());
-
 	return (true);
 }
 
