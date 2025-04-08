@@ -49,7 +49,7 @@ bool check::register_::isRegistered(CmdSpec &cmd, size_t idx) {
 	(void)idx;
 	if (cmd.getSender().cliInfo.getRegistration() == 3) {
 		reply::send_(cmd.getSender().getFd(),
-					 ERR_ALREADYREGISTRED(cmd.getSender().cliInfo.getNick()));
+					 ERR_ALREADYREGISTERED(cmd.getSender().cliInfo.getNick()));
 		return (false);
 	}
 	return (true);
