@@ -43,7 +43,7 @@ void joinMess(Channel *curChan, Client *sender) {
 		const std::string &servName = ":irc.bitchat.net";
 		reply::send_(sender->getFd(),
 					 RPL_MODE(servName, curChan->getName(),
-							  curChan->getModes()));
+							  curChan->getModes(), ""));
 	}
 	std::string nLst = buildNickList(curChan->getCliInChan(), sender, *curChan);
 	sendNickList(nLst, sender, *curChan);
