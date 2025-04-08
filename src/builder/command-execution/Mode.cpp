@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/08 16:45:42 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/08 16:53:22 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,7 @@ void sendModeMessages(std::string &first, std::string &second, Channel &curChan,
 					  std::string prefix) {
 	std::string messages = RPL_MODE(prefix, curChan.getName(), first) +
 						   RPL_MODE(prefix, curChan.getName(), second);
+	//TODO: need just one RPL_MODE
 	sendMessageChannel(curChan.getCliInChan(), messages);
 }
 
