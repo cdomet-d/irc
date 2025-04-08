@@ -154,7 +154,8 @@ void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 
 	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
 		if (cmd[flag_][nbFlag].find("+") != std::string::npos) {
-			if (cmd[flag_][nbFlag] == "+l" || cmd[flag_][nbFlag] == "+k")
+			if (cmd[flag_][nbFlag] == "+l" || cmd[flag_][nbFlag] == "+k" ||
+				cmd[flag_][nbFlag] == "+o")
 				newPassMaxCli.append(cmd[flagArg_][nbFlag] + " ");
 			posMode += cmd[flag_][nbFlag][1];
 		}

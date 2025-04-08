@@ -57,10 +57,9 @@
 //serv_replies
 #define RPL_WELCOME(nickname, prefix) (":irc.bitchat.net 001 " + nickname + " :Welcome to the Bitchat Internet Relay Chat Network " + prefix + "\r\n")
 #define RPL_YOURHOST(nickname) (":irc.bitchat.net 002 " + nickname + " :Your host is Bitchat, running version 1.0 \r\n")
-#define RPL_CREATED(nickname, date) (":irc.bitchat.net 003 " + nickname + " :This server was created " + date + "\r\n") //TODO : not used
-#define RPL_MYINFO(nickname) (":irc.bitchat.net 004 " + nickname + " Bitchat 1.0 | o | k,l,i,t | k,l\r\n") //TODO : not used
-//TODO: ask where these values come from
-#define RPL_ISUPPORT(nickname) ":irc.bitchat.net 005 " + nickname + " CHANLIMIT=#:50 CHANMODES=k,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server\r\n"
+#define RPL_CREATED(nickname, date) (":irc.bitchat.net 003 " + nickname + " :This server was created " + date + "\r\n")
+#define RPL_MYINFO(nickname) (":irc.bitchat.net 004 " + nickname + " Bitchat 1.0 | k,o,l,i,t | k,o,l\r\n")
+#define RPL_ISUPPORT(nickname) ":irc.bitchat.net 005 " + nickname + " CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server\r\n"
 
 //channel_replies
 #define RPL_CHANNELMODEIS(nickname, channel, modes, modeArgs) (":irc.bitchat.net 324 " + nickname + " " + channel + " " + modes + " " + modeArgs + "\r\n")
