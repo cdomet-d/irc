@@ -141,9 +141,8 @@ Channel &findCurChan(std::string chanName) {
 
 void sendModeMessages(std::string &first, std::string &second, Channel &curChan,
 					  std::string prefix) {
-	std::string messages = RPL_MODE(prefix, curChan.getName(), first) +
-						   RPL_MODE(prefix, curChan.getName(), second);
-	//TODO: need just one RPL_MODE
+	std::string messages =
+		RPL_MODE(prefix, curChan.getName(), first + " " + second);
 	sendMessageChannel(curChan.getCliInChan(), messages);
 }
 
@@ -200,7 +199,6 @@ void mode(CmdSpec &cmd) {
 		if (curChan.getModes().find("k") != std::string::npos) {
 			modeArgs += (" " + curChan.getPassword());
 		}
-		//TODO: add arg flag o ??
 		reply::send_(sender->getFd(),
 					 RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
 									   curChan.getName(), curChan.getModes(),
