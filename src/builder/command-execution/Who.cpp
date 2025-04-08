@@ -18,7 +18,7 @@
 std::string buildNickList(clientMap curMap, Client *sender, Channel &curChan) {
 	std::string list;
 	(void)sender;
-	for (clientMapIt it = curMap.begin(); it != curMap.end(); it++) {
+	for (clientMapIt it = curMap.begin(); it != curMap.end(); ++it) {
 		// if (it->first == sender->getFd())
 		// 	continue;
 		std::string prefix = "";
