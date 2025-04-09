@@ -2,12 +2,12 @@
 
 rm -f outputs/client*
 
-mkfifo outputs/client1_in outputs/client1_out
+mkfifo outputs/client1_in.txt outputs/client1_out.txt
 mkfifo outputs/client2_in.txt outputs/client2_out.txt
 mkfifo outputs/client3_in.txt outputs/client3_out.txt
 
-exec {client1_in_fd}<>outputs/client1_in
-exec {client1_out_fd}<>outputs/client1_out
+exec {client1_in_fd}<>outputs/client1_in.txt
+exec {client1_out_fd}<>outputs/client1_out.txt
 exec {client2_in_fd}<>outputs/client2_in.txt
 exec {client2_out_fd}<>outputs/client2_out.txt
 exec {client3_in_fd}<>outputs/client3_in.txt
