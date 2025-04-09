@@ -17,12 +17,12 @@ PASS 0
 NICK chacham
 USER
 USER c
-USER c c
-USER c c c
-USER :c c
-USER charlottesweeting c c c :hello world
+USER c 0
+USER c 0 *
+USER :c 0
+USER charlottesweeting 0 * c :hello world
 USER c
-USER c c c c
+USER c 0 * c
 JOIN #chan
 QUIT
 EOF

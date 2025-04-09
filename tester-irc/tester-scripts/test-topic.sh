@@ -23,7 +23,7 @@ cat <<EOF >&${client1_in_fd}
 TOPIC
 PASS 0
 NICK chacham
-USER c c c c
+USER c 0 * c
 JOIN #chan
 TOPIC
 TOPIC #dontexist
@@ -40,7 +40,7 @@ sleep 0.5
 cat <<EOF >&${client2_in_fd}
 PASS 0
 NICK bobby
-USER b b b b
+USER b 0 * b
 TOPIC #chan
 TOPIC #chan pizza
 JOIN #chan

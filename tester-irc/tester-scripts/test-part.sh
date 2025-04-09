@@ -25,7 +25,7 @@ cat <<EOF >&${client1_in_fd}
 PART
 PASS 0
 NICK chacham
-USER c c c c
+USER c 0 * c
 PART
 PART #dontexist
 PART wrongchan
@@ -43,7 +43,7 @@ sleep 0.5
 cat <<EOF >&${client2_in_fd}
 PASS 0
 NICK bobby
-USER b b b b
+USER b 0 * b
 PART #chan
 JOIN #chan
 PART #chan

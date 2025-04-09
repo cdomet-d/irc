@@ -6,7 +6,7 @@ PASS
 PASS wrongpassword
 PASS 0
 NICK chacham
-USER c c c c
+USER c 0 * c
 PASS
 PASS 0
 EOF
