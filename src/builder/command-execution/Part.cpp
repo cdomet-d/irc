@@ -21,7 +21,6 @@ void partOneChan(Client *sender, Channel &curChan) {
 	sender->removeOneChan(curChan.getName());
 	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end())
 		curChan.removeCli(OPCLI, targetFd);
-	checkOnlyOperator(&curChan);
 }
 
 void partMess(Client *sender, Channel &curChan, const std::string &message) {
@@ -46,5 +45,6 @@ void part(CmdSpec &cmd) {
 		Channel &curChan = findCurChan(cmd[channel_][nbChan]);
 		partMess(sender, curChan, message);
 		partOneChan(sender, curChan);
+		checkOnlyOperator(&curChan);
 	}
 }
