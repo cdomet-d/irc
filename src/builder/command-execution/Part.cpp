@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/09 15:28:39 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/09 17:46:39 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void partMess(Client *sender, Channel &curChan, const std::string &message) {
 	else {
 		sendMessageChannel(curChan.getCliInChan(),
 						   RPL_PARTREASON(sender->cliInfo.getPrefix(),
-										  curChan.getName(), message));
+										  curChan.getName(), ":" + message));
 	}
 }
 
