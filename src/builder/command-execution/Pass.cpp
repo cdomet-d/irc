@@ -16,8 +16,7 @@
 #include "Server.hpp"
 
 void pass(CmdSpec &cmd) {
-	Client *sender = &cmd.getSender();
-	reply::send_(sender->getFd(),
-				 PASS_SUCCESS(cmd.getSendNick()));
-	sender->cliInfo.setRegistration(1);
+  Client *sender = &cmd.getSender();
+  reply::send_(sender->getFd(), PASS_SUCCESS(cmd.getSendNick()));
+  sender->cliInfo.setRegistration(1);
 }

@@ -17,8 +17,8 @@
 #include "typedef.hpp"
 
 namespace buffer_manip {
-	bool prepareCommand(Client &sender);
-	stringVec vectorSplit(std::string &s, char del);
+bool prepareCommand(Client &sender);
+stringVec vectorSplit(std::string &s, char del);
 }; // namespace buffer_manip
 
 #endif

@@ -19,6 +19,6 @@
 #include <stdlib.h>
 
 int test(const char *script, const char *expectedOutputFile,
-		 const char *testName);
+         const char *testName);
 
 #endif

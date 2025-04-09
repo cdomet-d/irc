@@ -13,37 +13,35 @@
 #include "validator.hpp"
 
 bool check::mess(CmdSpec &cmd, size_t idx) {
-	if (!check::mess_::params(cmd))
-		return (false);
+  if (!check::mess_::params(cmd))
+    return (false);
 
-	while (idx < cmd[target_].size()) {
-		if (cmd[target_][idx][0] != '#') {
-			if (!check::target(cmd, idx)) {
-				cmd[target_].rmParam(idx);
-				continue;
-			}
-		} else if (!check::chan(cmd, idx)) {
-			cmd[target_].rmParam(idx);
-			continue;
-		}
-		idx++;
-	}
-	if (!cmd[target_].size())
-		return (false);
-	return (true);
+  while (idx < cmd[target_].size()) {
+    if (cmd[target_][idx][0] != '#') {
+      if (!check::target(cmd, idx)) {
+        cmd[target_].rmParam(idx);
+        continue;
+      }
+    } else if (!check::chan(cmd, idx)) {
+      cmd[target_].rmParam(idx);
+      continue;
+    }
+    idx++;
+  }
+  if (!cmd[target_].size())
+    return (false);
+  return (true);
 }
 
 bool check::mess_::params(CmdSpec &cmd) {
-	if (cmd[target_].empty()) {
-		reply::send_(
-			cmd.getSendFd(),
-			ERR_NORECIPIENT(cmd.getSendNick(), cmd.getName()));
-		return (false);
-	}
-	if (cmd[message_].empty()) {
-		reply::send_(cmd.getSendFd(),
-					 ERR_NOTEXTTOSEND(cmd.getSendNick()));
-		return (false);
-	}
-	return (true);
+  if (cmd[target_].empty()) {
+    reply::send_(cmd.getSendFd(),
+                 ERR_NORECIPIENT(cmd.getSendNick(), cmd.getName()));
+    return (false);
+  }
+  if (cmd[message_].empty()) {
+    reply::send_(cmd.getSendFd(), ERR_NOTEXTTOSEND(cmd.getSendNick()));
+    return (false);
+  }
+  return (true);
 }

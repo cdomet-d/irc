@@ -16,39 +16,39 @@
 #include <sstream>
 
 std::string buildNickList(clientMap curMap, Client *sender, Channel &curChan) {
-	std::string list;
+  std::string list;
 
-	for (clientMapIt it = curMap.begin(); it != curMap.end(); ++it) {
-		if (it->first == sender->getFd())
-			continue;
-		std::string prefix = "";
-		if (curChan.getOpCli().find(it->first) != curChan.getOpCli().end()) {
-			prefix = "@";
-		}
-		if (!list.empty()) {
-			list += " ";
-		}
-		list += prefix + it->second->cliInfo.getNick();
-	}
-	return (list);
+  for (clientMapIt it = curMap.begin(); it != curMap.end(); ++it) {
+    if (it->first == sender->getFd())
+      continue;
+    std::string prefix = "";
+    if (curChan.getOpCli().find(it->first) != curChan.getOpCli().end()) {
+      prefix = "@";
+    }
+    if (!list.empty()) {
+      list += " ";
+    }
+    list += prefix + it->second->cliInfo.getNick();
+  }
+  return (list);
 }
 
 void who(CmdSpec &cmd) {
-	(void)cmd;
-	Client *sender = &cmd.getSender();
-	Channel &curChan = findCurChan(cmd[channel_][0]);
-	std::string nickList;
+  (void)cmd;
+  Client *sender = &cmd.getSender();
+  Channel &curChan = findCurChan(cmd[channel_][0]);
+  std::string nickList;
 
-	//TODO: check that flag o is functional
+  // TODO: check that flag o is functional
 
-	if (!cmd[flag_].empty() && cmd[flag_][0] == "o") {
-		nickList = buildNickList(curChan.getOpCli(), sender, curChan);
-		return;
-	}
-	nickList = buildNickList(curChan.getCliInChan(), sender, curChan);
+  if (!cmd[flag_].empty() && cmd[flag_][0] == "o") {
+    nickList = buildNickList(curChan.getOpCli(), sender, curChan);
+    return;
+  }
+  nickList = buildNickList(curChan.getCliInChan(), sender, curChan);
 
-	reply::send_(sender->getFd(), RPL_NAMREPLY(sender->cliInfo.getNick(), "=",
-											   curChan.getName(), nickList));
-	reply::send_(sender->getFd(),
-				 RPL_ENDOFNAMES(sender->cliInfo.getNick(), curChan.getName()));
+  reply::send_(sender->getFd(), RPL_NAMREPLY(sender->cliInfo.getNick(), "=",
+                                             curChan.getName(), nickList));
+  reply::send_(sender->getFd(),
+               RPL_ENDOFNAMES(sender->cliInfo.getNick(), curChan.getName()));
 }
