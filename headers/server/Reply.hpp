@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/09 16:51:13 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/09 17:11:17 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@
 //notice_replies (uses nickname)
 #define NOTICE_REQUIRE_PASSWORD(nickname) (":irc.bitchat.net NOTICE " + nickname + " :You must provide a password using the PASS command before registration\r\n")
 #define PASS_SUCCESS(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Valid password ! You may register\r\n")
-#define RPL_NICK(nickname) (":irc.bitchat.net NOTICE " + nickname + " :The nickname is valid and saved !\r\n")
+#define RPL_VALIDNICK(nickname) (":irc.bitchat.net NOTICE " + nickname + " :The nickname is valid and saved !\r\n")
 #define RPL_USER(nickname, username) (":irc.bitchat.net NOTICE " + nickname + " :The Username " + username + " is valid and saved !\r\n")
 #define REG_COMPLETE(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Registration completed, you can join channels and start chatting !\r\n")
 #define RPL_CHANOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " :You're operator of " + channel + "\r\n")
@@ -95,6 +95,7 @@
 #define RPL_TOPICCHANGED(prefix, channel, Topic) (":" + prefix + " TOPIC " + channel + " :" + Topic + "\r\n")
 #define RPL_MODE(prefix, channel, Mode, modeArgs) (":" + prefix + " MODE " + channel + " " + Mode + " " + modeArgs + "\r\n")
 #define RPL_QUIT(prefix, message) (":" + prefix + " :Client Quit " + message + "\r\n")
+#define RPL_NICK(prefix, newNick) (":" + prefix + " NICK :" + newNick + "\r\n")
 
 namespace reply {
 	enum e_level { INFO, ERROR, DEBUG, REPLY, GOT };
