@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/09 17:11:17 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/09 17:59:55 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@
 //RESPONDS_REPLIES
 //serv_replies
 #define RPL_WELCOME(nickname, prefix) (":irc.bitchat.net 001 " + nickname + " :Welcome to the Bitchat Internet Relay Chat Network " + prefix + "\r\n")
-#define RPL_YOURHOST(nickname) (":irc.bitchat.net 002 " + nickname + " :Your host is Bitchat, running version 1.0n")
+#define RPL_YOURHOST(nickname) (":irc.bitchat.net 002 " + nickname + " :Your host is Bitchat, running version 1.0\r\n")
 #define RPL_CREATED(nickname, date) (":irc.bitchat.net 003 " + nickname + " :This server was created " + date + "\r\n")
 #define RPL_MYINFO(nickname) (":irc.bitchat.net 004 " + nickname + " Bitchat 1.0 | k,o,l,i,t | k,o,l\r\n")
 #define RPL_ISUPPORT(nickname) ":irc.bitchat.net 005 " + nickname + " CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server\r\n"

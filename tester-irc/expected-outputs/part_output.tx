@@ -2,7 +2,8 @@
 :irc.bitchat.net NOTICE * :Valid password ! You may register
 :irc.bitchat.net NOTICE chacham :The nickname is valid and saved !
 :irc.bitchat.net 001 chacham :Welcome to the Bitchat Internet Relay Chat Network chacham!c@localhost
-:irc.bitchat.net 002 chacham :Your host is Bitchat, running version 1.0n:irc.bitchat.net 003 chacham :This server was created 09-04-2025 17:51:32
+:irc.bitchat.net 002 chacham :Your host is Bitchat, running version 1.0
+:irc.bitchat.net 003 chacham :This server was created 09-04-2025 17:51:32
 :irc.bitchat.net 004 chacham Bitchat 1.0 | k,o,l,i,t | k,o,l
 :irc.bitchat.net 005 chacham CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
 :irc.bitchat.net NOTICE chacham :Registration completed, you can join channels and start chatting !
@@ -37,7 +38,8 @@
 :irc.bitchat.net NOTICE * :Valid password ! You may register
 :irc.bitchat.net NOTICE bobby :The nickname is valid and saved !
 :irc.bitchat.net 001 bobby :Welcome to the Bitchat Internet Relay Chat Network bobby!b@localhost
-:irc.bitchat.net 002 bobby :Your host is Bitchat, running version 1.0n:irc.bitchat.net 003 bobby :This server was created 09-04-2025 17:51:32
+:irc.bitchat.net 002 bobby :Your host is Bitchat, running version 1.0
+:irc.bitchat.net 003 bobby :This server was created 09-04-2025 17:51:32
 :irc.bitchat.net 004 bobby Bitchat 1.0 | k,o,l,i,t | k,o,l
 :irc.bitchat.net 005 bobby CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
 :irc.bitchat.net NOTICE bobby :Registration completed, you can join channels and start chatting !

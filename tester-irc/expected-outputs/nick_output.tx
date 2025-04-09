@@ -16,7 +16,8 @@
 :irc.bitchat.net 432 * cha$: illegal char: expected [Aa -Zz], [0 - 9] or [-[]\`^{}], is $ :Erroneous nickname or username
 :irc.bitchat.net NOTICE cha-[]\^4`{} :The nickname is valid and saved !
 :irc.bitchat.net 001 cha-[]\^4`{} :Welcome to the Bitchat Internet Relay Chat Network cha-[]\^4`{}!c@localhost
-:irc.bitchat.net 002 cha-[]\^4`{} :Your host is Bitchat, running version 1.0n:irc.bitchat.net 003 cha-[]\^4`{} :This server was created 09-04-2025 17:35:25
+:irc.bitchat.net 002 cha-[]\^4`{} :Your host is Bitchat, running version 1.0
+:irc.bitchat.net 003 cha-[]\^4`{} :This server was created 09-04-2025 17:35:25
 :irc.bitchat.net 004 cha-[]\^4`{} Bitchat 1.0 | k,o,l,i,t | k,o,l
 :irc.bitchat.net 005 cha-[]\^4`{} CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
 :irc.bitchat.net NOTICE cha-[]\^4`{} :Registration completed, you can join channels and start chatting !
@@ -36,7 +37,8 @@
 :irc.bitchat.net 433 * chacham :Nickname is already in use
 :irc.bitchat.net NOTICE bobby :The nickname is valid and saved !
 :irc.bitchat.net 001 bobby :Welcome to the Bitchat Internet Relay Chat Network bobby!b@localhost
-:irc.bitchat.net 002 bobby :Your host is Bitchat, running version 1.0n:irc.bitchat.net 003 bobby :This server was created 09-04-2025 17:35:25
+:irc.bitchat.net 002 bobby :Your host is Bitchat, running version 1.0
+:irc.bitchat.net 003 bobby :This server was created 09-04-2025 17:35:25
 :irc.bitchat.net 004 bobby Bitchat 1.0 | k,o,l,i,t | k,o,l
 :irc.bitchat.net 005 bobby CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
 :irc.bitchat.net NOTICE bobby :Registration completed, you can join channels and start chatting !
