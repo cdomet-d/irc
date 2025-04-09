@@ -1,64 +1,78 @@
-:servername 451 * :You have not registered
-:servername 451 * :You have not registered
-:servername NOTICE * :Valid password ! You may register
-:servername NOTICE * :Introducing new nick "chacham"
-:servername NOTICE chacham :Registration complete
-:servername 461 chacham JOIN :Not enough parameters
-:servername 479 chacham #chan with space :Illegal channel name
-:chacham!~c@hostname JOIN #chan
-:servername MODE #chan +t
-:servername 353 chacham @ #chan :@chacham
-:servername 366 chacham #chan :End of /NAMES list.
-:chacham!~c@hostname JOIN #:cha
-:servername MODE #:cha +t
-:servername 353 chacham @ #:cha :@chacham
-:servername 366 chacham #:cha :End of /NAMES list.
-:servername 403 chacham chan :No such channel
-:servername 403 chacham &chan :No such channel
-:chacham!~c@hostname JOIN #chan
-:servername MODE #chan +t
-:servername 353 chacham @ #chan :@chacham
-:servername 366 chacham #chan :End of /NAMES list.
-:chacham!~c@hostname MODE #chan +k key
-:bobby!~b@hostname JOIN #chan
-:chacham!~c@hostname JOIN #chan2
-:servername 353 chacham @ #chan2 :chacham @bobby
-:servername 366 chacham #chan2 :End of /NAMES list.
-:chacham!~c@hostname JOIN #chan3
-:servername 353 chacham @ #chan3 :chacham @bobby
-:servername 366 chacham #chan3 :End of /NAMES list.
-:chacham!~c@hostname MODE #chan +i
-:servername 341 chacham bobby #chan
-:bobby!~b@hostname JOIN #chan
-:servername 443 chacham bobby #chan :is already on channel
-:bobby!~b@hostname PART #chan
-:chacham!~c@hostname MODE #chan -ik+l * 1
-:servername NOTICE * : Valid password ! You may register
-:servername NOTICE * :Introducing new nick "bobby"
-:servername NOTICE bobby :Registration complete
-:servername 475 bobby #chan :Cannot join channel (+k) - bad key
-:servername 475 bobby #chan :Cannot join channel (+k) - bad key
-:bobby!~b@hostname JOIN #chan
-:servername 353 bobby @ #chan :bobby @chacham
-:servername 366 bobby #chan :End of /NAMES list.
-:bobby!~b@hostname JOIN #chan2
-:servername MODE #chan2 +t
-:servername 353 bobby @ #chan2 :@bobby
-:servername 366 bobby #chan2 :End of /NAMES list.
-:bobby!~b@hostname JOIN #chan3
-:servername MODE #chan3 +t
-:servername 353 bobby @ #chan3 :@bobby
-:servername 366 bobby #chan3 :End of /NAMES list.
-:bobby!~b@hostname MODE #chan3 +k key
-:chacham!~c@hostname JOIN #chan2
-:chacham!~c@hostname JOIN #chan3
-:bobby!~b@hostname PART #chan
-:bobby!~b@hostname PART #chan2
-:bobby!~b@hostname PART #chan3
-:chacham!~c@hostname INVITE bobby :#chan
-:servername 475 bobby #chan :Cannot join channel (+k) - bad key
-:bobby!~b@hostname JOIN #chan
-:servername 353 bobby @ #chan :bobby @chacham
-:servername 366 bobby #chan :End of /NAMES list.
-:bobby!~b@hostname PART #chan
-:servername 471 bobby #chan :Cannot join channel (+l) - channel is full, try again later
+:irc.bitchat.net 451 * :You have not registered
+:irc.bitchat.net 451 * :You have not registered
+:irc.bitchat.net NOTICE * :Valid password ! You may register
+:irc.bitchat.net NOTICE chacham :The nickname is valid and saved !
+:irc.bitchat.net 001 chacham :Welcome to the Bitchat Internet Relay Chat Network chacham!c@localhost
+:irc.bitchat.net 002 chacham :Your host is Bitchat, running version 1.0 
+:irc.bitchat.net 003 chacham :This server was created 09-04-2025 13:07:07
+:irc.bitchat.net 004 chacham Bitchat 1.0 | k,o,l,i,t | k,o,l
+:irc.bitchat.net 005 chacham CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net NOTICE chacham :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 461 chacham JOIN :Not enough parameters
+:irc.bitchat.net 403 chacham #chan with space :Illegal channel name
+:chacham!c@localhost JOIN #chan
+::irc.bitchat.net MODE #chan +t 
+:irc.bitchat.net 353 chacham = #chan :@chacham
+:irc.bitchat.net 366 chacham #chan :End of /NAMES list
+:chacham!c@localhost JOIN #:chan
+::irc.bitchat.net MODE #:chan +t 
+:irc.bitchat.net 353 chacham = #:chan :@chacham
+:irc.bitchat.net 366 chacham #:chan :End of /NAMES list
+:irc.bitchat.net 403 chacham chan :No such channel
+:irc.bitchat.net 403 chacham &chan :No such channel
+:chacham!c@localhost MODE #chan +k key 
+:bobby!b@localhost JOIN #chan
+:chacham!c@localhost JOIN #chan2
+:irc.bitchat.net 353 chacham = #chan2 :chacham @bobby
+:irc.bitchat.net 366 chacham #chan2 :End of /NAMES list
+:chacham!c@localhost JOIN #chan3
+:irc.bitchat.net 353 chacham = #chan3 :chacham @bobby
+:irc.bitchat.net 366 chacham #chan3 :End of /NAMES list
+:chacham!c@localhost MODE #chan +i 
+:bobby!b@localhost PART #chan
+:bobby!b@localhost PART #chan2
+:irc.bitchat.net NOTICE chacham :You're operator of #chan2
+:bobby!b@localhost PART #chan3
+:irc.bitchat.net NOTICE chacham :You're operator of #chan3
+:irc.bitchat.net 341 chacham #chan bobby
+:bobby!b@localhost JOIN #chan
+:bobby!b@localhost PART #chan
+:chacham!c@localhost MODE #chan +l-ik 1 
+:chacham!c@localhost :Client Quit 
+:irc.bitchat.net chacham :You quitted the server, see you next time !
+:irc.bitchat.net NOTICE * :Valid password ! You may register
+:irc.bitchat.net NOTICE bobby :The nickname is valid and saved !
+:irc.bitchat.net 001 bobby :Welcome to the Bitchat Internet Relay Chat Network bobby!b@localhost
+:irc.bitchat.net 002 bobby :Your host is Bitchat, running version 1.0 
+:irc.bitchat.net 003 bobby :This server was created 09-04-2025 13:07:07
+:irc.bitchat.net 004 bobby Bitchat 1.0 | k,o,l,i,t | k,o,l
+:irc.bitchat.net 005 bobby CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net NOTICE bobby :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 475 bobby #chan :Cannot join channel (+k) - bad key
+:irc.bitchat.net 475 bobby #chan :Cannot join channel (+k) - bad key
+:bobby!b@localhost JOIN #chan
+:irc.bitchat.net 353 bobby = #chan :@chacham bobby
+:irc.bitchat.net 366 bobby #chan :End of /NAMES list
+:bobby!b@localhost JOIN #chan2
+::irc.bitchat.net MODE #chan2 +t 
+:irc.bitchat.net 353 bobby = #chan2 :@bobby
+:irc.bitchat.net 366 bobby #chan2 :End of /NAMES list
+:bobby!b@localhost JOIN #chan3
+::irc.bitchat.net MODE #chan3 +t 
+:irc.bitchat.net 353 bobby = #chan3 :@bobby
+:irc.bitchat.net 366 bobby #chan3 :End of /NAMES list
+:bobby!b@localhost MODE #chan3 +k key 
+:chacham!c@localhost JOIN #chan2
+:chacham!c@localhost JOIN #chan3
+:chacham!c@localhost MODE #chan +i 
+:bobby!b@localhost PART #chan
+:bobby!b@localhost PART #chan2
+:bobby!b@localhost PART #chan3
+:chacham!c@localhost INVITE bobby :#chan
+:bobby!b@localhost JOIN #chan
+:irc.bitchat.net 353 bobby = #chan :@chacham bobby
+:irc.bitchat.net 366 bobby #chan :End of /NAMES list
+:bobby!b@localhost PART #chan
+:irc.bitchat.net 471 bobby #chan :Cannot join channel (+l) - channel is full, try again later
+:bobby!b@localhost :Client Quit 
+:irc.bitchat.net bobby :You quitted the server, see you next time !

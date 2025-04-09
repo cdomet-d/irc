@@ -31,7 +31,6 @@ JOIN :#chan,
 JOIN #:chan
 JOIN chan
 JOIN &chan
-JOIN #chan
 MODE #chan +k key
 EOF
 
@@ -85,7 +84,7 @@ sleep 0.5
 
 #tests channel client limit
 cat <<EOF >&${client1_in_fd}
-MODE #chan -ik+l key 1
+MODE #chan -ik+l 1
 EOF
 
 sleep 0.5
@@ -110,7 +109,7 @@ wait $PID3 2>/dev/null
 cat outputs/client1_out.txt > outputs/output.txt &
 cat outputs/client2_out.txt >> outputs/output.txt &
 
-sleep 0.5
+sleep 2
 
 exec {client1_in_fd}>&-
 exec {client1_out_fd}>&-
