@@ -29,10 +29,8 @@ USER c 0 * c
 PART
 PART #dontexist
 PART wrongchan
-JOIN #chan
-JOIN #chan2
-JOIN #chan3
-PART #chan,#chan2,#chan3 :im leaving. idiots.
+JOIN #chan,#chan2,#chan3
+PART #chan
 JOIN #chan
 EOF
 
@@ -45,8 +43,8 @@ PASS 0
 NICK bobby
 USER b 0 * b
 PART #chan
-JOIN #chan
-PART #chan
+JOIN #chan,#chan2,#chan3
+PART #chan,#chan2,#chan3 :im leaving. idiots.
 EOF
 
 sleep 0.5
