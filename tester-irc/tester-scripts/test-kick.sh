@@ -111,7 +111,7 @@ wait $PID3 2>/dev/null
 cat outputs/client1_out.txt > outputs/output.txt &
 cat outputs/client2_out.txt >> outputs/output.txt &
 
-sleep 0.5
+sleep 2
 
 exec {client1_in_fd}>&-
 exec {client1_out_fd}>&-
