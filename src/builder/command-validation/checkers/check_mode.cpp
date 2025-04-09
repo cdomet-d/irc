@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 17:57:07 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 13:40:37 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 	}
 	if (cmd[flag_].empty()) {
 		reply::send_(
-			cmd.getSender().getFd(),
-			ERR_NEEDMOREPARAMS(cmd.getSender().cliInfo.getNick(), "Mode"));
+			cmd.getSendFd(),
+			ERR_NEEDMOREPARAMS(cmd.getSendNick(), "Mode"));
 		return false;
 	}
 	return true;

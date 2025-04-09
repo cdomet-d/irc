@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:48:49 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:34 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/09 13:40:37 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void user(CmdSpec &cmd) {
 	sender.cliInfo.setUsername(cmd[username_][0]);
 	if (sender.cliInfo.getRegistration() == 1) {
 		sender.cliInfo.setRegistration(2);
-		reply::send_(cmd.getSender().getFd(),
+		reply::send_(cmd.getSendFd(),
 					RPL_USER(sender.cliInfo.getNick(), sender.cliInfo.getUsername()));
 	}
 	else if (sender.cliInfo.getRegistration() == 2)

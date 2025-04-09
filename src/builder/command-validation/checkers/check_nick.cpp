@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/07 17:06:04 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 13:40:37 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 bool check::nick(CmdSpec &cmd, size_t idx) {
 	if (cmd[nickname_].empty()) {
-		reply::send_(cmd.getSender().getFd(),
-					 ERR_NONICKNAMEGIVEN(cmd.getSender().cliInfo.getNick()));
+		reply::send_(cmd.getSendFd(),
+					 ERR_NONICKNAMEGIVEN(cmd.getSendNick()));
 		return (false);
 	}
 	cmd[nickname_].trimParam(idx, NICKLEN);
@@ -23,7 +23,7 @@ bool check::nick(CmdSpec &cmd, size_t idx) {
 	if (!check::nick_::syntaxIsValid(nick, cmd.getSender()))
 		return false;
 	if (check::exists(nick, cmd.serv_.getUsedNick())) {
-		reply::send_(cmd.getSender().getFd(), ERR_NICKNAMEINUSE(cmd.getSender().cliInfo.getNick(), nick));
+		reply::send_(cmd.getSendFd(), ERR_NICKNAMEINUSE(cmd.getSendNick(), nick));
 		return false;
 	}
 	return true;

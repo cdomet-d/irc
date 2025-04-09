@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:20:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 16:53:39 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 13:40:37 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,5 @@ void nick(CmdSpec &cmd) {
 		registrationCompleted(sender);
 		return ;
 	}
-	reply::send_(cmd.getSender().getFd(), RPL_NICK(sender.cliInfo.getNick()));
+	reply::send_(cmd.getSendFd(), RPL_NICK(sender.cliInfo.getNick()));
 }

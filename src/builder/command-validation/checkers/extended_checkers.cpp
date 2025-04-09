@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:50:22 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/04 17:57:21 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 13:40:37 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ bool check::kick(CmdSpec &cmd, size_t idx) {
 			continue;
 		}
 		if (!check::chans_::onChan(cmd[channel_][idx], tChan)) {
-			reply::send_(cmd.getSender().getFd(),
-						 ERR_USERNOTINCHANNEL(cmd.getSender().cliInfo.getNick(),
+			reply::send_(cmd.getSendFd(),
+						 ERR_USERNOTINCHANNEL(cmd.getSendNick(),
 											  cmd[target_][idx],
 											  cmd[channel_][idx]));
 			cmd[target_].rmParam(idx);

@@ -1,0 +1,18 @@
+BasedOn: GNU
+UseTab: Always
+IndentWidth: 4
+TabWidth: 4
+ReflowComments: false
+AllowShortBlocksOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Empty
+SplitEmptyFunction: false
+AlwaysBreakTemplateDeclarations: Yes
+BraceWrapping: 
+	AfterControlStatement: false
+	BeforeCatch: false
+	AfterFunction: false
+BreakBeforeBraces: Custom
+MaxEmptyLinesToKeep: 1
+SpacesInAngles: true
+ColumnLimit: 80
+NamespaceIndentation: All

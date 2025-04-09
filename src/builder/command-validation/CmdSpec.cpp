@@ -163,6 +163,14 @@ int CmdSpec::getRegistrationStage() const {
 	return (registrationStage_);
 }
 
+const std::string CmdSpec::getSendNick() const {
+	return sender_->cliInfo.getNick();
+}
+
+int CmdSpec::getSendFd() const {
+	return sender_->getFd();
+}
+
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/07 17:06:53 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 13:14:06 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,16 @@
 #define ERR_TOOMANYTARGETS(nickname, target) (":irc.bitchat.net 407 " + nickname + " " + target + " :Too many targets\r\n") //TODO : not used
 
 //registration_err_replies
-#define ERR_NICKNAMEINUSE(nickname, newNick) (":irc.bitchat.net 433 " + nickname + " " + newNick + " :Nickname is already in use\r\n")
-#define ERR_NOTREGISTERED(nickname) (":irc.bitchat.net 451 " + nickname + " :You have not registered\r\n")
 #define ERR_ALREADYREGISTRED(nickname) (":irc.bitchat.net 462 " + nickname + " :You may not reregister\r\n")
-#define ERR_PASSWDMISMATCH(nickname) (":irc.bitchat.net 464 " + nickname + " :Password incorrect\r\n")
-#define ERR_NOSUCHNICK(nickname, target) (":irc.bitchat.net 401 " + nickname + " " + target + " :No such nick/channel\r\n")
-#define ERR_NEEDPASS(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter password\r\n")
+#define ERR_BADCHAR(nickname, received) (":irc.bitchat.net NOTICE " + nickname + " :USER format should be <username> 0 * <realname>, is [" + received + "]\r\n")
 #define ERR_NEEDNICK(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter nickname\r\n")
-#define ERR_NEEDUSER(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter username\r\n")
 #define ERR_NEEDNICKORUSER(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter nickname or username\r\n")
+#define ERR_NEEDPASS(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter password\r\n")
+#define ERR_NEEDUSER(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter username\r\n")
+#define ERR_NICKNAMEINUSE(nickname, newNick) (":irc.bitchat.net 433 " + nickname + " " + newNick + " :Nickname is already in use\r\n")
+#define ERR_NOSUCHNICK(nickname, target) (":irc.bitchat.net 401 " + nickname + " " + target + " :No such nick/channel\r\n")
+#define ERR_NOTREGISTERED(nickname) (":irc.bitchat.net 451 " + nickname + " :You have not registered\r\n")
+#define ERR_PASSWDMISMATCH(nickname) (":irc.bitchat.net 464 " + nickname + " :Incorrect password\r\n")
 
 //RESPONDS_REPLIES
 //serv_replies
@@ -81,11 +82,12 @@
 #define NOTICE_REQUIRE_PASSWORD(nickname) (":irc.bitchat.net NOTICE " + nickname + " :You must provide a password using the PASS command before registration\r\n")
 #define PASS_SUCCESS(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Valid password ! You may register\r\n")
 #define RPL_NICK(nickname) (":irc.bitchat.net NOTICE " + nickname + " :The nickname is valid and saved !\r\n")
-#define RPL_USER(nickname, username) (":irc.bitchat.net NOTICE " + nickname + " :The Username " + username + " is valid and saved !\r\n")
-#define REG_COMPLETE(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Registration completed, you can join channels and start chatting !\r\n")
+#define RPL_USER(nickname, username) (":irc.bitchat.net NOTICE " + nickname + " :The username " + username + " is valid and saved !\r\n")
+#define REG_COMPLETE(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Registration complete! You can join channels and start chatting.\r\n")
 #define RPL_CHANOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " :You're operator of " + channel + "\r\n")
 #define RPL_CHANOPENOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " : You're no longer operator of " + channel + "\r\n")
-#define RPL_BYEYBE(nickname) (":irc.bitchat.net " + nickname + " :You quitted the server, see you next time !\r\n")
+#define RPL_BYEYBE(nickname) (":irc.bitchat.net " + nickname + " :You quit the server, see you next time !\r\n")
+
 //command_replies (uses prefix)
 #define RPL_INVITE(prefix, target, channel) (":" + prefix + " INVITE " + target + " :" + channel + "\r\n")
 #define RPL_JOIN(prefix, channel) (":" + prefix + " JOIN :" + channel + "\r\n")

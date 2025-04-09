@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 17:56:58 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 13:40:37 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,8 @@ bool check::join_::cliHasMaxChans(Channel &chan, Client &sender) {
 
 bool check::join_::syntaxIsValid(CmdSpec &cmd, size_t idx) {
 	if (cmd[channel_][idx][0] != '#') {
-		reply::send_(cmd.getSender().getFd(),
-					 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
+		reply::send_(cmd.getSendFd(),
+					 ERR_NOSUCHCHANNEL(cmd.getSendNick(),
 									   cmd[channel_][idx]));
 		return false;
 	}
