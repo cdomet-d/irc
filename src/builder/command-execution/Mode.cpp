@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 16:46:25 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:42:15 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,10 @@ void executeL(std::string flag, std::string param, Channel &curChan) {
 		errno = 0;
 		double result = strtod(param.c_str(), &endptr);
 
-		//if err of strtod, the maxCli of the channel will be set to the maxCi of the server so 50
-		if (errno == ERANGE || *endptr != '\0' || result < 0 ||
-			result > std::numeric_limits< int >::max()) {
+		// if err of strtod, the maxCli of the channel will be set to the maxCi of
+		// the server so 50
+		if (errno == ERANGE || *endptr != '\0' || result < 0
+			|| result > std::numeric_limits< int >::max()) {
 			curChan.setMaxCli(50);
 			curChan.setModes();
 		} else {
@@ -111,7 +112,7 @@ void executeL(std::string flag, std::string param, Channel &curChan) {
 }
 
 int findFlagLevel(std::string level) {
-	std::string flag[5] = {"o", "i", "t", "k", "l"};
+	std::string flag[5] = { "o", "i", "t", "k", "l" };
 	for (int i = 0; i < 5; i++) {
 		if (level.find(flag[i]) != std::string::npos)
 			return (i);
@@ -120,8 +121,8 @@ int findFlagLevel(std::string level) {
 }
 
 void executeFlag(std::string flag, std::string param, Channel &curChan) {
-	modesFunc flagExecutor[5] = {&executeO, &executeI, &executeT, &executeK,
-								 &executeL};
+	modesFunc flagExecutor[5]
+		= { &executeO, &executeI, &executeT, &executeK, &executeL };
 	int flagLevel = findFlagLevel(flag);
 
 	if (flagLevel != -1)
@@ -137,46 +138,47 @@ Channel &findCurChan(std::string chanName) {
 	return (*curChanIt->second);
 }
 
-void sendModeMessages(std::string &first, std::string &second, Channel &curChan,
-					  std::string nick) {
-	std::string messages = RPL_CHANNELMODEIS(nick, curChan.getName(), first) +
-						   RPL_CHANNELMODEIS(nick, curChan.getName(), second);
+void sendModeMessages(std::string &first, std::string &second,
+					  Channel &curChan, std::string nick) {
+	std::string messages
+		= RPL_CHANNELMODEIS(nick, curChan.getName(), first)
+		  + RPL_CHANNELMODEIS(nick, curChan.getName(), second);
 	sendMessageChannel(curChan.getCliInChan(), messages);
 }
 
 void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
-    std::string negMode = "-";
-    std::string posMode = "+";
-    std::string newPassMaxCli = " ";
+	std::string negMode = "-";
+	std::string posMode = "+";
+	std::string newPassMaxCli = " ";
 
-    for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
-        if (cmd[flag_][nbFlag].find("+") != std::string::npos) {
-            if (cmd[flag_][nbFlag] == "+l" || cmd[flag_][nbFlag] == "+k")
-                newPassMaxCli.append(cmd[flagArg_][nbFlag] + " ");
-            posMode += cmd[flag_][nbFlag][1];
-        }
-        if (cmd[flag_][nbFlag].find("-") != std::string::npos)
-            negMode += cmd[flag_][nbFlag][1];
-    }
-    posMode.append(newPassMaxCli);
-    if (!strcmp("-", negMode.c_str()) && negMode.size() == 1) {
-        sendMessageChannel(curChan.getCliInChan(),
-                           RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
-                                             curChan.getName(), posMode));
-        return;
-    }
+	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
+		if (cmd[flag_][nbFlag].find("+") != std::string::npos) {
+			if (cmd[flag_][nbFlag] == "+l" || cmd[flag_][nbFlag] == "+k")
+				newPassMaxCli.append(cmd[flagArg_][nbFlag] + " ");
+			posMode += cmd[flag_][nbFlag][1];
+		}
+		if (cmd[flag_][nbFlag].find("-") != std::string::npos)
+			negMode += cmd[flag_][nbFlag][1];
+	}
+	posMode.append(newPassMaxCli);
+	if (!strcmp("-", negMode.c_str()) && negMode.size() == 1) {
+		sendMessageChannel(curChan.getCliInChan(),
+						   RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
+											 curChan.getName(), posMode));
+		return;
+	}
 
-    if (!strcmp("-", posMode.c_str()) && posMode.size() == 1) {
-        sendMessageChannel(curChan.getCliInChan(),
-                           RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
-                                             curChan.getName(), negMode));
-        return;
-    }
+	if (!strcmp("-", posMode.c_str()) && posMode.size() == 1) {
+		sendMessageChannel(curChan.getCliInChan(),
+						   RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
+											 curChan.getName(), negMode));
+		return;
+	}
 
-    (cmd[flag_][0][0] == '+')
-        ? sendModeMessages(posMode, negMode, curChan, sender->cliInfo.getNick())
-        : sendModeMessages(negMode, posMode, curChan,
-                           sender->cliInfo.getNick());
+	(cmd[flag_][0][0] == '+') ? sendModeMessages(posMode, negMode, curChan,
+												 sender->cliInfo.getNick())
+							  : sendModeMessages(negMode, posMode, curChan,
+												 sender->cliInfo.getNick());
 }
 
 void mode(CmdSpec &cmd) {

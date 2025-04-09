@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 17:57:11 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:12:17 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,31 +14,26 @@
 
 bool check::nick(CmdSpec &cmd, size_t idx) {
 	if (cmd[nickname_].empty()) {
-		reply::send_(cmd.getSender().getFd(),
-					 ERR_NONICKNAMEGIVEN(cmd.getSender().cliInfo.getNick()));
+		reply::send_(cmd.getSdFd(), ERR_NONICKNAMEGIVEN(cmd.getSdNick()));
 		return (false);
 	}
-	std::string nick = cmd[nickname_][idx];
-	if (nick.size() > 9) {
-		nick = nick.substr(0, 9);
-		cmd[nickname_].rmParam(idx);
-		cmd[nickname_].setOneParam(nick);
-	}
+	cmd[nickname_].trimParam(idx, NICKLEN);
+	std::string &nick = cmd[nickname_][idx];
 	if (!check::nick_::syntaxIsValid(nick, cmd.getSender()))
 		return false;
 	if (check::exists(nick, cmd.serv_.getUsedNick())) {
-		reply::send_(cmd.getSender().getFd(), ERR_NICKNAMEINUSE(cmd.getSender().cliInfo.getNick(), nick));
+		reply::send_(cmd.getSdFd(), ERR_NICKNAMEINUSE(cmd.getSdNick(), nick));
 		return false;
 	}
 	return true;
 }
 
-//TODO: why are we passing nick in param here ?
+// TODO: why are we passing nick in param here ?
 bool check::nick_::syntaxIsValid(const std::string &nick,
 								 const Client &sender) {
-	std::string badFirst(": illegal first char (should be a letter), is "),
+	std::string badFirst(": illegal first char: expected [Aa -Zz], is "),
 		illegal(
-			": illegal char (should be a letter, a digit or -[]\\`^{}), is ");
+			": illegal char: expected [Aa -Zz], [0 - 9] or [-[]\\`^{}], is ");
 
 	std::string::const_iterator start = nick.begin();
 	if (!isalpha(*start)) {

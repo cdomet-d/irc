@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:48:49 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:34 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:07:36 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void registrationCompleted(Client &sender) {
 	sender.cliInfo.setRegistration(3);
 	sender.cliInfo.setPrefix();
 	reply::send_(sender.getFd(), RPL_WELCOME(sender.cliInfo.getNick(),
-											  sender.cliInfo.getPrefix()));
+											 sender.cliInfo.getPrefix()));
 	reply::send_(sender.getFd(), RPL_YOURHOST(sender.cliInfo.getNick()));
 	reply::send_(sender.getFd(),
 				 RPL_CREATED(sender.cliInfo.getNick(), timeStamp()));
@@ -40,9 +40,8 @@ void user(CmdSpec &cmd) {
 	sender.cliInfo.setUsername(cmd[username_][0]);
 	if (sender.cliInfo.getRegistration() == 1) {
 		sender.cliInfo.setRegistration(2);
-		reply::send_(cmd.getSender().getFd(),
-					RPL_USER(sender.cliInfo.getNick(), sender.cliInfo.getUsername()));
-	}
-	else if (sender.cliInfo.getRegistration() == 2)
+		reply::send_(cmd.getSdFd(), RPL_USER(sender.cliInfo.getNick(),
+											 sender.cliInfo.getUsername()));
+	} else if (sender.cliInfo.getRegistration() == 2)
 		registrationCompleted(sender);
 }

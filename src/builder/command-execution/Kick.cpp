@@ -36,7 +36,8 @@ void kick(CmdSpec &cmd) {
 	for (size_t nbTarget = 0; nbTarget < cmd[target_].size(); nbTarget++) {
 		for (clientMapIt targetIt = curChan.getCliInChan().begin();
 			 targetIt != curChan.getCliInChan().end(); ++targetIt) {
-			if (targetIt->second->cliInfo.getNick() == cmd[target_][nbTarget]) {
+			if (targetIt->second->cliInfo.getNick()
+				== cmd[target_][nbTarget]) {
 				target = targetIt->second;
 				break;
 			}

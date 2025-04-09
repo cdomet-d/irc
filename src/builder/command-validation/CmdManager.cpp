@@ -19,11 +19,11 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdManager::CmdManager(void) {
+CmdManager::CmdManager() {
 	std::cout << "Cmd Manager instace created" << std::endl;
 }
 
-CmdManager::~CmdManager(void) {
+CmdManager::~CmdManager() {
 	for (cmdMap::iterator it = commandList_.begin(); it != commandList_.end();
 		 it++) {
 		delete it->second;

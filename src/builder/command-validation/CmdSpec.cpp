@@ -16,14 +16,15 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
+CmdSpec::CmdSpec(const std::string name, int registrationStage,
+				 paramMap params,
 				 std::vector< bool (*)(CmdSpec &, size_t) > checkers,
 				 void (*cmExecutor)(CmdSpec &cmd))
 	: serv_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
 	  name_(name), registrationStage_(registrationStage), params_(params),
 	  checkers_(checkers), cmExecutor_(cmExecutor) {}
 
-CmdSpec::~CmdSpec(void) {
+CmdSpec::~CmdSpec() {
 	for (paramMap::iterator it = params_.begin(); it != params_.end(); it++) {
 		delete it->second;
 	}
@@ -48,14 +49,15 @@ const CmdParam &CmdSpec::operator[](e_param type) const {
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-bool CmdSpec::checkRegistrationStage(void) {
+bool CmdSpec::checkRegistrationStage() {
 	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
 		valid_ = false;
 		if (sender_->cliInfo.getRegistration() == 0)
 			reply::send_(sender_->getFd(),
 						 ERR_NEEDPASS(sender_->cliInfo.getNick()));
 		else
-			reply::send_(sender_->getFd(), ERR_NOTREGISTERED(sender_->cliInfo.getNick()));
+			reply::send_(sender_->getFd(),
+						 ERR_NOTREGISTERED(sender_->cliInfo.getNick()));
 		return (false);
 	}
 	return (true);
@@ -67,8 +69,8 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	if (!checkRegistrationStage())
 		return (*this);
 	setParam();
-	if (name_ == "INVITE" && !(*this)[target_].size() &&
-		!(*this)[channel_].size())
+	if (name_ == "INVITE" && !(*this)[target_].size()
+		&& !(*this)[channel_].size())
 		return (*this);
 	hasParamList();
 	// displayParams();
@@ -81,7 +83,7 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	return (*this);
 }
 
-void CmdSpec::cleanAll(void) {
+void CmdSpec::cleanAll() {
 	for (size_t i = 0; i < params_.size(); i++) {
 		(*params_[i].second).clean();
 	}
@@ -139,28 +141,36 @@ void CmdSpec::displayParams(const std::string &where) {
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-const std::string &CmdSpec::getName(void) const {
+const std::string &CmdSpec::getName() const {
 	return (name_);
 }
 
-bool CmdSpec::getValid(void) const {
+bool CmdSpec::getValid() const {
 	return (valid_);
 }
 
-void (*CmdSpec::getExecutor(void) const)(CmdSpec &cmd) {
+void (*CmdSpec::getExecutor() const)(CmdSpec &cmd) {
 	return (cmExecutor_);
 }
 
-Client &CmdSpec::getSender(void) const {
+Client &CmdSpec::getSender() const {
 	return (*sender_);
 }
 
-const paramMap &CmdSpec::getParams(void) const {
+const paramMap &CmdSpec::getParams() const {
 	return (params_);
 }
 
 int CmdSpec::getRegistrationStage() const {
 	return (registrationStage_);
+}
+
+const std::string CmdSpec::getSdNick() const {
+	return sender_->cliInfo.getNick();
+}
+
+int CmdSpec::getSdFd() const {
+	return sender_->getFd();
 }
 
 /* ************************************************************************** */
@@ -170,15 +180,16 @@ void CmdSpec::setSender(Client &sender) {
 	sender_ = &sender;
 }
 
-void CmdSpec::setParam(void) {
-	for (size_t i = 0; i < params_.size() && i < sender_->mess.getSize(); i++) {
+void CmdSpec::setParam() {
+	for (size_t i = 0; i < params_.size() && i < sender_->mess.getSize();
+		 i++) {
 		try {
 			(*params_[i].second).setOneParam(sender_->mess[i + 1]);
 		} catch (const std::out_of_range &e) {}
 	}
 }
 
-void CmdSpec::hasParamList(void) {
+void CmdSpec::hasParamList() {
 	for (size_t i = 0; i < params_.size(); i++) {
 		CmdParam &innerParam = *params_[i].second;
 		if (innerParam.isList()) {
@@ -193,13 +204,13 @@ void CmdSpec::hasParamList(void) {
 /* ************************************************************************** */
 /*                               NESTED CLASS                                 */
 /* ************************************************************************** */
-CmdSpec::CmdBuilder::CmdBuilder(void) {
+CmdSpec::CmdBuilder::CmdBuilder() {
 	name_ = "";
 	registrationStage_ = 0;
 	cmExecutor_ = NULL;
 }
 
-CmdSpec::CmdBuilder::~CmdBuilder(void) {}
+CmdSpec::CmdBuilder::~CmdBuilder() {}
 
 /* methods */
 CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::Name(const std::string &name) {
@@ -224,7 +235,8 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(bool (*ft)(CmdSpec &cmd,
 	return (*this);
 }
 
-CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::CmExecutor(void (*ft)(CmdSpec &cmd)) {
+CmdSpec::CmdBuilder &
+CmdSpec::CmdBuilder::CmExecutor(void (*ft)(CmdSpec &cmd)) {
 	cmExecutor_ = ft;
 	return (*this);
 }

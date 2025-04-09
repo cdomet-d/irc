@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 18:07:58 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:42:26 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,11 @@ std::string buildNickList(clientMap curMap, Client *sender, Channel &curChan) {
 }
 
 void who(CmdSpec &cmd) {
-	(void)cmd;
 	Client *sender = &cmd.getSender();
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 	std::string nickList;
 
-	//TODO: check that flag o is functional
+	// TODO: check that flag o is functional
 
 	if (!cmd[flag_].empty() && cmd[flag_][0] == "o") {
 		nickList = buildNickList(curChan.getOpCli(), sender, curChan);

@@ -32,7 +32,7 @@ void part(CmdSpec &cmd);
 void privmsg(CmdSpec &cmd);
 void quit(CmdSpec &cmd);
 
-//UTILS
+// UTILS
 Channel &findCurChan(std::string chanName);
 Channel *createChan(const std::string &chanName);
 void checkOnlyOperator(Channel *curChan);
@@ -40,4 +40,4 @@ void partOneChan(Client *sender, Channel &curChan);
 void partAllChans(Client *sender);
 void registrationCompleted(Client &sender);
 
-#endif ///CMDEXECUTION_HPP
+#endif /// CMDEXECUTION_HPP

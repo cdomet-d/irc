@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 17:56:48 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:07:36 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,14 @@ bool check::chan(CmdSpec &cmd, size_t idx) {
 		channel = cmd[channel_][idx];
 
 	if (!check::exists(channel, cmd.serv_.getAllChan())) {
-		reply::send_(cmd.getSender().getFd(),
-					 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
-									   channel));
+		reply::send_(cmd.getSdFd(),
+					 ERR_NOSUCHCHANNEL(cmd.getSdNick(), channel));
 		return (false);
 	}
 	stringVec userChan = cmd.getSender().getJoinedChans();
 	if (!check::chans_::onChan(channel, userChan)) {
-		reply::send_(cmd.getSender().getFd(),
-					 ERR_NOTONCHANNEL(cmd.getSender().cliInfo.getNick(),
-									  channel));
+		reply::send_(cmd.getSdFd(),
+					 ERR_NOTONCHANNEL(cmd.getSdNick(), channel));
 		return (false);
 	}
 	return (true);
@@ -47,19 +45,18 @@ bool check::chans_::isOp(CmdSpec &cmd, size_t idx) {
 	itChan = cmd.serv_.getAllChan().find(cmd[channel_][idx]);
 	Channel chan = *itChan->second;
 
-	if (cmd.getName() == "TOPIC" &&
-		(cmd[topic_].empty() ||
-		 chan.getModes().find('t') == std::string::npos)) {
+	if (cmd.getName() == "TOPIC"
+		&& (cmd[topic_].empty()
+			|| chan.getModes().find('t') == std::string::npos)) {
 		return (true);
 	}
 
 	clientMap::const_iterator itCl;
 
-	itCl = chan.getOpCli().find(cmd.getSender().getFd());
+	itCl = chan.getOpCli().find(cmd.getSdFd());
 	if (itCl == chan.getOpCli().end()) {
-		reply::send_(cmd.getSender().getFd(),
-					 ERR_CHANOPRIVSNEEDED(cmd.getSender().cliInfo.getNick(),
-										  chan.getName()));
+		reply::send_(cmd.getSdFd(),
+					 ERR_CHANOPRIVSNEEDED(cmd.getSdNick(), chan.getName()));
 		return (false);
 	}
 	return (true);

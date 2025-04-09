@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:13 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:41:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Channel::Channel(std::string name)
 	setModes();
 }
 
-Channel::~Channel(void) {
+Channel::~Channel() {
 	// reply::INFO, "Channel deleted:", this->getName());
 }
 
@@ -45,8 +45,9 @@ bool Channel::addClientToChan(Channel *curChan, Client *sender) {
 
 	for (clientMapIt itCli = curChan->getCliInChan().begin();
 		 itCli != curChan->getCliInChan().end(); ++itCli) {
-		reply::send_(itCli->second->getFd(),
-					 RPL_JOIN(sender->cliInfo.getPrefix(), curChan->getName()));
+		reply::send_(
+			itCli->second->getFd(),
+			RPL_JOIN(sender->cliInfo.getPrefix(), curChan->getName()));
 	}
 	if (curChan->getTopic().empty() == true)
 		reply::send_(sender->getFd(), RPL_NOTOPIC(sender->cliInfo.getNick(),
@@ -60,8 +61,8 @@ bool Channel::addClientToChan(Channel *curChan, Client *sender) {
 												  curChan->getName()));
 		curChan->addCli(OPCLI, sender);
 	}
-	if (curChan->getInvitCli().find(sender->getFd()) !=
-		curChan->getInvitCli().end())
+	if (curChan->getInvitCli().find(sender->getFd())
+		!= curChan->getInvitCli().end())
 		curChan->removeCli(INVITECLI, sender->getFd());
 
 	return (true);
