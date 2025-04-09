@@ -24,41 +24,41 @@
 #include <unistd.h>
 
 class Client {
-public:
-  /*                               CONSTRUCTORS                             */
-  Client(void);
-  ~Client(void);
+  public:
+	/*                               CONSTRUCTORS                             */
+	Client (void);
+	~Client (void);
 
-  /*                               GETTERS                                  */
-  int getFd() const;
-  const stringVec &getJoinedChans() const;
-  struct epoll_event *getCliEpoll();
+	/*                               GETTERS                                  */
+	int getFd () const;
+	const stringVec &getJoinedChans () const;
+	struct epoll_event *getCliEpoll ();
 
-  /*                               SETTERS                                  */
-  void setCliEpoll(struct epoll_event epoll);
-  void setFd(int fd);
+	/*                               SETTERS                                  */
+	void setCliEpoll (struct epoll_event epoll);
+	void setFd (int fd);
 
-  /*                               MEMBERS                                  */
-  void removeOneChan(std::string chanName);
-  void addOneChan(std::string chanName);
+	/*                               MEMBERS                                  */
+	void removeOneChan (std::string chanName);
+	void addOneChan (std::string chanName);
 
-  Message mess;
-  struct sockaddr_in cliAddr_;
-  UserInfo cliInfo;
+	Message mess;
+	struct sockaddr_in cliAddr_;
+	UserInfo cliInfo;
 
-private:
-  /*                               MEMBERS                                  */
-  // sockets
-  int cliFd_;
-  struct epoll_event cliEpoll_;
+  private:
+	/*                               MEMBERS                                  */
+	// sockets
+	int cliFd_;
+	struct epoll_event cliEpoll_;
 
-  // channels
-  stringVec joinedChans_;
-  stringVec invitedChans_;
+	// channels
+	stringVec joinedChans_;
+	stringVec invitedChans_;
 
-  // private constructors
-  Client &operator=(const Client &rhs);
-  Client(const Client &rhs);
+	// private constructors
+	Client &operator= (const Client &rhs);
+	Client (const Client &rhs);
 };
 
 #endif

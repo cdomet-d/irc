@@ -15,44 +15,44 @@
 
 #include <string>
 class UserInfo {
-public:
-  /*                               ORTHODOX CLASS                           */
-  UserInfo(void);
-  ~UserInfo(void);
+  public:
+	/*                               ORTHODOX CLASS                           */
+	UserInfo (void);
+	~UserInfo (void);
 
-  /*                               METHODS                                  */
+	/*                               METHODS                                  */
 
-  /*                               GETTERS                                  */
-  int getRegistration() const;
-  std::string getHostname() const;
-  std::string getIP() const;
-  std::string getName() const;
-  std::string getNick() const;
-  std::string getPrefix() const;
-  std::string getRealName() const;
-  std::string getUsername() const;
+	/*                               GETTERS                                  */
+	int getRegistration () const;
+	std::string getHostname () const;
+	std::string getIP () const;
+	std::string getName () const;
+	std::string getNick () const;
+	std::string getPrefix () const;
+	std::string getRealName () const;
+	std::string getUsername () const;
 
-  /*                               SETTERS                                  */
-  void setHostname(std::string hostname);
-  void setIP(std::string ip);
-  void setNick(const std::string &newNick);
-  void setPrefix();
-  void setRegistration(int stage);
-  void setUsername(const std::string &username);
+	/*                               SETTERS                                  */
+	void setHostname (std::string hostname);
+	void setIP (std::string ip);
+	void setNick (const std::string &newNick);
+	void setPrefix ();
+	void setRegistration (int stage);
+	void setUsername (const std::string &username);
 
-private:
-  int registration_;
-  std::string hostname_;
-  std::string ip_;
-  std::string name_;
-  std::string nick_;
-  std::string pass_;
-  std::string prefix_;
-  std::string realName_;
-  std::string username_;
+  private:
+	int registration_;
+	std::string hostname_;
+	std::string ip_;
+	std::string name_;
+	std::string nick_;
+	std::string pass_;
+	std::string prefix_;
+	std::string realName_;
+	std::string username_;
 
-  UserInfo(const UserInfo &rhs);
-  UserInfo &operator=(const UserInfo &rhs);
+	UserInfo (const UserInfo &rhs);
+	UserInfo &operator= (const UserInfo &rhs);
 };
 
 #endif

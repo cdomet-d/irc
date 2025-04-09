@@ -18,25 +18,27 @@
 
 int gSign = false;
 
-void SignalHandler(int signum) {
-  (void)signum;
-  gSign = true;
+void
+SignalHandler (int signum) {
+	(void)signum;
+	gSign = true;
 }
 
-int main(int ac, char *av[]) {
-  if (ac != 3)
-    return (std::cerr << "Expected <port> <password>" << std::endl, 1);
+int
+main (int ac, char *av[]) {
+	if (ac != 3)
+		return (std::cerr << "Expected <port> <password>" << std::endl, 1);
 
-  signal(SIGINT, SignalHandler);
-  signal(SIGQUIT, SignalHandler);
-  int port = atoi(av[1]); // TODO: protect atoi from overflow
-  std::string password = av[2];
+	signal (SIGINT, SignalHandler);
+	signal (SIGQUIT, SignalHandler);
+	int port = atoi (av[1]); // TODO: protect atoi from overflow
+	std::string password = av[2];
 
-  Server &server = Server::GetServerInstance(port, password);
-  CmdManager &cmManager = CmdManager::getManagerInstance();
+	Server &server = Server::GetServerInstance (port, password);
+	CmdManager &cmManager = CmdManager::getManagerInstance ();
 
-  cmManager.generateCmds();
-  server.servInit();
-  server.servRun();
-  return (0);
+	cmManager.generateCmds ();
+	server.servInit ();
+	server.servRun ();
+	return (0);
 }

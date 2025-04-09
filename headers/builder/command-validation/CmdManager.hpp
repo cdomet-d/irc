@@ -17,32 +17,35 @@
 #include <iostream>
 #include <map>
 
-typedef std::map<std::string, CmdSpec *> cmdMap;
+typedef std::map< std::string, CmdSpec * > cmdMap;
 
 class CmdManager {
-public:
-  /*                               CONSTRUCTORS                             */
-  static CmdManager &getManagerInstance();
-  ~CmdManager(void);
-
-  /*                               METHODS                                  */
-  CmdSpec &findCmd(const std::string &cmName);
-  bool executeCm(CmdSpec &cm);
-  void generateCmds();
-  void log(CmdSpec *cm);
-
-  /*                               NESTED CLASS                             */
-  class CmdNotFoundException : std::exception {
   public:
-    const char *what() const throw() { return ("Command not found"); }
-  };
+	/*                               CONSTRUCTORS                             */
+	static CmdManager &getManagerInstance ();
+	~CmdManager (void);
 
-private:
-  /*                               MEMBERS                                  */
-  cmdMap commandList_;
+	/*                               METHODS                                  */
+	CmdSpec &findCmd (const std::string &cmName);
+	bool executeCm (CmdSpec &cm);
+	void generateCmds ();
+	void log (CmdSpec *cm);
 
-  // private constructor
-  CmdManager(void);
+	/*                               NESTED CLASS                             */
+	class CmdNotFoundException : std::exception {
+	  public:
+		const char *
+		what () const throw () {
+			return ("Command not found");
+		}
+	};
+
+  private:
+	/*                               MEMBERS                                  */
+	cmdMap commandList_;
+
+	// private constructor
+	CmdManager (void);
 };
 
 #endif

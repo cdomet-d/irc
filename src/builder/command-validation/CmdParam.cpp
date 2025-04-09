@@ -15,71 +15,102 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdParam::CmdParam(void) : opt_(false), list_(false) {}
+CmdParam::CmdParam (void) : opt_ (false), list_ (false) {}
 
-CmdParam::CmdParam(const bool opt, const bool list) : opt_(opt), list_(list) {}
+CmdParam::CmdParam (const bool opt, const bool list)
+	: opt_ (opt), list_ (list) {}
 
-CmdParam::CmdParam(const CmdParam &rhs) { *this = rhs; }
+CmdParam::CmdParam (const CmdParam &rhs) {
+	*this = rhs;
+}
 
-CmdParam::~CmdParam(void) {}
+CmdParam::~CmdParam (void) {}
 
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-std::string &CmdParam::operator[](size_t i) {
-  if (i >= innerParam_.size())
-    throw std::out_of_range("Param not found");
-  return (innerParam_[i]);
+std::string &
+CmdParam::operator[] (size_t i) {
+	if (i >= innerParam_.size ())
+		throw std::out_of_range ("Param not found");
+	return (innerParam_[i]);
 }
 
-const std::string &CmdParam::operator[](size_t i) const {
-  if (i >= innerParam_.size())
-    throw std::out_of_range("Param not found");
-  return (innerParam_[i]);
+const std::string &
+CmdParam::operator[] (size_t i) const {
+	if (i >= innerParam_.size ())
+		throw std::out_of_range ("Param not found");
+	return (innerParam_[i]);
 }
 
-CmdParam &CmdParam::operator=(const CmdParam &rhs) {
-  if (this != &rhs) {
-    opt_ = rhs.isOpt();
-    list_ = rhs.isList();
-    innerParam_ = rhs.getInnerParam();
-  }
-  return (*this);
+CmdParam &
+CmdParam::operator= (const CmdParam &rhs) {
+	if (this != &rhs) {
+		opt_ = rhs.isOpt ();
+		list_ = rhs.isList ();
+		innerParam_ = rhs.getInnerParam ();
+	}
+	return (*this);
 }
 
-bool CmdParam::empty() { return innerParam_.begin() == innerParam_.end(); }
-
-size_t CmdParam::size(void) const { return (innerParam_.size()); }
-
-void CmdParam::rmParam(size_t pos) {
-  innerParam_.erase(innerParam_.begin() + pos);
+bool
+CmdParam::empty () {
+	return innerParam_.begin () == innerParam_.end ();
 }
 
-void CmdParam::addOne(size_t pos) {
-  innerParam_.insert(innerParam_.begin() + pos, "");
+size_t
+CmdParam::size (void) const {
+	return (innerParam_.size ());
 }
 
-void CmdParam::clean(void) { innerParam_.clear(); }
+void
+CmdParam::rmParam (size_t pos) {
+	innerParam_.erase (innerParam_.begin () + pos);
+}
 
-bool CmdParam::isOpt(void) const { return (opt_); }
+void
+CmdParam::addOne (size_t pos) {
+	innerParam_.insert (innerParam_.begin () + pos, "");
+}
 
-bool CmdParam::isList(void) const { return (list_); }
+void
+CmdParam::clean (void) {
+	innerParam_.clear ();
+}
 
-void CmdParam::trimParam(size_t paramIdx, size_t lenToTrim) {
-  if ((innerParam_[paramIdx].size()) > lenToTrim)
-    innerParam_[paramIdx].erase(lenToTrim);
+bool
+CmdParam::isOpt (void) const {
+	return (opt_);
+}
+
+bool
+CmdParam::isList (void) const {
+	return (list_);
+}
+
+void
+CmdParam::trimParam (size_t paramIdx, size_t lenToTrim) {
+	if ((innerParam_[paramIdx].size ()) > lenToTrim)
+		innerParam_[paramIdx].erase (lenToTrim);
 }
 
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-const stringVec &CmdParam::getInnerParam(void) const { return (innerParam_); }
+const stringVec &
+CmdParam::getInnerParam (void) const {
+	return (innerParam_);
+}
 
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
-void CmdParam::setOneParam(std::string &buffer) {
-  innerParam_.push_back(buffer);
+void
+CmdParam::setOneParam (std::string &buffer) {
+	innerParam_.push_back (buffer);
 }
 
-void CmdParam::setParamList(const stringVec &buffer) { innerParam_ = buffer; }
+void
+CmdParam::setParamList (const stringVec &buffer) {
+	innerParam_ = buffer;
+}

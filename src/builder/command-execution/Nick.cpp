@@ -15,17 +15,18 @@
 #include "Reply.hpp"
 #include "Server.hpp"
 
-void nick(CmdSpec &cmd) {
-  Client &sender = cmd.getSender();
+void
+nick (CmdSpec &cmd) {
+	Client &sender = cmd.getSender ();
 
-  cmd.serv_.removeNickFromUsedNicks(sender.cliInfo.getNick());
-  sender.cliInfo.setNick(cmd[nickname_][0]);
-  cmd.serv_.addNickToUsedNicks(cmd[nickname_][0], sender.getFd());
-  if (sender.cliInfo.getRegistration() == 1)
-    sender.cliInfo.setRegistration(2);
-  else if (sender.cliInfo.getRegistration() == 2) {
-    registrationCompleted(sender);
-    return;
-  }
-  reply::send_(cmd.getSendFd(), RPL_NICK(sender.cliInfo.getNick()));
+	cmd.serv_.removeNickFromUsedNicks (sender.cliInfo.getNick ());
+	sender.cliInfo.setNick (cmd[nickname_][0]);
+	cmd.serv_.addNickToUsedNicks (cmd[nickname_][0], sender.getFd ());
+	if (sender.cliInfo.getRegistration () == 1)
+		sender.cliInfo.setRegistration (2);
+	else if (sender.cliInfo.getRegistration () == 2) {
+		registrationCompleted (sender);
+		return;
+	}
+	reply::send_ (cmd.getSendFd (), RPL_NICK (sender.cliInfo.getNick ()));
 }
