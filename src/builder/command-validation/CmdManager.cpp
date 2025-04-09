@@ -181,8 +181,13 @@ void CmdManager::log(CmdSpec *cm) {
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-CmdSpec &CmdManager::findCmd(const std::string &cmName) {
+CmdSpec &CmdManager::findCmd(std::string cmName) {
 	cmdMap::iterator it;
+
+	if (cmName.find_first_not_of("abcdefghijklmnopqrstuvwxyz") ==
+		std::string::npos)
+		for (size_t i = 0; i < cmName.size(); i++)
+			cmName[i] = std::toupper(cmName[i]);
 
 	it = commandList_.find(cmName);
 	if (it == commandList_.end()) {
