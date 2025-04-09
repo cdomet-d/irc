@@ -40,9 +40,10 @@ bool check::join_::assessRequest(Channel chan, CmdSpec &cmd, size_t idx) {
 	if (chan.getModes().find('l') != std::string::npos &&
 		!check::join_::chanHasRoom(chan, cmd.getSender()))
 		return (false);
-	if (chan.getModes().find("i") != std::string::npos &&
-		!check::join_::hasInvite(chan, cmd.getSender()))
-		return (false);
+	if (chan.getModes().find("i") != std::string::npos) {
+		if (!check::join_::hasInvite(chan, cmd.getSender()))
+			return (false);
+	}
 	else if (chan.getModes().find("k") != std::string::npos &&
 			 !check::join_::validKey(chan, cmd[key_], idx, cmd.getSender()))
 		return (false);
@@ -90,7 +91,8 @@ bool check::join_::cliHasMaxChans(Channel &chan, Client &sender) {
 bool check::join_::syntaxIsValid(CmdSpec &cmd, size_t idx) {
 	if (cmd[channel_][idx].size() == 1 && cmd[channel_][idx][0] == '0')
 		return (true);
-	if (cmd[channel_][idx][0] != '#') {
+	if (cmd[channel_][idx][0] != '#' ||
+		cmd[channel_][idx].find(" ") != std::string::npos) {
 		reply::send_(cmd.getSender().getFd(),
 					 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
 									   cmd[channel_][idx]));
