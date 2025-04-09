@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/09 15:26:38 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:39:54 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void kick(CmdSpec &cmd) {
 			sendMessageChannel(
 				curChan.getCliInChan(),
 				RPL_KICK(sender->cliInfo.getPrefix(), curChan.getName(),
-						 target->cliInfo.getNick(), cmd[message_][0]));
+						 target->cliInfo.getNick(), ":" + cmd[message_][0]));
 		else
 			sendMessageChannel(curChan.getCliInChan(),
 							   RPL_KICK(sender->cliInfo.getPrefix(),
