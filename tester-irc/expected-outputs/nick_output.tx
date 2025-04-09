@@ -1,36 +1,50 @@
-:servernam NOTICE * :Valid password ! You may register
-:servername 431 * :No nickname given
-:servername 432 * charlotte sweeting :illegal char (should be a letter, a digit or -[]\`^{}), is   :Erroneous nickname
-:servername 432 * #cha :illegal first char (should be a letter), is # :Erroneous Nickname
-:servername 432 * :cha :illegal first char (should be a letter), is : :Erroneous Nickname
-:servername 432 * 4cha :illegal first char (should be a letter), is 4 :Erroneous Nickname
-:servername 432 * -cha :illegal first char (should be a letter), is - :Erroneous Nickname
-:servername 432 * [cha :illegal first char (should be a letter), is [ :Erroneous Nickname
-:servername 432 * ]cha :illegal first char (should be a letter), is ] :Erroneous Nickname
-:servername 432 * \cha :illegal first char (should be a letter), is \ :Erroneous Nickname
-:servername 432 * `cha :illegal first char (should be a letter), is ` :Erroneous Nickname
-:servername 432 * ^cha :illegal first char (should be a letter), is ^ :Erroneous Nickname
-:servername 432 * {cha :illegal first char (should be a letter), is { :Erroneous Nickname
-:servername 432 * }cha :illegal first char (should be a letter), is } :Erroneous Nickname
-:servername 432 * +cha :illegal first char (should be a letter), is + :Erroneous Nickname
-:servername 432 * cha$ :illegal char (should be a letter, a digit or -[]\`^{}), is $ :Erroneous Nickname
-:servername NOTICE * :Introducing new nick "cha-[]\^4`{}"
-:servername NOTICE cha-[]\^4`{} :Registration complete
-:cha-[]\^4`{}!~c@hostname NICK :chacham
-:servername 432 chacham cha# :illegal char (should be a letter, a digit or -[]\`^{}), is # :Erroneous Nickname
-:servername 432 chacham cha: :illegal char (should be a letter, a digit or -[]\`^{}), is : :Erroneous Nickname
-:servername 431 * :No nickname given
-:chacham!~c@hostname JOIN #chan
-:servername MODE #chan +t
-:servername 353 chacham @ #chan :@chacham
-:servername 366 chacham #chan :End of /NAMES list.
-:bobby!~b@hostname JOIN #chan
-:chacham!~c@hostname NICK :sweet
-:servername NOTICE * : Valid password ! You may register
-:servername 433 * chacham :Nickname is already in use
-:servername NOTICE * :Introducing new nick "bobby"
-:servername NOTICE bobby :Registration complete
-:bobby!~b@hostname JOIN #chan
-:servername 353 bobby @ #chan :bobby @chacham
-:servername 366 bobby #chan :End of /NAMES list.
-:chacham!~c@hostname NICK :sweet
+:irc.bitchat.net NOTICE * :Valid password ! You may register
+:irc.bitchat.net 431 * :No nickname given
+:irc.bitchat.net 432 * charlotte sweet: illegal char: expected [Aa -Zz], [0 - 9] or [-[]\`^{}], is   :Erroneous nickname or username
+:irc.bitchat.net 432 * #cha: illegal first char: expected [Aa -Zz], is # :Erroneous nickname or username
+:irc.bitchat.net 432 * :cha: illegal first char: expected [Aa -Zz], is : :Erroneous nickname or username
+:irc.bitchat.net 432 * 4cha: illegal first char: expected [Aa -Zz], is 4 :Erroneous nickname or username
+:irc.bitchat.net 432 * -cha: illegal first char: expected [Aa -Zz], is - :Erroneous nickname or username
+:irc.bitchat.net 432 * [cha: illegal first char: expected [Aa -Zz], is [ :Erroneous nickname or username
+:irc.bitchat.net 432 * ]cha: illegal first char: expected [Aa -Zz], is ] :Erroneous nickname or username
+:irc.bitchat.net 432 * \cha: illegal first char: expected [Aa -Zz], is \ :Erroneous nickname or username
+:irc.bitchat.net 432 * `cha: illegal first char: expected [Aa -Zz], is ` :Erroneous nickname or username
+:irc.bitchat.net 432 * ^cha: illegal first char: expected [Aa -Zz], is ^ :Erroneous nickname or username
+:irc.bitchat.net 432 * {cha: illegal first char: expected [Aa -Zz], is { :Erroneous nickname or username
+:irc.bitchat.net 432 * }cha: illegal first char: expected [Aa -Zz], is } :Erroneous nickname or username
+:irc.bitchat.net 432 * +cha: illegal first char: expected [Aa -Zz], is + :Erroneous nickname or username
+:irc.bitchat.net 432 * cha$: illegal char: expected [Aa -Zz], [0 - 9] or [-[]\`^{}], is $ :Erroneous nickname or username
+:irc.bitchat.net NOTICE cha-[]\^4`{} :The nickname is valid and saved !
+:irc.bitchat.net 001 cha-[]\^4`{} :Welcome to the Bitchat Internet Relay Chat Network cha-[]\^4`{}!c@localhost
+:irc.bitchat.net 002 cha-[]\^4`{} :Your host is Bitchat, running version 1.0n:irc.bitchat.net 003 cha-[]\^4`{} :This server was created 09-04-2025 17:35:25
+:irc.bitchat.net 004 cha-[]\^4`{} Bitchat 1.0 | k,o,l,i,t | k,o,l
+:irc.bitchat.net 005 cha-[]\^4`{} CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net NOTICE cha-[]\^4`{} :Registration completed, you can join channels and start chatting !
+:cha-[]\^4`{}!c@localhost NICK :chacham
+:irc.bitchat.net 432 chacham cha#: illegal char: expected [Aa -Zz], [0 - 9] or [-[]\`^{}], is # :Erroneous nickname or username
+:irc.bitchat.net 432 chacham cha:: illegal char: expected [Aa -Zz], [0 - 9] or [-[]\`^{}], is : :Erroneous nickname or username
+:irc.bitchat.net 431 chacham :No nickname given
+:chacham!c@localhost JOIN #chan
+::irc.bitchat.net MODE #chan +t 
+:irc.bitchat.net 353 chacham = #chan :@chacham
+:irc.bitchat.net 366 chacham #chan :End of /NAMES list
+:bobby!b@localhost JOIN #chan
+:chacham!c@localhost NICK :sweet
+:sweet!c@localhost :Client Quit 
+:irc.bitchat.net sweet :You quitted the server, see you next time !
+:irc.bitchat.net NOTICE * :Valid password ! You may register
+:irc.bitchat.net 433 * chacham :Nickname is already in use
+:irc.bitchat.net NOTICE bobby :The nickname is valid and saved !
+:irc.bitchat.net 001 bobby :Welcome to the Bitchat Internet Relay Chat Network bobby!b@localhost
+:irc.bitchat.net 002 bobby :Your host is Bitchat, running version 1.0n:irc.bitchat.net 003 bobby :This server was created 09-04-2025 17:35:25
+:irc.bitchat.net 004 bobby Bitchat 1.0 | k,o,l,i,t | k,o,l
+:irc.bitchat.net 005 bobby CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net NOTICE bobby :Registration completed, you can join channels and start chatting !
+:bobby!b@localhost JOIN #chan
+:irc.bitchat.net 353 bobby = #chan :@chacham bobby
+:irc.bitchat.net 366 bobby #chan :End of /NAMES list
+:chacham!c@localhost NICK :sweet
+:sweet!c@localhost :Client Quit 
+:irc.bitchat.net NOTICE bobby :You're operator of #chan
+:bobby!b@localhost :Client Quit 
+:irc.bitchat.net bobby :You quitted the server, see you next time !
