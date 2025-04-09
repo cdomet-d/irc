@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/07 18:48:04 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:28:39 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void partOneChan(Client *sender, Channel &curChan) {
 	sender->removeOneChan(curChan.getName());
 	if (curChan.getOpCli().find(targetFd) != curChan.getOpCli().end())
 		curChan.removeCli(OPCLI, targetFd);
+	//TODO: call removeCli with INVITECLI ??
 }
 
 void partMess(Client *sender, Channel &curChan, const std::string &message) {
