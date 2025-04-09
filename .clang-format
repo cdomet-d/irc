@@ -13,5 +13,9 @@ BraceWrapping:
 BreakBeforeBraces: Custom
 MaxEmptyLinesToKeep: 1
 SpacesInAngles: true
-ColumnLimit: 80
+ColumnLimit: 79
 NamespaceIndentation: All
+SpaceBeforeParens: ControlStatements
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+RemoveParentheses: ReturnStatement

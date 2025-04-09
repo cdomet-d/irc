@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:42:01 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,25 @@
 
 int gSign = false;
 
-void
-SignalHandler (int signum) {
+void SignalHandler(int signum) {
 	(void)signum;
 	gSign = true;
 }
 
-int
-main (int ac, char *av[]) {
+int main(int ac, char *av[]) {
 	if (ac != 3)
 		return (std::cerr << "Expected <port> <password>" << std::endl, 1);
 
-	signal (SIGINT, SignalHandler);
-	signal (SIGQUIT, SignalHandler);
-	int port = atoi (av[1]); // TODO: protect atoi from overflow
+	signal(SIGINT, SignalHandler);
+	signal(SIGQUIT, SignalHandler);
+	int port = atoi(av[1]); // TODO: protect atoi from overflow
 	std::string password = av[2];
 
-	Server &server = Server::GetServerInstance (port, password);
-	CmdManager &cmManager = CmdManager::getManagerInstance ();
+	Server &server = Server::GetServerInstance(port, password);
+	CmdManager &cmManager = CmdManager::getManagerInstance();
 
-	cmManager.generateCmds ();
-	server.servInit ();
-	server.servRun ();
+	cmManager.generateCmds();
+	server.servInit();
+	server.servRun();
 	return (0);
 }

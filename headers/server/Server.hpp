@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 12:12:10 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:41:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,40 +32,40 @@ class Server {
 
   public:
 	/*                               ORTHODOX CLASS                           */
-	static Server &GetServerInstance (int port, std::string password);
-	~Server (void);
+	static Server &GetServerInstance(int port, std::string password);
+	~Server();
 
 	/*                               EXCEPTIONS                                */
 	class InitFailed : public std::exception {
 	  public:
-		InitFailed (const char *err);
-		const char *what () const throw ();
+		InitFailed(const char *err);
+		const char *what() const throw();
 
 	  private:
 		const char *errMessage;
 	};
 
 	/*                               METHODS                                  */
-	bool handleData (int fd);
-	bool servInit ();
-	bool servRun ();
-	void acceptClient ();
-	void addChan (Channel *curChan);
-	void addNickToUsedNicks (const std::string &newNick, int fd);
-	void removeNickFromUsedNicks (const std::string &toRemove);
-	void removeChan (Channel *curChan);
-	void removeCli (Client *curCli);
+	bool handleData(int fd);
+	bool servInit();
+	bool servRun();
+	void acceptClient();
+	void addChan(Channel *curChan);
+	void addNickToUsedNicks(const std::string &newNick, int fd);
+	void removeNickFromUsedNicks(const std::string &toRemove);
+	void removeChan(Channel *curChan);
+	void removeCli(Client *curCli);
 
 	/*                               GETTERS                                  */
-	const nickMap &getUsedNick () const;
-	int getFdFromNick (const std::string &nick) const;
-	const std::string getPass () const;
+	const nickMap &getUsedNick() const;
+	int getFdFromNick(const std::string &nick) const;
+	const std::string getPass() const;
 
 	/*                               MEMBERS                                  */
 	std::ofstream logfile;
 
-	const clientMap &getAllCli () const;
-	const channelMap &getAllChan () const;
+	const clientMap &getAllCli() const;
+	const channelMap &getAllChan() const;
 
   private:
 	/*                               METHODS                                  */
@@ -85,8 +85,8 @@ class Server {
 	nickMap usedNicks_;
 
 	// private constructor
-	Server (void);
-	Server (int port, std::string password);
+	Server();
+	Server(int port, std::string password);
 };
 
 #endif // SERVER_HPP

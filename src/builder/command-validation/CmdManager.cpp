@@ -19,12 +19,12 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdManager::CmdManager (void) {
+CmdManager::CmdManager() {
 	std::cout << "Cmd Manager instace created" << std::endl;
 }
 
-CmdManager::~CmdManager (void) {
-	for (cmdMap::iterator it = commandList_.begin (); it != commandList_.end ();
+CmdManager::~CmdManager() {
+	for (cmdMap::iterator it = commandList_.begin(); it != commandList_.end();
 		 it++) {
 		delete it->second;
 	}
@@ -33,170 +33,165 @@ CmdManager::~CmdManager (void) {
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-bool
-CmdManager::executeCm (CmdSpec &cm) {
-	if (cm.getValid ()) {
-		cm.getExecutor () (cm);
+bool CmdManager::executeCm(CmdSpec &cm) {
+	if (cm.getValid()) {
+		cm.getExecutor()(cm);
 	}
-	cm.cleanAll ();
-	if (cm.getName () == "QUIT")
+	cm.cleanAll();
+	if (cm.getName() == "QUIT")
 		return (true);
 	return (false);
 }
 
-void
-CmdManager::generateCmds () {
-	log (CmdSpec::CmdBuilder ()
-			 .Name ("PASS")
-			 .Registration (0)
-			 .addParam (password_, new CmdParam ())
-			 .addChecker (check::register_::stageDone)
-			 .addChecker (check::register_::isRegistered)
-			 .addChecker (check::enoughParams)
-			 .addChecker (check::register_::pwMatch)
-			 .CmExecutor (pass)
-			 .build ());
+void CmdManager::generateCmds() {
+	log(CmdSpec::CmdBuilder()
+			.Name("PASS")
+			.Registration(0)
+			.addParam(password_, new CmdParam())
+			.addChecker(check::register_::stageDone)
+			.addChecker(check::register_::isRegistered)
+			.addChecker(check::enoughParams)
+			.addChecker(check::register_::pwMatch)
+			.CmExecutor(pass)
+			.build());
 
-	log (CmdSpec::CmdBuilder ()
-			 .Name ("NICK")
-			 .Registration (1)
-			 .addParam (nickname_, new CmdParam ())
-			 .addChecker (check::register_::stageDone)
-			 .addChecker (check::nick)
-			 .CmExecutor (nick)
-			 .build ());
+	log(CmdSpec::CmdBuilder()
+			.Name("NICK")
+			.Registration(1)
+			.addParam(nickname_, new CmdParam())
+			.addChecker(check::register_::stageDone)
+			.addChecker(check::nick)
+			.CmExecutor(nick)
+			.build());
 
-	log (CmdSpec::CmdBuilder ()
-			 .Name ("USER")
-			 .Registration (1)
-			 .addParam (username_, new CmdParam ())
-			 .addParam (hostname_, new CmdParam ())
-			 .addParam (servername_, new CmdParam ())
-			 .addParam (realname_, new CmdParam ())
-			 .addChecker (check::register_::stageDone)
-			 .addChecker (check::register_::isRegistered)
-			 .addChecker (check::enoughParams)
-			 .addChecker (check::user)
-			 .CmExecutor (user)
-			 .build ());
+	log(CmdSpec::CmdBuilder()
+			.Name("USER")
+			.Registration(1)
+			.addParam(username_, new CmdParam())
+			.addParam(hostname_, new CmdParam())
+			.addParam(servername_, new CmdParam())
+			.addParam(realname_, new CmdParam())
+			.addChecker(check::register_::stageDone)
+			.addChecker(check::register_::isRegistered)
+			.addChecker(check::enoughParams)
+			.addChecker(check::user)
+			.CmExecutor(user)
+			.build());
 
-	log (CmdSpec::CmdBuilder ()
-			 .Name ("JOIN")
-			 .Registration (3)
-			 .addParam (channel_, new CmdParam (false, true))
-			 .addParam (key_, new CmdParam (true, true))
-			 .addChecker (check::enoughParams)
-			 .addChecker (check::join)
-			 .CmExecutor (join)
-			 .build ());
+	log(CmdSpec::CmdBuilder()
+			.Name("JOIN")
+			.Registration(3)
+			.addParam(channel_, new CmdParam(false, true))
+			.addParam(key_, new CmdParam(true, true))
+			.addChecker(check::enoughParams)
+			.addChecker(check::join)
+			.CmExecutor(join)
+			.build());
 
-	log (CmdSpec::CmdBuilder ()
-			 .Name ("INVITE")
-			 .Registration (3)
-			 .addParam (target_, new CmdParam ())
-			 .addParam (channel_, new CmdParam ())
-			 .addChecker (check::enoughParams)
-			 .addChecker (check::chan)
-			 .addChecker (check::invite)
-			 .addChecker (check::chans_::isOp)
-			 .CmExecutor (invite)
-			 .build ());
+	log(CmdSpec::CmdBuilder()
+			.Name("INVITE")
+			.Registration(3)
+			.addParam(target_, new CmdParam())
+			.addParam(channel_, new CmdParam())
+			.addChecker(check::enoughParams)
+			.addChecker(check::chan)
+			.addChecker(check::invite)
+			.addChecker(check::chans_::isOp)
+			.CmExecutor(invite)
+			.build());
 
-	log (CmdSpec::CmdBuilder ()
-			 .Name ("KICK")
-			 .Registration (3)
-			 .addParam (channel_, new CmdParam ())
-			 .addParam (target_, new CmdParam (false, true))
-			 .addParam (message_, new CmdParam (true, false))
-			 .addChecker (check::enoughParams)
-			 .addChecker (check::chan)
-			 .addChecker (check::chans_::isOp)
-			 .addChecker (check::kick)
-			 .CmExecutor (kick)
-			 .build ());
+	log(CmdSpec::CmdBuilder()
+			.Name("KICK")
+			.Registration(3)
+			.addParam(channel_, new CmdParam())
+			.addParam(target_, new CmdParam(false, true))
+			.addParam(message_, new CmdParam(true, false))
+			.addChecker(check::enoughParams)
+			.addChecker(check::chan)
+			.addChecker(check::chans_::isOp)
+			.addChecker(check::kick)
+			.CmExecutor(kick)
+			.build());
 
-	log (CmdSpec::CmdBuilder ()
-			 .Name ("MODE")
-			 .Registration (3)
-			 .addParam (channel_, new CmdParam ())
-			 .addParam (flag_, new CmdParam (true, true))
-			 .addParam (flagArg_, new CmdParam (true, true))
-			 .addChecker (check::enoughParams)
-			 .addChecker (check::chan)
-			 .addChecker (check::chans_::isOp)
-			 .addChecker (check::mode)
-			 .CmExecutor (mode)
-			 .build ());
+	log(CmdSpec::CmdBuilder()
+			.Name("MODE")
+			.Registration(3)
+			.addParam(channel_, new CmdParam())
+			.addParam(flag_, new CmdParam(true, true))
+			.addParam(flagArg_, new CmdParam(true, true))
+			.addChecker(check::enoughParams)
+			.addChecker(check::chan)
+			.addChecker(check::chans_::isOp)
+			.addChecker(check::mode)
+			.CmExecutor(mode)
+			.build());
 
-	log (CmdSpec::CmdBuilder ()
-			 .Name ("PART")
-			 .Registration (3)
-			 .addParam (channel_, new CmdParam (false, true))
-			 .addParam (message_, new CmdParam (true, false))
-			 .addChecker (check::enoughParams)
-			 .addChecker (check::part)
-			 .CmExecutor (part)
-			 .build ());
+	log(CmdSpec::CmdBuilder()
+			.Name("PART")
+			.Registration(3)
+			.addParam(channel_, new CmdParam(false, true))
+			.addParam(message_, new CmdParam(true, false))
+			.addChecker(check::enoughParams)
+			.addChecker(check::part)
+			.CmExecutor(part)
+			.build());
 
-	log (CmdSpec::CmdBuilder ()
-			 .Name ("PRIVMSG")
-			 .Registration (3)
-			 .addParam (target_, new CmdParam (false, true))
-			 .addParam (message_, new CmdParam ())
-			 .addChecker (check::mess)
-			 .CmExecutor (privmsg)
-			 .build ());
+	log(CmdSpec::CmdBuilder()
+			.Name("PRIVMSG")
+			.Registration(3)
+			.addParam(target_, new CmdParam(false, true))
+			.addParam(message_, new CmdParam())
+			.addChecker(check::mess)
+			.CmExecutor(privmsg)
+			.build());
 
-	log (CmdSpec::CmdBuilder ()
-			 .Name ("QUIT")
-			 .Registration (0)
-			 .addParam (message_, new CmdParam (true, false))
-			 .CmExecutor (quit)
-			 .build ());
+	log(CmdSpec::CmdBuilder()
+			.Name("QUIT")
+			.Registration(0)
+			.addParam(message_, new CmdParam(true, false))
+			.CmExecutor(quit)
+			.build());
 
-	log (CmdSpec::CmdBuilder ()
-			 .Name ("TOPIC")
-			 .Registration (3)
-			 .addParam (channel_, new CmdParam ())
-			 .addParam (topic_, new CmdParam (true, false))
-			 .addChecker (check::enoughParams)
-			 .addChecker (check::chan)
-			 .addChecker (check::chans_::isOp)
-			 .CmExecutor (topic)
-			 .build ());
+	log(CmdSpec::CmdBuilder()
+			.Name("TOPIC")
+			.Registration(3)
+			.addParam(channel_, new CmdParam())
+			.addParam(topic_, new CmdParam(true, false))
+			.addChecker(check::enoughParams)
+			.addChecker(check::chan)
+			.addChecker(check::chans_::isOp)
+			.CmExecutor(topic)
+			.build());
 
-	log (CmdSpec::CmdBuilder ()
-			 .Name ("WHO")
-			 .Registration (3)
-			 .addParam (channel_, new CmdParam ())
-			 .addParam (flag_, new CmdParam (true, false))
-			 .addChecker (check::enoughParams)
-			 .addChecker (check::chan)
-			 .CmExecutor (who)
-			 .build ());
+	log(CmdSpec::CmdBuilder()
+			.Name("WHO")
+			.Registration(3)
+			.addParam(channel_, new CmdParam())
+			.addParam(flag_, new CmdParam(true, false))
+			.addChecker(check::enoughParams)
+			.addChecker(check::chan)
+			.CmExecutor(who)
+			.build());
 }
 
-void
-CmdManager::log (CmdSpec *cm) {
-	commandList_[cm->getName ()] = cm;
+void CmdManager::log(CmdSpec *cm) {
+	commandList_[cm->getName()] = cm;
 }
 
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-CmdSpec &
-CmdManager::findCmd (const std::string &cmName) {
+CmdSpec &CmdManager::findCmd(const std::string &cmName) {
 	cmdMap::iterator it;
 
-	it = commandList_.find (cmName);
-	if (it == commandList_.end ()) {
-		throw CmdNotFoundException ();
+	it = commandList_.find(cmName);
+	if (it == commandList_.end()) {
+		throw CmdNotFoundException();
 	}
 	return (*it->second);
 }
 
-CmdManager &
-CmdManager::getManagerInstance () {
+CmdManager &CmdManager::getManagerInstance() {
 	static CmdManager instance;
 	return (instance);
 }

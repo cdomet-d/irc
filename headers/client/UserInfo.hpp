@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserInfo.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:10 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:41:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,28 +17,28 @@
 class UserInfo {
   public:
 	/*                               ORTHODOX CLASS                           */
-	UserInfo (void);
-	~UserInfo (void);
+	UserInfo();
+	~UserInfo();
 
 	/*                               METHODS                                  */
 
 	/*                               GETTERS                                  */
-	int getRegistration () const;
-	std::string getHostname () const;
-	std::string getIP () const;
-	std::string getName () const;
-	std::string getNick () const;
-	std::string getPrefix () const;
-	std::string getRealName () const;
-	std::string getUsername () const;
+	int getRegistration() const;
+	std::string getHostname() const;
+	std::string getIP() const;
+	std::string getName() const;
+	std::string getNick() const;
+	std::string getPrefix() const;
+	std::string getRealName() const;
+	std::string getUsername() const;
 
 	/*                               SETTERS                                  */
-	void setHostname (std::string hostname);
-	void setIP (std::string ip);
-	void setNick (const std::string &newNick);
-	void setPrefix ();
-	void setRegistration (int stage);
-	void setUsername (const std::string &username);
+	void setHostname(std::string hostname);
+	void setIP(std::string ip);
+	void setNick(const std::string &newNick);
+	void setPrefix();
+	void setRegistration(int stage);
+	void setUsername(const std::string &username);
 
   private:
 	int registration_;
@@ -51,8 +51,8 @@ class UserInfo {
 	std::string realName_;
 	std::string username_;
 
-	UserInfo (const UserInfo &rhs);
-	UserInfo &operator= (const UserInfo &rhs);
+	UserInfo(const UserInfo &rhs);
+	UserInfo &operator=(const UserInfo &rhs);
 };
 
 #endif

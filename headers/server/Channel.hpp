@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:11 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:41:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,36 +24,36 @@ class Client;
 class Channel {
   public:
 	/*                               ORTHODOX CLASS                           */
-	Channel (std::string name);
-	~Channel (void);
+	Channel(std::string name);
+	~Channel();
 
 	/*                               METHODS                                  */
-	bool addClientToChan (Channel *curChan, Client *curCli);
-	void addCli (mapChan curMap, Client *curCli);
-	void removeCli (mapChan curMap, int fdCli);
+	bool addClientToChan(Channel *curChan, Client *curCli);
+	void addCli(mapChan curMap, Client *curCli);
+	void removeCli(mapChan curMap, int fdCli);
 
 	/*                               GETTERS                                  */
-	bool getInviteOnly () const;
-	bool getIsPassMatch () const;
-	bool getTopicRestrict () const;
-	const clientMap &getCliInChan () const;
-	const clientMap &getOpCli () const;
-	const clientMap &getInvitCli () const;
-	size_t getMaxCli () const;
-	std::string getName () const;
-	std::string getTopic () const;
-	std::string getModes () const;
-	std::string getPassword () const;
+	bool getInviteOnly() const;
+	bool getIsPassMatch() const;
+	bool getTopicRestrict() const;
+	const clientMap &getCliInChan() const;
+	const clientMap &getOpCli() const;
+	const clientMap &getInvitCli() const;
+	size_t getMaxCli() const;
+	std::string getName() const;
+	std::string getTopic() const;
+	std::string getModes() const;
+	std::string getPassword() const;
 
 	/*                               SETTERS                                  */
-	void setInviteOnly (bool inviteOnly);
-	void setIsPassMatch (bool password);
-	void setMaxCli (int maxCli);
-	void setModes ();
-	void setName (std::string name);
-	void setPassword (std::string password);
-	void setTopic (std::string topic);
-	void setTopicRestrict (bool topicRestrict);
+	void setInviteOnly(bool inviteOnly);
+	void setIsPassMatch(bool password);
+	void setMaxCli(int maxCli);
+	void setModes();
+	void setName(std::string name);
+	void setPassword(std::string password);
+	void setTopic(std::string topic);
+	void setTopicRestrict(bool topicRestrict);
 
   private:
 	bool inviteOnly_;
@@ -69,6 +69,6 @@ class Channel {
 	std::string topic_;
 };
 
-void sendMessageChannel (clientMap allCliChannel, std::string message);
+void sendMessageChannel(clientMap allCliChannel, std::string message);
 
 #endif

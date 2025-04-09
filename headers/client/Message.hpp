@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/07 17:17:38 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:41:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,39 +18,39 @@
 class Message {
   public:
 	/*                               ORTHODOX CLASS                           */
-	Message (void);
-	~Message (void);
-	std::string &operator[] (unsigned int i);
+	Message();
+	~Message();
+	std::string &operator[](unsigned int i);
 
 	/*                               GETTERS                                  */
-	size_t getSize () const;
-	const std::string getMess () const;
-	const std::string getLeft () const;
-	const std::string getCmd () const;
-	const stringVec &getCmdParam ();
+	size_t getSize() const;
+	const std::string getMess() const;
+	const std::string getLeft() const;
+	const std::string getCmd() const;
+	const stringVec &getCmdParam();
 
 	/*                               SETTERS                                  */
-	void setMess (std::string buffer);
-	void setCmdParam (const stringVec &splitBuffer);
+	void setMess(std::string buffer);
+	void setCmdParam(const stringVec &splitBuffer);
 
 	/*                               METHODS                                  */
-	bool emptyBuff ();
-	bool hasPrefix (const std::string &cliPrefix);
-	bool hasTrailing ();
-	bool isCap ();
-	bool lenIsValid (const Client &sender);
-	std::string::size_type evaluateTermination () const;
-	void clearCmdParam ();
-	void clearMess ();
-	void clear ();
-	void formatMode ();
-	void removeNewlines ();
-	void trimSpaces ();
-	void updateMess ();
+	bool emptyBuff();
+	bool hasPrefix(const std::string &cliPrefix);
+	bool hasTrailing();
+	bool isCap();
+	bool lenIsValid(const Client &sender);
+	std::string::size_type evaluateTermination() const;
+	void clearCmdParam();
+	void clearMess();
+	void clear();
+	void formatMode();
+	void removeNewlines();
+	void trimSpaces();
+	void updateMess();
 
   private:
-	Message (const Message &rhs);
-	Message &operator= (const Message &rhs);
+	Message(const Message &rhs);
+	Message &operator=(const Message &rhs);
 
 	// members
 	std::string message_;

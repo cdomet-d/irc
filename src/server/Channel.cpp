@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:13 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:41:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 
-Channel::Channel (std::string name)
-	: inviteOnly_ (false), isPassMatch_ (false), topicRestrict_ (true),
-	  maxCli_ (-1), name_ (name), topic_ ("") {
-	setModes ();
+Channel::Channel(std::string name)
+	: inviteOnly_(false), isPassMatch_(false), topicRestrict_(true),
+	  maxCli_(-1), name_(name), topic_("") {
+	setModes();
 }
 
-Channel::~Channel (void) {
+Channel::~Channel() {
 	// reply::INFO, "Channel deleted:", this->getName());
 }
 
@@ -31,70 +31,66 @@ Channel::~Channel (void) {
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
-void
-sendMessageChannel (clientMap allCliChannel, std::string message) {
-	for (clientMapIt it = allCliChannel.begin (); it != allCliChannel.end ();
+void sendMessageChannel(clientMap allCliChannel, std::string message) {
+	for (clientMapIt it = allCliChannel.begin(); it != allCliChannel.end();
 		 ++it) {
-		reply::send_ (it->second->getFd (), message);
+		reply::send_(it->second->getFd(), message);
 	}
 }
 
-bool
-Channel::addClientToChan (Channel *curChan, Client *sender) {
-	curChan->addCli (ALLCLI, sender);
+bool Channel::addClientToChan(Channel *curChan, Client *sender) {
+	curChan->addCli(ALLCLI, sender);
 
-	sender->addOneChan (curChan->getName ());
+	sender->addOneChan(curChan->getName());
 
-	for (clientMapIt itCli = curChan->getCliInChan ().begin ();
-		 itCli != curChan->getCliInChan ().end (); ++itCli) {
-		reply::send_ (
-			itCli->second->getFd (),
-			RPL_JOIN (sender->cliInfo.getPrefix (), curChan->getName ()));
+	for (clientMapIt itCli = curChan->getCliInChan().begin();
+		 itCli != curChan->getCliInChan().end(); ++itCli) {
+		reply::send_(
+			itCli->second->getFd(),
+			RPL_JOIN(sender->cliInfo.getPrefix(), curChan->getName()));
 	}
-	if (curChan->getTopic ().empty () == true)
-		reply::send_ (sender->getFd (), RPL_NOTOPIC (sender->cliInfo.getNick (),
-													 curChan->getName ()));
+	if (curChan->getTopic().empty() == true)
+		reply::send_(sender->getFd(), RPL_NOTOPIC(sender->cliInfo.getNick(),
+												  curChan->getName()));
 	else
-		reply::send_ (sender->getFd (),
-					  RPL_TOPIC (sender->cliInfo.getNick (),
-								 curChan->getName (), curChan->getTopic ()));
-	if (curChan->getOpCli ().empty ()) {
-		reply::send_ (sender->getFd (), RPL_CHANOPE (sender->cliInfo.getNick (),
-													 curChan->getName ()));
-		curChan->addCli (OPCLI, sender);
+		reply::send_(sender->getFd(),
+					 RPL_TOPIC(sender->cliInfo.getNick(), curChan->getName(),
+							   curChan->getTopic()));
+	if (curChan->getOpCli().empty()) {
+		reply::send_(sender->getFd(), RPL_CHANOPE(sender->cliInfo.getNick(),
+												  curChan->getName()));
+		curChan->addCli(OPCLI, sender);
 	}
-	if (curChan->getInvitCli ().find (sender->getFd ())
-		!= curChan->getInvitCli ().end ())
-		curChan->removeCli (INVITECLI, sender->getFd ());
+	if (curChan->getInvitCli().find(sender->getFd())
+		!= curChan->getInvitCli().end())
+		curChan->removeCli(INVITECLI, sender->getFd());
 
 	return (true);
 }
 
-void
-Channel::addCli (mapChan curMap, Client *sender) {
+void Channel::addCli(mapChan curMap, Client *sender) {
 	switch (curMap) {
 	case ALLCLI:
-		cliInChan_.insert (clientPair (sender->getFd (), sender));
+		cliInChan_.insert(clientPair(sender->getFd(), sender));
 		break;
 	case OPCLI:
-		cliIsOperator_.insert (clientPair (sender->getFd (), sender));
+		cliIsOperator_.insert(clientPair(sender->getFd(), sender));
 		break;
 	case INVITECLI:
-		cliInvited_.insert (clientPair (sender->getFd (), sender));
+		cliInvited_.insert(clientPair(sender->getFd(), sender));
 	}
 }
 
-void
-Channel::removeCli (mapChan curMap, int fdCli) {
+void Channel::removeCli(mapChan curMap, int fdCli) {
 	switch (curMap) {
 	case ALLCLI:
-		cliInChan_.erase (fdCli);
+		cliInChan_.erase(fdCli);
 		break;
 	case OPCLI:
-		cliIsOperator_.erase (fdCli);
+		cliIsOperator_.erase(fdCli);
 		break;
 	case INVITECLI:
-		cliInvited_.erase (fdCli);
+		cliInvited_.erase(fdCli);
 	}
 }
 
@@ -102,92 +98,73 @@ Channel::removeCli (mapChan curMap, int fdCli) {
 /*                               GETTERS                                      */
 /* ************************************************************************** */
 
-std::string
-Channel::getName () const {
+std::string Channel::getName() const {
 	return (name_);
 }
-std::string
-Channel::getTopic () const {
+std::string Channel::getTopic() const {
 	return (topic_);
 }
-size_t
-Channel::getMaxCli () const {
+size_t Channel::getMaxCli() const {
 	return (maxCli_);
 }
-bool
-Channel::getInviteOnly () const {
+bool Channel::getInviteOnly() const {
 	return (inviteOnly_);
 }
-bool
-Channel::getIsPassMatch () const {
+bool Channel::getIsPassMatch() const {
 	return (isPassMatch_);
 }
-bool
-Channel::getTopicRestrict () const {
+bool Channel::getTopicRestrict() const {
 	return (topicRestrict_);
 }
-const clientMap &
-Channel::getCliInChan () const {
+const clientMap &Channel::getCliInChan() const {
 	return (cliInChan_);
 }
-const clientMap &
-Channel::getOpCli () const {
+const clientMap &Channel::getOpCli() const {
 	return (cliIsOperator_);
 }
-const clientMap &
-Channel::getInvitCli () const {
+const clientMap &Channel::getInvitCli() const {
 	return (cliInvited_);
 }
-std::string
-Channel::getPassword () const {
+std::string Channel::getPassword() const {
 	return (pass_);
 }
-std::string
-Channel::getModes () const {
+std::string Channel::getModes() const {
 	return (modes_);
 }
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
-void
-Channel::setName (std::string name) {
+void Channel::setName(std::string name) {
 	name_ = name;
 }
-void
-Channel::setTopic (std::string topic) {
+void Channel::setTopic(std::string topic) {
 	topic_ = topic;
 }
-void
-Channel::setPassword (std::string password) {
+void Channel::setPassword(std::string password) {
 	pass_ = password;
 }
-void
-Channel::setModes () {
+void Channel::setModes() {
 	std::string modes = "+";
 
-	if (getMaxCli () != 0)
-		modes.append ("l");
-	if (getInviteOnly () == true)
-		modes.append ("i");
-	if (getIsPassMatch () == true)
-		modes.append ("k");
-	if (getTopicRestrict () == true)
-		modes.append ("t");
+	if (getMaxCli() != 0)
+		modes.append("l");
+	if (getInviteOnly() == true)
+		modes.append("i");
+	if (getIsPassMatch() == true)
+		modes.append("k");
+	if (getTopicRestrict() == true)
+		modes.append("t");
 	modes_ = modes;
 }
-void
-Channel::setMaxCli (int maxCli) {
+void Channel::setMaxCli(int maxCli) {
 	maxCli_ = maxCli;
 }
-void
-Channel::setInviteOnly (bool inviteOnly) {
+void Channel::setInviteOnly(bool inviteOnly) {
 	inviteOnly_ = inviteOnly;
 }
-void
-Channel::setIsPassMatch (bool password) {
+void Channel::setIsPassMatch(bool password) {
 	isPassMatch_ = password;
 }
-void
-Channel::setTopicRestrict (bool topicRestrict) {
+void Channel::setTopicRestrict(bool topicRestrict) {
 	topicRestrict_ = topicRestrict;
 }

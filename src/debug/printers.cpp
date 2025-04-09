@@ -6,15 +6,14 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 13:42:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 11:05:08 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:43:52 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printers.hpp"
 
-void
-print::charByChar (const std::string &buf) {
-	for (std::string::size_type i = 0; i < buf.size (); ++i) {
+void print::charByChar(const std::string &buf) {
+	for (std::string::size_type i = 0; i < buf.size(); ++i) {
 		if (buf[i] == 10)
 			std::cout << "[" << (int)buf[i] << "]";
 		if (buf[i] == 13)
@@ -24,13 +23,12 @@ print::charByChar (const std::string &buf) {
 	}
 }
 
-void
-print::cmdParam (const stringVec &obj, std::string where) {
-	if (obj.empty ())
+void print::cmdParam(const stringVec &obj, std::string where) {
+	if (obj.empty())
 		return std::cout << where + ": [ ... ]" << std::endl, (void)false;
 	std::cout << "[" << std::endl;
-	for (stringVec::const_iterator it = obj.begin (); it != obj.end (); ++it) {
-		if ((*it).empty ())
+	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it) {
+		if ((*it).empty())
 			std::cout << "\t" + where + ":\t"
 					  << "[...]" << std::endl;
 		else
@@ -39,8 +37,7 @@ print::cmdParam (const stringVec &obj, std::string where) {
 	std::cout << "]" << std::endl;
 }
 
-void
-print::modeEnumToString (e_mdeset set_, e_mdetype type_) {
+void print::modeEnumToString(e_mdeset set_, e_mdetype type_) {
 	std::cout << "Set: ";
 	switch (set_) {
 	case SET_ERR:
@@ -77,32 +74,29 @@ print::modeEnumToString (e_mdeset set_, e_mdetype type_) {
 	}
 }
 
-size_t
-print::getLargerArg (const stringVec &arr) {
+size_t print::getLargerArg(const stringVec &arr) {
 	size_t max = 0;
-	for (stringVec::const_iterator i = arr.begin (); i != arr.end (); ++i) {
-		size_t size = (*i).size ();
+	for (stringVec::const_iterator i = arr.begin(); i != arr.end(); ++i) {
+		size_t size = (*i).size();
 		if (size > max)
 			max = size;
 	}
 	return max + 2;
 }
 
-void
-print::argument (const stringVec::const_iterator &it, size_t width) {
-	if ((*it).empty ())
-		std::cout << std::setw (width) << std::left << "[...]";
+void print::argument(const stringVec::const_iterator &it, size_t width) {
+	if ((*it).empty())
+		std::cout << std::setw(width) << std::left << "[...]";
 	else
-		std::cout << std::setw (width) << std::left << *it;
+		std::cout << std::setw(width) << std::left << *it;
 }
 
-void
-print::modeArgs (const stringVec &mdestr, const stringVec &modeargs,
-				 const std::string &where) {
-	bool empty_flags = mdestr.empty ();
-	bool empty_args = modeargs.empty ();
-	int awidth = getLargerArg (modeargs);
-	int swidth = getLargerArg (mdestr);
+void print::modeArgs(const stringVec &mdestr, const stringVec &modeargs,
+					 const std::string &where) {
+	bool empty_flags = mdestr.empty();
+	bool empty_args = modeargs.empty();
+	int awidth = getLargerArg(modeargs);
+	int swidth = getLargerArg(mdestr);
 
 	if (swidth < 6)
 		swidth = 6;
@@ -111,23 +105,23 @@ print::modeArgs (const stringVec &mdestr, const stringVec &modeargs,
 
 	stringVec::const_iterator j;
 	if (!empty_args)
-		j = modeargs.begin ();
+		j = modeargs.begin();
 	std::cout << "[ " + where << std::endl;
 
-	std::cout << "\t| " << std::setw (swidth) << std::left << "flags";
+	std::cout << "\t| " << std::setw(swidth) << std::left << "flags";
 	std::cout << " | ";
-	std::cout << std::setw (awidth) << std::left << "arg";
+	std::cout << std::setw(awidth) << std::left << "arg";
 	std::cout << " |" << std::endl;
-	for (stringVec::const_iterator i = mdestr.begin (); i != mdestr.end ();
+	for (stringVec::const_iterator i = mdestr.begin(); i != mdestr.end();
 		 ++i) {
 		if (!empty_flags) {
 			std::cout << "\t| ";
-			print::argument (i, swidth);
+			print::argument(i, swidth);
 		}
 		std::cout << " | ";
 		if (!empty_args) {
-			print::argument (j, awidth);
-			if (j != modeargs.end ())
+			print::argument(j, awidth);
+			if (j != modeargs.end())
 				j++;
 			std::cout << " |" << std::endl;
 		}

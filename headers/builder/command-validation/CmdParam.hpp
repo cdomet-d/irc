@@ -21,30 +21,30 @@
 class CmdParam {
   public:
 	/*                               CONSTRUCTORS                             */
-	CmdParam (void);
-	CmdParam (const bool opt, const bool list);
-	CmdParam (const CmdParam &rhs);
-	~CmdParam (void);
+	CmdParam();
+	CmdParam(const bool opt, const bool list);
+	CmdParam(const CmdParam &rhs);
+	~CmdParam();
 
 	/*                               METHODS                                  */
-	bool empty ();
-	bool isList () const;
-	bool isOpt (void) const;
-	CmdParam &operator= (const CmdParam &rhs);
-	size_t size (void) const;
-	std::string &operator[] (size_t i);
-	const std::string &operator[] (size_t i) const;
-	void addOne (size_t pos);
-	void clean (void);
-	void rmParam (size_t pos);
-	void trimParam (size_t paramIdx, size_t lenToTrim);
+	bool empty();
+	bool isList() const;
+	bool isOpt() const;
+	CmdParam &operator=(const CmdParam &rhs);
+	size_t size() const;
+	std::string &operator[](size_t i);
+	const std::string &operator[](size_t i) const;
+	void addOne(size_t pos);
+	void clean();
+	void rmParam(size_t pos);
+	void trimParam(size_t paramIdx, size_t lenToTrim);
 
 	/*                               GETTERS                                  */
-	const stringVec &getInnerParam (void) const;
+	const stringVec &getInnerParam() const;
 
 	/*                               SETTERS                                  */
-	void setOneParam (std::string &buffer);
-	void setParamList (const stringVec &buffer);
+	void setOneParam(std::string &buffer);
+	void setParamList(const stringVec &buffer);
 
   private:
 	/*                               MEMBERS                                  */

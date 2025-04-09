@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:08 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:41:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,21 +26,21 @@
 class Client {
   public:
 	/*                               CONSTRUCTORS                             */
-	Client (void);
-	~Client (void);
+	Client();
+	~Client();
 
 	/*                               GETTERS                                  */
-	int getFd () const;
-	const stringVec &getJoinedChans () const;
-	struct epoll_event *getCliEpoll ();
+	int getFd() const;
+	const stringVec &getJoinedChans() const;
+	struct epoll_event *getCliEpoll();
 
 	/*                               SETTERS                                  */
-	void setCliEpoll (struct epoll_event epoll);
-	void setFd (int fd);
+	void setCliEpoll(struct epoll_event epoll);
+	void setFd(int fd);
 
 	/*                               MEMBERS                                  */
-	void removeOneChan (std::string chanName);
-	void addOneChan (std::string chanName);
+	void removeOneChan(std::string chanName);
+	void addOneChan(std::string chanName);
 
 	Message mess;
 	struct sockaddr_in cliAddr_;
@@ -57,8 +57,8 @@ class Client {
 	stringVec invitedChans_;
 
 	// private constructors
-	Client &operator= (const Client &rhs);
-	Client (const Client &rhs);
+	Client &operator=(const Client &rhs);
+	Client(const Client &rhs);
 };
 
 #endif
