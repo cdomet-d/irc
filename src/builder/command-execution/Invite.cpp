@@ -22,8 +22,8 @@ void invite(CmdSpec &cmd) {
 	if (cmd[target_].empty()) {
 		for (channelMapIt chan = server.getAllChan().begin();
 			 chan != server.getAllChan().end(); ++chan) {
-			if (chan->second->getInvitCli().find(sender->getFd()) !=
-				chan->second->getInvitCli().end())
+			if (chan->second->getInvitCli().find(sender->getFd())
+				!= chan->second->getInvitCli().end())
 				reply::send_(
 					sender->getFd(),
 					RPL_INVITELIST(sender->cliInfo.getNick(), chan->first));
@@ -34,7 +34,7 @@ void invite(CmdSpec &cmd) {
 	}
 
 	Channel &curChan = findCurChan(cmd[channel_][0]);
-	//use NickMap
+	// use NickMap
 	Client *targetCli = NULL;
 	for (clientMapIt itTarget = cmd.serv_.getAllCli().begin();
 		 itTarget != cmd.serv_.getAllCli().end(); ++itTarget) {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:08 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:41:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@
 class Client {
   public:
 	/*                               CONSTRUCTORS                             */
-	Client(void);
-	~Client(void);
+	Client();
+	~Client();
 
 	/*                               GETTERS                                  */
 	int getFd() const;

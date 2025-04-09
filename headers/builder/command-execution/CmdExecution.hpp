@@ -32,7 +32,7 @@ void part(CmdSpec &cmd);
 void privmsg(CmdSpec &cmd);
 void quit(CmdSpec &cmd);
 
-//UTILS
+// UTILS
 Channel &findCurChan(std::string chanName);
 Channel *createChan(const std::string &chanName);
 void checkOnlyOperator(Channel *curChan);
@@ -43,4 +43,4 @@ std::string buildNickList(clientMap curMap, Client *sender, Channel &curChan);
 void sendNickList(std::string &nickList, Client *sender, Channel &curChan);
 void partMess(Client *sender, Channel &curChan, const std::string &message);
 
-#endif ///CMDEXECUTION_HPP
+#endif /// CMDEXECUTION_HPP

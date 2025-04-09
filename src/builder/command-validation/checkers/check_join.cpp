@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/08 15:51:53 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/09 16:21:56 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,8 @@ bool check::join_::chanHasRoom(Channel &chan, Client &sender) {
 bool check::join_::cliHasMaxChans(Channel &chan, Client &sender) {
 	if (sender.getJoinedChans().size() < MAX_CHAN_PER_CLI)
 		return (false);
-	reply::send_(sender.getFd(),
-				 ERR_TOOMANYCHANNELS(sender.cliInfo.getNick(), chan.getName()));
+	reply::send_(sender.getFd(), ERR_TOOMANYCHANNELS(sender.cliInfo.getNick(),
+													 chan.getName()));
 	return (true);
 }
 

@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/04/04 11:01:21 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/04/09 14:38:45 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -157,6 +157,7 @@ clean:
 
 fclean: clean
 	$(RM) raw.log
+	$(RM) val.log
 	$(RM) $(NAME)
 	$(RM) $(DEBUG_NAME)
 	@echo
@@ -185,6 +186,9 @@ drun: debug
 	valgrind $(VFLAGS) ./$(DEBUG_NAME) 4444 0
 
 # ----------------------------- FORMAT --------------------------------------- #
+format:
+	@printf '$(CYBOLD)%.30s\n$(R)' "-- Formatting... --------------------------"
+	bash .scripts/format-all.sh 
 
 # ---------------------------------------------------------------------------- #
 

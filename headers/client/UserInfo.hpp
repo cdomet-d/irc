@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserInfo.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/03 15:59:10 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:41:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 class UserInfo {
   public:
 	/*                               ORTHODOX CLASS                           */
-	UserInfo(void);
-	~UserInfo(void);
+	UserInfo();
+	~UserInfo();
 
 	/*                               METHODS                                  */
 

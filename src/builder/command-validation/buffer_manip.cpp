@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   buffer_manip.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 16:47:19 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 16:19:57 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@ bool buffer_manip::prepareCommand(Client &sender) {
 						 ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
 											sender.mess.getCmd()));
 		}
-		sender.mess.clearCmdParam();
-		sender.mess.clearMess();
+		sender.mess.clear();
 		sender.mess.updateMess();
 	}
 	return true;

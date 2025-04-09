@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 17:57:07 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:42:38 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ e_mdetype check::mode_::typeIsValid(const char &c) {
 	}
 }
 
-/* for the current flag, recover type of setchar [+ | -] and type of flagtype [i | k | l | o | t]
-Sends the ERR_UNKNOWN PARAM if they don't exist, then return an error.
-if returns an error if they don't exist */
+/* for the current flag, recover type of setchar [+ | -] and type of flagtype [i
+| k | l | o | t] Sends the ERR_UNKNOWN PARAM if they don't exist, then return an
+error. if returns an error if they don't exist */
 bool check::mode_::flagIsValid(e_mdeset &set, e_mdetype &type,
 							   const std::string &flag, const Client &cli) {
 	try {
@@ -60,7 +60,8 @@ bool check::mode_::flagIsValid(e_mdeset &set, e_mdetype &type,
 	return true;
 }
 
-/* formats mode arguments, validating that each flag is paired with an argument*/
+/* formats mode arguments, validating that each flag is paired with an
+ * argument*/
 bool check::mode_::formatArgs(CmdSpec &cmd) {
 	e_mdetype type;
 	e_mdeset set;
@@ -76,14 +77,16 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 									   cmd.getSender()))
 			return false;
 		// if we MUST have a param and we don't, erase the flag
-		if (((type == B) || (type == C && set == SET)) &&
-			i >= cmd[flagArg_].size())
+		if (((type == B) || (type == C && set == SET))
+			&& i >= cmd[flagArg_].size())
 			cmd[flag_].rmParam(i);
-		// else if we don't need a parameter, and cmd[flagArg_] is empty, we add a blank space at str.begin()
-		else if (cmd[flagArg_].empty() &&
-				 ((type == C && set == UNSET) || type == D))
+		// else if we don't need a parameter, and cmd[flagArg_] is empty, we add a
+		// blank space at str.begin()
+		else if (cmd[flagArg_].empty()
+				 && ((type == C && set == UNSET) || type == D))
 			cmd[flagArg_].addOne(i);
-		// else if we don't need a parameter, and cmd[flagArg_] is not, we add a blank space at i
+		// else if we don't need a parameter, and cmd[flagArg_] is not, we add a
+		// blank space at i
 		else if ((type == C && set == UNSET) || type == D)
 			cmd[flagArg_].addOne(i);
 		// increment if no cmd[flag_] were removed
@@ -91,9 +94,8 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 			i++;
 	}
 	if (cmd[flag_].empty()) {
-		reply::send_(
-			cmd.getSender().getFd(),
-			ERR_NEEDMOREPARAMS(cmd.getSender().cliInfo.getNick(), "Mode"));
+		reply::send_(cmd.getSdFd(),
+					 ERR_NEEDMOREPARAMS(cmd.getSdNick(), cmd.getName()));
 		return false;
 	}
 	return true;
@@ -106,7 +108,7 @@ bool check::mode(CmdSpec &cmd, size_t idx) {
 	return true;
 }
 
-//TODO: check if there is a target and that the client is on it.
-//TODO: +l: block if arg is not an interger
-//TODO: +o: check client exist and is on channel
-//TODO: +k: check that 26 > len > 8 
+// TODO: check if there is a target and that the client is on it.
+// TODO: +l: block if arg is not an interger
+// TODO: +o: check client exist and is on channel
+// TODO: +k: check that 26 > len > 8

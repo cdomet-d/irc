@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/08 15:56:06 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/09 16:25:28 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Channel::Channel(std::string name)
 	setModes();
 }
 
-Channel::~Channel(void) {
+Channel::~Channel() {
 	// reply::INFO, "Channel deleted:", this->getName());
 }
 

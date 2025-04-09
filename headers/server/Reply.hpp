@@ -6,52 +6,102 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/08 15:46:02 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/09 16:16:56 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef REPLY_H
 #define REPLY_H
 #include <cstring>
 #include <string>
 
-//STANDARD_REPLIES
+// STANDARD_REPLIES
 
-//ERR_REPLIES
-//channel_err_replies
-#define ERR_BADCHANNELKEY(nickname, channel) (":irc.bitchat.net 475 " + nickname + " " + channel + " :Cannot join channel (+k)" + "\r\n")
-#define ERR_CHANNELISFULL(nickname, channel) (":irc.bitchat.net 471 " + nickname + " " + channel + " :Cannot join channel (+l)\r\n")
-#define ERR_CHANOPRIVSNEEDED(nickname, channel)  (":irc.bitchat.net 482 " + nickname + " " + channel + " :You're not channel operator" + "\r\n")
-#define ERR_INVITEONLYCHAN(nickname, channel) (":irc.bitchat.net 473 " + nickname  + " " + channel + " :Cannot join channel (+i)\r\n")
-#define ERR_TOOMANYCHANNELS(nickname, channel) (":irc.bitchat.net 405 " + nickname + " " + channel + " :You have joined too many channels\r\n")
-#define ERR_NOSUCHCHANNEL(nickname, channel) (":irc.bitchat.net 403 " + nickname + " " + channel + " :No such channel" + "\r\n")
-#define ERR_NOTONCHANNEL(nickname, channel) (":irc.bitchat.net 442 " + nickname + " " + channel + " :You're not on that channel" + "\r\n")
-#define ERR_USERNOTINCHANNEL(nickname, target, channel) (":irc.bitchat.net 441 " + nickname + " " + target + " " + channel + " :They aren't on that channel\r\n")
-#define ERR_USERONCHANNEL(nickname, target, channel) (":irc.bitchat.net 443 " + nickname + " " + target + " " + channel + " :is already on channel\r\n")
-#define ERR_CANNOTSENDTOCHAN(nickname, channel) (":irc.bitchat.net 404 " + nickname + " " + channel + " :Cannot send to channel\r\n") //TODO : not used
+// ERR_REPLIES
+// channel_err_replies
+#define ERR_BADCHANNELKEY(nickname, channel)                                  \
+	(":irc.bitchat.net 475 " + nickname + " " + channel                       \
+	 + " :Cannot join channel (+k)" + "\r\n")
+#define ERR_CHANNELISFULL(nickname, channel)                                  \
+	(":irc.bitchat.net 471 " + nickname + " " + channel                       \
+	 + " :Cannot join channel (+l)\r\n")
+#define ERR_CHANOPRIVSNEEDED(nickname, channel)                               \
+	(":irc.bitchat.net 482 " + nickname + " " + channel                       \
+	 + " :You're not channel operator" + "\r\n")
+#define ERR_INVITEONLYCHAN(nickname, channel)                                 \
+	(":irc.bitchat.net 473 " + nickname + " " + channel                       \
+	 + " :Cannot join channel (+i)\r\n")
+#define ERR_TOOMANYCHANNELS(nickname, channel)                                \
+	(":irc.bitchat.net 405 " + nickname + " " + channel                       \
+	 + " :You have joined too many channels\r\n")
+#define ERR_NOSUCHCHANNEL(nickname, channel)                                  \
+	(":irc.bitchat.net 403 " + nickname + " " + channel + " :No such channel" \
+	 + "\r\n")
+#define ERR_NOTONCHANNEL(nickname, channel)                                   \
+	(":irc.bitchat.net 442 " + nickname + " " + channel                       \
+	 + " :You're not on that channel" + "\r\n")
+#define ERR_USERNOTINCHANNEL(nickname, target, channel)                       \
+	(":irc.bitchat.net 441 " + nickname + " " + target + " " + channel        \
+	 + " :They aren't on that channel\r\n")
+#define ERR_USERONCHANNEL(nickname, target, channel)                          \
+	(":irc.bitchat.net 443 " + nickname + " " + target + " " + channel        \
+	 + " :is already on channel\r\n")
+#define ERR_CANNOTSENDTOCHAN(nickname, channel)                               \
+	(":irc.bitchat.net 404 " + nickname + " " + channel                       \
+	 + " :Cannot send to channel\r\n") // TODO : not used
 
-//input_err_replies
-#define ERR_NORECIPIENT(nickname, command) (":irc.bitchat.net 411 " + nickname + " :No recipient given (" + command + ")\r\n")
-#define ERR_NOTEXTTOSEND(nickname) (":irc.bitchat.net 412 " + nickname + " :No text to send\r\n")
-#define ERR_INPUTTOOLONG(nickname) (":irc.bitchat.net 417 " + nickname + " :Input line was too long\r\n")
-#define ERR_UNKNOWNCOMMAND(nickname, command) (":irc.bitchat.net 421 " + nickname + " " + command + " :Unknown command\r\n")
-#define ERR_NONICKNAMEGIVEN(nickname) (":irc.bitchat.net 431 " + nickname + " :No nickname given\r\n")
-#define ERR_ERRONEUSNICKNAME(nickname, newNick) (":irc.bitchat.net 432 " + nickname + " " + newNick + " :Erroneous nickname\r\n")
-#define ERR_NEEDMOREPARAMS(nickname, command)(":irc.bitchat.net 461 " + nickname + " " + command + " :Not enough parameters\r\n")
-#define ERR_UNKNOWNMODE(nickname, modechar) (":irc.bitchat.net 472 " + nickname + " " + modechar + " :is unknown mode char to me" + "\r\n")
-#define ERR_TOOMANYTARGETS(nickname, target) (":irc.bitchat.net 407 " + nickname + " " + target + " :Too many targets\r\n") //TODO : not used
+// input_err_replies
+#define ERR_NORECIPIENT(nickname, command)                                    \
+	(":irc.bitchat.net 411 " + nickname + " :No recipient given (" + command  \
+	 + ")\r\n")
+#define ERR_NOTEXTTOSEND(nickname)                                            \
+	(":irc.bitchat.net 412 " + nickname + " :No text to send\r\n")
+#define ERR_INPUTTOOLONG(nickname)                                            \
+	(":irc.bitchat.net 417 " + nickname + " :Input line was too long\r\n")
+#define ERR_UNKNOWNCOMMAND(nickname, command)                                 \
+	(":irc.bitchat.net 421 " + nickname + " " + command                       \
+	 + " :Unknown command\r\n")
+#define ERR_NONICKNAMEGIVEN(nickname)                                         \
+	(":irc.bitchat.net 431 " + nickname + " :No nickname given\r\n")
+#define ERR_ERRONEUSNICKNAME(nickname, newNick)                               \
+	(":irc.bitchat.net 432 " + nickname + " " + newNick                       \
+	 + " :Erroneous nickname or username\r\n")
+#define ERR_NEEDMOREPARAMS(nickname, command)                                 \
+	(":irc.bitchat.net 461 " + nickname + " " + command                       \
+	 + " :Not enough parameters\r\n")
+#define ERR_UNKNOWNMODE(nickname, modechar)                                   \
+	(":irc.bitchat.net 472 " + nickname + " " + modechar                      \
+	 + " :is unknown mode char to me" + "\r\n")
+#define ERR_TOOMANYTARGETS(nickname, target)                                  \
+	(":irc.bitchat.net 407 " + nickname + " " + target                        \
+	 + " :Too many targets\r\n") // TODO : not used
 
-//registration_err_replies
-#define ERR_NICKNAMEINUSE(nickname, newNick) (":irc.bitchat.net 433 " + nickname + " " + newNick + " :Nickname is already in use\r\n")
-#define ERR_NOTREGISTERED(nickname) (":irc.bitchat.net 451 " + nickname + " :You have not registered\r\n")
-#define ERR_ALREADYREGISTERED(nickname) (":irc.bitchat.net 462 " + nickname + " :You may not reregister\r\n")
-#define ERR_PASSWDMISMATCH(nickname) (":irc.bitchat.net 464 " + nickname + " :Password incorrect\r\n")
-#define ERR_NOSUCHNICK(nickname, target) (":irc.bitchat.net 401 " + nickname + " " + target + " :No such nick/channel\r\n")
-#define ERR_NEEDPASS(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter password\r\n")
-#define ERR_NEEDNICK(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter nickname\r\n")
-#define ERR_NEEDUSER(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter username\r\n")
-#define ERR_NEEDNICKORUSER(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter nickname or username\r\n")
+// registration_err_replies
+#define ERR_ALREADYREGISTERED(nickname)                                        \
+	(":irc.bitchat.net 462 " + nickname + " :You may not reregister\r\n")
+#define ERR_BADCHAR(nickname, received)                                       \
+	(":irc.bitchat.net NOTICE " + nickname                                    \
+	 + " :USER format should be <username> 0 * <realname>, is [" + received   \
+	 + "]\r\n")
+#define ERR_NEEDNICK(nickname)                                                \
+	(":irc.bitchat.net NOTICE " + nickname + " :Please enter nickname\r\n")
+#define ERR_NEEDNICKORUSER(nickname)                                          \
+	(":irc.bitchat.net NOTICE " + nickname                                    \
+	 + " :Please enter nickname or username\r\n")
+#define ERR_NEEDPASS(nickname)                                                \
+	(":irc.bitchat.net NOTICE " + nickname + " :Please enter password\r\n")
+#define ERR_NEEDUSER(nickname)                                                \
+	(":irc.bitchat.net NOTICE " + nickname + " :Please enter username\r\n")
+#define ERR_NICKNAMEINUSE(nickname, newNick)                                  \
+	(":irc.bitchat.net 433 " + nickname + " " + newNick                       \
+	 + " :Nickname is already in use\r\n")
+#define ERR_NOSUCHNICK(nickname, target)                                      \
+	(":irc.bitchat.net 401 " + nickname + " " + target                        \
+	 + " :No such nick/channel\r\n")
+#define ERR_NOTREGISTERED(nickname)                                           \
+	(":irc.bitchat.net 451 " + nickname + " :You have not registered\r\n")
+#define ERR_PASSWDMISMATCH(nickname)                                          \
+	(":irc.bitchat.net 464 " + nickname + " :Incorrect password\r\n")
 
 //RESPONDS_REPLIES
 //serv_replies
@@ -97,10 +147,10 @@
 #define RPL_QUIT(prefix, message) (":" + prefix + " :Client Quit " + message + "\r\n")
 
 namespace reply {
-	enum e_level { INFO, ERROR, DEBUG, REPLY };
+	enum e_level { INFO, ERROR, DEBUG, REPLY, GOT };
 	void log(e_level level, std::string message, std::string verbose);
 	void log(e_level level, std::string message);
 	void send_(int fd, std::string reply);
 
 } // namespace reply
-#endif //REPLY_HPP
+#endif // REPLY_HPP

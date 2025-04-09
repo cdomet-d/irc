@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 16:27:24 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:41:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 class Message {
   public:
 	/*                               ORTHODOX CLASS                           */
-	Message(void);
-	~Message(void);
+	Message();
+	~Message();
 	std::string &operator[](unsigned int i);
 
 	/*                               GETTERS                                  */
@@ -42,6 +42,7 @@ class Message {
 	std::string::size_type evaluateTermination() const;
 	void clearCmdParam();
 	void clearMess();
+	void clear();
 	void formatMode();
 	void removeNewlines();
 	void trimSpaces();

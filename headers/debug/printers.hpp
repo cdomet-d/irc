@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 
 #include "typedef.hpp"
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
 namespace print {
 	void charByChar(const std::string &buf);
@@ -27,8 +27,8 @@ namespace print {
 		std::cout << "[" + what + "]" << std::endl;
 		typedef typename MapType::key_type key;
 		// typedef typename MapType::value_type val;
-		for (typename MapType::const_iterator it = map.begin(); it != map.end();
-			 ++it) {
+		for (typename MapType::const_iterator it = map.begin();
+			 it != map.end(); ++it) {
 
 			const key &k = it->first;
 			std::cout << std::setw(20) << k << std::endl;

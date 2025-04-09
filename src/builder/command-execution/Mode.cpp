@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/08 16:53:22 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/09 16:17:51 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,10 @@ void executeL(std::string flag, std::string param, Channel &curChan) {
 		errno = 0;
 		double result = strtod(param.c_str(), &endptr);
 
-		//if err of strtod, the maxCli of the channel will be set to the maxCi of the server so 50
-		if (errno == ERANGE || *endptr != '\0' || result < 0 ||
-			result > std::numeric_limits< int >::max()) {
+		// if err of strtod, the maxCli of the channel will be set to the maxCi of
+		// the server so 50
+		if (errno == ERANGE || *endptr != '\0' || result < 0
+			|| result > std::numeric_limits< int >::max()) {
 			curChan.setMaxCli(50);
 			curChan.setModes();
 		} else {
@@ -113,7 +114,7 @@ void executeL(std::string flag, std::string param, Channel &curChan) {
 }
 
 int findFlagLevel(std::string level) {
-	std::string flag[5] = {"o", "i", "t", "k", "l"};
+	std::string flag[5] = { "o", "i", "t", "k", "l" };
 	for (int i = 0; i < 5; i++) {
 		if (level.find(flag[i]) != std::string::npos)
 			return (i);
@@ -122,8 +123,8 @@ int findFlagLevel(std::string level) {
 }
 
 void executeFlag(std::string flag, std::string param, Channel &curChan) {
-	modesFunc flagExecutor[5] = {&executeO, &executeI, &executeT, &executeK,
-								 &executeL};
+	modesFunc flagExecutor[5]
+		= { &executeO, &executeI, &executeT, &executeK, &executeL };
 	int flagLevel = findFlagLevel(flag);
 
 	if (flagLevel != -1)
