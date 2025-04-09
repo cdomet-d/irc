@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/04/09 14:38:45 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/04/09 16:16:37 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -178,7 +178,11 @@ info:
 
 run: all
 	$(RM) raw.log
-	./$(NAME) 4444 0
+	@if echo $(MAKECMDGOALS) | grep -q "6667"; then \
+		./$(NAME) 6667 0; \
+	else \
+		./$(NAME) 4444 0; \
+	fi
 
 VFLAGS:= --leak-check=full --log-file="val.log" --show-leak-kinds=all --track-fds=yes
 drun: debug

@@ -38,10 +38,11 @@ namespace check {
 
 	namespace mode_ {
 		bool formatArgs(CmdSpec &cmd);
-		bool flagIsValid(e_mdeset &set, e_mdetype &type,
-						 const std::string &flag, const Client &cli);
+		bool validFlag(e_mdeset &set, e_mdetype &type, const std::string &flag,
+					   const Client &cli);
 		e_mdeset whichSet(const char &c);
 		e_mdetype typeIsValid(const char &c);
+		bool oTargetIsOnChan(const CmdSpec &cmd, size_t idx);
 	} // namespace mode_
 
 	namespace nick_ {
