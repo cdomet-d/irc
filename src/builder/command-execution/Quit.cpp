@@ -36,7 +36,7 @@ void quit(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 	std::string message;
 	if (!cmd[message_].empty())
-		message = cmd[message_][0];
+		message = ":" + cmd[message_][0];
 
 	sender->mess.clearMess();
 	partAllChans(cmd, message);
