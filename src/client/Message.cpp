@@ -93,20 +93,30 @@ void Message::formatMode() {
 	modeFormat.push_back(cmdParam_.at(0));
 	modeFormat.push_back(cmdParam_.at(1));
 
-	for (stringVec::iterator i = cmdParam_.begin() + 2; i != cmdParam_.end();
-		 ++i) {
-		if (!i->empty()) {
-			const char firstChar = (*i)[0];
+	if (cmdParam_.size() > 2) {
+		for (size_t i = 0; i < cmdParam_[2].size(); i++) {
+			const char firstChar = cmdParam_[2][i];
 			if (firstChar == '+' || firstChar == '-') {
-				std::string flags = *i;
-				for (size_t j = 1; j < flags.size(); ++j) {
-                    flagformat += firstChar;
-                    flagformat += (*i)[j];
-                    flagformat += ',';
-                }
-            } else {
-                paramformat += *i;
-                paramformat += ',';
+				i++;
+				while (i < cmdParam_[2].size()) {
+					flagformat += firstChar;
+					flagformat += cmdParam_[2][i];
+					flagformat += ',';
+					if ((i + 1) < cmdParam_[2].size() &&
+						(cmdParam_[2][i + 1] == '+' ||
+						 cmdParam_[2][i + 1] == '-'))
+						break;
+					++i;
+				}
+			} else
+				flagformat += cmdParam_[2][i];
+		}
+
+		for (stringVec::iterator it = cmdParam_.begin() + 3;
+			 it != cmdParam_.end(); ++it) {
+			if (!it->empty()) {
+				paramformat += *it;
+				paramformat += ',';
 			}
 		}
 	}
