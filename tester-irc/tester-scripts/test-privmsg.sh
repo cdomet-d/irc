@@ -74,6 +74,7 @@ sleep 0.5
 
 echo "QUIT" >&${client1_in_fd}
 echo "QUIT" >&${client2_in_fd}
+echo "QUIT" >&${client3_in_fd}
 
 sleep 3
 
@@ -86,10 +87,12 @@ wait $PID2 2>/dev/null
 wait $PID3 2>/dev/null
 
 cat outputs/client1_out > outputs/output.txt &
+sleep 0.5
 cat outputs/client2_out.txt >> outputs/output.txt &
+sleep 0.5
 cat outputs/client3_out.txt >> outputs/output.txt &
 
-sleep 2
+sleep 4
 
 exec {client1_in_fd}>&-
 exec {client1_out_fd}>&-
