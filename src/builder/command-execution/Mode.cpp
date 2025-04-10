@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "CmdExecution.hpp"
-#include "CmdSpec.hpp"
-#include "Server.hpp"
 #include <cerrno>
 #include <cstdlib>
 #include <limits>
