@@ -6,7 +6,9 @@
 :irc.bitchat.net 003 chacham :This server was created 09-04-2025 15:40:01
 :irc.bitchat.net 004 chacham Bitchat 1.0 | k,o,l,i,t | k,o,l
 :irc.bitchat.net 005 chacham CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
-:irc.bitchat.net NOTICE chacham :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 375 chacham :- Bitchat Message of the day - 
+:irc.bitchat.net 372 chacham :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 376 chacham :End of /MOTD command
 :chacham!c@localhost JOIN #chan
 ::irc.bitchat.net MODE #chan +t 
 :irc.bitchat.net 353 chacham = #chan :@chacham
@@ -32,7 +34,9 @@
 :irc.bitchat.net 003 bobby :This server was created 09-04-2025 15:40:01
 :irc.bitchat.net 004 bobby Bitchat 1.0 | k,o,l,i,t | k,o,l
 :irc.bitchat.net 005 bobby CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
-:irc.bitchat.net NOTICE bobby :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 375 bobby :- Bitchat Message of the day - 
+:irc.bitchat.net 372 bobby :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 376 bobby :End of /MOTD command
 :irc.bitchat.net 442 bobby #chan :You're not on that channel
 :bobby!b@localhost JOIN #chan
 :irc.bitchat.net 353 bobby = #chan :bobby @chacham juju

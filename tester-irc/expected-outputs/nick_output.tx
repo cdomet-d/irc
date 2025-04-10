@@ -20,7 +20,9 @@
 :irc.bitchat.net 003 cha-[]\^4`{} :This server was created 09-04-2025 17:35:25
 :irc.bitchat.net 004 cha-[]\^4`{} Bitchat 1.0 | k,o,l,i,t | k,o,l
 :irc.bitchat.net 005 cha-[]\^4`{} CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
-:irc.bitchat.net NOTICE cha-[]\^4`{} :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 375 cha-[]\^4`{} :- Bitchat Message of the day - 
+:irc.bitchat.net 372 cha-[]\^4`{} :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 376 cha-[]\^4`{} :End of /MOTD command
 :cha-[]\^4`{}!c@localhost NICK :chacham
 :irc.bitchat.net 432 chacham cha#: illegal char: expected [Aa -Zz], [0 - 9] or [-[]\`^{}], is # :Erroneous nickname or username
 :irc.bitchat.net 432 chacham cha:: illegal char: expected [Aa -Zz], [0 - 9] or [-[]\`^{}], is : :Erroneous nickname or username
@@ -41,7 +43,9 @@
 :irc.bitchat.net 003 bobby :This server was created 09-04-2025 17:35:25
 :irc.bitchat.net 004 bobby Bitchat 1.0 | k,o,l,i,t | k,o,l
 :irc.bitchat.net 005 bobby CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
-:irc.bitchat.net NOTICE bobby :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 375 bobby :- Bitchat Message of the day - 
+:irc.bitchat.net 372 bobby :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 376 bobby :End of /MOTD command
 :bobby!b@localhost JOIN #chan
 :irc.bitchat.net 353 bobby = #chan :@chacham bobby
 :irc.bitchat.net 366 bobby #chan :End of /NAMES list
