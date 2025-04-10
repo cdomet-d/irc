@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/07 18:04:45 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/10 17:22:50 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void quit(CmdSpec &cmd) {
 				 RPL_QUIT(sender->cliInfo.getPrefix(), message));
 	reply::send_(sender->getFd(), RPL_BYEYBE(sender->cliInfo.getNick()));
 	std::stringstream ss;
-	ss << "Client [" << sender->getFd() << "] disc";
+	ss << "Client [" << sender->getFd() << "] disconnected\r\n";
 	reply::log(reply::INFO, ss.str());
 	cmd.serv_.removeCli(sender);
 	close(sender->getFd());

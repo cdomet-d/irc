@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/10 14:49:23 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/10 17:12:48 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,20 +124,23 @@ bool check::mode(CmdSpec &cmd, size_t idx) {
 	if (!check::mode_::formatArgs(cmd))
 		return false;
 
-	print::map(
-		cmd.serv_.getAllChan().find(cmd[channel_][0])->second->getCliInChan(),
-		cmd[channel_][0]);
-	print::map(
-		cmd.serv_.getAllChan().find(cmd[channel_][0])->second->getOpCli(),
-		cmd[channel_][0] + "operators");
 	for (; idx < cmd[flag_].size(); ++idx) {
+		std::cout << idx << " | "
+				  << cmd[flag_][idx] + " | " + cmd[flagArg_][idx] << std::endl;
 		if (cmd[flag_][idx] == "+o") {
 			if (!check::mode_::oTargetIsOnChan(cmd, idx))
 				return false;
+		}
+		if (cmd[flag_][idx] == "+k") {
+			if (cmd[flagArg_][idx].size() < 8 ||
+				cmd[flagArg_][idx].size() > 26) {
+				reply::send_(cmd.getSdFd(),
+							 "Key should be between 8 and 26 char long");
+				return false;
+			}
 		}
 	}
 	return true;
 }
 
 // TODO: +l: block if arg is not an interger
-// TODO: +k: check that 26 > len > 8
