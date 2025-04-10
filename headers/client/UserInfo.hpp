@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 13:39:45 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:04:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 class UserInfo {
   public:
 	/*                               ORTHODOX CLASS                           */
-	UserInfo(void);
-	~UserInfo(void);
+	UserInfo();
+	~UserInfo();
 
 	/*                               METHODS                                  */
 
@@ -39,6 +39,7 @@ class UserInfo {
 	void setPrefix();
 	void setRegistration(int stage);
 	void setUsername(const std::string &username);
+	void setRealname(const std::string &realname);
 
   private:
 	int registration_;

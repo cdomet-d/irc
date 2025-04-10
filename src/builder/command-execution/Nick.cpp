@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:20:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 13:40:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:05:26 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,25 @@
 void nick(CmdSpec &cmd) {
 	Client &sender = cmd.getSender();
 
-	if (!sender.cliInfo.getNick().empty())
-		cmd.server_.removeNickFromUsedNicks(sender.cliInfo.getNick());
+	cmd.serv_.removeNickFromUsedNicks(sender.cliInfo.getNick());
 	sender.cliInfo.setNick(cmd[nickname_][0]);
-	cmd.server_.addNickToUsedNicks(cmd[nickname_][0], sender.getFd());
-	if (sender.cliInfo.getRegistration() == 1)
-		sender.cliInfo.setRegistration(2);
-	else if (sender.cliInfo.getRegistration() == 2) {
-		registrationCompleted(sender);
-		return ;
+	cmd.serv_.addNickToUsedNicks(cmd[nickname_][0], sender.getFd());
+	if (sender.cliInfo.getRegistration() == 3) {
+		const stringVec &sdChans = sender.getJoinedChans();
+		if (sdChans.empty())
+			reply::send_(cmd.getSdFd(), RPL_NICK(sender.cliInfo.getPrefix(),
+												  cmd[nickname_][0]));
+		for (size_t i = 0; i < sdChans.size(); i++) {
+			Channel &curChan = findCurChan(sdChans[i]);
+			sendMessageChannel(
+				curChan.getCliInChan(),
+				RPL_NICK(sender.cliInfo.getPrefix(), cmd[nickname_][0]));
+		}
 	}
-	reply::send_(cmd.getSender().getFd(), RPL_NICK(sender.cliInfo.getNick()));
+	sender.cliInfo.setPrefix();
+	if (sender.cliInfo.getRegistration() == 1) {
+		sender.cliInfo.setRegistration(2);
+		reply::send_(cmd.getSdFd(), RPL_VALIDNICK(sender.cliInfo.getNick()));
+	} else if (sender.cliInfo.getRegistration() == 2)
+		registrationCompleted(sender);
 }

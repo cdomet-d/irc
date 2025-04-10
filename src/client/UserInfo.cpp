@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 13:39:48 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:06:46 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 
-UserInfo::UserInfo(void)
+UserInfo::UserInfo()
 	: registration_(0), name_(""), nick_("*"), pass_(""), realName_("") {}
-UserInfo::~UserInfo(void) {}
+UserInfo::~UserInfo() {}
 
 UserInfo::UserInfo(const UserInfo &rhs) {
 	static_cast< void >(rhs);
@@ -94,4 +94,8 @@ void UserInfo::setPrefix() {
 
 void UserInfo::setRegistration(int stage) {
 	registration_ = stage;
+}
+
+void UserInfo::setRealname(const std::string &realname) {
+	realName_ = realname;
 }

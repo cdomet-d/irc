@@ -23,11 +23,11 @@ class CmdManager {
   public:
 	/*                               CONSTRUCTORS                             */
 	static CmdManager &getManagerInstance();
-	~CmdManager(void);
+	~CmdManager();
 
 	/*                               METHODS                                  */
-	CmdSpec &findCmd(const std::string &cmName);
-	void executeCm(CmdSpec &cm);
+	CmdSpec &findCmd(std::string cmName);
+	bool executeCm(CmdSpec &cm);
 	void generateCmds();
 	void log(CmdSpec *cm);
 
@@ -44,7 +44,7 @@ class CmdManager {
 	cmdMap commandList_;
 
 	// private constructor
-	CmdManager(void);
+	CmdManager();
 };
 
 #endif

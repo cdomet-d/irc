@@ -33,7 +33,7 @@ INVITE cc cc
 INVITE
 PASS 0
 NICK chacham
-USER c c c c
+USER c 0 * c
 JOIN #chan
 MODE #chan +i
 EOF
@@ -45,7 +45,7 @@ sleep 0.5
 cat <<EOF >&${client2_in_fd}
 PASS 0
 NICK bobby
-USER b b b b
+USER b 0 * b
 JOIN #chan
 EOF
 
@@ -55,7 +55,7 @@ sleep 0.5
 cat <<EOF >&${client3_in_fd}
 PASS 0
 NICK juju
-USER j j j j
+USER j 0 * j
 EOF
 
 sleep 0.5
@@ -124,7 +124,7 @@ wait $PID3 2>/dev/null
 cat outputs/client1_out.txt > outputs/output.txt &
 cat outputs/client2_out.txt >> outputs/output.txt &
 
-sleep 0.5
+sleep 2
 
 # Nettoyer les FIFOs et autres fichiers temporaires
 exec {client1_in_fd}>&-

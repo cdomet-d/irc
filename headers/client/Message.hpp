@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/07 09:07:57 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:04:04 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 class Message {
   public:
 	/*                               ORTHODOX CLASS                           */
-	Message(void);
-	~Message(void);
+	Message();
+	~Message();
 	std::string &operator[](unsigned int i);
 
 	/*                               GETTERS                                  */
@@ -42,6 +42,7 @@ class Message {
 	std::string::size_type evaluateTermination() const;
 	void clearCmdParam();
 	void clearMess();
+	void clear();
 	void formatMode();
 	void removeNewlines();
 	void trimSpaces();

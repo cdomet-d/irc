@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 13:40:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:05:45 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 #include "CmdSpec.hpp"
 #include "Server.hpp"
 
-//TODO boucler sur toutes les targets
+// TODO boucler sur toutes les targets
 void privmsg(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 
 	for (size_t nbTarg = 0; nbTarg < cmd[target_].size(); nbTarg++) {
 		if (cmd[target_][nbTarg].find("#") == cmd[target_][nbTarg].npos) {
-			for (clientMapIt itTarget = cmd.server_.getAllCli().begin();
-				 itTarget != cmd.server_.getAllCli().end(); ++itTarget) {
-				if (itTarget->second->cliInfo.getNick() ==
-					cmd[target_][nbTarg]) {
+			for (clientMapIt itTarget = cmd.serv_.getAllCli().begin();
+				 itTarget != cmd.serv_.getAllCli().end(); ++itTarget) {
+				if (itTarget->second->cliInfo.getNick()
+					== cmd[target_][nbTarg]) {
 					reply::send_(
 						itTarget->first,
 						RPL_PRIVMSG(sender->cliInfo.getPrefix(),

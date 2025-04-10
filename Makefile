@@ -6,7 +6,7 @@
 #    By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/04/04 13:39:37 by aljulien         ###   ########.fr        #
+#    Updated: 2025/04/10 16:03:48 by aljulien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,6 +62,7 @@ BUILD_EXE_SRC:=		Join.cpp \
 					Kick.cpp \
 					Who.cpp \
 					Pass.cpp \
+					Ping.cpp \
 					Nick.cpp \
 					User.cpp \
 					Quit.cpp \
@@ -157,6 +158,7 @@ clean:
 
 fclean: clean
 	$(RM) raw.log
+	$(RM) val.log
 	$(RM) $(NAME)
 	$(RM) $(DEBUG_NAME)
 	@echo
@@ -176,15 +178,18 @@ info:
 # ----------------------------- RUN ------------------------------------------ #
 
 run: all
+	$(RM) raw.log
 	./$(NAME) 4444 0
 
-VFLAGS:= --leak-check=full --show-leak-kinds=all --track-fds=yes
+VFLAGS:= --leak-check=full --log-file="val.log" --show-leak-kinds=all --track-fds=yes
 drun: debug
+	$(RM) raw.log
 	valgrind $(VFLAGS) ./$(DEBUG_NAME) 4444 0
 
-
-
-# ----------------------------- FORMAT ------------------------------------------ #
+# ----------------------------- FORMAT --------------------------------------- #
+format:
+	@printf '$(CYBOLD)%.30s\n$(R)' "-- Formatting... --------------------------"
+	bash .scripts/format-all.sh 
 
 # ---------------------------------------------------------------------------- #
 

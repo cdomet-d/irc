@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 13:59:33 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 13:39:41 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:03:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ typedef enum {
 	TYPE_ERR,
 	/* TYPE B: always MUST have a param */
 	B,
-	/* TYPE C: MUST have a param when set, MUST NOT have a param when unset	*/
+	/* TYPE C: MUST have a param when set, MUST NOT have a param when unset
+   */
 	C,
 	/* TYPE D: MUST NOT have a param */
 	D
@@ -56,6 +57,8 @@ typedef enum {
 
 #define MAX_EVENTS 100
 #define MAX_CHAN_PER_CLI 50
+#define USERLEN 15
+#define NICKLEN 15
 
 // -------------------------------- DEBUG ----------------------------------- //
 

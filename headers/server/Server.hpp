@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 13:39:47 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:04:30 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,14 @@ extern int gSign;
 
 class Client;
 
-//TODO : add queue in case maxevent is returned, for handling too many events at once
+// TODO : add queue in case maxevent is returned, for handling too many events
+// at once
 class Server {
 
   public:
 	/*                               ORTHODOX CLASS                           */
 	static Server &GetServerInstance(int port, std::string password);
-	~Server(void);
+	~Server();
 
 	/*                               EXCEPTIONS                                */
 	class InitFailed : public std::exception {
@@ -84,8 +85,8 @@ class Server {
 	nickMap usedNicks_;
 
 	// private constructor
-	Server(void);
+	Server();
 	Server(int port, std::string password);
 };
 
-#endif //SERVER_HPP
+#endif // SERVER_HPP

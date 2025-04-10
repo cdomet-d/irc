@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 13:39:46 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:04:18 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class Channel {
   public:
 	/*                               ORTHODOX CLASS                           */
 	Channel(std::string name);
-	~Channel(void);
+	~Channel();
 
 	/*                               METHODS                                  */
 	bool addClientToChan(Channel *curChan, Client *curCli);

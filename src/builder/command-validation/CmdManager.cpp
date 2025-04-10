@@ -1,6 +1,6 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
+/*                                                        :::      ::::   */
 /*   CmdManager.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
@@ -19,11 +19,11 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdManager::CmdManager(void) {
+CmdManager::CmdManager() {
 	std::cout << "Cmd Manager instace created" << std::endl;
 }
 
-CmdManager::~CmdManager(void) {
+CmdManager::~CmdManager() {
 	for (cmdMap::iterator it = commandList_.begin(); it != commandList_.end();
 		 it++) {
 		delete it->second;
@@ -33,11 +33,14 @@ CmdManager::~CmdManager(void) {
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-void CmdManager::executeCm(CmdSpec &cm) {
+bool CmdManager::executeCm(CmdSpec &cm) {
 	if (cm.getValid()) {
 		cm.getExecutor()(cm);
 	}
 	cm.cleanAll();
+	if (cm.getName() == "QUIT")
+		return (true);
+	return (false);
 }
 
 void CmdManager::generateCmds() {
@@ -91,11 +94,9 @@ void CmdManager::generateCmds() {
 			.addParam(target_, new CmdParam())
 			.addParam(channel_, new CmdParam())
 			.addChecker(check::enoughParams)
-			.addChecker(check::target)
 			.addChecker(check::chan)
-			.addChecker(check::chans_::isOnChan)
 			.addChecker(check::invite)
-			.addChecker(check::chans_::hasChanAuthorisations)
+			.addChecker(check::chans_::isOp)
 			.CmExecutor(invite)
 			.build());
 
@@ -107,8 +108,7 @@ void CmdManager::generateCmds() {
 			.addParam(message_, new CmdParam(true, false))
 			.addChecker(check::enoughParams)
 			.addChecker(check::chan)
-			.addChecker(check::chans_::isOnChan)
-			.addChecker(check::chans_::hasChanAuthorisations)
+			.addChecker(check::chans_::isOp)
 			.addChecker(check::kick)
 			.CmExecutor(kick)
 			.build());
@@ -121,8 +121,7 @@ void CmdManager::generateCmds() {
 			.addParam(flagArg_, new CmdParam(true, true))
 			.addChecker(check::enoughParams)
 			.addChecker(check::chan)
-			.addChecker(check::chans_::isOnChan)
-			.addChecker(check::chans_::hasChanAuthorisations)
+			.addChecker(check::chans_::isOp)
 			.addChecker(check::mode)
 			.CmExecutor(mode)
 			.build());
@@ -160,8 +159,7 @@ void CmdManager::generateCmds() {
 			.addParam(topic_, new CmdParam(true, false))
 			.addChecker(check::enoughParams)
 			.addChecker(check::chan)
-			.addChecker(check::chans_::isOnChan)
-			.addChecker(check::chans_::hasChanAuthorisations)
+			.addChecker(check::chans_::isOp)
 			.CmExecutor(topic)
 			.build());
 
@@ -172,9 +170,14 @@ void CmdManager::generateCmds() {
 			.addParam(flag_, new CmdParam(true, false))
 			.addChecker(check::enoughParams)
 			.addChecker(check::chan)
-			.addChecker(check::chans_::isOnChan)
-			//TODO: add checker for flag "o"
 			.CmExecutor(who)
+			.build());
+	
+	log(CmdSpec::CmdBuilder()
+			.Name("PING")
+			.addParam(message_, new CmdParam())
+			.addChecker(check::enoughParams)
+			.CmExecutor(ping)
 			.build());
 }
 
@@ -185,8 +188,13 @@ void CmdManager::log(CmdSpec *cm) {
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-CmdSpec &CmdManager::findCmd(const std::string &cmName) {
+CmdSpec &CmdManager::findCmd(std::string cmName) {
 	cmdMap::iterator it;
+
+	if (cmName.find_first_not_of("abcdefghijklmnopqrstuvwxyz") ==
+		std::string::npos)
+		for (size_t i = 0; i < cmName.size(); i++)
+			cmName[i] = std::toupper(cmName[i]);
 
 	it = commandList_.find(cmName);
 	if (it == commandList_.end()) {

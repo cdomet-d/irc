@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 13:39:49 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:06:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Channel::Channel(std::string name)
 	setModes();
 }
 
-Channel::~Channel(void) {
+Channel::~Channel() {
 	// reply::INFO, "Channel deleted:", this->getName());
 }
 
@@ -40,30 +40,12 @@ void sendMessageChannel(clientMap allCliChannel, std::string message) {
 
 bool Channel::addClientToChan(Channel *curChan, Client *sender) {
 	curChan->addCli(ALLCLI, sender);
-
 	sender->addOneChan(curChan->getName());
-
-	for (clientMapIt itCli = curChan->getCliInChan().begin();
-		 itCli != curChan->getCliInChan().end(); ++itCli) {
-		reply::send_(itCli->second->getFd(),
-					 RPL_JOIN(sender->cliInfo.getPrefix(), curChan->getName()));
-	}
-	if (curChan->getTopic().empty() == true)
-		reply::send_(sender->getFd(), RPL_NOTOPIC(sender->cliInfo.getNick(),
-												  curChan->getName()));
-	else
-		reply::send_(sender->getFd(),
-					 RPL_TOPIC(sender->cliInfo.getNick(), curChan->getName(),
-							   curChan->getTopic()));
-	if (curChan->getOpCli().empty()) {
-		reply::send_(sender->getFd(), RPL_CHANOPE(sender->cliInfo.getNick(),
-												  curChan->getName()));
+	if (curChan->getOpCli().empty())
 		curChan->addCli(OPCLI, sender);
-	}
 	if (curChan->getInvitCli().find(sender->getFd()) !=
 		curChan->getInvitCli().end())
 		curChan->removeCli(INVITECLI, sender->getFd());
-
 	return (true);
 }
 
@@ -100,52 +82,66 @@ void Channel::removeCli(mapChan curMap, int fdCli) {
 std::string Channel::getName() const {
 	return (name_);
 }
+
 std::string Channel::getTopic() const {
 	return (topic_);
 }
+
 size_t Channel::getMaxCli() const {
 	return (maxCli_);
 }
+
 bool Channel::getInviteOnly() const {
 	return (inviteOnly_);
 }
+
 bool Channel::getIsPassMatch() const {
 	return (isPassMatch_);
 }
+
 bool Channel::getTopicRestrict() const {
 	return (topicRestrict_);
 }
+
 const clientMap &Channel::getCliInChan() const {
 	return (cliInChan_);
 }
+
 const clientMap &Channel::getOpCli() const {
 	return (cliIsOperator_);
 }
+
 const clientMap &Channel::getInvitCli() const {
 	return (cliInvited_);
 }
+
 std::string Channel::getPassword() const {
 	return (pass_);
 }
+
 std::string Channel::getModes() const {
 	return (modes_);
 }
+
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
 void Channel::setName(std::string name) {
 	name_ = name;
 }
+
 void Channel::setTopic(std::string topic) {
 	topic_ = topic;
 }
+
 void Channel::setPassword(std::string password) {
 	pass_ = password;
 }
+
 void Channel::setModes() {
 	std::string modes = "+";
 
-	if (getMaxCli() != 0)
+	if (static_cast<ssize_t>(getMaxCli()) != -1)
 		modes.append("l");
 	if (getInviteOnly() == true)
 		modes.append("i");
@@ -155,15 +151,20 @@ void Channel::setModes() {
 		modes.append("t");
 	modes_ = modes;
 }
+
 void Channel::setMaxCli(int maxCli) {
 	maxCli_ = maxCli;
 }
+
 void Channel::setInviteOnly(bool inviteOnly) {
 	inviteOnly_ = inviteOnly;
 }
+
 void Channel::setIsPassMatch(bool password) {
 	isPassMatch_ = password;
 }
+
 void Channel::setTopicRestrict(bool topicRestrict) {
 	topicRestrict_ = topicRestrict;
 }
+

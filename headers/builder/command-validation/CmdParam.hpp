@@ -21,25 +21,26 @@
 class CmdParam {
   public:
 	/*                               CONSTRUCTORS                             */
-	CmdParam(void);
+	CmdParam();
 	CmdParam(const bool opt, const bool list);
 	CmdParam(const CmdParam &rhs);
-	~CmdParam(void);
+	~CmdParam();
 
 	/*                               METHODS                                  */
 	bool empty();
 	bool isList() const;
-	bool isOpt(void) const;
+	bool isOpt() const;
 	CmdParam &operator=(const CmdParam &rhs);
-	size_t size(void) const;
-	std::string &operator[](unsigned int i);
-	void addOne(unsigned int pos);
-	void clean(void);
-	void rmParam(unsigned int pos);
-	void trimParam(int paramIdx, int startPos, int lenToTrim);
+	size_t size() const;
+	std::string &operator[](size_t i);
+	const std::string &operator[](size_t i) const;
+	void addOne(size_t pos);
+	void clean();
+	void rmParam(size_t pos);
+	void trimParam(size_t paramIdx, size_t lenToTrim);
 
 	/*                               GETTERS                                  */
-	const stringVec &getInnerParam(void) const;
+	const stringVec &getInnerParam() const;
 
 	/*                               SETTERS                                  */
 	void setOneParam(std::string &buffer);

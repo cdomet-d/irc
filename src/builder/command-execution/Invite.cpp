@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 13:40:04 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:04:49 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void invite(CmdSpec &cmd) {
 	if (cmd[target_].empty()) {
 		for (channelMapIt chan = server.getAllChan().begin();
 			 chan != server.getAllChan().end(); ++chan) {
-			if (chan->second->getInvitCli().find(sender->getFd()) !=
-				chan->second->getInvitCli().end())
+			if (chan->second->getInvitCli().find(sender->getFd())
+				!= chan->second->getInvitCli().end())
 				reply::send_(
 					sender->getFd(),
 					RPL_INVITELIST(sender->cliInfo.getNick(), chan->first));
@@ -34,8 +34,14 @@ void invite(CmdSpec &cmd) {
 	}
 
 	Channel &curChan = findCurChan(cmd[channel_][0]);
-	int fdTarget = server.getUsedNick().find(cmd[target_][0])->second;
-	Client *targetCli = server.getAllCli().find(fdTarget)->second;
+	// use NickMap
+	Client *targetCli = NULL;
+	for (clientMapIt itTarget = cmd.serv_.getAllCli().begin();
+		 itTarget != cmd.serv_.getAllCli().end(); ++itTarget) {
+		if (itTarget->second->cliInfo.getNick() == cmd[target_][0]) {
+			targetCli = itTarget->second;
+		}
+	}
 
 	reply::send_(sender->getFd(),
 				 RPL_INVITING(sender->cliInfo.getNick(),

@@ -14,21 +14,27 @@
 #define VALIDATOR_HPP
 
 #include "CmdSpec.hpp"
+#include <algorithm>
 
 namespace check {
-	bool chan(CmdSpec &cmd, int idx);
-	bool invite(CmdSpec &cmd, int idx);
-	bool kick(CmdSpec &cmd, int idx);
-	bool part(CmdSpec &cmd, int idx);
-	bool mess(CmdSpec &cmd, int idx);
-	bool mode(CmdSpec &cmd, int idx);
-	bool nick(CmdSpec &cmd, int idx);
-	bool target(CmdSpec &cmd, int idx);
-	bool targetIsOnChan(CmdSpec &cmd, int idx);
-	bool user(CmdSpec &cmd, int idx);
-	bool join(CmdSpec &cmd, int idx);
-	bool enoughParams(CmdSpec &cmd, int idx);
-	bool findString(stringVec array, std::string &strToFind);
+	bool chan(CmdSpec &cmd, size_t idx);
+	bool invite(CmdSpec &cmd, size_t idx);
+	bool kick(CmdSpec &cmd, size_t idx);
+	bool part(CmdSpec &cmd, size_t idx);
+	bool mess(CmdSpec &cmd, size_t idx);
+	bool mode(CmdSpec &cmd, size_t idx);
+	bool nick(CmdSpec &cmd, size_t idx);
+	bool target(CmdSpec &cmd, size_t idx);
+	bool user(CmdSpec &cmd, size_t idx);
+	bool join(CmdSpec &cmd, size_t idx);
+	bool enoughParams(CmdSpec &cmd, size_t idx);
+	const stringVec &getTargetChan(const std::string &target,
+								   const Server &serv);
+	template < typename MapType >
+	bool exists(std::string arg, const MapType &map) {
+		typename MapType::const_iterator toFind = map.find(arg);
+		return toFind != map.end();
+	}
 
 	namespace mode_ {
 		bool formatArgs(CmdSpec &cmd);
@@ -39,9 +45,6 @@ namespace check {
 	} // namespace mode_
 
 	namespace nick_ {
-		bool isUnique(const std::string &nick, const nickMap &regCli,
-					  const Client &sender);
-		std::string trim(const std::string &nick);
 		bool isAllowed(const char &c);
 		bool isSpecial(const char &c);
 		bool syntaxIsValid(const std::string &nick, const Client &sender);
@@ -53,17 +56,18 @@ namespace check {
 		bool validKey(Channel &chan, CmdParam &keys, size_t i, Client &sender);
 		bool chanHasRoom(Channel &chan, Client &sender);
 		bool cliHasMaxChans(Channel &chan, Client &sender);
+		bool syntaxIsValid(CmdSpec &cmd, size_t idx);
 	} // namespace join_
 
 	namespace chans_ {
-		bool isOnChan(CmdSpec &cmd, int idx);
-		bool hasChanAuthorisations(CmdSpec &cmd, int idx);
+		bool isOp(CmdSpec &cmd, size_t idx);
+		bool onChan(std::string arg, const stringVec &arr);
 	} // namespace chans_
 
 	namespace register_ {
-		bool isRegistered(CmdSpec &cmd, int idx);
-		bool stageDone(CmdSpec &cmd, int idx);
-		bool pwMatch(CmdSpec &cmd, int idx);
+		bool isRegistered(CmdSpec &cmd, size_t idx);
+		bool stageDone(CmdSpec &cmd, size_t idx);
+		bool pwMatch(CmdSpec &cmd, size_t idx);
 	} // namespace register_
 
 	namespace mess_ {

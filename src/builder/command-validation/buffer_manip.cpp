@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/07 09:07:50 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:06:00 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,15 @@ bool buffer_manip::prepareCommand(Client &sender) {
 			sender.mess.formatMode();
 		CmdManager &manager = CmdManager::getManagerInstance();
 		try {
-			if (sender.mess.getCmd() == "QUIT") {
-				manager.executeCm(
-					manager.findCmd(sender.mess.getCmd()).process(sender));
+			if (manager.executeCm(
+					manager.findCmd(sender.mess.getCmd()).process(sender)))
 				return true;
-			}
-			manager.executeCm(
-				manager.findCmd(sender.mess.getCmd()).process(sender));
-
 		} catch (const CmdManager::CmdNotFoundException &e) {
 			reply::send_(sender.getFd(),
 						 ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
 											sender.mess.getCmd()));
 		}
+		sender.mess.clear();
 		sender.mess.updateMess();
 	}
 	return true;

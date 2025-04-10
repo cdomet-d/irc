@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/07 09:08:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:03:43 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 
-Message::Message(void) {}
+Message::Message() {}
 
-Message::~Message(void) {}
+Message::~Message() {}
 
 std::string &Message::operator[](unsigned int i) {
 	if (i >= cmdParam_.size())
@@ -46,7 +46,8 @@ const std::string Message::getMess() const {
 	return message_;
 }
 
-/* in the event where several messages separated by /r/n were sent, the leftover part of the raw message */
+/* in the event where several messages separated by /r/n were sent, the leftover
+ * part of the raw message */
 const std::string Message::getLeft() const {
 	return leftover_;
 }
@@ -83,6 +84,11 @@ void Message::clearMess() {
 	trailing_.clear();
 }
 
+void Message::clear() {
+	clearMess();
+	clearCmdParam();
+}
+
 void Message::formatMode() {
 	if (cmdParam_.size() < 2)
 		return;
@@ -93,19 +99,29 @@ void Message::formatMode() {
 	modeFormat.push_back(cmdParam_.at(0));
 	modeFormat.push_back(cmdParam_.at(1));
 
-	for (stringVec::iterator i = cmdParam_.begin() + 2; i != cmdParam_.end();
-		 ++i) {
-		if (!i->empty()) {
-			const char firstChar = (*i)[0];
+	if (cmdParam_.size() > 2) {
+		for (size_t i = 0; i < cmdParam_[2].size(); i++) {
+			const char firstChar = cmdParam_[2][i];
 			if (firstChar == '+' || firstChar == '-') {
-				std::string flags = *i;
-				for (size_t j = 1; j < flags.size(); ++j) {
+				i++;
+				while (i < cmdParam_[2].size()) {
 					flagformat += firstChar;
-					flagformat += (*i)[j];
+					flagformat += cmdParam_[2][i];
 					flagformat += ',';
+					if ((i + 1) < cmdParam_[2].size() &&
+						(cmdParam_[2][i + 1] == '+' ||
+						 cmdParam_[2][i + 1] == '-'))
+						break;
+					++i;
 				}
-			} else {
-				paramformat += *i;
+			} else
+				flagformat += cmdParam_[2][i];
+		}
+
+		for (stringVec::iterator it = cmdParam_.begin() + 3;
+			 it != cmdParam_.end(); ++it) {
+			if (!it->empty()) {
+				paramformat += *it;
 				paramformat += ',';
 			}
 		}
@@ -168,8 +184,8 @@ void Message::removeNewlines() {
 		message_.clear();
 		return;
 	}
-	std::string::size_type newline =
-		(termSize == 2 ? message_.find("\r\n") : message_.find("\n"));
+	std::string::size_type newline
+		= (termSize == 2 ? message_.find("\r\n") : message_.find("\n"));
 	leftover_ = message_.substr(newline + termSize);
 	message_.erase(message_.begin() + newline, message_.end());
 	return;
@@ -178,8 +194,8 @@ static bool isConsecutiveSpace(char left, char right) {
 	return (left == ' ' && right == ' ');
 }
 void Message::trimSpaces() {
-	std::string::iterator newEnd =
-		std::unique(message_.begin(), message_.end(), isConsecutiveSpace);
+	std::string::iterator newEnd
+		= std::unique(message_.begin(), message_.end(), isConsecutiveSpace);
 	if (newEnd != message_.end())
 		message_.erase(newEnd, message_.end());
 }

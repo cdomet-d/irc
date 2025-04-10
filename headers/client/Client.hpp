@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 13:39:43 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:03:59 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@
 class Client {
   public:
 	/*                               CONSTRUCTORS                             */
-	Client(void);
-	~Client(void);
+	Client();
+	~Client();
 
 	/*                               GETTERS                                  */
 	int getFd() const;

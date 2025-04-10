@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:08:25 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 13:40:02 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:03:22 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,15 @@ void kick(CmdSpec &cmd);
 void part(CmdSpec &cmd);
 void privmsg(CmdSpec &cmd);
 void quit(CmdSpec &cmd);
+void ping(CmdSpec &cmd);
 
-//UTILS
+// UTILS
 Channel &findCurChan(std::string chanName);
 Channel *createChan(const std::string &chanName);
 void checkOnlyOperator(Channel *curChan);
 void partOneChan(Client *sender, Channel &curChan);
-void partAllChans(Client *sender);
+void partAllChans(CmdSpec &cmd, const std::string &message);
 void registrationCompleted(Client &sender);
+void partMess(Client *sender, Channel &curChan, const std::string &message);
 
-#endif ///CMDEXECUTION_HPP
+#endif /// CMDEXECUTION_HPP

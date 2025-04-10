@@ -2,12 +2,12 @@
 
 rm -f outputs/client*
 
-mkfifo outputs/client1_in outputs/client1_out
+mkfifo outputs/client1_in.txt outputs/client1_out.txt
 mkfifo outputs/client2_in.txt outputs/client2_out.txt
 mkfifo outputs/client3_in.txt outputs/client3_out.txt
 
-exec {client1_in_fd}<>outputs/client1_in
-exec {client1_out_fd}<>outputs/client1_out
+exec {client1_in_fd}<>outputs/client1_in.txt
+exec {client1_out_fd}<>outputs/client1_out.txt
 exec {client2_in_fd}<>outputs/client2_in.txt
 exec {client2_out_fd}<>outputs/client2_out.txt
 exec {client3_in_fd}<>outputs/client3_in.txt
@@ -27,7 +27,7 @@ cat <<EOF >&${client1_in_fd}
 KICK
 PASS 0
 NICK chacham
-USER c c c c
+USER c 0 * c
 JOIN #chan
 KICK
 KICK wrongchan dontexist
@@ -40,7 +40,7 @@ sleep 0.5
 cat <<EOF >&${client2_in_fd}
 PASS 0
 NICK bobby
-USER b b b b
+USER b 0 * b
 KICK #chan chacham
 EOF
 
@@ -50,7 +50,7 @@ sleep 0.5
 cat <<EOF >&${client3_in_fd}
 PASS 0
 NICK juju
-USER j j j j
+USER j 0 * j
 JOIN #chan
 EOF
 
@@ -111,7 +111,7 @@ wait $PID3 2>/dev/null
 cat outputs/client1_out.txt > outputs/output.txt &
 cat outputs/client2_out.txt >> outputs/output.txt &
 
-sleep 0.5
+sleep 2
 
 exec {client1_in_fd}>&-
 exec {client1_out_fd}>&-

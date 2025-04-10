@@ -6,24 +6,27 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 16:42:41 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/04 13:40:11 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:06:13 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
 
-bool check::mess(CmdSpec &cmd, int idx) {
-	(void)idx;
+bool check::mess(CmdSpec &cmd, size_t idx) {
 	if (!check::mess_::params(cmd))
 		return (false);
 
-	size_t i = 0;
-	while (i < cmd[target_].size()) {
-		if (!check::target(cmd, i)) {
-			cmd[target_].rmParam(i);
+	while (idx < cmd[target_].size()) {
+		if (cmd[target_][idx][0] != '#') {
+			if (!check::target(cmd, idx)) {
+				cmd[target_].rmParam(idx);
+				continue;
+			}
+		} else if (!check::chan(cmd, idx)) {
+			cmd[target_].rmParam(idx);
 			continue;
 		}
-		i++;
+		idx++;
 	}
 	if (!cmd[target_].size())
 		return (false);
@@ -32,14 +35,12 @@ bool check::mess(CmdSpec &cmd, int idx) {
 
 bool check::mess_::params(CmdSpec &cmd) {
 	if (cmd[target_].empty()) {
-		reply::send_(
-			cmd.getSender().getFd(),
-			ERR_NORECIPIENT(cmd.getSender().cliInfo.getNick(), cmd.getName()));
+		reply::send_(cmd.getSdFd(),
+					 ERR_NORECIPIENT(cmd.getSdNick(), cmd.getName()));
 		return (false);
 	}
 	if (cmd[message_].empty()) {
-		reply::send_(cmd.getSender().getFd(),
-					 ERR_NOTEXTTOSEND(cmd.getSender().cliInfo.getNick()));
+		reply::send_(cmd.getSdFd(), ERR_NOTEXTTOSEND(cmd.getSdNick()));
 		return (false);
 	}
 	return (true);

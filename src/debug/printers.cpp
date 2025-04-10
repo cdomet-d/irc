@@ -6,12 +6,11 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 13:42:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/04 13:39:48 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:06:58 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printers.hpp"
-#include <iomanip>
 
 void print::charByChar(const std::string &buf) {
 	for (std::string::size_type i = 0; i < buf.size(); ++i) {
@@ -26,11 +25,12 @@ void print::charByChar(const std::string &buf) {
 
 void print::cmdParam(const stringVec &obj, std::string where) {
 	if (obj.empty())
-		return std::cout << "[ ... ]" << std::endl, (void)false;
+		return std::cout << where + ": [ ... ]" << std::endl, (void)false;
 	std::cout << "[" << std::endl;
 	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it) {
 		if ((*it).empty())
-			std::cout << "\t" + where + ":\t" << "[...]" << std::endl;
+			std::cout << "\t" + where + ":\t"
+					  << "[...]" << std::endl;
 		else
 			std::cout << "\t" + where + ":\t" << *it << std::endl;
 	}
@@ -112,7 +112,8 @@ void print::modeArgs(const stringVec &mdestr, const stringVec &modeargs,
 	std::cout << " | ";
 	std::cout << std::setw(awidth) << std::left << "arg";
 	std::cout << " |" << std::endl;
-	for (stringVec::const_iterator i = mdestr.begin(); i != mdestr.end(); ++i) {
+	for (stringVec::const_iterator i = mdestr.begin(); i != mdestr.end();
+		 ++i) {
 		if (!empty_flags) {
 			std::cout << "\t| ";
 			print::argument(i, swidth);
