@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:37:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/07 17:07:30 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/10 15:49:50 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,11 @@ void reply::log(e_level level, std::string message) {
 						 << std::flush;
 			break;
 		case REPLY:
-			serv.logfile << "[" << timeStamp() << "] REPLY " << message
+			serv.logfile << "[" << timeStamp() << "] >> " << message
 						 << std::flush;
 			break;
 		case GOT:
-			serv.logfile << "[" << timeStamp() << "] GOT " << message
+			serv.logfile << "[" << timeStamp() << "] << " << message
 						 << std::flush;
 			break;
 		}
@@ -75,11 +75,11 @@ void reply::log(e_level level, std::string message, std::string verbose) {
 						 << verbose << std::flush;
 			break;
 		case (REPLY):
-			serv.logfile << "[" << timeStamp() << "] REPLY " << message
+			serv.logfile << "[" << timeStamp() << "] >> " << message
 						 << verbose << std::flush;
 			break;
 		case GOT:
-			serv.logfile << "[" << timeStamp() << "] GOT " << message
+			serv.logfile << "[" << timeStamp() << "] << " << message
 						 << std::flush;
 			break;
 		}

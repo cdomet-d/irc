@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/09 18:04:47 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/10 14:49:23 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,7 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 	size_t size;
 	for (size_t i = 0; i < cmd[flag_].size();) {
 		size = cmd[flag_].size();
-		if (!check::mode_::validFlag(set, type, cmd[flag_][i],
-									 cmd.getSender()))
+		if (!check::mode_::validFlag(set, type, cmd[flag_][i], cmd.getSender()))
 			return false;
 
 		const bool needArg = ((type == B) || (type == C && set == SET));
@@ -111,9 +110,10 @@ bool check::mode_::oTargetIsOnChan(const CmdSpec &cmd, size_t idx) {
 		return false;
 	}
 	tChan = check::getTargetChan(cmd[flagArg_][idx], cmd.serv_);
-	if (!check::chans_::onChan(cmd[flagArg_][idx], tChan)) {
+	if (!check::chans_::onChan(cmd[channel_][idx], tChan)) {
 		reply::send_(cmd.getSdFd(),
-					 ERR_NOTONCHANNEL(cmd[flag_][idx], cmd[channel_][0]));
+					 ERR_USERNOTINCHANNEL(cmd.getSdNick(), cmd[flag_][idx],
+										  cmd[channel_][0]));
 		return false;
 	}
 	return true;
@@ -127,6 +127,9 @@ bool check::mode(CmdSpec &cmd, size_t idx) {
 	print::map(
 		cmd.serv_.getAllChan().find(cmd[channel_][0])->second->getCliInChan(),
 		cmd[channel_][0]);
+	print::map(
+		cmd.serv_.getAllChan().find(cmd[channel_][0])->second->getOpCli(),
+		cmd[channel_][0] + "operators");
 	for (; idx < cmd[flag_].size(); ++idx) {
 		if (cmd[flag_][idx] == "+o") {
 			if (!check::mode_::oTargetIsOnChan(cmd, idx))
