@@ -95,3 +95,7 @@ void UserInfo::setPrefix() {
 void UserInfo::setRegistration(int stage) {
 	registration_ = stage;
 }
+
+void UserInfo::setRealname(const std::string &realname) {
+	realName_ = realname;
+}

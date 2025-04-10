@@ -31,12 +31,15 @@ void registrationCompleted(Client &sender) {
 				 RPL_CREATED(sender.cliInfo.getNick(), timeStamp()));
 	reply::send_(sender.getFd(), RPL_MYINFO(sender.cliInfo.getNick()));
 	reply::send_(sender.getFd(), RPL_ISUPPORT(sender.cliInfo.getNick()));
-	reply::send_(sender.getFd(), REG_COMPLETE(sender.cliInfo.getNick()));
+	reply::send_(sender.getFd(), RPL_MOTDSTART(sender.cliInfo.getNick()));
+	reply::send_(sender.getFd(), RPL_MOTD(sender.cliInfo.getNick()));
+	reply::send_(sender.getFd(), RPL_ENDOFMOTD(sender.cliInfo.getNick()));
 }
 
 void user(CmdSpec &cmd) {
 	Client &sender = cmd.getSender();
 	sender.cliInfo.setUsername(cmd[username_][0]);
+	sender.cliInfo.setRealname(cmd[realname_][0]);
 	sender.cliInfo.setPrefix();
 	if (sender.cliInfo.getRegistration() == 1) {
 		sender.cliInfo.setRegistration(2);
