@@ -12,18 +12,18 @@
 :silver.libera.chat 403 chacham #dontexist :No such channel
 :silver.libera.chat 324 chacham #chan +t
 :silver.libera.chat 329 chacham #chan 1743083795
-:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr MODE #chan -t
-:bobyy!~b@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr JOIN #chan
-:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr MODE #chan +itkol key bobyy 2
-:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr MODE #chan -itkol * bobyy
+:chacham!~c@hostname MODE #chan -t
+:bobyy!~b@hostname JOIN #chan
+:chacham!~c@hostname MODE #chan +itkol key bobyy 2
+:chacham!~c@hostname MODE #chan -itkol * bobyy
 :silver.libera.chat 461 chacham MODE :Not enough parameters
 :silver.libera.chat 461 chacham MODE :Not enough parameters
 :servername 696 chacham #chan l -10 :is unknown mode char to me
 :servername 696 chacham #chan l hehe :is unknown mode char to me
 :silver.libera.chat 401 chacham dontexist :No such nick/channel
-:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr KICK #chan bobyy :bobyy
+:chacham!~c@hostname KICK #chan bobyy :bobyy
 :silver.libera.chat 441 chacham bobyy #chan :They aren't on that channel
-:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr MODE #chan +i-i
+:chacham!~c@hostname MODE #chan +i-i
 :servername NOTICE * : Valid password ! You may register
 :servername NOTICE * :Introducing new nick "bobby"
 :servername NOTICE bobby :Registration complete
@@ -31,6 +31,6 @@
 :servername 353 bobby @ #chan :bobby @chacham
 :servername 366 bobby #chan :End of /NAMES list.
 :silver.libera.chat 482 bobyy #chan :You're not a channel operator
-:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr MODE #chan +itkol key bobyy 2
-:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr MODE #chan -itkol * bobyy
-:chacham!~c@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr KICK #chan bobyy :bobyy
+:chacham!~c@hostname MODE #chan +itkol key bobyy 2
+:chacham!~c@hostname MODE #chan -itkol * bobyy
+:chacham!~c@hostname KICK #chan bobyy :bobyy

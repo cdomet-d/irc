@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_registration.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:45:57 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/09 15:43:04 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 16:22:11 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ bool check::register_::pwMatch(CmdSpec &cmd, size_t idx) {
 bool check::register_::isRegistered(CmdSpec &cmd, size_t idx) {
 	(void)idx;
 	if (cmd.getSender().cliInfo.getRegistration() == 3) {
-		reply::send_(cmd.getSdFd(), ERR_ALREADYREGISTRED(cmd.getSdNick()));
+		reply::send_(cmd.getSdFd(), ERR_ALREADYREGISTERED(cmd.getSdNick()));
 		return (false);
 	}
 	return (true);

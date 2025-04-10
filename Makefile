@@ -62,6 +62,7 @@ BUILD_EXE_SRC:=		Join.cpp \
 					Kick.cpp \
 					Who.cpp \
 					Pass.cpp \
+					Ping.cpp \
 					Nick.cpp \
 					User.cpp \
 					Quit.cpp \

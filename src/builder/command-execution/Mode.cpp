@@ -3,19 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/09 15:42:15 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 16:17:51 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdExecution.hpp"
-#include "CmdSpec.hpp"
-#include "Server.hpp"
 #include <cerrno>
 #include <cstdlib>
 #include <limits>
+#include <sstream>
 
 void executeO(std::string flag, std::string param, Channel &curChan) {
 	Client *targetCli = NULL;
@@ -34,8 +33,8 @@ void executeO(std::string flag, std::string param, Channel &curChan) {
 	}
 
 	if (flag == "+o ") {
-		std::cout << targetCli->getFd() << targetCli->cliInfo.getNick()
-				  << std::endl;
+		// std::cout << targetCli->getFd() << targetCli->cliInfo.getNick()
+		// 		  << std::endl;
 		curChan.addCli(OPCLI, targetCli);
 		reply::send_(
 			targetCli->getFd(),
@@ -61,6 +60,7 @@ void executeI(std::string flag, std::string param, Channel &curChan) {
 		curChan.setModes();
 	}
 }
+
 void executeT(std::string flag, std::string param, Channel &curChan) {
 	(void)param;
 
@@ -105,8 +105,8 @@ void executeL(std::string flag, std::string param, Channel &curChan) {
 			curChan.setModes();
 		}
 	}
-	if (flag == "-l" && curChan.getMaxCli() == 0) {
-		curChan.setMaxCli(0);
+	if (flag == "-l" && static_cast< ssize_t >(curChan.getMaxCli()) != -1) {
+		curChan.setMaxCli(-1);
 		curChan.setModes();
 	}
 }
@@ -138,47 +138,33 @@ Channel &findCurChan(std::string chanName) {
 	return (*curChanIt->second);
 }
 
-void sendModeMessages(std::string &first, std::string &second,
-					  Channel &curChan, std::string nick) {
-	std::string messages
-		= RPL_CHANNELMODEIS(nick, curChan.getName(), first)
-		  + RPL_CHANNELMODEIS(nick, curChan.getName(), second);
-	sendMessageChannel(curChan.getCliInChan(), messages);
-}
-
 void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 	std::string negMode = "-";
 	std::string posMode = "+";
-	std::string newPassMaxCli = " ";
+	std::string newPassMaxCli;
 
 	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
 		if (cmd[flag_][nbFlag].find("+") != std::string::npos) {
-			if (cmd[flag_][nbFlag] == "+l" || cmd[flag_][nbFlag] == "+k")
+			if (cmd[flag_][nbFlag] == "+l" || cmd[flag_][nbFlag] == "+k" ||
+				cmd[flag_][nbFlag] == "+o")
 				newPassMaxCli.append(cmd[flagArg_][nbFlag] + " ");
 			posMode += cmd[flag_][nbFlag][1];
 		}
 		if (cmd[flag_][nbFlag].find("-") != std::string::npos)
 			negMode += cmd[flag_][nbFlag][1];
 	}
-	posMode.append(newPassMaxCli);
-	if (!strcmp("-", negMode.c_str()) && negMode.size() == 1) {
+	if (negMode.size() == 1) {
+		sendMessageChannel(
+			curChan.getCliInChan(),
+			RPL_MODE(sender->cliInfo.getPrefix(), curChan.getName(), posMode, newPassMaxCli));
+	} else if (posMode.size() == 1) {
+		sendMessageChannel(
+			curChan.getCliInChan(),
+			RPL_MODE(sender->cliInfo.getPrefix(), curChan.getName(), negMode, ""));
+	} else
 		sendMessageChannel(curChan.getCliInChan(),
-						   RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
-											 curChan.getName(), posMode));
-		return;
-	}
-
-	if (!strcmp("-", posMode.c_str()) && posMode.size() == 1) {
-		sendMessageChannel(curChan.getCliInChan(),
-						   RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
-											 curChan.getName(), negMode));
-		return;
-	}
-
-	(cmd[flag_][0][0] == '+') ? sendModeMessages(posMode, negMode, curChan,
-												 sender->cliInfo.getNick())
-							  : sendModeMessages(negMode, posMode, curChan,
-												 sender->cliInfo.getNick());
+						   RPL_MODE(sender->cliInfo.getPrefix(),
+									curChan.getName(), posMode + negMode, newPassMaxCli));
 }
 
 void mode(CmdSpec &cmd) {
@@ -186,8 +172,22 @@ void mode(CmdSpec &cmd) {
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 
 	if (!cmd[flag_].size()) {
-		reply::send_(sender->getFd(), RPL_UMODEIS(sender->cliInfo.getNick(),
-												  curChan.getModes()));
+		std::string modeArgs;
+
+		if (curChan.getModes().find("l") != std::string::npos) {
+			std::stringstream sstream;
+			std::string maxCli;
+			sstream << curChan.getMaxCli();
+			sstream >> maxCli;
+			modeArgs += maxCli;
+		}
+		if (curChan.getModes().find("k") != std::string::npos) {
+			modeArgs += (" " + curChan.getPassword());
+		}
+		reply::send_(sender->getFd(),
+					 RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
+									   curChan.getName(), curChan.getModes(),
+									   modeArgs));
 		return;
 	}
 	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag)

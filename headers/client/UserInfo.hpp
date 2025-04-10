@@ -39,6 +39,7 @@ class UserInfo {
 	void setPrefix();
 	void setRegistration(int stage);
 	void setUsername(const std::string &username);
+	void setRealname(const std::string &realname);
 
   private:
 	int registration_;

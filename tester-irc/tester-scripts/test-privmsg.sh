@@ -27,7 +27,7 @@ cat <<EOF >&${client1_in_fd}
 PRIVMSG
 PASS 0
 NICK chacham
-USER c c c c
+USER c 0 * c
 JOIN #chan
 JOIN #chan2
 
@@ -39,7 +39,7 @@ sleep 0.5
 cat <<EOF >&${client2_in_fd}
 PASS 0
 NICK bobby
-USER b b b b
+USER b 0 * b
 JOIN #chan
 JOIN #chan2
 EOF
@@ -50,7 +50,7 @@ sleep 0.5
 cat <<EOF >&${client3_in_fd}
 PASS 0
 NICK juju
-USER j j j j
+USER j 0 * j
 EOF
 
 sleep 0.5
@@ -89,7 +89,7 @@ cat outputs/client1_out > outputs/output.txt &
 cat outputs/client2_out.txt >> outputs/output.txt &
 cat outputs/client3_out.txt >> outputs/output.txt &
 
-sleep 0.5
+sleep 2
 
 exec {client1_in_fd}>&-
 exec {client1_out_fd}>&-
