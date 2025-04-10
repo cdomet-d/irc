@@ -172,13 +172,6 @@ void CmdManager::generateCmds() {
 			.addChecker(check::chan)
 			.CmExecutor(who)
 			.build());
-	
-	log(CmdSpec::CmdBuilder()
-			.Name("PING")
-			.addParam(message_, new CmdParam())
-			.addChecker(check::enoughParams)
-			.CmExecutor(ping)
-			.build());
 }
 
 void CmdManager::log(CmdSpec *cm) {
