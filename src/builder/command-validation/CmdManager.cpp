@@ -172,6 +172,13 @@ void CmdManager::generateCmds() {
 			.addChecker(check::chan)
 			.CmExecutor(who)
 			.build());
+	
+	log(CmdSpec::CmdBuilder()
+			.Name("PING")
+			.addParam(message_, new CmdParam())
+			.addChecker(check::enoughParams)
+			.CmExecutor(ping)
+			.build());
 }
 
 void CmdManager::log(CmdSpec *cm) {
@@ -181,8 +188,13 @@ void CmdManager::log(CmdSpec *cm) {
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-CmdSpec &CmdManager::findCmd(const std::string &cmName) {
+CmdSpec &CmdManager::findCmd(std::string cmName) {
 	cmdMap::iterator it;
+
+	if (cmName.find_first_not_of("abcdefghijklmnopqrstuvwxyz") ==
+		std::string::npos)
+		for (size_t i = 0; i < cmName.size(); i++)
+			cmName[i] = std::toupper(cmName[i]);
 
 	it = commandList_.find(cmName);
 	if (it == commandList_.end()) {

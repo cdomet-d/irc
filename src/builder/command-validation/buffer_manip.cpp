@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   buffer_manip.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/07 17:18:33 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/09 16:19:57 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@ bool buffer_manip::prepareCommand(Client &sender) {
 			if (manager.executeCm(
 					manager.findCmd(sender.mess.getCmd()).process(sender)))
 				return true;
-			sender.mess.clear();
 		} catch (const CmdManager::CmdNotFoundException &e) {
 			reply::send_(sender.getFd(),
 						 ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
 											sender.mess.getCmd()));
 		}
+		sender.mess.clear();
 		sender.mess.updateMess();
 	}
 	return true;

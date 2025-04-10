@@ -41,7 +41,7 @@ NICK }cha
 NICK +cha
 NICK cha$
 NICK cha-[]\\^4\`{}
-USER c c c c
+USER c 0 * c
 NICK chacham sweet
 NICK cha#
 NICK cha:
@@ -55,7 +55,7 @@ cat <<EOF >&${client2_in_fd}
 PASS 0
 NICK chacham
 NICK bobby
-USER b b b b
+USER b 0 * b
 EOF
 
 sleep 0.5
@@ -68,6 +68,8 @@ sleep 0.5
 
 # ➤ client1 change de nick
 echo "NICK sweet" >&${client1_in_fd}
+
+sleep 0.5
 
 # Quit pour les deux clients
 echo "QUIT" >&${client1_in_fd}

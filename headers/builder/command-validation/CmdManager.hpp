@@ -26,7 +26,7 @@ class CmdManager {
 	~CmdManager();
 
 	/*                               METHODS                                  */
-	CmdSpec &findCmd(const std::string &cmName);
+	CmdSpec &findCmd(std::string cmName);
 	bool executeCm(CmdSpec &cm);
 	void generateCmds();
 	void log(CmdSpec *cm);

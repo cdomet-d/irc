@@ -52,7 +52,8 @@ const CmdParam &CmdSpec::operator[](e_param type) const {
 bool CmdSpec::checkRegistrationStage() {
 	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
 		valid_ = false;
-		if (sender_->cliInfo.getRegistration() == 0)
+		if (sender_->cliInfo.getRegistration() == 0 &&
+			(name_ == "NICK" || name_ == "USER"))
 			reply::send_(sender_->getFd(),
 						 ERR_NEEDPASS(sender_->cliInfo.getNick()));
 		else
@@ -73,7 +74,7 @@ CmdSpec &CmdSpec::process(Client &sender) {
 		&& !(*this)[channel_].size())
 		return (*this);
 	hasParamList();
-	// displayParams();
+	// displayParams("process");
 	for (size_t i = 0; i < checkers_.size(); i++) {
 		if (!checkers_[i](*this, 0)) {
 			valid_ = false;
@@ -129,13 +130,15 @@ void CmdSpec::displayParams(const std::string &where) {
 		try {
 			for (size_t index = 0; index < (*i->second).size(); index++) {
 				std::cout << "param[" << enumToString(i->first) << "]"
-						  << "[" << index << "] : " << (*i->second)[index];
+						  << "[" << index << "] : " << (*i->second)[index]
+						  << std::endl;
 			}
 		} catch (const std::out_of_range &e) {
 			std::cerr << e.what() << std::endl;
 		}
 		std::cout << "\n";
 	}
+	std::cout << "\n";
 }
 
 /* ************************************************************************** */

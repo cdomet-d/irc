@@ -17,12 +17,12 @@ PASS 0
 NICK chacham
 USER
 USER c
-USER c c
-USER c c c
-USER :c c
-USER charlottesweeting c c c :hello world
+USER c 0
+USER c 0 *
+USER :c 0
+USER charlottesweeting 0 * c :hello world
 USER c
-USER c c c c
+USER c 0 * c
 JOIN #chan
 QUIT
 EOF
@@ -35,7 +35,7 @@ wait $PID1 2>/dev/null
 
 cat outputs/client1_out.txt > outputs/output.txt &
 
-sleep 0.5
+sleep 1
 
 exec {client1_in_fd}>&-
 exec {client1_out_fd}>&-
