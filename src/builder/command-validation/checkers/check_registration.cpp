@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_registration.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:45:57 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/09 16:22:11 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:06:21 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
