@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "buffer_manip.hpp"
-#include "CmdExecution.hpp"
 #include "CmdManager.hpp"
 #include "Reply.hpp"
 #include "printers.hpp"
