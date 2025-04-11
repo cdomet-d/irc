@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:05:15 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 16:57:56 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,21 @@
 #include <limits>
 #include <sstream>
 
-void executeO(std::string flag, std::string param, Channel &curChan) {
+void executeO(std::string flag, std::string targ, Channel &curChan) {
 	Client *targetCli = NULL;
-	std::string targ = param.erase(param.size() - 1, 1);
 
 	for (clientMapIt targetIt = curChan.getCliInChan().begin();
-		 targetIt != curChan.getCliInChan().end(); ++targetIt) {
+	targetIt != curChan.getCliInChan().end(); ++targetIt) {
 		if (targetIt->second->cliInfo.getNick() == targ) {
 			targetCli = targetIt->second;
 			break;
 		}
 	}
-
-	if (targetCli == NULL) {
+	
+	if (targetCli == NULL)
 		return;
-	}
-
+	
 	if (flag == "+o ") {
-		// std::cout << targetCli->getFd() << targetCli->cliInfo.getNick()
-		// 		  << std::endl;
 		curChan.addCli(OPCLI, targetCli);
 		reply::send_(
 			targetCli->getFd(),
