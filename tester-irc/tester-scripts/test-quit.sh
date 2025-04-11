@@ -64,7 +64,7 @@ cat <<EOF > test_input.txt
 QUIT
 EOF
 
-timeout 2s nc 0.0.0.0 4444 < test_input.txt > outputs/output.txt
+timeout 2s nc 0.0.0.0 4444 < test_input.txt >> outputs/output.txt
 
 
 #TODO:
