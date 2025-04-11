@@ -20,7 +20,9 @@ USER c
 USER c 0
 USER c 0 *
 USER :c 0
-USER charlottesweeting 0 * c :hello world
+USER c 000 * c
+USER c 0 *** c
+USER aaaaaaaaaaaaahhhhhhhhhhhh 0 * :charlotte sweeting
 USER c
 USER c 0 * c
 JOIN #chan
