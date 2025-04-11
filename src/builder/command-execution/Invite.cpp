@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 11:13:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:08:28 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ void invite(CmdSpec &cmd) {
 	if (cmd[target_].empty()) {
 		for (channelMapIt chan = server.getAllChan().begin();
 			 chan != server.getAllChan().end(); ++chan) {
-			if (chan->second->getInvitCli().find(sender->getFd())
-				!= chan->second->getInvitCli().end())
-				reply::send_(
+			if (chan->second->getInvitCli().find(sender->getFd()) !=
+				chan->second->getInvitCli().end())
+				RPL::send_(
 					sender->getFd(),
 					RPL_INVITELIST(sender->cliInfo.getNick(), chan->first));
 		}
-		reply::send_(sender->getFd(),
-					 RPL_ENDOFINVITELIST(sender->cliInfo.getNick()));
+		RPL::send_(sender->getFd(),
+				   RPL_ENDOFINVITELIST(sender->cliInfo.getNick()));
 		return;
 	}
 
@@ -37,12 +37,12 @@ void invite(CmdSpec &cmd) {
 	int fdTarget = server.getUsedNick().find(cmd[target_][0])->second;
 	Client *targetCli = server.getAllCli().find(fdTarget)->second;
 
-	reply::send_(sender->getFd(),
-				 RPL_INVITING(sender->cliInfo.getNick(),
-							  targetCli->cliInfo.getNick(), cmd[channel_][0]));
-	reply::send_(fdTarget,
-				 RPL_INVITE(sender->cliInfo.getPrefix(),
+	RPL::send_(sender->getFd(),
+			   RPL_INVITING(sender->cliInfo.getNick(),
 							targetCli->cliInfo.getNick(), cmd[channel_][0]));
+	RPL::send_(fdTarget,
+			   RPL_INVITE(sender->cliInfo.getPrefix(),
+						  targetCli->cliInfo.getNick(), cmd[channel_][0]));
 
 	curChan.addCli(INVITECLI, targetCli);
 }

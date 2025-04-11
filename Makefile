@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+         #
+#    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/04/10 16:03:48 by aljulien         ###   ########.fr        #
+#    Updated: 2025/04/11 12:14:26 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -175,11 +175,18 @@ info:
 	@echo
 	@echo $(SRC)
 
+track:
+	bash .scripts/track-remote-branches.sh
+
 # ----------------------------- RUN ------------------------------------------ #
 
 run: all
 	$(RM) raw.log
-	./$(NAME) 4444 0
+	@if echo $(MAKECMDGOALS) | grep -q "6667"; then \
+		./$(NAME) 6667 0; \
+	else \
+		./$(NAME) 4444 0; \
+	fi
 
 VFLAGS:= --leak-check=full --log-file="val.log" --show-leak-kinds=all --track-fds=yes
 drun: debug

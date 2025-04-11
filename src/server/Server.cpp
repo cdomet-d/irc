@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:06:37 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:17:13 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,7 @@ bool Server::servRun() {
 	int nbFds;
 
 	std::cout << "Server listening on port " << port_
-			  << " | IP adress: " << inet_ntoa(servAddr_.sin_addr)
-			  << std::endl;
+			  << " | IP adress: " << inet_ntoa(servAddr_.sin_addr) << std::endl;
 	while (gSign == false) {
 		nbFds = epoll_wait(epollFd_, events_, MAX_EVENTS, -1);
 		if (nbFds == -1 && gSign == false)
@@ -138,19 +137,17 @@ void Server::acceptClient() {
 		newCli->setCliEpoll(cliEpollTemp);
 
 		if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, newCli->getFd(),
-					  newCli->getCliEpoll())
-			== -1) {
+					  newCli->getCliEpoll()) == -1) {
 			close(newCli->getFd());
 			throw Server::InitFailed(
 				const_cast< const char * >(strerror(errno)));
 		}
 
 		clients_.insert(clientPair(newCli->getFd(), newCli));
-		usedNicks_.insert(
-			nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
+		usedNicks_.insert(nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected\n";
-		reply::log(reply::INFO, ss.str());
+		RPL::log(RPL::INFO, ss.str());
 	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
 }
 
@@ -173,7 +170,7 @@ bool Server::handleData(int fd) {
 		curCli->mess.setMess(inputCli);
 		if (curCli->mess.getMess().find('\n') != std::string::npos) {
 			std::string temp = curCli->mess.getMess();
-			reply::log(reply::GOT, temp);
+			RPL::log(RPL::GOT, temp);
 			buffer_manip::prepareCommand(*curCli);
 		}
 	}
@@ -186,7 +183,7 @@ void checkOnlyOperator(Channel *curChan) {
 	if (curChan->getCliInChan().size() >= 1) {
 		if (!curChan->getOpCli().size()) {
 			curChan->addCli(OPCLI, curChan->getCliInChan().begin()->second);
-			reply::send_(
+			RPL::send_(
 				curChan->getCliInChan().begin()->second->getFd(),
 				RPL_CHANOPE(
 					curChan->getCliInChan().begin()->second->cliInfo.getNick(),
