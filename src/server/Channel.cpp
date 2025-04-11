@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:06:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:17:06 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ Channel::Channel(std::string name)
 }
 
 Channel::~Channel() {
-	// reply::INFO, "Channel deleted:", this->getName());
+	// RPL::INFO, "Channel deleted:", this->getName());
 }
 
 /* ************************************************************************** */
@@ -34,7 +34,7 @@ Channel::~Channel() {
 void sendMessageChannel(clientMap allCliChannel, std::string message) {
 	for (clientMapIt it = allCliChannel.begin(); it != allCliChannel.end();
 		 ++it) {
-		reply::send_(it->second->getFd(), message);
+		RPL::send_(it->second->getFd(), message);
 	}
 }
 
@@ -141,7 +141,7 @@ void Channel::setPassword(std::string password) {
 void Channel::setModes() {
 	std::string modes = "+";
 
-	if (static_cast<ssize_t>(getMaxCli()) != -1)
+	if (static_cast< ssize_t >(getMaxCli()) != -1)
 		modes.append("l");
 	if (getInviteOnly() == true)
 		modes.append("i");
@@ -167,4 +167,3 @@ void Channel::setIsPassMatch(bool password) {
 void Channel::setTopicRestrict(bool topicRestrict) {
 	topicRestrict_ = topicRestrict;
 }
-

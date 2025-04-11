@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:04:25 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:57:42 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@
 
 // registration_err_replies
 #define ERR_ALREADYREGISTERED(nickname) (":irc.bitchat.net 462 " + nickname + " :You may not reregister\r\n")
-#define ERR_BADCHAR(nickname, received) (":irc.bitchat.net NOTICE " + nickname + " :USER format should be <username> 0 * <realname>, is [" + received   + "]\r\n")
 #define ERR_NEEDNICK(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter nickname\r\n")
 #define ERR_NEEDNICKORUSER(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter nickname or username\r\n")
 #define ERR_NEEDPASS(nickname) (":irc.bitchat.net NOTICE " + nickname + " :Please enter password\r\n")
@@ -103,11 +102,11 @@
 #define RPL_NICK(prefix, newNick) (":" + prefix + " NICK :" + newNick + "\r\n")
 #define RPL_PONG(message) (":irc.bitchat.net PONG irc.bitchat.net :" + message + "\r\n")
 
-namespace reply {
+namespace RPL {
 	enum e_level { INFO, ERROR, DEBUG, REPLY, GOT };
 	void log(e_level level, std::string message, std::string verbose);
 	void log(e_level level, std::string message);
 	void send_(int fd, std::string reply);
 
-} // namespace reply
+} // namespace RPL
 #endif // REPLY_HPP

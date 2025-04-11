@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:06:37 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:58:43 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ void Server::acceptClient() {
 		usedNicks_.insert(nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected\n";
-		reply::log(reply::INFO, ss.str());
+		RPL::log(RPL::INFO, ss.str());
 	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
 }
 
@@ -170,7 +170,7 @@ bool Server::handleData(int fd) {
 		curCli->mess.setMess(inputCli);
 		if (curCli->mess.getMess().find('\n') != std::string::npos) {
 			std::string temp = curCli->mess.getMess();
-			reply::log(reply::GOT, temp);
+			RPL::log(RPL::GOT, temp);
 			buffer_manip::prepareCommand(*curCli);
 		}
 	}
@@ -184,9 +184,7 @@ void checkOnlyOperator(Client &oldOp, Channel *curChan) {
 		if (!curChan->getOpCli().size()) {
 			Client *cli = curChan->getCliInChan().begin()->second;
 			curChan->addCli(OPCLI, cli);
-			// reply::send_(cli->getFd(), RPL_CHANOPE(cli->cliInfo.getNick(),
-			// 									   curChan->getName()));
-			reply::send_(cli->getFd(),
+			RPL::send_(cli->getFd(),
 						 RPL_MODE(oldOp.cliInfo.getPrefix(), curChan->getName(),
 								  "+o", cli->cliInfo.getNick()));
 		}

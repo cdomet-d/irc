@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   check_mode.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/10 16:06:17 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 14:59:28 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "printers.hpp"
 #include "validator.hpp"
 
-/* Returns SET, UNSER or SET_ERR */
+/* Returns SET, UNSET or SET_ERR */
 e_mdeset check::mode_::whichSet(const char &c) {
 	switch (c) {
 	case '+':
@@ -42,30 +43,27 @@ e_mdetype check::mode_::typeIsValid(const char &c) {
 	}
 }
 
-/* for the current flag, recover type of setchar [+ | -] and type of flagtype [i
-| k | l | o | t] Sends the ERR_UNKNOWN PARAM if they don't exist, then return an
-error. if returns an error if they don't exist */
-bool check::mode_::flagIsValid(e_mdeset &set, e_mdetype &type,
-							   const std::string &flag, const Client &cli) {
+/* for the current flag, recover type of setchar [+ | -] and type of flagtype [i | k | l | o | t].
+Sends the ERR_UNKNOWN PARAM if they don't exist, then return an
+error. Returns an error if they don't exist */
+bool check::mode_::validFlag(e_mdeset &set, e_mdetype &type,
+							 const std::string &flag, const Client &cli) {
 	try {
 		set = check::mode_::whichSet(flag.at(0));
 		type = check::mode_::typeIsValid(flag.at(1));
 	} catch (std::exception &e) { return false; }
 	if (!set || !type) {
-		reply::send_(cli.getFd(),
-					 ERR_UNKNOWNMODE(cli.cliInfo.getNick(),
-									 (!set ? flag.at(0) : flag.at(1))));
-		return false;
+		return RPL::send_(cli.getFd(),
+						  ERR_UNKNOWNMODE(cli.cliInfo.getNick(),
+										  (!set ? flag.at(0) : flag.at(1)))),
+			   false;
 	}
 	return true;
 }
 
-/* formats mode arguments, validating that each flag is paired with an
- * argument*/
 bool check::mode_::formatArgs(CmdSpec &cmd) {
 	e_mdetype type;
 	e_mdeset set;
-	stringVec flags, param;
 
 	if (cmd[flag_].empty()) {
 		return true;
@@ -73,42 +71,70 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 	size_t size;
 	for (size_t i = 0; i < cmd[flag_].size();) {
 		size = cmd[flag_].size();
-		if (!check::mode_::flagIsValid(set, type, cmd[flag_][i],
-									   cmd.getSender()))
+		if (!check::mode_::validFlag(set, type, cmd[flag_][i], cmd.getSender()))
 			return false;
-		// if we MUST have a param and we don't, erase the flag
-		if (((type == B) || (type == C && set == SET))
-			&& i >= cmd[flagArg_].size())
+
+		const bool needArg = ((type == B) || (type == C && set == SET));
+		const bool needEmpty = ((type == D) || (type == C && set == UNSET));
+
+		if (needArg && i >= cmd[flagArg_].size())
 			cmd[flag_].rmParam(i);
-		// else if we don't need a parameter, and cmd[flagArg_] is empty, we add a
-		// blank space at str.begin()
-		else if (cmd[flagArg_].empty()
-				 && ((type == C && set == UNSET) || type == D))
+		else if (needEmpty) {
 			cmd[flagArg_].addOne(i);
-		// else if we don't need a parameter, and cmd[flagArg_] is not, we add a
-		// blank space at i
-		else if ((type == C && set == UNSET) || type == D)
-			cmd[flagArg_].addOne(i);
-		// increment if no cmd[flag_] were removed
+		}
 		if (size == cmd[flag_].size())
 			i++;
 	}
-	if (cmd[flag_].empty()) {
-		reply::send_(cmd.getSdFd(),
-					 ERR_NEEDMOREPARAMS(cmd.getSdNick(), cmd.getName()));
-		return false;
-	}
+	if (cmd[flag_].empty())
+		return RPL::send_(cmd.getSdFd(),
+						  ERR_NEEDMOREPARAMS(cmd.getSdNick(), cmd.getName())),
+			   false;
+	return true;
+}
+
+bool check::mode_::oTargetIsOnChan(const CmdSpec &cmd, size_t idx) {
+	stringVec tChan;
+	if (!check::exists(cmd[flagArg_][idx], cmd.serv_.getUsedNick()))
+		return RPL::send_(cmd.getSdFd(),
+						  ERR_NOSUCHNICK(cmd.getSdNick(), cmd[channel_][0])),
+			   false;
+	tChan = check::getTargetChan(cmd[flagArg_][idx], cmd.serv_);
+	if (!check::chans_::onChan(cmd[channel_][idx], tChan))
+		return RPL::send_(cmd.getSdFd(),
+						  ERR_USERNOTINCHANNEL(cmd.getSdNick(), cmd[flag_][idx],
+											   cmd[channel_][0])),
+			   false;
 	return true;
 }
 
 bool check::mode(CmdSpec &cmd, size_t idx) {
-	(void)idx;
 	if (!check::mode_::formatArgs(cmd))
 		return false;
+
+	for (; idx < cmd[flag_].size(); ++idx) {
+		if (cmd[flag_][idx] == "+o") {
+			if (!check::mode_::oTargetIsOnChan(cmd, idx))
+				return false;
+		}
+		if (cmd[flag_][idx] == "+k") {
+			if (cmd[flagArg_][idx].size() < 8 ||
+				cmd[flagArg_][idx].size() > 26) {
+				return RPL::send_(
+						   cmd.getSdFd(),
+						   ERR_BADKEYLEN(cmd.getSdPre(), cmd[channel_][0])),
+					   false;
+			}
+		}
+		if (cmd[flag_][idx] == "+l") {
+			for (size_t i = 0; cmd[flagArg_][idx][i]; ++i) {
+				if (!std::isdigit(cmd[flagArg_][idx][i]))
+					return RPL::send_(cmd.getSdFd(),
+									  ERR_BADINPUT(cmd.getSdPre(),
+												   cmd.getName(), "0 - 9",
+												   cmd[flagArg_][idx][i])),
+						   false;
+			}
+		}
+	}
 	return true;
 }
-
-// TODO: check if there is a target and that the client is on it.
-// TODO: +l: block if arg is not an interger
-// TODO: +o: check client exist and is on channel
-// TODO: +k: check that 26 > len > 8

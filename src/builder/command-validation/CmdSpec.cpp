@@ -16,8 +16,7 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdSpec::CmdSpec(const std::string name, int registrationStage,
-				 paramMap params,
+CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
 				 std::vector< bool (*)(CmdSpec &, size_t) > checkers,
 				 void (*cmExecutor)(CmdSpec &cmd))
 	: serv_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
@@ -54,11 +53,11 @@ bool CmdSpec::checkRegistrationStage() {
 		valid_ = false;
 		if (sender_->cliInfo.getRegistration() == 0 &&
 			(name_ == "NICK" || name_ == "USER"))
-			reply::send_(sender_->getFd(),
-						 ERR_NEEDPASS(sender_->cliInfo.getNick()));
+			RPL::send_(sender_->getFd(),
+					   ERR_NEEDPASS(sender_->cliInfo.getNick()));
 		else
-			reply::send_(sender_->getFd(),
-						 ERR_NOTREGISTERED(sender_->cliInfo.getNick()));
+			RPL::send_(sender_->getFd(),
+					   ERR_NOTREGISTERED(sender_->cliInfo.getNick()));
 		return (false);
 	}
 	return (true);
@@ -70,11 +69,10 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	if (!checkRegistrationStage())
 		return (*this);
 	setParam();
-	if (name_ == "INVITE" && !(*this)[target_].size()
-		&& !(*this)[channel_].size())
+	if (name_ == "INVITE" && !(*this)[target_].size() &&
+		!(*this)[channel_].size())
 		return (*this);
 	hasParamList();
-	// displayParams("process");
 	for (size_t i = 0; i < checkers_.size(); i++) {
 		if (!checkers_[i](*this, 0)) {
 			valid_ = false;
@@ -172,6 +170,10 @@ const std::string CmdSpec::getSdNick() const {
 	return sender_->cliInfo.getNick();
 }
 
+const std::string CmdSpec::getSdPre() const {
+	return sender_->cliInfo.getPrefix();
+}
+
 int CmdSpec::getSdFd() const {
 	return sender_->getFd();
 }
@@ -184,8 +186,7 @@ void CmdSpec::setSender(Client &sender) {
 }
 
 void CmdSpec::setParam() {
-	for (size_t i = 0; i < params_.size() && i < sender_->mess.getSize();
-		 i++) {
+	for (size_t i = 0; i < params_.size() && i < sender_->mess.getSize(); i++) {
 		try {
 			(*params_[i].second).setOneParam(sender_->mess[i + 1]);
 		} catch (const std::out_of_range &e) {}
@@ -238,8 +239,7 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(bool (*ft)(CmdSpec &cmd,
 	return (*this);
 }
 
-CmdSpec::CmdBuilder &
-CmdSpec::CmdBuilder::CmExecutor(void (*ft)(CmdSpec &cmd)) {
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::CmExecutor(void (*ft)(CmdSpec &cmd)) {
 	cmExecutor_ = ft;
 	return (*this);
 }

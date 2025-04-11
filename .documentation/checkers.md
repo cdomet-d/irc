@@ -17,7 +17,7 @@
 | check::join_::**hasInvite**              | ERR_INVITEONLYCHAN                  | if channel has +i mode, it checks if sender has an invite                              |
 | check::join_::**validKey**               | ERR_BADCHANNELKEY                   | if channel has +k, it checks if the given key is valid                                 |
 | check::mess_::**params**                 | ERR_NORECIPIENT<br>ERR_NOTEXTTOSEND | checks if privmsg's params aren't empty                                                |
-| check::mode_::**flagIsValid**            | ERR_UNKNOWNMODE                     | checks if mode flag is valid                                                           |
+| check::mode_::**validFlag**            | ERR_UNKNOWNMODE                     | checks if mode flag is valid                                                           |
 | check::nick_::**isUnique**               | ERR_NICKNAMEINUSE                   | checks if nickname isn't already used                                                  |
 | check::nick_::**syntaxIsValid**          | ERR_ERRONEUSNICKNAME                | checks nickname syntaxe                                                                |
 | check::register_::**isRegistered**       | ERR_ALREADYREGISTRED                | checks if client isn't already registered                                              |
@@ -34,7 +34,7 @@
 | check::**join**   | loops on all channels and calls check::join_::**assessRequest**                                                                                                                                                |
 | check::**kick**   | loops on all targets and calls check::target and check::**targetIsOnChan**                                                                                                                                     |
 | check::**mess**   | loops on all targets and needs to call check::**target** or  check::**chan** and check::chans_::**isOnChan**<br>-> doesn't work because of privmsg params' enum (this is where check::exists would be usefull) |
-| check::**mode**   | loops on all flags and calls check::mode_::**flagIsValid** and *missing checker*                                                                                                                               |
+| check::**mode**   | loops on all flags and calls check::mode_::**validFlag** and *missing checker*                                                                                                                               |
 | check::**part**   | loops on all channels and calls check::**chan** and check::chans_::**isOnChan**                                                                                                                                |
 
 ## Commands and their associated checkers
@@ -44,7 +44,7 @@
 | INVITE  | - check::**enoughParams**<br>- check::**target**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::**invite**<br>- check::chans_::**isOp**                                         |
 | JOIN    | - check::**enoughParams**<br>- check::**join**<br>- check::**findString**<br>- check::join_::**chanHasRoom**<br>- check::join_::**hasInvite**<br>- check::join_::**validKey**<br>- check::join_::**cliHasMaxChans** |
 | KICK    | - check::**enoughParams**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::chans_::**isOp**<br>-  check::**kick**<br>- check::**target**<br>- check::**targetIsOnChan**           |
-| MODE    | - check::**enoughParams**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::chans_::**isOp**<br>- check::**mode**<br>- check::mode_::**flagIsValid**<br>- missing checker          |
+| MODE    | - check::**enoughParams**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::chans_::**isOp**<br>- check::**mode**<br>- check::mode_::**validFlag**<br>- missing checker          |
 | NICK    | - check::register_::**stageDone**<br>- check::**nick**<br>- check::nick_::**syntaxIsValid**<br> - check::nick_::**isUnique**                                                                                        |
 | PART    | - check::**enoughParams**<br>- check::**part**<br>- check::**chan**<br>- check::chans_::**isOnChan**                                                                                                                |
 | PASS    | - check::register_::**stageDone**<br>- check::register_::**isRegistered**<br>- check::**enoughParams**<br>- check::register_::**pwMatch**                                                                           |
@@ -52,7 +52,7 @@
 | QUIT    | \                                                                                                                                                                                                                   |
 | TOPIC   | - check::**enoughParams**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::chans_::**isOp**                                                                                       |
 | USER    | - check::register_::**isRegistered**<br>- check::**enoughParams**<br>- check::**user**                                                                                                                              |
-| WHO     | - check::**enoughParams**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::mode_::**flagIsValid** (doesn't have correct proto)                                                                     |
+| WHO     | - check::**enoughParams**<br>- check::**chan**<br>- check::chans_::**isOnChan**<br>- check::mode_::**validFlag** (doesn't have correct proto)                                                                     |
 
 ## Simplifying the checkers
 

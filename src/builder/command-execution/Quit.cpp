@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:05:41 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:09:35 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,12 @@ void quit(CmdSpec &cmd) {
 		message = "You quitted the server, see you next time !";
 	sender->mess.clearMess();
 	partAllChans(cmd, message);
-	reply::send_(sender->getFd(),
-				 RPL_QUIT(sender->cliInfo.getPrefix(), message));
-	reply::send_(sender->getFd(),
-				 RPL_ERROR(sender->cliInfo.getHostname(), "Client Quit"));
+	RPL::send_(sender->getFd(), RPL_QUIT(sender->cliInfo.getPrefix(), message));
+	RPL::send_(sender->getFd(),
+			   RPL_ERROR(sender->cliInfo.getHostname(), "Client Quit"));
 	std::stringstream ss;
-	ss << "Client [" << sender->getFd() << "] disc";
-	reply::log(reply::INFO, ss.str());
+	ss << "Client [" << sender->getFd() << "] disconnected\r\n";
+	RPL::log(RPL::INFO, ss.str());
 	cmd.serv_.removeCli(sender);
 	close(sender->getFd());
 	delete sender;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:05:45 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:09:31 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,12 @@ void privmsg(CmdSpec &cmd) {
 		if (cmd[target_][nbTarg].find("#") == cmd[target_][nbTarg].npos) {
 			for (clientMapIt itTarget = cmd.serv_.getAllCli().begin();
 				 itTarget != cmd.serv_.getAllCli().end(); ++itTarget) {
-				if (itTarget->second->cliInfo.getNick()
-					== cmd[target_][nbTarg]) {
-					reply::send_(
-						itTarget->first,
-						RPL_PRIVMSG(sender->cliInfo.getPrefix(),
-									itTarget->second->cliInfo.getNick(),
-									cmd[message_][0]));
+				if (itTarget->second->cliInfo.getNick() ==
+					cmd[target_][nbTarg]) {
+					RPL::send_(itTarget->first,
+							   RPL_PRIVMSG(sender->cliInfo.getPrefix(),
+										   itTarget->second->cliInfo.getNick(),
+										   cmd[message_][0]));
 				}
 			}
 			continue;
@@ -39,9 +38,9 @@ void privmsg(CmdSpec &cmd) {
 		for (clientMapIt itCli = curChan.getCliInChan().begin();
 			 itCli != curChan.getCliInChan().end(); ++itCli) {
 			if (itCli->first != sender->getFd())
-				reply::send_(itCli->second->getFd(),
-							 RPL_PRIVMSG(sender->cliInfo.getPrefix(),
-										 curChan.getName(), cmd[message_][0]));
+				RPL::send_(itCli->second->getFd(),
+						   RPL_PRIVMSG(sender->cliInfo.getPrefix(),
+									   curChan.getName(), cmd[message_][0]));
 		}
 	}
 }
