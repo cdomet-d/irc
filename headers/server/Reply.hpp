@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/11 14:28:20 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:05:50 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,7 @@
 	(":irc.bitchat.net " + nickname +                                          \
 	 " :You quit the server, see you next time !\r\n")
 
+#define RPL_ERROR(host, reason) ("ERROR :Closing Link: " + host + " (" + reason + ")\r\n")
 //command_replies (uses prefix)
 #define ERR_BADKEYLEN(prefix, channel)                                         \
 	(":" + prefix + " MODE " + channel +                                       \
@@ -208,14 +209,15 @@
 #define RPL_PARTREASON(prefix, channel, reason)                                \
 	(":" + prefix + " PART " + channel + " " + reason + "\r\n")
 #define RPL_PRIVMSG(prefix, target, message)                                   \
-	(":" + prefix + " PRIVMSG " + target + " " + message + "\r\n")
+	(":" + prefix + " PRIVMSG " + target + " :" + message + "\r\n")
 #define RPL_TOPICCHANGED(prefix, channel, Topic)                               \
 	(":" + prefix + " TOPIC " + channel + " :" + Topic + "\r\n")
 #define RPL_MODE(prefix, channel, Mode, modeArgs)                              \
 	(":" + prefix + " MODE " + channel + " " + Mode + " " + modeArgs + "\r\n")
 #define RPL_QUIT(prefix, message)                                              \
-	(":" + prefix + " :Client Quit " + message + "\r\n")
+	(":" + prefix + " QUIT :" + message + "\r\n")
 #define RPL_NICK(prefix, newNick) (":" + prefix + " NICK :" + newNick + "\r\n")
+#define RPL_PONG(message) (":irc.bitchat.net PONG irc.bitchat.net :" + message + "\r\n")
 
 namespace RPL {
 	enum e_level { INFO, ERROR, DEBUG, REPLY, GOT };

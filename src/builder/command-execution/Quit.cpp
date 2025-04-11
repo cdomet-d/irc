@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:07:34 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,15 @@ void quit(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 	std::string message;
 	if (!cmd[message_].empty())
-		message = ":" + cmd[message_][0];
-
+		message = cmd[message_][0];
+	else
+		message = "You quitted the server, see you next time !";
 	sender->mess.clearMess();
 	partAllChans(cmd, message);
 	RPL::send_(sender->getFd(),
 				 RPL_QUIT(sender->cliInfo.getPrefix(), message));
-	RPL::send_(sender->getFd(), RPL_BYEYBE(sender->cliInfo.getNick()));
+	RPL::send_(sender->getFd(),
+				 RPL_ERROR(sender->cliInfo.getHostname(), "Client Quit"));
 	std::stringstream ss;
 	ss << "Client [" << sender->getFd() << "] disconnected\r\n";
 	RPL::log(RPL::INFO, ss.str());

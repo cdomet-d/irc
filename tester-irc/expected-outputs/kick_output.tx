@@ -10,7 +10,7 @@
 :irc.bitchat.net 372 chacham :Registration completed, you can join channels and start chatting !
 :irc.bitchat.net 376 chacham :End of /MOTD command
 :chacham!c@localhost JOIN #chan
-::irc.bitchat.net MODE #chan +t 
+:irc.bitchat.net MODE #chan +t 
 :irc.bitchat.net 353 chacham = #chan :@chacham
 :irc.bitchat.net 366 chacham #chan :End of /NAMES list
 :irc.bitchat.net 461 chacham KICK :Not enough parameters

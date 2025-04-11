@@ -18,7 +18,6 @@
 void kickFromAllMap(Client *target, Channel &curChan) {
 	int fdTarget = target->getFd();
 
-	target->removeOneChan(curChan.getName());
 	curChan.removeCli(ALLCLI, fdTarget);
 	clientMapIt itTarget;
 	itTarget = curChan.getOpCli().find(fdTarget);

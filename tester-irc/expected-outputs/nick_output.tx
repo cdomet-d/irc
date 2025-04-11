@@ -28,7 +28,7 @@
 :irc.bitchat.net 432 chacham cha:: illegal char: expected [Aa -Zz], [0 - 9] or [-[]\`^{}], is : :Erroneous nickname or username
 :irc.bitchat.net 431 chacham :No nickname given
 :chacham!c@localhost JOIN #chan
-::irc.bitchat.net MODE #chan +t 
+:irc.bitchat.net MODE #chan +t 
 :irc.bitchat.net 353 chacham = #chan :@chacham
 :irc.bitchat.net 366 chacham #chan :End of /NAMES list
 :bobby!b@localhost JOIN #chan

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/11 12:56:40 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:07:56 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ bool check::user(CmdSpec &cmd, size_t idx) {
 	}
 	if (!check::nick_::syntaxIsValid(cmd[username_][idx], cmd.getSender()))
 		return false;
-	if (cmd[hostname_][idx][0] != '0' || cmd[servername_][idx][0] != '*') {
+	if (cmd[hostname_][idx] != "0" || cmd[servername_][idx] != "*") {
 		std::string reply = cmd[username_][idx] + " " + cmd[hostname_][idx] +
 							" " + cmd[servername_][idx] + " " +
 							cmd[realname_][idx];

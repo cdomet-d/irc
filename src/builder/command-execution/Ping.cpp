@@ -3,6 +3,5 @@
 #include "CmdExecution.hpp"
 
 void ping(CmdSpec &cmd) {
-	RPL::send_(cmd.getSdFd(),
-				 ":irc.bitchat.net PONG irc.bitchat.net :" + cmd[message_][0]);
+	RPL::send_(cmd.getSdFd(), RPL_PONG(cmd[message_][0]));
 }
