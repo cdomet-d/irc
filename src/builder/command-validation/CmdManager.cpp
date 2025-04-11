@@ -175,6 +175,7 @@ void CmdManager::generateCmds() {
 	
 	log(CmdSpec::CmdBuilder()
 			.Name("PING")
+			.Registration(3)
 			.addParam(message_, new CmdParam())
 			.addChecker(check::enoughParams)
 			.CmExecutor(ping)

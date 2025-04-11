@@ -13,11 +13,11 @@
 :irc.bitchat.net 461 chacham JOIN :Not enough parameters
 :irc.bitchat.net 403 chacham #chan with space :Illegal channel name
 :chacham!c@localhost JOIN #chan
-::irc.bitchat.net MODE #chan +t 
+:irc.bitchat.net MODE #chan +t 
 :irc.bitchat.net 353 chacham = #chan :@chacham
 :irc.bitchat.net 366 chacham #chan :End of /NAMES list
 :chacham!c@localhost JOIN #:chan
-::irc.bitchat.net MODE #:chan +t 
+:irc.bitchat.net MODE #:chan +t 
 :irc.bitchat.net 353 chacham = #:chan :@chacham
 :irc.bitchat.net 366 chacham #:chan :End of /NAMES list
 :irc.bitchat.net 403 chacham chan :No such channel
@@ -58,11 +58,11 @@
 :irc.bitchat.net 353 bobby = #chan :@chacham bobby
 :irc.bitchat.net 366 bobby #chan :End of /NAMES list
 :bobby!b@localhost JOIN #chan2
-::irc.bitchat.net MODE #chan2 +t 
+:irc.bitchat.net MODE #chan2 +t 
 :irc.bitchat.net 353 bobby = #chan2 :@bobby
 :irc.bitchat.net 366 bobby #chan2 :End of /NAMES list
 :bobby!b@localhost JOIN #chan3
-::irc.bitchat.net MODE #chan3 +t 
+:irc.bitchat.net MODE #chan3 +t 
 :irc.bitchat.net 353 bobby = #chan3 :@bobby
 :irc.bitchat.net 366 bobby #chan3 :End of /NAMES list
 :bobby!b@localhost MODE #chan3 +k key 

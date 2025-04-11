@@ -175,10 +175,6 @@ bool Server::handleData(int fd) {
 			std::string temp = curCli->mess.getMess();
 			reply::log(reply::GOT, temp);
 			buffer_manip::prepareCommand(*curCli);
-			if (strncmp(temp.c_str(), "QUIT", 4)) {
-				curCli->mess.clearMess();
-				curCli->mess.clearCmdParam();
-			}
 		}
 	}
 	return (true);

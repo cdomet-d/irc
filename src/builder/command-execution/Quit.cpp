@@ -36,13 +36,15 @@ void quit(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 	std::string message;
 	if (!cmd[message_].empty())
-		message = ":" + cmd[message_][0];
-
+		message = cmd[message_][0];
+	else
+		message = "You quitted the server, see you next time !";
 	sender->mess.clearMess();
 	partAllChans(cmd, message);
 	reply::send_(sender->getFd(),
 				 RPL_QUIT(sender->cliInfo.getPrefix(), message));
-	reply::send_(sender->getFd(), RPL_BYEYBE(sender->cliInfo.getNick()));
+	reply::send_(sender->getFd(),
+				 RPL_ERROR(sender->cliInfo.getHostname(), "Client Quit"));
 	std::stringstream ss;
 	ss << "Client [" << sender->getFd() << "] disc";
 	reply::log(reply::INFO, ss.str());

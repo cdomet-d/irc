@@ -59,7 +59,7 @@ void joinMess(Channel *curChan, Client *sender) {
 							   curChan->getTopic()));
 	if (curChan->getOpCli().find(sender->getFd()) !=
 		curChan->getOpCli().end()) {
-		const std::string &servName = ":irc.bitchat.net";
+		const std::string &servName = "irc.bitchat.net";
 		reply::send_(sender->getFd(), RPL_MODE(servName, curChan->getName(),
 											   curChan->getModes(), ""));
 	}

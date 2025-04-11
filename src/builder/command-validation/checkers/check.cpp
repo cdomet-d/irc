@@ -24,7 +24,7 @@ bool check::user(CmdSpec &cmd, size_t idx) {
 	}
 	if (!check::nick_::syntaxIsValid(cmd[username_][idx], cmd.getSender()))
 		return false;
-	if (cmd[hostname_][idx][0] != '0' || cmd[servername_][idx][0] != '*') {
+	if (cmd[hostname_][idx] != "0" || cmd[servername_][idx] != "*") {
 		std::string reply = cmd[username_][idx] + "] [" + cmd[hostname_][idx]
 							+ "] [" + cmd[servername_][idx] + "] ["
 							+ cmd[realname_][idx];
