@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:04:25 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:28:49 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@
 #define RPL_ISUPPORT(nickname) ":irc.bitchat.net 005 " + nickname + " CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server\r\n"
 #define RPL_MOTDSTART(nickname) (":irc.bitchat.net 375 " + nickname + " :- Bitchat Message of the day - \r\n")
 #define RPL_ENDOFMOTD(nickname) (":irc.bitchat.net 376 " + nickname + " :End of /MOTD command\r\n")
-#define RPL_MOTD(nickname) (":irc.bitchat.net 372 " + nickname + " :Registration completed, you can join channels and start chatting !\r\n")
+#define RPL_MOTD(nickname) (":irc.bitchat.net 372 " + nickname + " :Registration complete, you can join channels and start chatting !\r\n")
 
 //channel_replies
 #define RPL_CHANNELMODEIS(nickname, channel, modes, modeArgs) (":irc.bitchat.net 324 " + nickname + " " + channel + " " + modes + " " + modeArgs + "\r\n")
