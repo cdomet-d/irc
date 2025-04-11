@@ -83,8 +83,7 @@ bool Server::servRun() {
 	int nbFds;
 
 	std::cout << "Server listening on port " << port_
-			  << " | IP adress: " << inet_ntoa(servAddr_.sin_addr)
-			  << std::endl;
+			  << " | IP adress: " << inet_ntoa(servAddr_.sin_addr) << std::endl;
 	while (gSign == false) {
 		nbFds = epoll_wait(epollFd_, events_, MAX_EVENTS, -1);
 		if (nbFds == -1 && gSign == false)
@@ -138,16 +137,14 @@ void Server::acceptClient() {
 		newCli->setCliEpoll(cliEpollTemp);
 
 		if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, newCli->getFd(),
-					  newCli->getCliEpoll())
-			== -1) {
+					  newCli->getCliEpoll()) == -1) {
 			close(newCli->getFd());
 			throw Server::InitFailed(
 				const_cast< const char * >(strerror(errno)));
 		}
 
 		clients_.insert(clientPair(newCli->getFd(), newCli));
-		usedNicks_.insert(
-			nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
+		usedNicks_.insert(nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected\n";
 		reply::log(reply::INFO, ss.str());
@@ -180,17 +177,18 @@ bool Server::handleData(int fd) {
 	return (true);
 }
 
-void checkOnlyOperator(Channel *curChan) {
+void checkOnlyOperator(Client &oldOp, Channel *curChan) {
 	static Server &server = Server::GetServerInstance(0, "");
 
 	if (curChan->getCliInChan().size() >= 1) {
 		if (!curChan->getOpCli().size()) {
-			curChan->addCli(OPCLI, curChan->getCliInChan().begin()->second);
-			reply::send_(
-				curChan->getCliInChan().begin()->second->getFd(),
-				RPL_CHANOPE(
-					curChan->getCliInChan().begin()->second->cliInfo.getNick(),
-					curChan->getName()));
+			Client *cli = curChan->getCliInChan().begin()->second;
+			curChan->addCli(OPCLI, cli);
+			// reply::send_(cli->getFd(), RPL_CHANOPE(cli->cliInfo.getNick(),
+			// 									   curChan->getName()));
+			reply::send_(cli->getFd(),
+						 RPL_MODE(oldOp.cliInfo.getPrefix(), curChan->getName(),
+								  "+o", cli->cliInfo.getNick()));
 		}
 	}
 	if (curChan->getCliInChan().empty() == true) {

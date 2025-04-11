@@ -36,7 +36,7 @@ void ping(CmdSpec &cmd);
 // UTILS
 Channel &findCurChan(std::string chanName);
 Channel *createChan(const std::string &chanName);
-void checkOnlyOperator(Channel *curChan);
+void checkOnlyOperator(Client &oldOp, Channel *curChan);
 void partOneChan(Client *sender, Channel &curChan);
 void partAllChans(CmdSpec &cmd, const std::string &message);
 void registrationCompleted(Client &sender);
