@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 15:28:49 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 17:03:52 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@
 #define RPL_USER(nickname, username) (":irc.bitchat.net NOTICE " + nickname + " :The Username " + username + " is valid and saved !\r\n")
 #define RPL_CHANOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " :You're operator of " + channel + "\r\n")
 #define RPL_CHANOPENOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " : You're no longer operator of " + channel + "\r\n")
-#define RPL_BYEYBE(nickname) (":irc.bitchat.net " + nickname + " :You quitted the server, see you next time !\r\n")
+#define RPL_BYEYBE(nickname) (":irc.bitchat.net " + nickname + " :You quit the server, see you next time !\r\n")
 #define RPL_ERROR(host, reason) ("ERROR :Closing Link: " + host + " (" + reason + ")\r\n")
 //command_replies (uses prefix)
 #define RPL_INVITE(prefix, target, channel) (":" + prefix + " INVITE " + target + " :" + channel + "\r\n")
