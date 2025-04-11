@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   extended_checkers.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:50:22 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/09 16:22:34 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ bool check::kick(CmdSpec &cmd, size_t idx) {
 			continue;
 		}
 		if (!check::chans_::onChan(cmd[channel_][0], tChan)) {
-			reply::send_(cmd.getSdFd(), ERR_USERNOTINCHANNEL(
+			RPL::send_(cmd.getSdFd(), ERR_USERNOTINCHANNEL(
 											cmd.getSdNick(), cmd[target_][idx],
 											cmd[channel_][0]));
 			cmd[target_].rmParam(idx);

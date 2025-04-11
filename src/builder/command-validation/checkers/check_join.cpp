@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_join.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/10 16:06:09 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ bool check::join_::hasInvite(Channel &chan, Client &sender) {
 	itCli = chan.getInvitCli().find(sender.getFd());
 	if (itCli != chan.getInvitCli().end())
 		return (true);
-	reply::send_(sender.getFd(),
+	RPL::send_(sender.getFd(),
 				 ERR_INVITEONLYCHAN(sender.cliInfo.getNick(), chan.getName()));
 	return (false);
 }
@@ -67,7 +67,7 @@ bool check::join_::validKey(Channel &chan, CmdParam &keys, size_t idx,
 							Client &sender) {
 	if (idx < keys.size() && chan.getPassword() == keys[idx])
 		return (true);
-	reply::send_(sender.getFd(),
+	RPL::send_(sender.getFd(),
 				 ERR_BADCHANNELKEY(sender.cliInfo.getNick(), chan.getName()));
 	return (false);
 }
@@ -75,7 +75,7 @@ bool check::join_::validKey(Channel &chan, CmdParam &keys, size_t idx,
 bool check::join_::chanHasRoom(Channel &chan, Client &sender) {
 	if (chan.getCliInChan().size() < chan.getMaxCli())
 		return (true);
-	reply::send_(sender.getFd(),
+	RPL::send_(sender.getFd(),
 				 ERR_CHANNELISFULL(sender.cliInfo.getNick(), chan.getName()));
 	return (false);
 }
@@ -83,7 +83,7 @@ bool check::join_::chanHasRoom(Channel &chan, Client &sender) {
 bool check::join_::cliHasMaxChans(Channel &chan, Client &sender) {
 	if (sender.getJoinedChans().size() < MAX_CHAN_PER_CLI)
 		return (false);
-	reply::send_(sender.getFd(), ERR_TOOMANYCHANNELS(sender.cliInfo.getNick(),
+	RPL::send_(sender.getFd(), ERR_TOOMANYCHANNELS(sender.cliInfo.getNick(),
 													 chan.getName()));
 	return (true);
 }
@@ -93,7 +93,7 @@ bool check::join_::syntaxIsValid(CmdSpec &cmd, size_t idx) {
 		return (true);
 	if (cmd[channel_][idx][0] != '#' ||
 		cmd[channel_][idx].find(" ") != std::string::npos) {
-		reply::send_(cmd.getSender().getFd(),
+		RPL::send_(cmd.getSender().getFd(),
 					 ERR_NOSUCHCHANNEL(cmd.getSender().cliInfo.getNick(),
 									   cmd[channel_][idx]));
 		return false;

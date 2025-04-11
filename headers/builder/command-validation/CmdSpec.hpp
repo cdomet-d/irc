@@ -61,6 +61,7 @@ class CmdSpec {
 	bool getValid() const;
 	Client &getSender() const;
 	const std::string getSdNick() const;
+	const std::string getSdPre() const;
 	int getSdFd() const;
 	const paramMap &getParams() const;
 	const std::string &getName() const;

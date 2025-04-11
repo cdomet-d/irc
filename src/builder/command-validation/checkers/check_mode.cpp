@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/11 12:14:49 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 14:59:28 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ e_mdetype check::mode_::typeIsValid(const char &c) {
 	}
 }
 
-/* for the current flag, recover type of setchar [+ | -] and type of flagtype [i
-| k | l | o | t] Sends the ERR_UNKNOWN PARAM if they don't exist, then return an
+/* for the current flag, recover type of setchar [+ | -] and type of flagtype [i | k | l | o | t].
+Sends the ERR_UNKNOWN PARAM if they don't exist, then return an
 error. Returns an error if they don't exist */
 bool check::mode_::validFlag(e_mdeset &set, e_mdetype &type,
 							 const std::string &flag, const Client &cli) {
@@ -53,20 +53,13 @@ bool check::mode_::validFlag(e_mdeset &set, e_mdetype &type,
 		type = check::mode_::typeIsValid(flag.at(1));
 	} catch (std::exception &e) { return false; }
 	if (!set || !type) {
-		reply::send_(cli.getFd(),
-					 ERR_UNKNOWNMODE(cli.cliInfo.getNick(),
-									 (!set ? flag.at(0) : flag.at(1))));
-		return false;
+		return RPL::send_(cli.getFd(),
+						  ERR_UNKNOWNMODE(cli.cliInfo.getNick(),
+										  (!set ? flag.at(0) : flag.at(1)))),
+			   false;
 	}
 	return true;
 }
-
-// if we MUST have a param and we don't, erase the flag
-// else if we don't need a parameter, and cmd[flagArg_] is empty, we add a blank space at str.begin()
-// else if we don't need a parameter, and cmd[flagArg_] is not empty, we add a blank space at i
-// increment if no cmd[flag_] were removed
-/* formats mode arguments, validating that each flag is paired with an
- * argument*/
 
 bool check::mode_::formatArgs(CmdSpec &cmd) {
 	e_mdetype type;
@@ -92,41 +85,33 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 		if (size == cmd[flag_].size())
 			i++;
 	}
-	print::modeArgs(cmd[flag_].getInnerParam(), cmd[flagArg_].getInnerParam(),
-					"After formatting");
-	if (cmd[flag_].empty()) {
-		reply::send_(cmd.getSdFd(),
-					 ERR_NEEDMOREPARAMS(cmd.getSdNick(), cmd.getName()));
-		return false;
-	}
+	if (cmd[flag_].empty())
+		return RPL::send_(cmd.getSdFd(),
+						  ERR_NEEDMOREPARAMS(cmd.getSdNick(), cmd.getName())),
+			   false;
 	return true;
 }
 
 bool check::mode_::oTargetIsOnChan(const CmdSpec &cmd, size_t idx) {
 	stringVec tChan;
-	if (!check::exists(cmd[flagArg_][idx], cmd.serv_.getUsedNick())) {
-		reply::send_(cmd.getSdFd(),
-					 ERR_NOSUCHNICK(cmd.getSdNick(), cmd[channel_][0]));
-		return false;
-	}
+	if (!check::exists(cmd[flagArg_][idx], cmd.serv_.getUsedNick()))
+		return RPL::send_(cmd.getSdFd(),
+						  ERR_NOSUCHNICK(cmd.getSdNick(), cmd[channel_][0])),
+			   false;
 	tChan = check::getTargetChan(cmd[flagArg_][idx], cmd.serv_);
-	if (!check::chans_::onChan(cmd[channel_][idx], tChan)) {
-		reply::send_(cmd.getSdFd(),
-					 ERR_USERNOTINCHANNEL(cmd.getSdNick(), cmd[flag_][idx],
-										  cmd[channel_][0]));
-		return false;
-	}
+	if (!check::chans_::onChan(cmd[channel_][idx], tChan))
+		return RPL::send_(cmd.getSdFd(),
+						  ERR_USERNOTINCHANNEL(cmd.getSdNick(), cmd[flag_][idx],
+											   cmd[channel_][0])),
+			   false;
 	return true;
 }
 
 bool check::mode(CmdSpec &cmd, size_t idx) {
-	(void)idx;
 	if (!check::mode_::formatArgs(cmd))
 		return false;
 
 	for (; idx < cmd[flag_].size(); ++idx) {
-		std::cout << idx << " | "
-				  << cmd[flag_][idx] + " | " + cmd[flagArg_][idx] << std::endl;
 		if (cmd[flag_][idx] == "+o") {
 			if (!check::mode_::oTargetIsOnChan(cmd, idx))
 				return false;
@@ -134,13 +119,22 @@ bool check::mode(CmdSpec &cmd, size_t idx) {
 		if (cmd[flag_][idx] == "+k") {
 			if (cmd[flagArg_][idx].size() < 8 ||
 				cmd[flagArg_][idx].size() > 26) {
-				reply::send_(cmd.getSdFd(),
-							 "Key should be between 8 and 26 char long");
-				return false;
+				return RPL::send_(
+						   cmd.getSdFd(),
+						   ERR_BADKEYLEN(cmd.getSdPre(), cmd[channel_][0])),
+					   false;
+			}
+		}
+		if (cmd[flag_][idx] == "+l") {
+			for (size_t i = 0; cmd[flagArg_][idx][i]; ++i) {
+				if (!std::isdigit(cmd[flagArg_][idx][i]))
+					return RPL::send_(cmd.getSdFd(),
+									  ERR_BADINPUT(cmd.getSdPre(),
+												   cmd.getName(), "0 - 9",
+												   cmd[flagArg_][idx][i])),
+						   false;
 			}
 		}
 	}
 	return true;
 }
-
-// TODO: +l: block if arg is not an interger

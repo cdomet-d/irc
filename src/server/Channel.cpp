@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:06:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ Channel::Channel(std::string name)
 }
 
 Channel::~Channel() {
-	// reply::INFO, "Channel deleted:", this->getName());
+	// RPL::INFO, "Channel deleted:", this->getName());
 }
 
 /* ************************************************************************** */
@@ -34,7 +34,7 @@ Channel::~Channel() {
 void sendMessageChannel(clientMap allCliChannel, std::string message) {
 	for (clientMapIt it = allCliChannel.begin(); it != allCliChannel.end();
 		 ++it) {
-		reply::send_(it->second->getFd(), message);
+		RPL::send_(it->second->getFd(), message);
 	}
 }
 

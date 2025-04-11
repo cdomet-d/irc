@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:04:55 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,26 +41,26 @@ void sendNickList(clientMap curMap, Channel &curChan, const Client &sender) {
 		}
 		list += prefix + it->second->cliInfo.getNick();
 	}
-	reply::send_(sender.getFd(), RPL_NAMREPLY(sender.cliInfo.getNick(), "=",
+	RPL::send_(sender.getFd(), RPL_NAMREPLY(sender.cliInfo.getNick(), "=",
 											  curChan.getName(), list));
-	reply::send_(sender.getFd(),
+	RPL::send_(sender.getFd(),
 				 RPL_ENDOFNAMES(sender.cliInfo.getNick(), curChan.getName()));
 }
 
 void joinMess(Channel *curChan, Client *sender) {
 	for (clientMapIt itCli = curChan->getCliInChan().begin();
 		 itCli != curChan->getCliInChan().end(); ++itCli) {
-		reply::send_(itCli->second->getFd(),
+		RPL::send_(itCli->second->getFd(),
 					 RPL_JOIN(sender->cliInfo.getPrefix(), curChan->getName()));
 	}
 	if (curChan->getTopic().empty() == false)
-		reply::send_(sender->getFd(),
+		RPL::send_(sender->getFd(),
 					 RPL_TOPIC(sender->cliInfo.getNick(), curChan->getName(),
 							   curChan->getTopic()));
 	if (curChan->getOpCli().find(sender->getFd()) !=
 		curChan->getOpCli().end()) {
 		const std::string &servName = ":irc.bitchat.net";
-		reply::send_(sender->getFd(), RPL_MODE(servName, curChan->getName(),
+		RPL::send_(sender->getFd(), RPL_MODE(servName, curChan->getName(),
 											   curChan->getModes(), ""));
 	}
 	sendNickList(curChan->getCliInChan(), *curChan, *sender);

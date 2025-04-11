@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:06:37 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ void Server::acceptClient() {
 			nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected\n";
-		reply::log(reply::INFO, ss.str());
+		RPL::log(RPL::INFO, ss.str());
 	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
 }
 
@@ -173,7 +173,7 @@ bool Server::handleData(int fd) {
 		curCli->mess.setMess(inputCli);
 		if (curCli->mess.getMess().find('\n') != std::string::npos) {
 			std::string temp = curCli->mess.getMess();
-			reply::log(reply::GOT, temp);
+			RPL::log(RPL::GOT, temp);
 			buffer_manip::prepareCommand(*curCli);
 			if (strncmp(temp.c_str(), "QUIT", 4)) {
 				curCli->mess.clearMess();
@@ -190,7 +190,7 @@ void checkOnlyOperator(Channel *curChan) {
 	if (curChan->getCliInChan().size() >= 1) {
 		if (!curChan->getOpCli().size()) {
 			curChan->addCli(OPCLI, curChan->getCliInChan().begin()->second);
-			reply::send_(
+			RPL::send_(
 				curChan->getCliInChan().begin()->second->getFd(),
 				RPL_CHANOPE(
 					curChan->getCliInChan().begin()->second->cliInfo.getNick(),

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:48:49 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:05:49 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,16 @@ static std::string timeStamp() {
 
 void registrationCompleted(Client &sender) {
 	sender.cliInfo.setRegistration(3);
-	reply::send_(sender.getFd(), RPL_WELCOME(sender.cliInfo.getNick(),
+	RPL::send_(sender.getFd(), RPL_WELCOME(sender.cliInfo.getNick(),
 											 sender.cliInfo.getPrefix()));
-	reply::send_(sender.getFd(), RPL_YOURHOST(sender.cliInfo.getNick()));
-	reply::send_(sender.getFd(),
+	RPL::send_(sender.getFd(), RPL_YOURHOST(sender.cliInfo.getNick()));
+	RPL::send_(sender.getFd(),
 				 RPL_CREATED(sender.cliInfo.getNick(), timeStamp()));
-	reply::send_(sender.getFd(), RPL_MYINFO(sender.cliInfo.getNick()));
-	reply::send_(sender.getFd(), RPL_ISUPPORT(sender.cliInfo.getNick()));
-	reply::send_(sender.getFd(), RPL_MOTDSTART(sender.cliInfo.getNick()));
-	reply::send_(sender.getFd(), RPL_MOTD(sender.cliInfo.getNick()));
-	reply::send_(sender.getFd(), RPL_ENDOFMOTD(sender.cliInfo.getNick()));
+	RPL::send_(sender.getFd(), RPL_MYINFO(sender.cliInfo.getNick()));
+	RPL::send_(sender.getFd(), RPL_ISUPPORT(sender.cliInfo.getNick()));
+	RPL::send_(sender.getFd(), RPL_MOTDSTART(sender.cliInfo.getNick()));
+	RPL::send_(sender.getFd(), RPL_MOTD(sender.cliInfo.getNick()));
+	RPL::send_(sender.getFd(), RPL_ENDOFMOTD(sender.cliInfo.getNick()));
 }
 
 void user(CmdSpec &cmd) {
@@ -43,7 +43,7 @@ void user(CmdSpec &cmd) {
 	sender.cliInfo.setPrefix();
 	if (sender.cliInfo.getRegistration() == 1) {
 		sender.cliInfo.setRegistration(2);
-		reply::send_(cmd.getSdFd(), RPL_USER(sender.cliInfo.getNick(),
+		RPL::send_(cmd.getSdFd(), RPL_USER(sender.cliInfo.getNick(),
 											 sender.cliInfo.getUsername()));
 	} else if (sender.cliInfo.getRegistration() == 2)
 		registrationCompleted(sender);

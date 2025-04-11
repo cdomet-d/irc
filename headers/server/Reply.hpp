@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/11 12:14:31 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 14:28:20 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,6 @@
 // registration_err_replies
 #define ERR_ALREADYREGISTERED(nickname)                                        \
 	(":irc.bitchat.net 462 " + nickname + " :You may not reregister\r\n")
-#define ERR_BADCHAR(nickname, received)                                        \
-	(":irc.bitchat.net NOTICE " + nickname +                                   \
-	 " :USER format should be <username> 0 * <realname>, is [" + received +    \
-	 "]\r\n")
 #define ERR_NEEDNICK(nickname)                                                 \
 	(":irc.bitchat.net NOTICE " + nickname + " :Please enter nickname\r\n")
 #define ERR_NEEDNICKORUSER(nickname)                                           \
@@ -183,7 +179,7 @@
 	(":irc.bitchat.net NOTICE " + nickname +                                   \
 	 " :The nickname is valid and saved !\r\n")
 #define RPL_USER(nickname, username)                                           \
-	(":irc.bitchat.net NOTICE " + nickname + " :The Username " + username +    \
+	(":irc.bitchat.net NOTICE " + nickname + " :The username " + username +    \
 	 " is valid and saved !\r\n")
 #define RPL_CHANOPE(nickname, channel)                                         \
 	(":irc.bitchat.net NOTICE " + nickname + " :You're operator of " +         \
@@ -193,8 +189,15 @@
 	 " : You're no longer operator of " + channel + "\r\n")
 #define RPL_BYEYBE(nickname)                                                   \
 	(":irc.bitchat.net " + nickname +                                          \
-	 " :You quitted the server, see you next time !\r\n")
+	 " :You quit the server, see you next time !\r\n")
+
 //command_replies (uses prefix)
+#define ERR_BADKEYLEN(prefix, channel)                                         \
+	(":" + prefix + " MODE " + channel +                                       \
+	 " :+k: key len must be at least 8 and no more than 26\r\n")
+#define ERR_BADINPUT(prefix, cmd, expected, received)                          \
+	(":" + prefix + " :" + cmd + " format should be [" + expected +            \
+	 "], is [" + received + "]\r\n")
 #define RPL_INVITE(prefix, target, channel)                                    \
 	(":" + prefix + " INVITE " + target + " :" + channel + "\r\n")
 #define RPL_JOIN(prefix, channel) (":" + prefix + " JOIN " + channel + "\r\n")
@@ -214,11 +217,10 @@
 	(":" + prefix + " :Client Quit " + message + "\r\n")
 #define RPL_NICK(prefix, newNick) (":" + prefix + " NICK :" + newNick + "\r\n")
 
-namespace reply {
+namespace RPL {
 	enum e_level { INFO, ERROR, DEBUG, REPLY, GOT };
 	void log(e_level level, std::string message, std::string verbose);
 	void log(e_level level, std::string message);
 	void send_(int fd, std::string reply);
-
-} // namespace reply
+} // namespace RPL
 #endif // REPLY_HPP

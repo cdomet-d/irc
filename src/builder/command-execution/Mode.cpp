@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:05:15 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,13 @@ void executeO(std::string flag, std::string param, Channel &curChan) {
 		// std::cout << targetCli->getFd() << targetCli->cliInfo.getNick()
 		// 		  << std::endl;
 		curChan.addCli(OPCLI, targetCli);
-		reply::send_(
+		RPL::send_(
 			targetCli->getFd(),
 			RPL_CHANOPE(targetCli->cliInfo.getNick(), curChan.getName()));
 	}
 	if (flag == "-o") {
 		curChan.removeCli(OPCLI, targetCli->getFd());
-		reply::send_(
+		RPL::send_(
 			targetCli->getFd(),
 			RPL_CHANOPENOPE(targetCli->cliInfo.getNick(), curChan.getName()));
 	}
@@ -128,7 +128,7 @@ void executeFlag(std::string flag, std::string param, Channel &curChan) {
 	if (flagLevel != -1)
 		flagExecutor[flagLevel](flag, param, curChan);
 	else
-		reply::log(reply::DEBUG, "Invalid flag : ", flag);
+		RPL::log(RPL::DEBUG, "Invalid flag : ", flag);
 }
 
 Channel &findCurChan(std::string chanName) {
@@ -184,7 +184,7 @@ void mode(CmdSpec &cmd) {
 		if (curChan.getModes().find("k") != std::string::npos) {
 			modeArgs += (" " + curChan.getPassword());
 		}
-		reply::send_(sender->getFd(),
+		RPL::send_(sender->getFd(),
 					 RPL_CHANNELMODEIS(sender->cliInfo.getNick(),
 									   curChan.getName(), curChan.getModes(),
 									   modeArgs));

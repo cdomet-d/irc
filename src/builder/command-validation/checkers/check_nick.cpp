@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_nick.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/10 16:06:26 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool check::nick(CmdSpec &cmd, size_t idx) {
 	if (cmd[nickname_].empty()) {
-		reply::send_(cmd.getSdFd(), ERR_NONICKNAMEGIVEN(cmd.getSdNick()));
+		RPL::send_(cmd.getSdFd(), ERR_NONICKNAMEGIVEN(cmd.getSdNick()));
 		return (false);
 	}
 	cmd[nickname_].trimParam(idx, NICKLEN);
@@ -22,7 +22,7 @@ bool check::nick(CmdSpec &cmd, size_t idx) {
 	if (!check::nick_::syntaxIsValid(nick, cmd.getSender()))
 		return false;
 	if (check::exists(nick, cmd.serv_.getUsedNick())) {
-		reply::send_(cmd.getSdFd(), ERR_NICKNAMEINUSE(cmd.getSdNick(), nick));
+		RPL::send_(cmd.getSdFd(), ERR_NICKNAMEINUSE(cmd.getSdNick(), nick));
 		return false;
 	}
 	return true;
@@ -37,7 +37,7 @@ bool check::nick_::syntaxIsValid(const std::string &nick,
 
 	std::string::const_iterator start = nick.begin();
 	if (!isalpha(*start)) {
-		reply::send_(sender.getFd(),
+		RPL::send_(sender.getFd(),
 					 ERR_ERRONEUSNICKNAME(sender.cliInfo.getNick(),
 										  nick + badFirst + *start));
 		return false;
@@ -45,7 +45,7 @@ bool check::nick_::syntaxIsValid(const std::string &nick,
 	start += 1;
 	while (start != nick.end()) {
 		if (!check::nick_::isAllowed(*start)) {
-			reply::send_(sender.getFd(),
+			RPL::send_(sender.getFd(),
 						 ERR_ERRONEUSNICKNAME(sender.cliInfo.getNick(),
 											  nick + illegal + *start));
 			return false;

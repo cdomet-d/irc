@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 12:14:44 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ void quit(CmdSpec &cmd) {
 
 	sender->mess.clearMess();
 	partAllChans(cmd, message);
-	reply::send_(sender->getFd(),
+	RPL::send_(sender->getFd(),
 				 RPL_QUIT(sender->cliInfo.getPrefix(), message));
-	reply::send_(sender->getFd(), RPL_BYEYBE(sender->cliInfo.getNick()));
+	RPL::send_(sender->getFd(), RPL_BYEYBE(sender->cliInfo.getNick()));
 	std::stringstream ss;
 	ss << "Client [" << sender->getFd() << "] disconnected\r\n";
-	reply::log(reply::INFO, ss.str());
+	RPL::log(RPL::INFO, ss.str());
 	cmd.serv_.removeCli(sender);
 	close(sender->getFd());
 	delete sender;

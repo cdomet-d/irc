@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_chans.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/10 16:06:05 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ bool check::chan(CmdSpec &cmd, size_t idx) {
 		channel = cmd[channel_][idx];
 
 	if (!check::exists(channel, cmd.serv_.getAllChan())) {
-		reply::send_(cmd.getSdFd(),
+		RPL::send_(cmd.getSdFd(),
 					 ERR_NOSUCHCHANNEL(cmd.getSdNick(), channel));
 		return (false);
 	}
 	stringVec userChan = cmd.getSender().getJoinedChans();
 	if (!check::chans_::onChan(channel, userChan)) {
-		reply::send_(cmd.getSdFd(),
+		RPL::send_(cmd.getSdFd(),
 					 ERR_NOTONCHANNEL(cmd.getSdNick(), channel));
 		return (false);
 	}
@@ -55,7 +55,7 @@ bool check::chans_::isOp(CmdSpec &cmd, size_t idx) {
 	clientMap::const_iterator itCl;
 	itCl = chan.getOpCli().find(cmd.getSender().getFd());
 	if (itCl == chan.getOpCli().end()) {
-		reply::send_(cmd.getSdFd(),
+		RPL::send_(cmd.getSdFd(),
 					 ERR_CHANOPRIVSNEEDED(cmd.getSdNick(), chan.getName()));
 		return (false);
 	}
