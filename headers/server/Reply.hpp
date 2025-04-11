@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:33:33 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 15:57:42 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/11 16:13:04 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@
 #define ERR_NOTREGISTERED(nickname) (":irc.bitchat.net 451 " + nickname + " :You have not registered\r\n")
 #define ERR_PASSWDMISMATCH(nickname) (":irc.bitchat.net 464 " + nickname + " :Incorrect password\r\n")
 
-//RESPONDS_REPLIES
 //serv_replies
 #define RPL_WELCOME(nickname, prefix) (":irc.bitchat.net 001 " + nickname + " :Welcome to the Bitchat Internet Relay Chat Network " + prefix + "\r\n")
 #define RPL_YOURHOST(nickname) (":irc.bitchat.net 002 " + nickname + " :Your host is Bitchat, running version 1.0\r\n")
@@ -90,6 +89,8 @@
 #define RPL_BYEYBE(nickname) (":irc.bitchat.net " + nickname + " :You quitted the server, see you next time !\r\n")
 #define RPL_ERROR(host, reason) ("ERROR :Closing Link: " + host + " (" + reason + ")\r\n")
 //command_replies (uses prefix)
+#define ERR_BADKEYLEN(prefix, channel) (":" + prefix + " MODE " + channel + " :+k: key len must be at least 8 and no more than 26\r\n")
+#define ERR_BADINPUT(prefix, cmd, expected, received) (":" + prefix + " :" + cmd + " format should be [" + expected + "], is [" + received + "]\r\n")
 #define RPL_INVITE(prefix, target, channel) (":" + prefix + " INVITE " + target + " :" + channel + "\r\n")
 #define RPL_JOIN(prefix, channel) (":" + prefix + " JOIN " + channel + "\r\n")
 #define RPL_KICK(prefix, channel, target, reason) (":" + prefix + " KICK " + channel + " " + target + " " + reason + "\r\n")
