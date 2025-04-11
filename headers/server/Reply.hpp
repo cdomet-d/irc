@@ -89,6 +89,7 @@
 #define RPL_CHANOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " :You're operator of " + channel + "\r\n")
 #define RPL_CHANOPENOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " : You're no longer operator of " + channel + "\r\n")
 #define RPL_BYEYBE(nickname) (":irc.bitchat.net " + nickname + " :You quitted the server, see you next time !\r\n")
+#define RPL_ERROR(host, reason) ("ERROR :Closing Link: " + host + " (" + reason + ")\r\n")
 //command_replies (uses prefix)
 #define RPL_INVITE(prefix, target, channel) (":" + prefix + " INVITE " + target + " :" + channel + "\r\n")
 #define RPL_JOIN(prefix, channel) (":" + prefix + " JOIN " + channel + "\r\n")
@@ -98,7 +99,7 @@
 #define RPL_PRIVMSG(prefix, target, message) (":" + prefix + " PRIVMSG " + target + " :" + message + "\r\n")
 #define RPL_TOPICCHANGED(prefix, channel, Topic) (":" + prefix + " TOPIC " + channel + " :" + Topic + "\r\n")
 #define RPL_MODE(prefix, channel, Mode, modeArgs) (":" + prefix + " MODE " + channel + " " + Mode + " " + modeArgs + "\r\n")
-#define RPL_QUIT(prefix, message) (":" + prefix + " :Client Quit " + message + "\r\n")
+#define RPL_QUIT(prefix, message) (":" + prefix + " QUIT :" + message + "\r\n")
 #define RPL_NICK(prefix, newNick) (":" + prefix + " NICK :" + newNick + "\r\n")
 
 namespace reply {
