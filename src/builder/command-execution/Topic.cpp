@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/04 13:40:08 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:09:41 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@
 
 void checkTopic(Channel &curChan, Client *curCli) {
 	if (curChan.getTopic().empty() == true) {
-		reply::send_(curCli->getFd(), RPL_NOTOPIC(curCli->cliInfo.getNick(),
-												  curChan.getName()));
+		RPL::send_(curCli->getFd(),
+				   RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan.getName()));
 		return;
 	}
-	reply::send_(curCli->getFd(),
-				 RPL_TOPIC(curCli->cliInfo.getNick(), curChan.getName(),
-						   curChan.getTopic()));
+	RPL::send_(curCli->getFd(),
+			   RPL_TOPIC(curCli->cliInfo.getNick(), curChan.getName(),
+						 curChan.getTopic()));
 	return;
 }
 
@@ -38,8 +38,7 @@ void changeTopic(Channel &curChan, Client *curCli, std::string topic) {
 	curChan.setTopic(topic);
 	sendMessageChannel(curChan.getCliInChan(),
 					   RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(),
-										curChan.getName(),
-										curChan.getTopic()));
+										curChan.getName(), curChan.getTopic()));
 }
 
 void topic(CmdSpec &cmd) {
@@ -54,8 +53,8 @@ void topic(CmdSpec &cmd) {
 	}
 	// if topic is = ":", the client clears the topic for the channel
 	// sends the notification to all clients of the channel
-	if (!strncmp(cmd[topic_][0].c_str(), " :", 2)
-		&& cmd[topic_][0].size() == 2) {
+	if (!strncmp(cmd[topic_][0].c_str(), " :", 2) &&
+		cmd[topic_][0].size() == 2) {
 		clearTopic(curChan, sender);
 		return;
 	}

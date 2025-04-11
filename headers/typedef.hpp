@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   typedef.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 13:59:33 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/10 16:03:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:52:47 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ typedef enum {
 #define MAX_CHAN_PER_CLI 50
 #define USERLEN 15
 #define NICKLEN 15
-
+#define USERFORMAT "<username> 0 * <realname>"
 // -------------------------------- DEBUG ----------------------------------- //
 
 #define BLACK "\033[30m"

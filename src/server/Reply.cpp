@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:37:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:06:34 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 14:28:43 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,19 @@ static std::string timeStamp() {
 	return (time_buf);
 }
 
-void reply::send_(int fd, std::string reply) {
-	reply::log(reply::REPLY, reply);
+void RPL::send_(int fd, std::string reply) {
+	RPL::log(RPL::REPLY, reply);
 	size_t bytes = send(fd, reply.c_str(), strlen(reply.c_str()),
 						MSG_EOR | MSG_DONTWAIT | MSG_NOSIGNAL);
 	if (bytes != strlen(reply.c_str()))
-		reply::log(ERROR, "Not send in full: \t", reply);
+		RPL::log(ERROR, "Not send in full: \t", reply);
 }
 
-void reply::log(e_level level, std::string message) {
+void RPL::log(e_level level, std::string message) {
 	Server &serv = Server::GetServerInstance(0, "");
+	if (message.find("PING") != std::string::npos ||
+		message.find("PONG") != std::string::npos)
+		return;
 	if (serv.logfile.is_open()) {
 		switch (level) {
 		case INFO:
@@ -47,18 +50,18 @@ void reply::log(e_level level, std::string message) {
 						 << std::flush;
 			break;
 		case REPLY:
-			serv.logfile << "[" << timeStamp() << "] REPLY " << message
+			serv.logfile << "[" << timeStamp() << "] >> " << message
 						 << std::flush;
 			break;
 		case GOT:
-			serv.logfile << "[" << timeStamp() << "] GOT " << message
+			serv.logfile << "[" << timeStamp() << "] << " << message
 						 << std::flush;
 			break;
 		}
 	}
 }
 
-void reply::log(e_level level, std::string message, std::string verbose) {
+void RPL::log(e_level level, std::string message, std::string verbose) {
 	Server &serv = Server::GetServerInstance(0, "");
 	if (serv.logfile.is_open()) {
 		switch (level) {
@@ -75,11 +78,11 @@ void reply::log(e_level level, std::string message, std::string verbose) {
 						 << verbose << std::flush;
 			break;
 		case (REPLY):
-			serv.logfile << "[" << timeStamp() << "] REPLY " << message
-						 << verbose << std::flush;
+			serv.logfile << "[" << timeStamp() << "] >> " << message << verbose
+						 << std::flush;
 			break;
 		case GOT:
-			serv.logfile << "[" << timeStamp() << "] GOT " << message
+			serv.logfile << "[" << timeStamp() << "] << " << message
 						 << std::flush;
 			break;
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Pass.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 09:04:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:05:36 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,6 @@
 
 void pass(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
-	reply::send_(sender->getFd(), PASS_SUCCESS(cmd.getSdNick()));
+	RPL::send_(sender->getFd(), PASS_SUCCESS(cmd.getSdNick()));
 	sender->cliInfo.setRegistration(1);
 }
