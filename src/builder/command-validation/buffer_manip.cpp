@@ -20,10 +20,6 @@
 bool buffer_manip::prepareCommand(Client &sender) {
 	sender.mess.trimSpaces();
 
-	if (ping(sender)) {
-		sender.mess.clear();
-		return (true);
-	}
 	while (!sender.mess.emptyBuff()) {
 		sender.mess.removeNewlines();
 		if (sender.mess.isCap()) {

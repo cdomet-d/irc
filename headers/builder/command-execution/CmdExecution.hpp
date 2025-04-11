@@ -31,7 +31,7 @@ void kick(CmdSpec &cmd);
 void part(CmdSpec &cmd);
 void privmsg(CmdSpec &cmd);
 void quit(CmdSpec &cmd);
-bool ping(Client& sender);
+void ping(CmdSpec &cmd);
 
 // UTILS
 Channel &findCurChan(std::string chanName);

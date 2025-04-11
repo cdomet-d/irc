@@ -101,6 +101,7 @@
 #define RPL_MODE(prefix, channel, Mode, modeArgs) (":" + prefix + " MODE " + channel + " " + Mode + " " + modeArgs + "\r\n")
 #define RPL_QUIT(prefix, message) (":" + prefix + " QUIT :" + message + "\r\n")
 #define RPL_NICK(prefix, newNick) (":" + prefix + " NICK :" + newNick + "\r\n")
+#define RPL_PONG(message) (":irc.bitchat.net PONG irc.bitchat.net :" + message + "\r\n")
 
 namespace reply {
 	enum e_level { INFO, ERROR, DEBUG, REPLY, GOT };
