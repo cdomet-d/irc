@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:04:49 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/11 11:13:12 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,8 @@ void invite(CmdSpec &cmd) {
 	}
 
 	Channel &curChan = findCurChan(cmd[channel_][0]);
-	// use NickMap
-	Client *targetCli = NULL;
-	for (clientMapIt itTarget = cmd.serv_.getAllCli().begin();
-		 itTarget != cmd.serv_.getAllCli().end(); ++itTarget) {
-		if (itTarget->second->cliInfo.getNick() == cmd[target_][0]) {
-			targetCli = itTarget->second;
-		}
-	}
+	int fdTarget = server.getUsedNick().find(cmd[target_][0])->second;
+	Client *targetCli = server.getAllCli().find(fdTarget)->second;
 
 	reply::send_(sender->getFd(),
 				 RPL_INVITING(sender->cliInfo.getNick(),
