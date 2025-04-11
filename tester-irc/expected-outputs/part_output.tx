@@ -13,20 +13,20 @@
 :irc.bitchat.net 403 chacham #dontexist :No such channel
 :irc.bitchat.net 403 chacham wrongchan :No such channel
 :chacham!c@localhost JOIN #chan
-::irc.bitchat.net MODE #chan +t 
+:irc.bitchat.net MODE #chan +t 
 :irc.bitchat.net 353 chacham = #chan :@chacham
 :irc.bitchat.net 366 chacham #chan :End of /NAMES list
 :chacham!c@localhost JOIN #chan2
-::irc.bitchat.net MODE #chan2 +t 
+:irc.bitchat.net MODE #chan2 +t 
 :irc.bitchat.net 353 chacham = #chan2 :@chacham
 :irc.bitchat.net 366 chacham #chan2 :End of /NAMES list
 :chacham!c@localhost JOIN #chan3
-::irc.bitchat.net MODE #chan3 +t 
+:irc.bitchat.net MODE #chan3 +t 
 :irc.bitchat.net 353 chacham = #chan3 :@chacham
 :irc.bitchat.net 366 chacham #chan3 :End of /NAMES list
 :chacham!c@localhost PART #chan
 :chacham!c@localhost JOIN #chan
-::irc.bitchat.net MODE #chan +t 
+:irc.bitchat.net MODE #chan +t 
 :irc.bitchat.net 353 chacham = #chan :@chacham
 :irc.bitchat.net 366 chacham #chan :End of /NAMES list
 :bobby!b@localhost JOIN #chan
