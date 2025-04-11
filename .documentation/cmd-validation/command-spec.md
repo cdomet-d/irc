@@ -554,7 +554,9 @@ rmFromChan() -> removes client from channel \
 
 PART #tosti bye bye (n'a pas pris le message entier car pas les deux points ":" devant)
 :bobyy!~<boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> PART #tosti :bye
+
 # JOIN #tosti key
+
 :lithium.libera.chat 421 bobyy #JOIN :Unknown command
 JOIN #tosti key
 :bobyy!~<boobyy@lfbn-lyo-1-144-60.w86-202.abo.wanadoo.fr> JOIN #tosti

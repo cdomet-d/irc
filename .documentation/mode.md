@@ -59,13 +59,10 @@ In order to ease parsing, each flag should be prequalified with its type.
 ## Mode tests
 
 ```text
-
-
 MODE #test -i +k aha
     # valid
  MODE #test +l +k aha lol
     # valid
-
 ```
 
 ## Types B and set C: always need an argument

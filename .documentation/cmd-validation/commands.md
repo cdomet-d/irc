@@ -2,13 +2,7 @@
 
 - [Commands structure, parsing rules and examples](#commands-structure-parsing-rules-and-examples)
 	- [PASS](#pass)
-		- [Parsing rules](#parsing-rules)
-			- [Failure strategy](#failure-strategy)
-			- [Success strategy](#success-strategy)
 	- [NICK](#nick)
-		- [Parsing rules](#parsing-rules-1)
-			- [Failure strategy](#failure-strategy-1)
-			- [Success strategy](#success-strategy-1)
 	- [USER](#user)
 
 ## PASS
@@ -18,20 +12,20 @@ PASS : <password>
   -> ex : /pass my_password
 ```
 
-### Parsing rules
+**Parsing rules**
 
 - MUST be used before sending NICK
 - MAY be used several times before sending NICK, but only the last pass will be registered
 - MUST have a parameter => 461 - ERR_NEEDMOREPARAM
 - Once set, CAN'T be modified => 462 - ERR_ALREADYREGISTERED
 
-#### Failure strategy
+**Failure strategy**
 
 - Returns the appropriate numeric reply to the client
 - Ignore the command
 - If the password doesn't match the registered one, the server SHOULD return 464 - ERR_PASSWDMISMATCH and close the connection with the client.
 
-#### Success strategy
+**Success strategy**
 
 - Informs the clients that the client changed his NICK, using the old nick as a source.
 
@@ -42,7 +36,7 @@ NICK : <nickname>
   -> ex : /nick my_nickname
 ```
 
-### Parsing rules
+**Parsing rules**
 
 - MUST NOT contain any of the following characters:
   - space (`' '`, 0x20),
@@ -61,12 +55,12 @@ NICK : <nickname>
 - MUST NOT already be in use => ERR_NICKNAMEINUSE
 - SHOULD NOT be ambiguous with implemented commands.
 
-#### Failure strategy
+**Failure strategy**
 
 - Returns the appropriate numeric reply to the client
 - Ignore the command
 
-#### Success strategy
+**Success strategy**
 
 - Informs the clients that the client changed his NICK, using the old nick as a source.
 
