@@ -72,6 +72,9 @@ EOF
 sleep 0.5
 
 echo "QUIT" >&${client1_in_fd}
+
+sleep 0.5
+
 echo "QUIT" >&${client2_in_fd}
 
 sleep 3
