@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/11 17:21:27 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/11 18:33:58 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,8 @@
 #define RPL_BYEYBE(nickname) (":irc.bitchat.net " + nickname + " :You quitted the server, see you next time !\r\n")
 #define RPL_ERROR(host, reason) ("ERROR :Closing Link: " + host + " (" + reason + ")\r\n")
 //command_replies (uses prefix)
-#define ERR_BADKEYLEN(prefix, channel) (":" + prefix + " MODE " + channel + " :+k: key len must be at least 8 and no more than 26\r\n")
-#define ERR_BADINPUT(prefix, cmd, expected, received) (":" + prefix + " :" + cmd + " format should be [" + expected + "], is [" + received + "]\r\n")
+#define ERR_BADKEYLEN(prefix, channel) (":" + prefix + " MODE " + channel + " :Bad key (+k) - key len must be at least 8 and no more than 26\r\n")
+#define ERR_BADINPUT(prefix, cmd, expected, received) (":" + prefix + " " + cmd + " :format should be [" + expected + "], is [" + received + "]\r\n")
 #define RPL_INVITE(prefix, target, channel) (":" + prefix + " INVITE " + target + " :" + channel + "\r\n")
 #define RPL_JOIN(prefix, channel) (":" + prefix + " JOIN " + channel + "\r\n")
 #define RPL_KICK(prefix, channel, target, reason) (":" + prefix + " KICK " + channel + " " + target + " " + reason + "\r\n")
