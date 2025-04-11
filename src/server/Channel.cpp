@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:17:06 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ void Channel::setPassword(std::string password) {
 void Channel::setModes() {
 	std::string modes = "+";
 
-	if (static_cast<ssize_t>(getMaxCli()) != -1)
+	if (static_cast< ssize_t >(getMaxCli()) != -1)
 		modes.append("l");
 	if (getInviteOnly() == true)
 		modes.append("i");
@@ -167,4 +167,3 @@ void Channel::setIsPassMatch(bool password) {
 void Channel::setTopicRestrict(bool topicRestrict) {
 	topicRestrict_ = topicRestrict;
 }
-

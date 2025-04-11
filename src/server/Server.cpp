@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:17:13 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,7 @@ bool Server::servRun() {
 	int nbFds;
 
 	std::cout << "Server listening on port " << port_
-			  << " | IP adress: " << inet_ntoa(servAddr_.sin_addr)
-			  << std::endl;
+			  << " | IP adress: " << inet_ntoa(servAddr_.sin_addr) << std::endl;
 	while (gSign == false) {
 		nbFds = epoll_wait(epollFd_, events_, MAX_EVENTS, -1);
 		if (nbFds == -1 && gSign == false)
@@ -138,16 +137,14 @@ void Server::acceptClient() {
 		newCli->setCliEpoll(cliEpollTemp);
 
 		if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, newCli->getFd(),
-					  newCli->getCliEpoll())
-			== -1) {
+					  newCli->getCliEpoll()) == -1) {
 			close(newCli->getFd());
 			throw Server::InitFailed(
 				const_cast< const char * >(strerror(errno)));
 		}
 
 		clients_.insert(clientPair(newCli->getFd(), newCli));
-		usedNicks_.insert(
-			nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
+		usedNicks_.insert(nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected\n";
 		RPL::log(RPL::INFO, ss.str());

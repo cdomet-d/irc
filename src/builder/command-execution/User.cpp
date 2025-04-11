@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:48:49 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:09:50 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ static std::string timeStamp() {
 void registrationCompleted(Client &sender) {
 	sender.cliInfo.setRegistration(3);
 	RPL::send_(sender.getFd(), RPL_WELCOME(sender.cliInfo.getNick(),
-											 sender.cliInfo.getPrefix()));
+										   sender.cliInfo.getPrefix()));
 	RPL::send_(sender.getFd(), RPL_YOURHOST(sender.cliInfo.getNick()));
 	RPL::send_(sender.getFd(),
-				 RPL_CREATED(sender.cliInfo.getNick(), timeStamp()));
+			   RPL_CREATED(sender.cliInfo.getNick(), timeStamp()));
 	RPL::send_(sender.getFd(), RPL_MYINFO(sender.cliInfo.getNick()));
 	RPL::send_(sender.getFd(), RPL_ISUPPORT(sender.cliInfo.getNick()));
 	RPL::send_(sender.getFd(), RPL_MOTDSTART(sender.cliInfo.getNick()));
@@ -44,7 +44,7 @@ void user(CmdSpec &cmd) {
 	if (sender.cliInfo.getRegistration() == 1) {
 		sender.cliInfo.setRegistration(2);
 		RPL::send_(cmd.getSdFd(), RPL_USER(sender.cliInfo.getNick(),
-											 sender.cliInfo.getUsername()));
+										   sender.cliInfo.getUsername()));
 	} else if (sender.cliInfo.getRegistration() == 2)
 		registrationCompleted(sender);
 }

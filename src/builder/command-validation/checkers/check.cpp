@@ -6,15 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/11 15:07:56 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:11:42 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printers.hpp"
 #include "validator.hpp"
 
-// TODO: add syntax checks on username ?
-/* checks that username syntax is valid */
 bool check::user(CmdSpec &cmd, size_t idx) {
 	cmd[username_].trimParam(idx, USERLEN);
 	if (cmd[username_].size() < 1) {

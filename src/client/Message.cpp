@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:16:53 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,8 +163,7 @@ bool Message::lenIsValid(const Client &sender) {
 	if (message_.empty())
 		return false;
 	if (message_.size() > 512) {
-		RPL::send_(sender.getFd(),
-					 ERR_INPUTTOOLONG(sender.cliInfo.getNick()));
+		RPL::send_(sender.getFd(), ERR_INPUTTOOLONG(sender.cliInfo.getNick()));
 		return false;
 	}
 	return true;
@@ -184,8 +183,8 @@ void Message::removeNewlines() {
 		message_.clear();
 		return;
 	}
-	std::string::size_type newline
-		= (termSize == 2 ? message_.find("\r\n") : message_.find("\n"));
+	std::string::size_type newline =
+		(termSize == 2 ? message_.find("\r\n") : message_.find("\n"));
 	leftover_ = message_.substr(newline + termSize);
 	message_.erase(message_.begin() + newline, message_.end());
 	return;
@@ -194,8 +193,8 @@ static bool isConsecutiveSpace(char left, char right) {
 	return (left == ' ' && right == ' ');
 }
 void Message::trimSpaces() {
-	std::string::iterator newEnd
-		= std::unique(message_.begin(), message_.end(), isConsecutiveSpace);
+	std::string::iterator newEnd =
+		std::unique(message_.begin(), message_.end(), isConsecutiveSpace);
 	if (newEnd != message_.end())
 		message_.erase(newEnd, message_.end());
 }

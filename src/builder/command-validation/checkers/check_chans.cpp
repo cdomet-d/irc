@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:10:22 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,12 @@ bool check::chan(CmdSpec &cmd, size_t idx) {
 		channel = cmd[channel_][idx];
 
 	if (!check::exists(channel, cmd.serv_.getAllChan())) {
-		RPL::send_(cmd.getSdFd(),
-					 ERR_NOSUCHCHANNEL(cmd.getSdNick(), channel));
+		RPL::send_(cmd.getSdFd(), ERR_NOSUCHCHANNEL(cmd.getSdNick(), channel));
 		return (false);
 	}
 	stringVec userChan = cmd.getSender().getJoinedChans();
 	if (!check::chans_::onChan(channel, userChan)) {
-		RPL::send_(cmd.getSdFd(),
-					 ERR_NOTONCHANNEL(cmd.getSdNick(), channel));
+		RPL::send_(cmd.getSdFd(), ERR_NOTONCHANNEL(cmd.getSdNick(), channel));
 		return (false);
 	}
 	return (true);
@@ -45,8 +43,8 @@ bool check::chans_::isOp(CmdSpec &cmd, size_t idx) {
 	Channel chan = *itChan->second;
 
 	if ((cmd.getName() == "TOPIC" &&
-			(cmd[topic_].empty() ||
-			 chan.getModes().find('t') == std::string::npos)) ||
+		 (cmd[topic_].empty() ||
+		  chan.getModes().find('t') == std::string::npos)) ||
 		(cmd.getName() == "MODE" && cmd[flag_].empty() &&
 		 cmd[flagArg_].empty())) {
 		return (true);
@@ -56,7 +54,7 @@ bool check::chans_::isOp(CmdSpec &cmd, size_t idx) {
 	itCl = chan.getOpCli().find(cmd.getSender().getFd());
 	if (itCl == chan.getOpCli().end()) {
 		RPL::send_(cmd.getSdFd(),
-					 ERR_CHANOPRIVSNEEDED(cmd.getSdNick(), chan.getName()));
+				   ERR_CHANOPRIVSNEEDED(cmd.getSdNick(), chan.getName()));
 		return (false);
 	}
 	return (true);

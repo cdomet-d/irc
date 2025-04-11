@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:16:28 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,10 @@ bool buffer_manip::prepareCommand(Client &sender) {
 				return true;
 		} catch (const CmdManager::CmdNotFoundException &e) {
 			RPL::send_(sender.getFd(),
-						 ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
-											sender.mess.getCmd()));
+					   ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
+										  sender.mess.getCmd()));
 		}
+		//TODO: bit worried that trailing will remain hanging around if the command is not found
 		sender.mess.clear();
 		sender.mess.updateMess();
 	}

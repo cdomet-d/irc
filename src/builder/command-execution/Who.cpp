@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:09:54 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,11 @@ void who(CmdSpec &cmd) {
 		for (clientMapIt it = curChan.getOpCli().begin();
 			 it != curChan.getOpCli().end(); ++it) {
 			RPL::send_(cmd.getSdFd(),
-						 RPL_WHOREPLY(it->second->cliInfo.getNick(), cmd[channel_][0],
-									  it->second->cliInfo.getUsername(),
-									  it->second->cliInfo.getHostname(), "@",
-									  it->second->cliInfo.getRealName()));
+					   RPL_WHOREPLY(it->second->cliInfo.getNick(),
+									cmd[channel_][0],
+									it->second->cliInfo.getUsername(),
+									it->second->cliInfo.getHostname(), "@",
+									it->second->cliInfo.getRealName()));
 		}
 	} else {
 		std::string flag;
@@ -37,13 +38,12 @@ void who(CmdSpec &cmd) {
 				curChan.getOpCli().end())
 				flag = "@";
 			RPL::send_(cmd.getSdFd(),
-						 RPL_WHOREPLY(it->second->cliInfo.getNick(),
-									  cmd[channel_][0],
-									  it->second->cliInfo.getUsername(),
-									  it->second->cliInfo.getHostname(), flag,
-									  it->second->cliInfo.getRealName()));
+					   RPL_WHOREPLY(it->second->cliInfo.getNick(),
+									cmd[channel_][0],
+									it->second->cliInfo.getUsername(),
+									it->second->cliInfo.getHostname(), flag,
+									it->second->cliInfo.getRealName()));
 		}
 	}
-	RPL::send_(cmd.getSdFd(),
-				 RPL_ENDOFWHO(cmd.getSdNick(), cmd[channel_][0]));
+	RPL::send_(cmd.getSdFd(), RPL_ENDOFWHO(cmd.getSdNick(), cmd[channel_][0]));
 }

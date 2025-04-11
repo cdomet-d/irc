@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/11 12:31:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:11:18 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,26 +28,25 @@ bool check::nick(CmdSpec &cmd, size_t idx) {
 	return true;
 }
 
-// TODO: why are we passing nick in param here ?
 bool check::nick_::syntaxIsValid(const std::string &nick,
 								 const Client &sender) {
 	std::string badFirst(": illegal first char: expected [Aa -Zz], is "),
 		illegal(
-			": illegal char: expected [Aa -Zz], [0 - 9] or [-[]\\`^{}], is ");
+			": illegal char: expected [AZ - az], [0 - 9] or [-[]\\`^{}], is ");
 
 	std::string::const_iterator start = nick.begin();
 	if (!isalpha(*start)) {
 		RPL::send_(sender.getFd(),
-					 ERR_ERRONEUSNICKNAME(sender.cliInfo.getNick(),
-										  nick + badFirst + *start));
+				   ERR_ERRONEUSNICKNAME(sender.cliInfo.getNick(),
+										nick + badFirst + *start));
 		return false;
 	}
 	start += 1;
 	while (start != nick.end()) {
 		if (!check::nick_::isAllowed(*start)) {
 			RPL::send_(sender.getFd(),
-						 ERR_ERRONEUSNICKNAME(sender.cliInfo.getNick(),
-											  nick + illegal + *start));
+					   ERR_ERRONEUSNICKNAME(sender.cliInfo.getNick(),
+											nick + illegal + *start));
 			return false;
 		}
 		++start;
