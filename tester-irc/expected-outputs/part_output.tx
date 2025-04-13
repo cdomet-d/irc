@@ -35,8 +35,8 @@
 :bobby!b@localhost PART #chan :im leaving. idiots.
 :bobby!b@localhost PART #chan2 :im leaving. idiots.
 :bobby!b@localhost PART #chan3 :im leaving. idiots.
-:chacham!c@localhost :Client Quit 
-:irc.bitchat.net chacham :You quitted the server, see you next time !
+:chacham!c@localhost QUIT :You quitted the server, see you next time !
+ERROR :Closing Link: localhost (Client Quit)
 :irc.bitchat.net NOTICE * :Valid password ! You may register
 :irc.bitchat.net NOTICE bobby :The nickname is valid and saved !
 :irc.bitchat.net 001 bobby :Welcome to the Bitchat Internet Relay Chat Network bobby!b@localhost
@@ -60,5 +60,5 @@
 :bobby!b@localhost PART #chan :im leaving. idiots.
 :bobby!b@localhost PART #chan2 :im leaving. idiots.
 :bobby!b@localhost PART #chan3 :im leaving. idiots.
-:bobby!b@localhost :Client Quit 
-:irc.bitchat.net bobby :You quitted the server, see you next time !
+:bobby!b@localhost QUIT :You quitted the server, see you next time !
+ERROR :Closing Link: localhost (Client Quit)
