@@ -26,9 +26,13 @@ bool check::len(CmdSpec &cmd, size_t idx) {
 		case 2:
 			return (cmd[username_].trimParam(idx, USERLEN));
 		case 3:
-			return (cmd[topic_].trimParam(idx, TOPICLEN));
+			if (!cmd[topic_].empty())
+				return (cmd[topic_].trimParam(idx, TOPICLEN));
+			break;
 		case 4:
-			return (cmd[message_].trimParam(idx, KICKLEN));
+			if (!cmd[message_].empty())
+				return (cmd[message_].trimParam(idx, KICKLEN));
+			break;
 		default:
 			return true;
 	}
@@ -36,11 +40,6 @@ bool check::len(CmdSpec &cmd, size_t idx) {
 }
 
 bool check::user(CmdSpec &cmd, size_t idx) {
-	if (cmd[username_].size() < 1) {
-		RPL::send_(cmd.getSdFd(),
-				   ERR_NEEDMOREPARAMS(cmd.getSdNick(), cmd.getName()));
-		return false;
-	}
 	if (!check::nick_::syntaxIsValid(cmd[username_][idx], cmd.getSender()))
 		return false;
 	if (cmd[hostname_][idx] != "0" || cmd[servername_][idx] != "*") {
