@@ -17,7 +17,6 @@ bool check::nick(CmdSpec &cmd, size_t idx) {
 		RPL::send_(cmd.getSdFd(), ERR_NONICKNAMEGIVEN(cmd.getSdNick()));
 		return (false);
 	}
-	cmd[nickname_].trimParam(idx, NICKLEN);
 	std::string &nick = cmd[nickname_][idx];
 	if (!check::nick_::syntaxIsValid(nick, cmd.getSender()))
 		return false;

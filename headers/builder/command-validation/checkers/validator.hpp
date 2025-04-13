@@ -28,6 +28,7 @@ namespace check {
 	bool user(CmdSpec &cmd, size_t idx);
 	bool join(CmdSpec &cmd, size_t idx);
 	bool enoughParams(CmdSpec &cmd, size_t idx);
+	bool len(CmdSpec &cmd, size_t idx);
 	const stringVec &getTargetChan(const std::string &target,
 								   const Server &serv);
 	template < typename MapType >

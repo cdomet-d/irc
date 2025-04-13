@@ -13,8 +13,29 @@
 #include "printers.hpp"
 #include "validator.hpp"
 
+bool check::len(CmdSpec &cmd, size_t idx) {
+	std::string cmdName[5] = {"JOIN", "NICK", "USER", "TOPIC", "KICK"};
+	size_t i = 0;
+	while (i < 5 && cmdName[i] != cmd.getName())
+		i++;
+	switch (i) {
+		case 0:
+			return (cmd[channel_].trimParam(idx, CHANNELLEN));
+		case 1:
+			return (cmd[nickname_].trimParam(idx, NICKLEN));
+		case 2:
+			return (cmd[username_].trimParam(idx, USERLEN));
+		case 3:
+			return (cmd[topic_].trimParam(idx, TOPICLEN));
+		case 4:
+			return (cmd[message_].trimParam(idx, KICKLEN));
+		default:
+			return true;
+	}
+	return true;
+}
+
 bool check::user(CmdSpec &cmd, size_t idx) {
-	cmd[username_].trimParam(idx, USERLEN);
 	if (cmd[username_].size() < 1) {
 		RPL::send_(cmd.getSdFd(),
 				   ERR_NEEDMOREPARAMS(cmd.getSdNick(), cmd.getName()));
