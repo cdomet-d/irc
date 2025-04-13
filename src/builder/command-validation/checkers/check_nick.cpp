@@ -29,7 +29,7 @@ bool check::nick(CmdSpec &cmd, size_t idx) {
 
 bool check::nick_::syntaxIsValid(const std::string &nick,
 								 const Client &sender) {
-	std::string badFirst(": illegal first char: expected [Aa -Zz], is "),
+	std::string badFirst(": illegal first char: expected [AZ - az], is "),
 		illegal(
 			": illegal char: expected [AZ - az], [0 - 9] or [-[]\\`^{}], is ");
 
