@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/14 12:08:18 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/14 18:11:54 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,20 @@ bool check::mode_::validFlag(e_mdeset &set, e_mdetype &type,
 	try {
 		set = check::mode_::whichSet(flag.at(0));
 		if (!set)
-			return RPL::send_(cli.getFd(),
-					ERR_UNKNOWNMODE(cli.cliInfo.getNick(),
-									flag.at(0))), false;
+			return RPL::send_(
+					   cli.getFd(),
+					   ERR_UNKNOWNMODE(cli.cliInfo.getNick(), flag.at(0))),
+				   false;
 		type = check::mode_::typeIsValid(flag.at(1));
 		if (!type)
-			return RPL::send_(cli.getFd(),
-						ERR_UNKNOWNMODE(cli.cliInfo.getNick(),
-										flag.at(1))), false;
-	} catch (std::exception &e) { return false; }
+			return RPL::send_(
+					   cli.getFd(),
+					   ERR_UNKNOWNMODE(cli.cliInfo.getNick(), flag.at(1))),
+				   false;
+	} catch (std::exception &e) {
+		RPL::send_(cli.getFd(), ERR_UNKNOWNMODE(cli.cliInfo.getNick(), ""));
+		return false;
+	}
 	return true;
 }
 
@@ -78,18 +83,18 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 		const bool needArg = ((type == B) || (type == C && set == SET));
 		const bool needEmpty = ((type == D) || (type == C && set == UNSET));
 
-		if (needArg && i >= cmd[flagArg_].size())
+		if (needArg &&
+			(i >= cmd[flagArg_].size() || cmd[flagArg_][i].empty())) {
 			cmd[flag_].rmParam(i);
-		else if (needEmpty) {
+			RPL::send_(cmd.getSdFd(),
+					   ERR_NEEDMOREPARAMS(cmd.getSdNick(), cmd.getName()));
+		} else if (needEmpty)
 			cmd[flagArg_].addOne(i);
-		}
 		if (size == cmd[flag_].size())
 			i++;
 	}
 	if (cmd[flag_].empty())
-		return RPL::send_(cmd.getSdFd(),
-						  ERR_NEEDMOREPARAMS(cmd.getSdNick(), cmd.getName())),
-			   false;
+		return false;
 	return true;
 }
 
