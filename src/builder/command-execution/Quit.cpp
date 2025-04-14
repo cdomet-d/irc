@@ -35,7 +35,7 @@ void partAllChans(CmdSpec &cmd, const std::string &message) {
 void quit(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 	std::string message;
-	if (!cmd[message_].empty())
+	if (!cmd[message_].empty() && !cmd[message_][0].empty())
 		message = cmd[message_][0];
 	else
 		message = "You quitted the server, see you next time !";

@@ -13,7 +13,7 @@
 #include "validator.hpp"
 
 bool check::nick(CmdSpec &cmd, size_t idx) {
-	if (cmd[nickname_].empty()) {
+	if (cmd[nickname_].empty() || cmd[nickname_][0].empty()) {
 		RPL::send_(cmd.getSdFd(), ERR_NONICKNAMEGIVEN(cmd.getSdNick()));
 		return (false);
 	}

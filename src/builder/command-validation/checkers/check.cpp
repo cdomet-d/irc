@@ -19,22 +19,22 @@ bool check::len(CmdSpec &cmd, size_t idx) {
 	while (i < 5 && cmdName[i] != cmd.getName())
 		i++;
 	switch (i) {
-		case 0:
-			return (cmd[channel_].trimParam(idx, CHANNELLEN));
-		case 1:
-			return (cmd[nickname_].trimParam(idx, NICKLEN));
-		case 2:
-			return (cmd[username_].trimParam(idx, USERLEN));
-		case 3:
-			if (!cmd[topic_].empty())
-				return (cmd[topic_].trimParam(idx, TOPICLEN));
-			break;
-		case 4:
-			if (!cmd[message_].empty())
-				return (cmd[message_].trimParam(idx, KICKLEN));
-			break;
-		default:
-			return true;
+	case 0:
+		return (cmd[channel_].trimParam(idx, CHANNELLEN));
+	case 1:
+		return (cmd[nickname_].trimParam(idx, NICKLEN));
+	case 2:
+		return (cmd[username_].trimParam(idx, USERLEN));
+	case 3:
+		if (!cmd[topic_].empty())
+			return (cmd[topic_].trimParam(idx, TOPICLEN));
+		break;
+	case 4:
+		if (!cmd[message_].empty())
+			return (cmd[message_].trimParam(idx, KICKLEN));
+		break;
+	default:
+		return true;
 	}
 	return true;
 }
@@ -80,7 +80,8 @@ bool check::invite(CmdSpec &cmd, size_t idx) {
 bool check::enoughParams(CmdSpec &cmd, size_t idx) {
 	while (idx < cmd.getParams().size()) {
 		CmdParam &innerParam = *cmd.getParams()[idx].second;
-		if (!innerParam.isOpt() && innerParam.empty()) {
+		if (!innerParam.isOpt() &&
+			(innerParam.empty() || innerParam[0].empty())) {
 			RPL::send_(cmd.getSdFd(),
 					   ERR_NEEDMOREPARAMS(cmd.getSdNick(), cmd.getName()));
 			return (false);
