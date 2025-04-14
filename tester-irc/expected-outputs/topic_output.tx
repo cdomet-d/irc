@@ -21,6 +21,7 @@
 :bobby!b@localhost JOIN #chan
 :chacham!c@localhost MODE #chan -t 
 :bobby!b@localhost TOPIC #chan :lol
+:bobby!b@localhost TOPIC #chan :
 :chacham!c@localhost QUIT :You quitted the server, see you next time !
 ERROR :Closing Link: localhost (Client Quit)
 :irc.bitchat.net NOTICE * :Valid password ! You may register
@@ -45,8 +46,8 @@ ERROR :Closing Link: localhost (Client Quit)
 :chacham!c@localhost MODE #chan -t 
 :bobby!b@localhost TOPIC #chan :lol
 :irc.bitchat.net 332 bobby #chan :lol
-:bobby!~b@hostname TOPIC #chan :
-:irc.bitchat.net 331 bobby #chan :No topic is set.
+:bobby!b@localhost TOPIC #chan :
+:irc.bitchat.net 331 bobby #chan :No topic is set
 :chacham!c@localhost QUIT :You quitted the server, see you next time !
 :chacham!c@localhost MODE #chan +o bobby
 :bobby!b@localhost QUIT :You quitted the server, see you next time !
