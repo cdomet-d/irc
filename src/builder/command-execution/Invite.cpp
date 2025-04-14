@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 15:08:28 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/14 16:04:58 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,8 @@ void invite(CmdSpec &cmd) {
 	static Server &server = Server::GetServerInstance(0, "");
 	Client *sender = &cmd.getSender();
 
-	if (cmd[target_].empty()) {
-		for (channelMapIt chan = server.getAllChan().begin();
-			 chan != server.getAllChan().end(); ++chan) {
-			if (chan->second->getInvitCli().find(sender->getFd()) !=
-				chan->second->getInvitCli().end())
-				RPL::send_(
-					sender->getFd(),
-					RPL_INVITELIST(sender->cliInfo.getNick(), chan->first));
-		}
-		RPL::send_(sender->getFd(),
-				   RPL_ENDOFINVITELIST(sender->cliInfo.getNick()));
-		return;
-	}
+	if (cmd[target_].empty())
+		return (server.checkChanInviteList(sender));
 
 	Channel &curChan = findCurChan(cmd[channel_][0]);
 	int fdTarget = server.getUsedNick().find(cmd[target_][0])->second;

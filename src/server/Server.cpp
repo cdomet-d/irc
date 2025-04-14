@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 15:17:13 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/14 16:10:41 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ bool Server::handleData(int fd) {
 
 	Client *curCli = clients_.find(fd)->second;
 	if (bytes == 0) {
-		std::cout << "sending QUIT command" << std::endl;
+	//	std::cout << "sending QUIT command" << std::endl;
 		curCli->mess.setMess("QUIT\n");
 		buffer_manip::prepareCommand(*curCli);
 		return (true);
@@ -207,6 +207,17 @@ void Server::removeChan(Channel *curChan) {
 void Server::removeCli(Client *curCli) {
 	removeNickFromUsedNicks(curCli->cliInfo.getNick());
 	clients_.erase(curCli->getFd());
+}
+
+void Server::checkChanInviteList(Client *sender) {
+	for (channelMapIt chan = channels_.begin(); chan != channels_.end();
+		 ++chan) {
+		if (chan->second->getInvitCli().find(sender->getFd()) !=
+			chan->second->getInvitCli().end())
+			RPL::send_(sender->getFd(),
+					   RPL_INVITELIST(sender->cliInfo.getNick(), chan->first));
+	}
+	RPL::send_(sender->getFd(), RPL_ENDOFINVITELIST(sender->cliInfo.getNick()));
 }
 
 void Server::addNickToUsedNicks(const std::string &newNick, int fd) {

@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:04:30 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/14 16:04:11 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,21 +55,19 @@ class Server {
 	void removeNickFromUsedNicks(const std::string &toRemove);
 	void removeChan(Channel *curChan);
 	void removeCli(Client *curCli);
+	void checkChanInviteList(Client *sender);
 
 	/*                               GETTERS                                  */
 	const nickMap &getUsedNick() const;
 	int getFdFromNick(const std::string &nick) const;
 	const std::string getPass() const;
+	const clientMap &getAllCli() const;
+	const channelMap &getAllChan() const;
 
 	/*                               MEMBERS                                  */
 	std::ofstream logfile;
 
-	const clientMap &getAllCli() const;
-	const channelMap &getAllChan() const;
-
   private:
-	/*                               METHODS                                  */
-
 	// attributes
 	const int port_;
 	const std::string pass_;
