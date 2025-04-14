@@ -5,7 +5,7 @@ SERV_HEA_DIR:= server/headers/
 BOT_SRC_DIR:= bot/src/
 BOT_HEA_DIR:= bot/headers/
 
-H:=  -I $(SERV_HEA_DIR) \
+SERV_INC:=  -I $(SERV_HEA_DIR) \
 	-I $(SERV_HEA_DIR)server/ \
 	-I $(SERV_HEA_DIR)builder/command-execution/ \
 	-I $(SERV_HEA_DIR)builder/command-validation/ \

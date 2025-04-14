@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/04/14 14:46:50 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/04/14 15:40:26 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,6 @@ BOT_NAME:= ircbot
 
 CC:=c++
 CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow
-CXXFLAGS:=-MMD -MP $(H)	
 DFLAGS:= -std=c++98 -Wextra -Wall -Wshadow -g3
 MAKEFLAGS:=--no-print-directory
 VFLAGS:= --leak-check=full --log-file="val.log" --show-leak-kinds=all --track-fds=yes
@@ -34,6 +33,8 @@ RM:= rm -rf
 
 all: $(NAME)
 
+S_CXXFLAGS:=-MMD -MP $(SERV_INC)
+
 OBJ:=$(addprefix $(BDIR), $(S_SRC:%.cpp=%.o))
 DEPS:=$(OBJ:%.o=%.d)
 
@@ -48,11 +49,13 @@ $(NAME): $(OBJ)
 $(BDIR)%.o: %.cpp
 	@mkdir -p $(dir $@)
 	@echo "$(CC) $(CFLAGS) $@"
-	@$(CC) $(CFLAGS) $(CXXFLAGS) -o $@ -c $<
+	@$(CC) $(CFLAGS) $(S_CXXFLAGS) -o $@ -c $<
 
 -include $(DEPS)
 
 bot: $(BOT_NAME)
+
+B_CXXFLAGS:=-MMD -MP $(BOT_INC)
 
 BOBJ:=$(addprefix $(BOT_BDIR), $(B_SRC:%.cpp=%.o))
 BDEPS:=$(BOBJ:%.o=%.d)
@@ -67,7 +70,7 @@ $(BOT_NAME): $(BOBJ)
 $(BOT_BDIR)%.o: %.cpp
 	@mkdir -p $(dir $@)
 	@echo "$(CC) $(CFLAGS) $@"
-	@$(CC) $(CFLAGS) $(CXXFLAGS) -o $@ -c $<
+	@$(CC) $(CFLAGS) $(B_CXXFLAGS) -o $@ -c $<
 
 -include $(BDEPS)
 
@@ -87,7 +90,7 @@ $(DEBUG_NAME): $(DOBJ)
 $(DBDIR)%.o: %.cpp
 	@mkdir -p $(dir $@)
 	@echo "$(CC) $(DFLAGS) $@"
-	@$(CC) $(DFLAGS) $(CXXFLAGS) -o $@ -c $<
+	@$(CC) $(DFLAGS) $(S_CXXFLAGS) -o $@ -c $<
 
 -include $(DDEPS)
 
@@ -138,9 +141,13 @@ redebug: fclean debug
 rebot: fclean bot
 
 info:
-	@echo $(CXXFLAGS)
+	@echo $(S_CXXFLAGS)
 	@echo
 	@echo $(S_SRC)
+	@echo
+	@echo $(B_CXXFLAGS)
+	@echo
+	@echo $(B_SRC)
 
 track:
 	bash .scripts/track-remote-branches.sh

@@ -2,11 +2,12 @@
 BOT_SRC_DIR:= bot/src/
 BOT_HEA_DIR:= bot/headers/
 
-H:=  -I $(SERV_HEA_DIR) \
+BOT_INC:= -I $(BOT_HEA_DIR) \
 
 # ----------------------------- BOT SOURCES FILES ---------------------------- #
 
 SRC_ROOT:=			main.cpp \
+					Bot.cpp \
 
 # ----------------------------- BOT FILE BUILDING PATH ----------------------- #
 
