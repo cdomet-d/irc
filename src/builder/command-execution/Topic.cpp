@@ -27,8 +27,6 @@ void checkTopic(Channel &curChan, Client *curCli) {
 }
 
 void changeTopic(Channel &curChan, Client *curCli, std::string topic) {
-	if (!topic.empty())
-		topic.erase(1, 0); // remove the ':'
 	curChan.setTopic(topic);
 	sendMessageChannel(curChan.getCliInChan(),
 					   RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(),
