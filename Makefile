@@ -6,103 +6,35 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/04/11 12:14:26 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/04/14 14:46:50 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+include .make/*.mk
+
 NAME:= ircserv
 DEBUG_NAME:= d-ircserv
-
-H:=  -I headers/ \
-	-I headers/server/ \
-	-I headers/builder/command-execution/ \
-	-I headers/builder/command-validation/ \
-	-I headers/builder/command-validation/checkers/ \
-	-I headers/builder/manager/ \
-	-I headers/client/ \
-	-I headers/debug/ \
+BOT_NAME:= ircbot
 
 CC:=c++
 CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow
+CXXFLAGS:=-MMD -MP $(H)	
 DFLAGS:= -std=c++98 -Wextra -Wall -Wshadow -g3
-CXXFLAGS:=-MMD -MP $(H)
 MAKEFLAGS:=--no-print-directory
+VFLAGS:= --leak-check=full --log-file="val.log" --show-leak-kinds=all --track-fds=yes
 
-# ----------------------------- SOURCES DIRECTORIES -------------------------- #
-BDIR:=.bdir/
-DBDIR:=.dbdir/
+BUILD:= .build/
+BDIR:= $(BUILD)bdir/
+DBDIR:=$(BUILD)dbdir/
+BOT_BDIR:=$(BUILD)bot_bdir/
 
-SRC_DIR:= src/
+RM:= rm -rf
 
-BUILD_EXE_DIR:= $(SRC_DIR)builder/command-execution/
-BUILD_VAL_DIR:= $(SRC_DIR)builder/command-validation/
-BUILD_CHECK_DIR:= $(SRC_DIR)builder/command-validation/checkers/
-BUILD_MAN_DIR:= $(SRC_DIR)builder/manager/
-
-CLI_DIR:= $(SRC_DIR)client/
-DEBUG_DIR:= $(SRC_DIR)debug/
-SERV_DIR:= $(SRC_DIR)server/
-
-# ----------------------------- SOURCES FILES -------------------------------- #
-
-SERV_SRC:=			Channel.cpp \
-					Server.cpp \
-					Reply.cpp \
-
-CLI_SRC:=			Client.cpp \
-					Message.cpp \
-					UserInfo.cpp \
-
-BUILD_EXE_SRC:=		Join.cpp \
-					Privmsg.cpp \
-					Topic.cpp \
-					Part.cpp \
-					Mode.cpp \
-					Invite.cpp \
-					Kick.cpp \
-					Who.cpp \
-					Pass.cpp \
-					Ping.cpp \
-					Nick.cpp \
-					User.cpp \
-					Quit.cpp \
-
-BUILD_VAL_SRC:=		buffer_manip.cpp \
-					CmdManager.cpp \
-					CmdParam.cpp  \
-					CmdSpec.cpp  \
-
-BUILD_CHECK_SRC:=	check_mode.cpp \
-					check_registration.cpp \
-					check_nick.cpp \
-					check_join.cpp \
-					check.cpp \
-					check_chans.cpp \
-					check_mess.cpp \
-					extended_checkers.cpp \
-
-BUILD_MAN_SRC:=	\
-
-DEBUG_SRC:=			printers.cpp \
-
-SRC_ROOT:=			main.cpp \
-
-# ----------------------------- BUILDING PATH -------------------------------- #
-
-SRC:= $(addprefix $(SRC_DIR), $(SRC_ROOT))
-SRC+= $(addprefix $(BUILD_EXE_DIR), $(BUILD_EXE_SRC))
-SRC+= $(addprefix $(BUILD_MAN_DIR), $(BUILD_MAN_SRC))
-SRC+= $(addprefix $(BUILD_VAL_DIR), $(BUILD_VAL_SRC))
-SRC+= $(addprefix $(BUILD_CHECK_DIR), $(BUILD_CHECK_SRC))
-SRC+= $(addprefix $(CLI_DIR), $(CLI_SRC))
-SRC+= $(addprefix $(DEBUG_DIR), $(DEBUG_SRC))
-SRC+= $(addprefix $(SERV_DIR), $(SERV_SRC))
-
-# ----------------------------- MAKE ----------------------------------------- #
+# ----------------------------- RULES ---------------------------------------- #
 
 all: $(NAME)
 
-OBJ:=$(addprefix $(BDIR), $(SRC:%.cpp=%.o))
+OBJ:=$(addprefix $(BDIR), $(S_SRC:%.cpp=%.o))
 DEPS:=$(OBJ:%.o=%.d)
 
 $(NAME): $(OBJ)
@@ -120,12 +52,28 @@ $(BDIR)%.o: %.cpp
 
 -include $(DEPS)
 
+bot: $(BOT_NAME)
 
-# ----------------------------- MAKE DEBUG ----------------------------------- #
+BOBJ:=$(addprefix $(BOT_BDIR), $(B_SRC:%.cpp=%.o))
+BDEPS:=$(BOBJ:%.o=%.d)
+
+$(BOT_NAME): $(BOBJ)
+	@echo
+	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(BOT_NAME)... ----------------"
+	$(CC) $(BOBJ) -o $(BOT_NAME)
+	@echo
+	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- $(BOT_NAME) done ! -----------------------"
+
+$(BOT_BDIR)%.o: %.cpp
+	@mkdir -p $(dir $@)
+	@echo "$(CC) $(CFLAGS) $@"
+	@$(CC) $(CFLAGS) $(CXXFLAGS) -o $@ -c $<
+
+-include $(BDEPS)
 
 debug: $(DEBUG_NAME)
 
-DOBJ:=$(addprefix $(DBDIR), $(SRC:%.cpp=%.o))
+DOBJ:=$(addprefix $(DBDIR), $(S_SRC:%.cpp=%.o))
 DDEPS:=$(DOBJ:%.o=%.d)
 
 $(DEBUG_NAME): $(DOBJ)
@@ -143,42 +91,59 @@ $(DBDIR)%.o: %.cpp
 
 -include $(DDEPS)
 
-RM:= rm -rf
-
-# ----------------------------- MAKE CLEAN  ---------------------------------- #
-
 clean:
 	@echo
 	@printf '$(CYBOLD)%.30s\n$(R)' "-- Cleaning... ----------------------------"
-	$(RM) $(BDIR)
-	$(RM) $(DBDIR)
+	$(RM) $(BUILD)
 	$(RM) src.mk
-
-# ----------------------------- MAKE FCLEAN  --------------------------------- #
-
-fclean: clean
-	$(RM) raw.log
-	$(RM) val.log
-	$(RM) $(NAME)
-	$(RM) $(DEBUG_NAME)
 	@echo
 
-# ----------------------------- MAKE RE -------------------------------------- #
+cleanserv:
+	@echo
+	@printf '$(CYBOLD)%.30s\n$(R)' "-- Cleaning... ----------------------------"
+	$(RM) $(BDIR)
+	$(RM) src.mk
+	@echo
+
+cleandebug:
+	@echo
+	@printf '$(CYBOLD)%.30s\n$(R)' "-- Cleaning debug... ----------------------"
+	$(RM) $(DBDIR)
+	$(RM) src.mk
+	@echo
+
+cleanbot:
+	@echo
+	@printf '$(CYBOLD)%.30s\n$(R)' "-- Cleaning debug... ----------------------"
+	$(RM) $(BOT_BDIR)
+	$(RM) src.mk
+	@echo
+
+fclean: clean
+	@printf '$(CYBOLD)%.30s\n$(R)' "-- Removing excecutables... ---------------"
+	$(RM) $(BOT_NAME)
+	$(RM) $(DEBUG_NAME)
+	$(RM) $(NAME)
+	@echo
+
+	@printf '$(CYBOLD)%.30s\n$(R)' "-- Removing logs... -----------------------"
+	$(RM) raw.log
+	$(RM) val.log
+	@echo
 
 re: fclean all
+
 redebug: fclean debug
 
-# ----------------------------- MAKE INFO ------------------------------------ #
+rebot: fclean bot
 
 info:
 	@echo $(CXXFLAGS)
 	@echo
-	@echo $(SRC)
+	@echo $(S_SRC)
 
 track:
 	bash .scripts/track-remote-branches.sh
-
-# ----------------------------- RUN ------------------------------------------ #
 
 run: all
 	$(RM) raw.log
@@ -188,60 +153,12 @@ run: all
 		./$(NAME) 4444 0; \
 	fi
 
-VFLAGS:= --leak-check=full --log-file="val.log" --show-leak-kinds=all --track-fds=yes
 drun: debug
 	$(RM) raw.log
 	valgrind $(VFLAGS) ./$(DEBUG_NAME) 4444 0
 
-# ----------------------------- FORMAT --------------------------------------- #
 format:
 	@printf '$(CYBOLD)%.30s\n$(R)' "-- Formatting... --------------------------"
 	bash .scripts/format-all.sh 
 
-# ---------------------------------------------------------------------------- #
-
-.PHONY: all clean info fclean re debug redebug run drun
-
-# ----------------------------- FORMATTING ----------------------------------- #
-
-PIBOLD= $(BO)$(M)
-BLBOLD= $(BO)$(B)
-CYBOLD= $(BO)$(C)
-PIBOLD= $(BO)$(P)
-
-# Text
-# reset
-R=\033[0m
-# faint
-F=\033[2m
-# underlined
-U=\033[4m
-# bold
-BO=\033[1m
-
-# Font color
-# red
-RE=\033[0;31m
-# green
-G=\033[0;32m
-# yellow
-Y=\033[0;33m
-# blue
-B=\033[0;34m
-# magenta
-M=\033[0;35m
-# cyan
-C=\033[0;36m
-# white
-W=\033[0;37m
-# pink
-P=\033[38;5;206m.
-
-# Background
-BG_RED=\033[41m
-BG_GREEN=\033[42m
-BG_YELLOW=\033[43m
-BG_B=\033[44m
-BG_MAGENTA=\033[45m
-BG_C=\033[46m
-BG_WHITE=\033[47m
+.PHONY: all bot debug clean cleanserv cleandebug cleanbot fclean re redebug info run drun format -list

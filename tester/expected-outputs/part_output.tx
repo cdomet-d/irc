@@ -1,0 +1,64 @@
+:irc.bitchat.net 451 * :You have not registered
+:irc.bitchat.net NOTICE * :Valid password ! You may register
+:irc.bitchat.net NOTICE chacham :The nickname is valid and saved !
+:irc.bitchat.net 001 chacham :Welcome to the Bitchat Internet Relay Chat Network chacham!c@localhost
+:irc.bitchat.net 002 chacham :Your host is Bitchat, running version 1.0
+:irc.bitchat.net 003 chacham :This server was created 09-04-2025 17:51:32
+:irc.bitchat.net 004 chacham Bitchat 1.0 | k,o,l,i,t | k,o,l
+:irc.bitchat.net 005 chacham CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 375 chacham :- Bitchat Message of the day - 
+:irc.bitchat.net 372 chacham :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 376 chacham :End of /MOTD command
+:irc.bitchat.net 461 chacham PART :Not enough parameters
+:irc.bitchat.net 403 chacham #dontexist :No such channel
+:irc.bitchat.net 403 chacham wrongchan :No such channel
+:chacham!c@localhost JOIN #chan
+:irc.bitchat.net MODE #chan +t 
+:irc.bitchat.net 353 chacham = #chan :@chacham
+:irc.bitchat.net 366 chacham #chan :End of /NAMES list
+:chacham!c@localhost JOIN #chan2
+:irc.bitchat.net MODE #chan2 +t 
+:irc.bitchat.net 353 chacham = #chan2 :@chacham
+:irc.bitchat.net 366 chacham #chan2 :End of /NAMES list
+:chacham!c@localhost JOIN #chan3
+:irc.bitchat.net MODE #chan3 +t 
+:irc.bitchat.net 353 chacham = #chan3 :@chacham
+:irc.bitchat.net 366 chacham #chan3 :End of /NAMES list
+:chacham!c@localhost PART #chan
+:chacham!c@localhost JOIN #chan
+:irc.bitchat.net MODE #chan +t 
+:irc.bitchat.net 353 chacham = #chan :@chacham
+:irc.bitchat.net 366 chacham #chan :End of /NAMES list
+:bobby!b@localhost JOIN #chan
+:bobby!b@localhost JOIN #chan2
+:bobby!b@localhost JOIN #chan3
+:bobby!b@localhost PART #chan :im leaving. idiots.
+:bobby!b@localhost PART #chan2 :im leaving. idiots.
+:bobby!b@localhost PART #chan3 :im leaving. idiots.
+:chacham!c@localhost :Client Quit 
+:irc.bitchat.net chacham :You quitted the server, see you next time !
+:irc.bitchat.net NOTICE * :Valid password ! You may register
+:irc.bitchat.net NOTICE bobby :The nickname is valid and saved !
+:irc.bitchat.net 001 bobby :Welcome to the Bitchat Internet Relay Chat Network bobby!b@localhost
+:irc.bitchat.net 002 bobby :Your host is Bitchat, running version 1.0
+:irc.bitchat.net 003 bobby :This server was created 09-04-2025 17:51:32
+:irc.bitchat.net 004 bobby Bitchat 1.0 | k,o,l,i,t | k,o,l
+:irc.bitchat.net 005 bobby CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 375 bobby :- Bitchat Message of the day - 
+:irc.bitchat.net 372 bobby :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 376 bobby :End of /MOTD command
+:irc.bitchat.net 442 bobby #chan :You're not on that channel
+:bobby!b@localhost JOIN #chan
+:irc.bitchat.net 353 bobby = #chan :bobby @chacham
+:irc.bitchat.net 366 bobby #chan :End of /NAMES list
+:bobby!b@localhost JOIN #chan2
+:irc.bitchat.net 353 bobby = #chan2 :bobby @chacham
+:irc.bitchat.net 366 bobby #chan2 :End of /NAMES list
+:bobby!b@localhost JOIN #chan3
+:irc.bitchat.net 353 bobby = #chan3 :bobby @chacham
+:irc.bitchat.net 366 bobby #chan3 :End of /NAMES list
+:bobby!b@localhost PART #chan :im leaving. idiots.
+:bobby!b@localhost PART #chan2 :im leaving. idiots.
+:bobby!b@localhost PART #chan3 :im leaving. idiots.
+:bobby!b@localhost :Client Quit 
+:irc.bitchat.net bobby :You quitted the server, see you next time !

@@ -1,12 +1,7 @@
-.bdir/
-.dbdir/
+.build/
 .vscode/
 *.log
-dir_build/
-*.mk
 *.txt
 d-ircserv
 ircserv
-tester
-notes.txt
 todo.md
