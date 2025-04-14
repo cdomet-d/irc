@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/11 15:16:53 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/14 18:28:45 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void Message::formatMode() {
 	modeFormat.push_back(cmdParam_.at(0));
 	modeFormat.push_back(cmdParam_.at(1));
 
-	if (cmdParam_.size() > 2) {
+	if (cmdParam_.size() > 2 && !cmdParam_.at(2).empty()) {
 		for (size_t i = 0; i < cmdParam_[2].size(); i++) {
 			const char firstChar = cmdParam_[2][i];
 			if (firstChar == '+' || firstChar == '-') {
@@ -128,6 +128,8 @@ void Message::formatMode() {
 	}
 	if (!flagformat.empty())
 		modeFormat.push_back(flagformat);
+	else if (cmdParam_.size() > 2)
+		modeFormat.push_back("");
 	if (!paramformat.empty())
 		modeFormat.push_back(paramformat);
 	clearCmdParam();

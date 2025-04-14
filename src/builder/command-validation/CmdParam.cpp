@@ -98,5 +98,6 @@ void CmdParam::setOneParam(std::string &buffer) {
 }
 
 void CmdParam::setParamList(const stringVec &buffer) {
-	innerParam_ = buffer;
+	if (!buffer.empty())
+		innerParam_ = buffer;
 }
