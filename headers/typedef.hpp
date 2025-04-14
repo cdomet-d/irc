@@ -59,8 +59,8 @@ typedef enum {
 #define MAX_EVENTS 100
 #define MAX_CHAN_PER_CLI 50
 #define CHANNELLEN 200
-#define NICKLEN 15
-#define USERLEN 15
+#define NICKLEN 9
+#define USERLEN 18
 #define TOPICLEN 307
 #define KICKLEN 307
 
