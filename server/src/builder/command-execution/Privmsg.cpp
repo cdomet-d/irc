@@ -22,8 +22,8 @@ void privmsg(CmdSpec &cmd) {
 		if (cmd[target_][nbTarg].find("#") == cmd[target_][nbTarg].npos) {
 			for (clientMapIt itTarget = cmd.serv_.getAllCli().begin();
 				 itTarget != cmd.serv_.getAllCli().end(); ++itTarget) {
-				if (itTarget->second->cliInfo.getNick() ==
-					cmd[target_][nbTarg]) {
+				if (itTarget->second->cliInfo.getNick()
+					== cmd[target_][nbTarg]) {
 					RPL::send_(itTarget->first,
 							   RPL_PRIVMSG(sender->cliInfo.getPrefix(),
 										   itTarget->second->cliInfo.getNick(),

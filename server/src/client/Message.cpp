@@ -108,9 +108,9 @@ void Message::formatMode() {
 					flagformat += firstChar;
 					flagformat += cmdParam_[2][i];
 					flagformat += ',';
-					if ((i + 1) < cmdParam_[2].size() &&
-						(cmdParam_[2][i + 1] == '+' ||
-						 cmdParam_[2][i + 1] == '-'))
+					if ((i + 1) < cmdParam_[2].size()
+						&& (cmdParam_[2][i + 1] == '+'
+							|| cmdParam_[2][i + 1] == '-'))
 						break;
 					++i;
 				}
@@ -183,8 +183,8 @@ void Message::removeNewlines() {
 		message_.clear();
 		return;
 	}
-	std::string::size_type newline =
-		(termSize == 2 ? message_.find("\r\n") : message_.find("\n"));
+	std::string::size_type newline
+		= (termSize == 2 ? message_.find("\r\n") : message_.find("\n"));
 	leftover_ = message_.substr(newline + termSize);
 	message_.erase(message_.begin() + newline, message_.end());
 	return;
@@ -193,8 +193,8 @@ static bool isConsecutiveSpace(char left, char right) {
 	return (left == ' ' && right == ' ');
 }
 void Message::trimSpaces() {
-	std::string::iterator newEnd =
-		std::unique(message_.begin(), message_.end(), isConsecutiveSpace);
+	std::string::iterator newEnd
+		= std::unique(message_.begin(), message_.end(), isConsecutiveSpace);
 	if (newEnd != message_.end())
 		message_.erase(newEnd, message_.end());
 }

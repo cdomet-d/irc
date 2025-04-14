@@ -32,8 +32,8 @@ void RPL::send_(int fd, std::string reply) {
 
 void RPL::log(e_level level, std::string message) {
 	Server &serv = Server::GetServerInstance(0, "");
-	if (message.find("PING") != std::string::npos ||
-		message.find("PONG") != std::string::npos)
+	if (message.find("PING") != std::string::npos
+		|| message.find("PONG") != std::string::npos)
 		return;
 	if (serv.logfile.is_open()) {
 		switch (level) {

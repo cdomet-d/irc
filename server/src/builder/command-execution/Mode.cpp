@@ -36,8 +36,9 @@ void executeO(std::string flag, std::string param, Channel &curChan) {
 		// std::cout << targetCli->getFd() << targetCli->cliInfo.getNick()
 		// 		  << std::endl;
 		curChan.addCli(OPCLI, targetCli);
-		RPL::send_(targetCli->getFd(), RPL_CHANOPE(targetCli->cliInfo.getNick(),
-												   curChan.getName()));
+		RPL::send_(
+			targetCli->getFd(),
+			RPL_CHANOPE(targetCli->cliInfo.getNick(), curChan.getName()));
 	}
 	if (flag == "-o") {
 		curChan.removeCli(OPCLI, targetCli->getFd());
@@ -95,8 +96,8 @@ void executeL(std::string flag, std::string param, Channel &curChan) {
 
 		// if err of strtod, the maxCli of the channel will be set to the maxCi of
 		// the server so 50
-		if (errno == ERANGE || *endptr != '\0' || result < 0 ||
-			result > std::numeric_limits< int >::max()) {
+		if (errno == ERANGE || *endptr != '\0' || result < 0
+			|| result > std::numeric_limits< int >::max()) {
 			curChan.setMaxCli(50);
 			curChan.setModes();
 		} else {
@@ -111,7 +112,7 @@ void executeL(std::string flag, std::string param, Channel &curChan) {
 }
 
 int findFlagLevel(std::string level) {
-	std::string flag[5] = {"o", "i", "t", "k", "l"};
+	std::string flag[5] = { "o", "i", "t", "k", "l" };
 	for (int i = 0; i < 5; i++) {
 		if (level.find(flag[i]) != std::string::npos)
 			return (i);
@@ -120,8 +121,8 @@ int findFlagLevel(std::string level) {
 }
 
 void executeFlag(std::string flag, std::string param, Channel &curChan) {
-	modesFunc flagExecutor[5] = {&executeO, &executeI, &executeT, &executeK,
-								 &executeL};
+	modesFunc flagExecutor[5]
+		= { &executeO, &executeI, &executeT, &executeK, &executeL };
 	int flagLevel = findFlagLevel(flag);
 
 	if (flagLevel != -1)
@@ -143,8 +144,8 @@ void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 	std::string newPassMaxCli;
 
 	for (size_t nbFlag = 0; nbFlag < cmd[flag_].size(); ++nbFlag) {
-		if (cmd[flag_][nbFlag] == "+l" || cmd[flag_][nbFlag] == "+k" ||
-			cmd[flag_][nbFlag] == "+o" || cmd[flag_][nbFlag] == "-o")
+		if (cmd[flag_][nbFlag] == "+l" || cmd[flag_][nbFlag] == "+k"
+			|| cmd[flag_][nbFlag] == "+o" || cmd[flag_][nbFlag] == "-o")
 			newPassMaxCli.append(cmd[flagArg_][nbFlag] + " ");
 		if (cmd[flag_][nbFlag].find("+") != std::string::npos)
 			posMode += cmd[flag_][nbFlag][1];
@@ -154,11 +155,13 @@ void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 	if (negMode.size() == 1) {
 		sendMessageChannel(curChan.getCliInChan(),
 						   RPL_MODE(sender->cliInfo.getPrefix(),
-									curChan.getName(), posMode, newPassMaxCli));
+									curChan.getName(), posMode,
+									newPassMaxCli));
 	} else if (posMode.size() == 1) {
 		sendMessageChannel(curChan.getCliInChan(),
 						   RPL_MODE(sender->cliInfo.getPrefix(),
-									curChan.getName(), negMode, newPassMaxCli));
+									curChan.getName(), negMode,
+									newPassMaxCli));
 	} else
 		sendMessageChannel(curChan.getCliInChan(),
 						   RPL_MODE(sender->cliInfo.getPrefix(),

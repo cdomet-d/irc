@@ -16,7 +16,8 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
+CmdSpec::CmdSpec(const std::string name, int registrationStage,
+				 paramMap params,
 				 std::vector< bool (*)(CmdSpec &, size_t) > checkers,
 				 void (*cmExecutor)(CmdSpec &cmd))
 	: serv_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
@@ -51,8 +52,8 @@ const CmdParam &CmdSpec::operator[](e_param type) const {
 bool CmdSpec::checkRegistrationStage() {
 	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
 		valid_ = false;
-		if (sender_->cliInfo.getRegistration() == 0 &&
-			(name_ == "NICK" || name_ == "USER"))
+		if (sender_->cliInfo.getRegistration() == 0
+			&& (name_ == "NICK" || name_ == "USER"))
 			RPL::send_(sender_->getFd(),
 					   ERR_NEEDPASS(sender_->cliInfo.getNick()));
 		else
@@ -69,8 +70,8 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	if (!checkRegistrationStage())
 		return (*this);
 	setParam();
-	if (name_ == "INVITE" && !(*this)[target_].size() &&
-		!(*this)[channel_].size())
+	if (name_ == "INVITE" && !(*this)[target_].size()
+		&& !(*this)[channel_].size())
 		return (*this);
 	hasParamList();
 	for (size_t i = 0; i < checkers_.size(); i++) {
@@ -186,7 +187,8 @@ void CmdSpec::setSender(Client &sender) {
 }
 
 void CmdSpec::setParam() {
-	for (size_t i = 0; i < params_.size() && i < sender_->mess.getSize(); i++) {
+	for (size_t i = 0; i < params_.size() && i < sender_->mess.getSize();
+		 i++) {
 		try {
 			(*params_[i].second).setOneParam(sender_->mess[i + 1]);
 		} catch (const std::out_of_range &e) {}
@@ -239,7 +241,8 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(bool (*ft)(CmdSpec &cmd,
 	return (*this);
 }
 
-CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::CmExecutor(void (*ft)(CmdSpec &cmd)) {
+CmdSpec::CmdBuilder &
+CmdSpec::CmdBuilder::CmExecutor(void (*ft)(CmdSpec &cmd)) {
 	cmExecutor_ = ft;
 	return (*this);
 }

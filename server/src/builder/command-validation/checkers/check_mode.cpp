@@ -71,7 +71,8 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 	size_t size;
 	for (size_t i = 0; i < cmd[flag_].size();) {
 		size = cmd[flag_].size();
-		if (!check::mode_::validFlag(set, type, cmd[flag_][i], cmd.getSender()))
+		if (!check::mode_::validFlag(set, type, cmd[flag_][i],
+									 cmd.getSender()))
 			return false;
 
 		const bool needArg = ((type == B) || (type == C && set == SET));
@@ -100,9 +101,9 @@ bool check::mode_::oTargetIsOnChan(const CmdSpec &cmd, size_t idx) {
 			   false;
 	tChan = check::getTargetChan(cmd[flagArg_][idx], cmd.serv_);
 	if (!check::chans_::onChan(cmd[channel_][idx], tChan))
-		return RPL::send_(cmd.getSdFd(),
-						  ERR_USERNOTINCHANNEL(cmd.getSdNick(), cmd[flag_][idx],
-											   cmd[channel_][0])),
+		return RPL::send_(cmd.getSdFd(), ERR_USERNOTINCHANNEL(
+											 cmd.getSdNick(), cmd[flag_][idx],
+											 cmd[channel_][0])),
 			   false;
 	return true;
 }
@@ -117,8 +118,8 @@ bool check::mode(CmdSpec &cmd, size_t idx) {
 				return false;
 		}
 		if (cmd[flag_][idx] == "+k") {
-			if (cmd[flagArg_][idx].size() < 8 ||
-				cmd[flagArg_][idx].size() > 26) {
+			if (cmd[flagArg_][idx].size() < 8
+				|| cmd[flagArg_][idx].size() > 26) {
 				return RPL::send_(
 						   cmd.getSdFd(),
 						   ERR_BADKEYLEN(cmd.getSdPre(), cmd[channel_][0])),

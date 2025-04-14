@@ -28,8 +28,8 @@ bool check::part(CmdSpec &cmd, size_t idx) {
 
 bool check::kick(CmdSpec &cmd, size_t idx) {
 	while (idx < cmd[target_].size()) {
-		const stringVec &tChan =
-			check::getTargetChan(cmd[target_][idx], cmd.serv_);
+		const stringVec &tChan
+			= check::getTargetChan(cmd[target_][idx], cmd.serv_);
 		if (!check::target(cmd, idx)) {
 			cmd[target_].rmParam(idx);
 			continue;

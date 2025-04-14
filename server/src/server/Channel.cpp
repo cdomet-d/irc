@@ -43,8 +43,8 @@ bool Channel::addClientToChan(Channel *curChan, Client *sender) {
 	sender->addOneChan(curChan->getName());
 	if (curChan->getOpCli().empty())
 		curChan->addCli(OPCLI, sender);
-	if (curChan->getInvitCli().find(sender->getFd()) !=
-		curChan->getInvitCli().end())
+	if (curChan->getInvitCli().find(sender->getFd())
+		!= curChan->getInvitCli().end())
 		curChan->removeCli(INVITECLI, sender->getFd());
 	return (true);
 }

@@ -192,8 +192,8 @@ void CmdManager::log(CmdSpec *cm) {
 CmdSpec &CmdManager::findCmd(std::string cmName) {
 	cmdMap::iterator it;
 
-	if (cmName.find_first_not_of("abcdefghijklmnopqrstuvwxyz") ==
-		std::string::npos)
+	if (cmName.find_first_not_of("abcdefghijklmnopqrstuvwxyz")
+		== std::string::npos)
 		for (size_t i = 0; i < cmName.size(); i++)
 			cmName[i] = std::toupper(cmName[i]);
 

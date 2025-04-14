@@ -14,18 +14,17 @@
 
 bool check::register_::stageDone(CmdSpec &cmd, size_t idx) {
 	(void)idx;
-	if (cmd.getSender().cliInfo.getRegistration() <=
-			cmd.getRegistrationStage() ||
-		cmd.getSender().cliInfo.getRegistration() == 3)
+	if (cmd.getSender().cliInfo.getRegistration() <= cmd.getRegistrationStage()
+		|| cmd.getSender().cliInfo.getRegistration() == 3)
 		return (true);
 	if (cmd.getSender().cliInfo.getRegistration() == 1)
 		RPL::send_(cmd.getSdFd(), ERR_NEEDNICKORUSER(cmd.getSdNick()));
 	if (cmd.getSender().cliInfo.getRegistration() == 2) {
-		if (cmd.getSdNick() != "*" &&
-			(cmd.getName() == "NICK" || cmd.getName() == "PASS"))
+		if (cmd.getSdNick() != "*"
+			&& (cmd.getName() == "NICK" || cmd.getName() == "PASS"))
 			RPL::send_(cmd.getSdFd(), ERR_NEEDUSER(cmd.getSdNick()));
-		else if (!cmd.getSender().cliInfo.getUsername().empty() &&
-				 (cmd.getName() == "USER" || cmd.getName() == "PASS"))
+		else if (!cmd.getSender().cliInfo.getUsername().empty()
+				 && (cmd.getName() == "USER" || cmd.getName() == "PASS"))
 			RPL::send_(cmd.getSdFd(), ERR_NEEDNICK(cmd.getSdNick()));
 		else
 			return (true);

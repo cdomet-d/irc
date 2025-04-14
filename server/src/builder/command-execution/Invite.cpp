@@ -22,8 +22,8 @@ void invite(CmdSpec &cmd) {
 	if (cmd[target_].empty()) {
 		for (channelMapIt chan = server.getAllChan().begin();
 			 chan != server.getAllChan().end(); ++chan) {
-			if (chan->second->getInvitCli().find(sender->getFd()) !=
-				chan->second->getInvitCli().end())
+			if (chan->second->getInvitCli().find(sender->getFd())
+				!= chan->second->getInvitCli().end())
 				RPL::send_(
 					sender->getFd(),
 					RPL_INVITELIST(sender->cliInfo.getNick(), chan->first));

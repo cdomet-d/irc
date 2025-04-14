@@ -41,7 +41,8 @@ void quit(CmdSpec &cmd) {
 		message = "You quitted the server, see you next time !";
 	sender->mess.clearMess();
 	partAllChans(cmd, message);
-	RPL::send_(sender->getFd(), RPL_QUIT(sender->cliInfo.getPrefix(), message));
+	RPL::send_(sender->getFd(),
+			   RPL_QUIT(sender->cliInfo.getPrefix(), message));
 	RPL::send_(sender->getFd(),
 			   RPL_ERROR(sender->cliInfo.getHostname(), "Client Quit"));
 	std::stringstream ss;

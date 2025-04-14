@@ -42,11 +42,11 @@ bool check::chans_::isOp(CmdSpec &cmd, size_t idx) {
 	itChan = cmd.serv_.getAllChan().find(cmd[channel_][idx]);
 	Channel chan = *itChan->second;
 
-	if ((cmd.getName() == "TOPIC" &&
-		 (cmd[topic_].empty() ||
-		  chan.getModes().find('t') == std::string::npos)) ||
-		(cmd.getName() == "MODE" && cmd[flag_].empty() &&
-		 cmd[flagArg_].empty())) {
+	if ((cmd.getName() == "TOPIC"
+		 && (cmd[topic_].empty()
+			 || chan.getModes().find('t') == std::string::npos))
+		|| (cmd.getName() == "MODE" && cmd[flag_].empty()
+			&& cmd[flagArg_].empty())) {
 		return (true);
 	}
 

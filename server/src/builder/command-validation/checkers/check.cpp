@@ -23,9 +23,9 @@ bool check::user(CmdSpec &cmd, size_t idx) {
 	if (!check::nick_::syntaxIsValid(cmd[username_][idx], cmd.getSender()))
 		return false;
 	if (cmd[hostname_][idx] != "0" || cmd[servername_][idx] != "*") {
-		std::string reply = cmd[username_][idx] + " " + cmd[hostname_][idx] +
-							" " + cmd[servername_][idx] + " " +
-							cmd[realname_][idx];
+		std::string reply = cmd[username_][idx] + " " + cmd[hostname_][idx]
+							+ " " + cmd[servername_][idx] + " "
+							+ cmd[realname_][idx];
 		RPL::send_(cmd.getSdFd(), ERR_BADINPUT(cmd.getSdPre(), cmd.getName(),
 											   USERFORMAT, reply));
 		return false;
@@ -47,7 +47,8 @@ bool check::target(CmdSpec &cmd, size_t idx) {
 bool check::invite(CmdSpec &cmd, size_t idx) {
 	if (!check::target(cmd, idx))
 		return false;
-	const stringVec &tChan = check::getTargetChan(cmd[target_][idx], cmd.serv_);
+	const stringVec &tChan
+		= check::getTargetChan(cmd[target_][idx], cmd.serv_);
 	if (check::chans_::onChan(cmd[channel_][idx], tChan)) {
 		RPL::send_(cmd.getSdFd(),
 				   ERR_USERONCHANNEL(cmd.getSdNick(), cmd[target_][idx],

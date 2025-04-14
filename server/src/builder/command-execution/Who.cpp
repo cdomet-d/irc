@@ -34,8 +34,8 @@ void who(CmdSpec &cmd) {
 		for (clientMapIt it = curChan.getCliInChan().begin();
 			 it != curChan.getCliInChan().end(); ++it) {
 			flag = "";
-			if (curChan.getOpCli().find(it->second->getFd()) !=
-				curChan.getOpCli().end())
+			if (curChan.getOpCli().find(it->second->getFd())
+				!= curChan.getOpCli().end())
 				flag = "@";
 			RPL::send_(cmd.getSdFd(),
 					   RPL_WHOREPLY(it->second->cliInfo.getNick(),

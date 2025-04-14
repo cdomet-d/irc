@@ -17,8 +17,9 @@ int main(int argc, char **argv) {
 		std::cout << "wrong arg" << std::endl;
 		return (1);
 	}
-	std::string cmd[12] = {"reg",  "pass", "nick", "user", "invite", "join",
-						   "kick", "mode", "part", "quit", "msg",	 "topic"};
+	std::string cmd[12]
+		= { "reg",	"pass", "nick", "user", "invite", "join",
+			"kick", "mode", "part", "quit", "msg",	  "topic" };
 	size_t i = 0;
 	while (i < 12 && argv[1] != cmd[i])
 		i++;

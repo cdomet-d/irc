@@ -38,7 +38,8 @@ void changeTopic(Channel &curChan, Client *curCli, std::string topic) {
 	curChan.setTopic(topic);
 	sendMessageChannel(curChan.getCliInChan(),
 					   RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(),
-										curChan.getName(), curChan.getTopic()));
+										curChan.getName(),
+										curChan.getTopic()));
 }
 
 void topic(CmdSpec &cmd) {
@@ -53,8 +54,8 @@ void topic(CmdSpec &cmd) {
 	}
 	// if topic is = ":", the client clears the topic for the channel
 	// sends the notification to all clients of the channel
-	if (!strncmp(cmd[topic_][0].c_str(), " :", 2) &&
-		cmd[topic_][0].size() == 2) {
+	if (!strncmp(cmd[topic_][0].c_str(), " :", 2)
+		&& cmd[topic_][0].size() == 2) {
 		clearTopic(curChan, sender);
 		return;
 	}
