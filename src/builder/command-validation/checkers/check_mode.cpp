@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/11 14:59:28 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/14 12:08:18 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,16 @@ bool check::mode_::validFlag(e_mdeset &set, e_mdetype &type,
 							 const std::string &flag, const Client &cli) {
 	try {
 		set = check::mode_::whichSet(flag.at(0));
+		if (!set)
+			return RPL::send_(cli.getFd(),
+					ERR_UNKNOWNMODE(cli.cliInfo.getNick(),
+									flag.at(0))), false;
 		type = check::mode_::typeIsValid(flag.at(1));
+		if (!type)
+			return RPL::send_(cli.getFd(),
+						ERR_UNKNOWNMODE(cli.cliInfo.getNick(),
+										flag.at(1))), false;
 	} catch (std::exception &e) { return false; }
-	if (!set || !type) {
-		return RPL::send_(cli.getFd(),
-						  ERR_UNKNOWNMODE(cli.cliInfo.getNick(),
-										  (!set ? flag.at(0) : flag.at(1)))),
-			   false;
-	}
 	return true;
 }
 
