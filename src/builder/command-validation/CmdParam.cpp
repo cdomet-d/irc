@@ -77,9 +77,10 @@ bool CmdParam::isList() const {
 	return (list_);
 }
 
-void CmdParam::trimParam(size_t paramIdx, size_t lenToTrim) {
-	if ((innerParam_[paramIdx].size()) > lenToTrim)
+bool CmdParam::trimParam(size_t paramIdx, size_t lenToTrim) {
+	if (innerParam_[paramIdx].size() > lenToTrim)
 		innerParam_[paramIdx].erase(lenToTrim);
+	return (true);
 }
 
 /* ************************************************************************** */

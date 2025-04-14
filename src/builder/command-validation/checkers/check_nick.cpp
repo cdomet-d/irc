@@ -13,11 +13,10 @@
 #include "validator.hpp"
 
 bool check::nick(CmdSpec &cmd, size_t idx) {
-	if (cmd[nickname_].empty()) {
+	if (cmd[nickname_].empty() || cmd[nickname_][0].empty()) {
 		RPL::send_(cmd.getSdFd(), ERR_NONICKNAMEGIVEN(cmd.getSdNick()));
 		return (false);
 	}
-	cmd[nickname_].trimParam(idx, NICKLEN);
 	std::string &nick = cmd[nickname_][idx];
 	if (!check::nick_::syntaxIsValid(nick, cmd.getSender()))
 		return false;
@@ -30,7 +29,7 @@ bool check::nick(CmdSpec &cmd, size_t idx) {
 
 bool check::nick_::syntaxIsValid(const std::string &nick,
 								 const Client &sender) {
-	std::string badFirst(": illegal first char: expected [Aa -Zz], is "),
+	std::string badFirst(": illegal first char: expected [AZ - az], is "),
 		illegal(
 			": illegal char: expected [AZ - az], [0 - 9] or [-[]\\`^{}], is ");
 

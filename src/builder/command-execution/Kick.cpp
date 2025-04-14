@@ -37,10 +37,10 @@ void kick(CmdSpec &cmd) {
 	Client *target = NULL;
 
 	for (size_t nbTarget = 0; nbTarget < cmd[target_].size(); nbTarget++) {
-		int fdTarget = server.getUsedNick().find(cmd[target_][0])->second;
+		int fdTarget = server.getUsedNick().find(cmd[target_][nbTarget])->second;
 		target = server.getAllCli().find(fdTarget)->second;
 
-		if (cmd[message_].size())
+		if (cmd[message_].size() && cmd[message_][0].size())
 			sendMessageChannel(
 				curChan.getCliInChan(),
 				RPL_KICK(sender->cliInfo.getPrefix(), curChan.getName(),

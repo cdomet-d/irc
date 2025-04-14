@@ -63,7 +63,7 @@ size_t Message::getSize() const {
 void Message::setCmdParam(const stringVec &splitBuffer) {
 	cmdParam_ = splitBuffer;
 	if (!trailing_.empty())
-		cmdParam_.push_back(trailing_);
+		cmdParam_.push_back(trailing_.substr(1, trailing_.size()));
 }
 
 void Message::setMess(std::string buffer) {
@@ -152,7 +152,7 @@ bool Message::hasTrailing() {
 	std::string::size_type trail = message_.find(" :");
 
 	if (trail != std::string::npos) {
-		trailing_ = message_.substr((trail) + 2, message_.size());
+		trailing_ = message_.substr((trail) + 1, message_.size());
 		message_.erase(trail);
 		return true;
 	}

@@ -26,6 +26,8 @@ bool check::join(CmdSpec &cmd, size_t idx) {
 			cmd[channel_].rmParam(idx);
 			continue;
 		}
+		else
+			check::len(cmd, idx);
 		idx++;
 	}
 	if (!cmd[channel_].size())

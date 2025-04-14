@@ -39,13 +39,13 @@ void partMess(Client *sender, Channel &curChan, const std::string &message) {
 void part(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 	std::string message;
-	if (!cmd[message_].empty())
+	if (!cmd[message_].empty() && !cmd[message_][0].empty())
 		message = cmd[message_][0];
 
 	for (size_t nbChan = 0; nbChan < cmd[channel_].size(); nbChan++) {
 		Channel &curChan = findCurChan(cmd[channel_][nbChan]);
 		partMess(sender, curChan, message);
 		partOneChan(sender, curChan);
-		checkOnlyOperator(&curChan);
+		checkOnlyOperator(*sender, &curChan);
 	}
 }

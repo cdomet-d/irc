@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   check_mode.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
 /*   Updated: 2025/04/14 12:08:18 by cdomet-d         ###   ########.fr       */
@@ -67,9 +67,8 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 	e_mdetype type;
 	e_mdeset set;
 
-	if (cmd[flag_].empty()) {
+	if (cmd[flag_].empty())
 		return true;
-	}
 	size_t size;
 	for (size_t i = 0; i < cmd[flag_].size();) {
 		size = cmd[flag_].size();
@@ -98,10 +97,10 @@ bool check::mode_::oTargetIsOnChan(const CmdSpec &cmd, size_t idx) {
 	stringVec tChan;
 	if (!check::exists(cmd[flagArg_][idx], cmd.serv_.getUsedNick()))
 		return RPL::send_(cmd.getSdFd(),
-						  ERR_NOSUCHNICK(cmd.getSdNick(), cmd[channel_][0])),
+						  ERR_NOSUCHNICK(cmd.getSdNick(), cmd[flagArg_][idx])),
 			   false;
 	tChan = check::getTargetChan(cmd[flagArg_][idx], cmd.serv_);
-	if (!check::chans_::onChan(cmd[channel_][idx], tChan))
+	if (!check::chans_::onChan(cmd[channel_][0], tChan))
 		return RPL::send_(cmd.getSdFd(),
 						  ERR_USERNOTINCHANNEL(cmd.getSdNick(), cmd[flag_][idx],
 											   cmd[channel_][0])),
@@ -114,7 +113,7 @@ bool check::mode(CmdSpec &cmd, size_t idx) {
 		return false;
 
 	for (; idx < cmd[flag_].size(); ++idx) {
-		if (cmd[flag_][idx] == "+o") {
+		if (cmd[flag_][idx] == "+o" || cmd[flag_][idx] == "-o") {
 			if (!check::mode_::oTargetIsOnChan(cmd, idx))
 				return false;
 		}

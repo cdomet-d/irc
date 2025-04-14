@@ -31,7 +31,7 @@ JOIN :#chan,
 JOIN #:chan
 JOIN chan
 JOIN &chan
-MODE #chan +k key
+MODE #chan +k password
 EOF
 
 sleep 0.5
@@ -44,17 +44,17 @@ NICK bobby
 USER b 0 * b
 JOIN #chan
 JOIN #chan wrongkey
-JOIN #chan key
+JOIN #chan password
 JOIN #chan2
 JOIN #chan3
-MODE #chan3 +k key
+MODE #chan3 +k password
 EOF
 
 sleep 0.5
 
 #client1 joins several channels at once and tries to join #chan though he's already in it
 cat <<EOF >&${client1_in_fd}
-JOIN #chan2,#chan3,#chan ,key
+JOIN #chan2,#chan3,#chan ,password
 MODE #chan +i
 EOF
 
@@ -76,7 +76,7 @@ sleep 0.5
 #tests if having an invite makes key unnecessary
 cat <<EOF >&${client2_in_fd}
 JOIN #chan
-JOIN #chan key
+JOIN #chan password
 PART #chan
 EOF
 
@@ -96,6 +96,7 @@ EOF
 sleep 0.5
 
 echo "QUIT" >&${client1_in_fd}
+sleep 0.5
 echo "QUIT" >&${client2_in_fd}
 
 sleep 3
@@ -107,6 +108,7 @@ wait $PID1 2>/dev/null
 wait $PID3 2>/dev/null
 
 cat outputs/client1_out.txt > outputs/output.txt &
+sleep 1
 cat outputs/client2_out.txt >> outputs/output.txt &
 
 sleep 2

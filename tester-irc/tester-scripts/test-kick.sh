@@ -95,7 +95,9 @@ EOF
 sleep 0.5
 
 echo "QUIT" >&${client1_in_fd}
+sleep 0.5
 echo "QUIT" >&${client2_in_fd}
+sleep 0.5
 echo "QUIT" >&${client3_in_fd}
 
 sleep 3
@@ -109,6 +111,7 @@ wait $PID2 2>/dev/null
 wait $PID3 2>/dev/null
 
 cat outputs/client1_out.txt > outputs/output.txt &
+sleep 1
 cat outputs/client2_out.txt >> outputs/output.txt &
 
 sleep 2

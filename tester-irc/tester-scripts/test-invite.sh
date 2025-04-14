@@ -105,7 +105,9 @@ sleep 0.5
 
 # Quit pour les deux clients
 echo "QUIT" >&${client1_in_fd}
+sleep 0.5
 echo "QUIT" >&${client2_in_fd}
+sleep 0.5
 echo "QUIT" >&${client3_in_fd}
 
 sleep 3  # Laisser le serveur envoyer les réponses
@@ -122,6 +124,7 @@ wait $PID3 2>/dev/null
 
 # Récupérer les logs depuis les FIFOs vers un fichier de sortie
 cat outputs/client1_out.txt > outputs/output.txt &
+sleep 1
 cat outputs/client2_out.txt >> outputs/output.txt &
 
 sleep 2
