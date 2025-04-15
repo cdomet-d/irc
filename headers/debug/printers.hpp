@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 13:43:23 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/10 16:04:13 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:53:51 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ namespace print {
 		std::cout << "[" + what + "]" << std::endl;
 		typedef typename MapType::key_type key;
 		// typedef typename MapType::value_type val;
-		for (typename MapType::const_iterator it = map.begin();
-			 it != map.end(); ++it) {
+		for (typename MapType::const_iterator it = map.begin(); it != map.end();
+			 ++it) {
 
 			const key &k = it->first;
 			std::cout << std::setw(20) << k << std::endl;

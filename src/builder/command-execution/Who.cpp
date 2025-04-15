@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Who.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 15:09:54 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:54:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <sstream>
 
 void who(CmdSpec &cmd) {
-	Channel &curChan = findCurChan(cmd[channel_][0]);
+	Channel &curChan = *cmd.serv_.findChan(cmd[channel_][0]);
 	std::string nickList;
 
 	if (!cmd[flag_].empty() && cmd[flag_][0] == "o") {

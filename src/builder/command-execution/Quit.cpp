@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 15:09:35 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:54:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ void partAllChans(CmdSpec &cmd, const std::string &message) {
 	stringVec joinedChans = sender->getJoinedChans();
 
 	for (size_t nbChan = 0; nbChan != joinedChans.size(); nbChan++) {
-		Channel &curChan = findCurChan(joinedChans[nbChan]);
+		Channel &curChan = *cmd.serv_.findChan(joinedChans[nbChan]);
 		if (cmd.getName() == "JOIN")
 			partMess(sender, curChan, message);
 		partOneChan(sender, curChan);
 		if (cmd.getName() == "QUIT")
 			sendMessageChannel(curChan.getCliInChan(),
 							   RPL_QUIT(sender->cliInfo.getPrefix(), message));
-		checkOnlyOperator(*sender, &curChan);
+		curChan.checkOnlyOperator(*sender);
 	}
 }
 

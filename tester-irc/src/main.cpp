@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 15:40:59 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/14 18:34:49 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:53:59 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
 	}
 	std::string cmd[14] = {"reg",  "pass",	"nick", "user", "invite",
 						   "join", "kick",	"mode", "part", "quit",
-						   "msg",  "topic", "who", "trail"};
+						   "msg",  "topic", "who",	"trail"};
 	size_t i = 0;
 	while (i < 14 && argv[1] != cmd[i])
 		i++;
@@ -98,8 +98,8 @@ int main(int argc, char **argv) {
 		break;
 	// WHO
 	case 12:
-		if (test("tester-scripts/test-who.sh",
-				 "expected-outputs/who_output.tx", "WHO:"))
+		if (test("tester-scripts/test-who.sh", "expected-outputs/who_output.tx",
+				 "WHO:"))
 			return (1);
 		break;
 	// TRAILING
