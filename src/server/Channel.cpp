@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:36:48 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:41:24 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,7 @@ bool Channel::addClientToChan(Channel *curChan, Client *sender) {
 	sender->addOneChan(curChan->getName());
 	if (curChan->getOpCli().empty())
 		curChan->addCli(OPCLI, sender);
-	if (curChan->getInvitCli().find(sender->getFd()) !=
-		curChan->getInvitCli().end())
-		curChan->removeCli(INVITECLI, sender->getFd());
+	curChan->removeCli(INVITECLI, sender->getFd());
 	return (true);
 }
 
