@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:52:05 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:54:07 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,16 @@ void executeO(std::string flag, std::string targ, Channel &curChan) {
 	Client *targetCli = NULL;
 	//TODO: function looks for a client in a channel based on nick ?
 	for (clientMapIt targetIt = curChan.getCliInChan().begin();
-	targetIt != curChan.getCliInChan().end(); ++targetIt) {
+		 targetIt != curChan.getCliInChan().end(); ++targetIt) {
 		if (targetIt->second->cliInfo.getNick() == targ) {
 			targetCli = targetIt->second;
 			break;
 		}
 	}
-	
+
 	if (targetCli == NULL)
 		return;
-	
+
 	if (flag == "+o") {
 		curChan.addCli(OPCLI, targetCli);
 		RPL::send_(targetCli->getFd(), RPL_CHANOPE(targetCli->cliInfo.getNick(),

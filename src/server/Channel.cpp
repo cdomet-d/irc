@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:52:25 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:53:53 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,8 @@ void Channel::checkOnlyOperator(Client &oldOp) {
 		if (!cliIsOperator_.size()) {
 			Client *cli = cliInChan_.begin()->second;
 			addCli(OPCLI, cli);
-			RPL::send_(cli->getFd(),
-						 RPL_MODE(oldOp.cliInfo.getPrefix(), name_,
-								  "+o", cli->cliInfo.getNick()));
+			RPL::send_(cli->getFd(), RPL_MODE(oldOp.cliInfo.getPrefix(), name_,
+											  "+o", cli->cliInfo.getNick()));
 		}
 	}
 	if (cliInChan_.empty() == true) {

@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/15 10:46:31 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:54:21 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ bool check::join(CmdSpec &cmd, size_t idx) {
 		} else if (!check::join_::syntaxIsValid(cmd, idx)) {
 			cmd[channel_].rmParam(idx);
 			continue;
-		}
-		else
+		} else
 			check::len(cmd, idx);
 		idx++;
 	}

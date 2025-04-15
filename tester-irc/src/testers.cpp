@@ -44,8 +44,8 @@ void compare(std::ifstream &output, std::ifstream &expectedOutput) {
 	std::string expectedOutputContent;
 	std::string outputContent;
 
-	while (getline(expectedOutput, expectedOutputContent, '\n')
-		   && getline(output, outputContent, '\n')) {
+	while (getline(expectedOutput, expectedOutputContent, '\n') &&
+		   getline(output, outputContent, '\n')) {
 		outputContent = trim_crlf(outputContent);
 		expectedOutputContent = trim_crlf(expectedOutputContent);
 

@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:51:40 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:53:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ bool Server::handleData(int fd) {
 
 	Client *curCli = clients_.find(fd)->second;
 	if (bytes == 0) {
-	//	std::cout << "sending QUIT command" << std::endl;
+		//	std::cout << "sending QUIT command" << std::endl;
 		curCli->mess.setMess("QUIT\n");
 		buffer_manip::prepareCommand(*curCli);
 		return (true);
@@ -205,14 +205,14 @@ Client *Server::findCli(int fd) {
 	clientMapIt currCliIt = clients_.find(fd);
 	if (currCliIt == clients_.end())
 		return (NULL);
-	return (currCliIt->second);	
+	return (currCliIt->second);
 }
 
 Channel *Server::findChan(std::string chanName) {
 	channelMapIt currChanIt = channels_.find(chanName);
 	if (currChanIt == channels_.end())
 		return (NULL);
-	return (currChanIt->second);	
+	return (currChanIt->second);
 }
 
 void Server::addNickToUsedNicks(const std::string &newNick, int fd) {
