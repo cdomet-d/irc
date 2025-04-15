@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 10:52:29 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:05:12 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,6 @@ void part(CmdSpec &cmd) {
 		Channel &curChan = *cmd.serv_.findChan(cmd[channel_][nbChan]);
 		partMess(sender, curChan, message);
 		partOneChan(sender, curChan);
-		checkOnlyOperator(&curChan);
+		curChan.checkOnlyOperator();
 	}
 }

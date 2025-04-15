@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:04:18 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:03:16 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class Channel {
 	bool addClientToChan(Channel *curChan, Client *curCli);
 	void addCli(mapChan curMap, Client *curCli);
 	void removeCli(mapChan curMap, int fdCli);
+	void checkOnlyOperator();
 
 	/*                               GETTERS                                  */
 	bool getInviteOnly() const;

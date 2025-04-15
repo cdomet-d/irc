@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 10:53:56 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:00:48 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 void executeO(std::string flag, std::string targ, Channel &curChan) {
 	Client *targetCli = NULL;
-
+	//TODO: function looks for a client in a channel based on nick ?
 	for (clientMapIt targetIt = curChan.getCliInChan().begin();
 	targetIt != curChan.getCliInChan().end(); ++targetIt) {
 		if (targetIt->second->cliInfo.getNick() == targ) {

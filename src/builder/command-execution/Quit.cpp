@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 10:52:32 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:05:28 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void partAllChans(CmdSpec &cmd, const std::string &message) {
 		if (cmd.getName() == "QUIT")
 			sendMessageChannel(curChan.getCliInChan(),
 							   RPL_QUIT(sender->cliInfo.getPrefix(), message));
-		checkOnlyOperator(&curChan);
+		curChan.checkOnlyOperator();
 	}
 }
 

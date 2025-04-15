@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 15:17:06 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:04:48 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,24 @@ void Channel::removeCli(mapChan curMap, int fdCli) {
 		break;
 	case INVITECLI:
 		cliInvited_.erase(fdCli);
+	}
+}
+
+void Channel::checkOnlyOperator() {
+	static Server &server = Server::GetServerInstance(0, "");
+
+	if (cliInChan_.size() >= 1) {
+		if (!cliIsOperator_.size()) {
+			addCli(OPCLI, cliInChan_.begin()->second);
+			RPL::send_(
+				cliInChan_.begin()->second->getFd(),
+				RPL_CHANOPE(cliInChan_.begin()->second->cliInfo.getNick(),
+							name_));
+		}
+	}
+	if (cliInChan_.empty() == true) {
+		server.removeChan(this);
+		delete this;
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 10:41:50 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:01:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,25 +175,6 @@ bool Server::handleData(int fd) {
 		}
 	}
 	return (true);
-}
-
-void checkOnlyOperator(Channel *curChan) {
-	static Server &server = Server::GetServerInstance(0, "");
-
-	if (curChan->getCliInChan().size() >= 1) {
-		if (!curChan->getOpCli().size()) {
-			curChan->addCli(OPCLI, curChan->getCliInChan().begin()->second);
-			RPL::send_(
-				curChan->getCliInChan().begin()->second->getFd(),
-				RPL_CHANOPE(
-					curChan->getCliInChan().begin()->second->cliInfo.getNick(),
-					curChan->getName()));
-		}
-	}
-	if (curChan->getCliInChan().empty() == true) {
-		server.removeChan(curChan);
-		delete curChan;
-	}
 }
 
 void Server::addChan(Channel *curChan) {
