@@ -1,36 +1,63 @@
-:servername 451 * :You have not registered
-:servername NOTICE * :Valid password ! You may register
-:servername NOTICE * :Introducing new nick "chacham"
-:servername NOTICE chacham :Registration complete
-:chacham!~c@hostname JOIN #chan
-:servername MODE #chan +t
-:servername 353 chacham @ #chan :@chacham
-:servername 366 chacham #chan :End of /NAMES list.
-:silver.libera.chat 461 chacham MODE :Not enough parameters
-:silver.libera.chat 403 chacham +i :No such channel
-:silver.libera.chat 403 chacham wrongchan :No such channel
-:silver.libera.chat 403 chacham #dontexist :No such channel
-:silver.libera.chat 324 chacham #chan +t
-:silver.libera.chat 329 chacham #chan 1743083795
-:chacham!~c@hostname MODE #chan -t
-:bobyy!~b@hostname JOIN #chan
-:chacham!~c@hostname MODE #chan +itkol key bobyy 2
-:chacham!~c@hostname MODE #chan -itkol * bobyy
-:silver.libera.chat 461 chacham MODE :Not enough parameters
-:silver.libera.chat 461 chacham MODE :Not enough parameters
-:servername 696 chacham #chan l -10 :is unknown mode char to me
-:servername 696 chacham #chan l hehe :is unknown mode char to me
-:silver.libera.chat 401 chacham dontexist :No such nick/channel
-:chacham!~c@hostname KICK #chan bobyy :bobyy
-:silver.libera.chat 441 chacham bobyy #chan :They aren't on that channel
-:chacham!~c@hostname MODE #chan +i-i
-:servername NOTICE * : Valid password ! You may register
-:servername NOTICE * :Introducing new nick "bobby"
-:servername NOTICE bobby :Registration complete
-:bobby!~b@hostname JOIN #chan
-:servername 353 bobby @ #chan :bobby @chacham
-:servername 366 bobby #chan :End of /NAMES list.
-:silver.libera.chat 482 bobyy #chan :You're not a channel operator
-:chacham!~c@hostname MODE #chan +itkol key bobyy 2
-:chacham!~c@hostname MODE #chan -itkol * bobyy
-:chacham!~c@hostname KICK #chan bobyy :bobyy
+:irc.bitchat.net 451 * :You have not registered
+:irc.bitchat.net NOTICE * :Valid password ! You may register
+:irc.bitchat.net NOTICE chacham :The nickname is valid and saved !
+:irc.bitchat.net 001 chacham :Welcome to the Bitchat Internet Relay Chat Network chacham!c@localhost
+:irc.bitchat.net 002 chacham :Your host is Bitchat, running version 1.0
+:irc.bitchat.net 003 chacham :This server was created 11-04-2025 18:46:01
+:irc.bitchat.net 004 chacham Bitchat 1.0 | k,o,l,i,t | k,o,l
+:irc.bitchat.net 005 chacham CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 375 chacham :- Bitchat Message of the day - 
+:irc.bitchat.net 372 chacham :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 376 chacham :End of /MOTD command
+:chacham!c@localhost JOIN #chan
+:irc.bitchat.net MODE #chan +t 
+:irc.bitchat.net 353 chacham = #chan :@chacham
+:irc.bitchat.net 366 chacham #chan :End of /NAMES list
+:irc.bitchat.net 461 chacham MODE :Not enough parameters
+:irc.bitchat.net 403 chacham +i :No such channel
+:irc.bitchat.net 403 chacham wrongchan :No such channel
+:irc.bitchat.net 403 chacham #dontexist :No such channel
+:irc.bitchat.net 324 chacham #chan +t 
+:irc.bitchat.net 472 chacham k :is unknown mode char to me
+:irc.bitchat.net 472 chacham u :is unknown mode char to me
+:chacham!c@localhost MODE #chan -t 
+:bobby!b@localhost JOIN #chan
+:chacham!c@localhost MODE #chan +ikol-t password bobby 2 
+:bobby!b@localhost MODE #chan +t 
+:chacham!c@localhost MODE #chan -ikol bobby 
+:irc.bitchat.net 461 chacham MODE :Not enough parameters
+:irc.bitchat.net NOTICE #chan :Bad key (+k) - key len must be at least 8 and no more than 26
+:irc.bitchat.net NOTICE #chan :Bad key (+k) - key len must be at least 8 and no more than 26
+:irc.bitchat.net 461 chacham MODE :Not enough parameters
+:irc.bitchat.net NOTICE #chan :format should be [0 - 9], is [-10]
+:irc.bitchat.net NOTICE #chan :format should be [0 - 9], is [hehehe]
+:irc.bitchat.net 401 chacham dontexist :No such nick/channel
+:irc.bitchat.net 401 chacham dontexist :No such nick/channel
+:chacham!c@localhost KICK #chan bobby 
+:irc.bitchat.net 441 chacham +o #chan :They aren't on that channel
+:chacham!c@localhost MODE #chan +i-i 
+:chacham!c@localhost QUIT :You quitted the server, see you next time !
+ERROR :Closing Link: localhost (Client Quit)
+:irc.bitchat.net NOTICE * :Valid password ! You may register
+:irc.bitchat.net NOTICE bobby :The nickname is valid and saved !
+:irc.bitchat.net 001 bobby :Welcome to the Bitchat Internet Relay Chat Network bobby!b@localhost
+:irc.bitchat.net 002 bobby :Your host is Bitchat, running version 1.0
+:irc.bitchat.net 003 bobby :This server was created 11-04-2025 18:46:02
+:irc.bitchat.net 004 bobby Bitchat 1.0 | k,o,l,i,t | k,o,l
+:irc.bitchat.net 005 bobby CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 375 bobby :- Bitchat Message of the day - 
+:irc.bitchat.net 372 bobby :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 376 bobby :End of /MOTD command
+:bobby!b@localhost JOIN #chan
+:irc.bitchat.net 353 bobby = #chan :bobby @chacham
+:irc.bitchat.net 366 bobby #chan :End of /NAMES list
+:irc.bitchat.net 324 bobby #chan  
+:irc.bitchat.net 482 bobby #chan :You're not channel operator
+:irc.bitchat.net NOTICE bobby :You're operator of #chan
+:chacham!c@localhost MODE #chan +ikol-t password bobby 2 
+:bobby!b@localhost MODE #chan +t 
+:irc.bitchat.net NOTICE bobby : You're no longer operator of #chan
+:chacham!c@localhost MODE #chan -ikol bobby 
+:chacham!c@localhost KICK #chan bobby 
+:bobby!b@localhost QUIT :You quitted the server, see you next time !
+ERROR :Closing Link: localhost (Client Quit)

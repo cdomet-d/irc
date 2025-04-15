@@ -25,8 +25,8 @@
 :chacham!c@localhost KICK #chan juju 
 :bobby!b@localhost JOIN #chan
 :chacham!c@localhost KICK #chan bobby :baddly behaved
-:chacham!c@localhost :Client Quit 
-:irc.bitchat.net chacham :You quitted the server, see you next time !
+:chacham!c@localhost QUIT :You quitted the server, see you next time !
+ERROR :Closing Link: localhost (Client Quit)
 :irc.bitchat.net NOTICE * :Valid password ! You may register
 :irc.bitchat.net NOTICE bobby :The nickname is valid and saved !
 :irc.bitchat.net 001 bobby :Welcome to the Bitchat Internet Relay Chat Network bobby!b@localhost
@@ -48,5 +48,5 @@
 :irc.bitchat.net 353 bobby = #chan :bobby @chacham
 :irc.bitchat.net 366 bobby #chan :End of /NAMES list
 :chacham!c@localhost KICK #chan bobby :baddly behaved
-:bobby!b@localhost :Client Quit 
-:irc.bitchat.net bobby :You quitted the server, see you next time !
+:bobby!b@localhost QUIT :You quitted the server, see you next time !
+ERROR :Closing Link: localhost (Client Quit)

@@ -69,8 +69,7 @@ CmdSpec &CmdSpec::process(Client &sender) {
 	if (!checkRegistrationStage())
 		return (*this);
 	setParam();
-	if (name_ == "INVITE" && !(*this)[target_].size() &&
-		!(*this)[channel_].size())
+	if (name_ == "INVITE" && !(*this)[target_].size())
 		return (*this);
 	hasParamList();
 	for (size_t i = 0; i < checkers_.size(); i++) {

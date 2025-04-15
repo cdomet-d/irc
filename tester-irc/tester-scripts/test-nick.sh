@@ -62,6 +62,7 @@ sleep 0.5
 
 # ➤ Join pour les deux clients
 echo "JOIN #chan" >&${client1_in_fd}
+sleep 0.5
 echo "JOIN #chan" >&${client2_in_fd}
 
 sleep 0.5
@@ -73,6 +74,7 @@ sleep 0.5
 
 # Quit pour les deux clients
 echo "QUIT" >&${client1_in_fd}
+sleep 0.5
 echo "QUIT" >&${client2_in_fd}
 
 sleep 3  # Laisser le serveur envoyer les réponses
@@ -87,6 +89,7 @@ wait $PID2 2>/dev/null
 
 # Récupérer les logs depuis les FIFOs vers un fichier de sortie
 cat outputs/client1_out.txt > outputs/output.txt &
+sleep 1
 cat outputs/client2_out.txt >> outputs/output.txt &
 
 sleep 2

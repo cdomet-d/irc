@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:41:24 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:52:25 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,8 @@ void Channel::setModes() {
 	if (getTopicRestrict() == true)
 		modes.append("t");
 	modes_ = modes;
+	if (modes_ == "+")
+		modes_.clear();
 }
 
 void Channel::setMaxCli(int maxCli) {

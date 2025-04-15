@@ -22,7 +22,7 @@
 :irc.bitchat.net 366 chacham #:chan :End of /NAMES list
 :irc.bitchat.net 403 chacham chan :No such channel
 :irc.bitchat.net 403 chacham &chan :No such channel
-:chacham!c@localhost MODE #chan +k key 
+:chacham!c@localhost MODE #chan +k password 
 :bobby!b@localhost JOIN #chan
 :chacham!c@localhost JOIN #chan2
 :irc.bitchat.net 353 chacham = #chan2 :chacham @bobby
@@ -33,15 +33,15 @@
 :chacham!c@localhost MODE #chan +i 
 :bobby!b@localhost PART #chan
 :bobby!b@localhost PART #chan2
-:irc.bitchat.net NOTICE chacham :You're operator of #chan2
+:bobby!b@localhost MODE #chan2 +o chacham
 :bobby!b@localhost PART #chan3
-:irc.bitchat.net NOTICE chacham :You're operator of #chan3
+:bobby!b@localhost MODE #chan3 +o chacham
 :irc.bitchat.net 341 chacham #chan bobby
 :bobby!b@localhost JOIN #chan
 :bobby!b@localhost PART #chan
 :chacham!c@localhost MODE #chan +l-ik 1 
-:chacham!c@localhost :Client Quit 
-:irc.bitchat.net chacham :You quitted the server, see you next time !
+:chacham!c@localhost QUIT :You quitted the server, see you next time !
+ERROR :Closing Link: localhost (Client Quit)
 :irc.bitchat.net NOTICE * :Valid password ! You may register
 :irc.bitchat.net NOTICE bobby :The nickname is valid and saved !
 :irc.bitchat.net 001 bobby :Welcome to the Bitchat Internet Relay Chat Network bobby!b@localhost
@@ -65,7 +65,7 @@
 :irc.bitchat.net MODE #chan3 +t 
 :irc.bitchat.net 353 bobby = #chan3 :@bobby
 :irc.bitchat.net 366 bobby #chan3 :End of /NAMES list
-:bobby!b@localhost MODE #chan3 +k key 
+:bobby!b@localhost MODE #chan3 +k password 
 :chacham!c@localhost JOIN #chan2
 :chacham!c@localhost JOIN #chan3
 :chacham!c@localhost MODE #chan +i 
@@ -78,5 +78,5 @@
 :irc.bitchat.net 366 bobby #chan :End of /NAMES list
 :bobby!b@localhost PART #chan
 :irc.bitchat.net 471 bobby #chan :Cannot join channel (+l) - channel is full, try again later
-:bobby!b@localhost :Client Quit 
-:irc.bitchat.net bobby :You quitted the server, see you next time !
+:bobby!b@localhost QUIT :You quitted the server, see you next time !
+ERROR :Closing Link: localhost (Client Quit)

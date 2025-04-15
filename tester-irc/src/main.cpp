@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 15:40:59 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/10 16:06:42 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/14 18:34:49 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,11 @@ int main(int argc, char **argv) {
 		std::cout << "wrong arg" << std::endl;
 		return (1);
 	}
-	std::string cmd[12] = {"reg",  "pass", "nick", "user", "invite", "join",
-						   "kick", "mode", "part", "quit", "msg",	 "topic"};
+	std::string cmd[14] = {"reg",  "pass",	"nick", "user", "invite",
+						   "join", "kick",	"mode", "part", "quit",
+						   "msg",  "topic", "who", "trail"};
 	size_t i = 0;
-	while (i < 12 && argv[1] != cmd[i])
+	while (i < 14 && argv[1] != cmd[i])
 		i++;
 	switch (i) {
 	// registration
@@ -93,6 +94,18 @@ int main(int argc, char **argv) {
 	case 11:
 		if (test("tester-scripts/test-topic.sh",
 				 "expected-outputs/topic_output.tx", "TOPIC:"))
+			return (1);
+		break;
+	// WHO
+	case 12:
+		if (test("tester-scripts/test-who.sh",
+				 "expected-outputs/who_output.tx", "WHO:"))
+			return (1);
+		break;
+	// TRAILING
+	case 13:
+		if (test("tester-scripts/test-trailing.sh",
+				 "expected-outputs/trailing_output.tx", "TRAILING:"))
 			return (1);
 		break;
 	default:
