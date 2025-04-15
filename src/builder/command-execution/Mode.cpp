@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 17:29:46 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:54:07 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,18 @@
 
 void executeO(std::string flag, std::string targ, Channel &curChan) {
 	Client *targetCli = NULL;
-
+	//TODO: function looks for a client in a channel based on nick ?
 	for (clientMapIt targetIt = curChan.getCliInChan().begin();
-	targetIt != curChan.getCliInChan().end(); ++targetIt) {
+		 targetIt != curChan.getCliInChan().end(); ++targetIt) {
 		if (targetIt->second->cliInfo.getNick() == targ) {
 			targetCli = targetIt->second;
 			break;
 		}
 	}
-	
+
 	if (targetCli == NULL)
 		return;
-	
+
 	if (flag == "+o") {
 		curChan.addCli(OPCLI, targetCli);
 		RPL::send_(targetCli->getFd(), RPL_CHANOPE(targetCli->cliInfo.getNick(),
@@ -126,13 +126,6 @@ void executeFlag(std::string flag, std::string param, Channel &curChan) {
 		RPL::log(RPL::DEBUG, "Invalid flag : ", flag);
 }
 
-Channel &findCurChan(std::string chanName) {
-	static Server &server = Server::GetServerInstance(0, "");
-	channelMapIt curChanIt = server.getAllChan().find(chanName);
-
-	return (*curChanIt->second);
-}
-
 void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 	std::string negMode = "-";
 	std::string posMode = "+";
@@ -164,7 +157,7 @@ void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 
 void mode(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
-	Channel &curChan = findCurChan(cmd[channel_][0]);
+	Channel &curChan = *cmd.serv_.findChan(cmd[channel_][0]);
 
 	if (!cmd[flag_].size()) {
 		std::string modeArgs;
