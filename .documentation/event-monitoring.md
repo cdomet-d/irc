@@ -1,5 +1,13 @@
 # EPOLL event monitoring
 
+- [EPOLL event monitoring](#epoll-event-monitoring)
+	- [Definitions](#definitions)
+	- [Kernel buffer](#kernel-buffer)
+	- [The notification mechanism](#the-notification-mechanism)
+		- [A word about epoll's structures](#a-word-about-epolls-structures)
+	- [Indirection](#indirection)
+	- [Sources](#sources)
+
 Epoll is an I/O event notification system. It allows I/O multiplexing within the Linux kernel.
 
 Here's we're discussing *memory* I/O events, not external I/O events (such as the ones that allow one's keyboard to communicate with your computer).
@@ -30,7 +38,7 @@ More about the socket interfaces with [the IBM documentation](https://www.ibm.co
 
 In short, Epoll is a *notification mechanism* that monitors each socket associated kernel buffer, notifiying the kernel when the buffer is not empty (read) or when the buffer is full (write).
 
-Epoll is an [indirection mechanism](#indirection) which allows the user to manipulate and monitor ressources without directly interfacing with raw fds. Instead, we interact with the Epoll API (ie: Application programming interface). 
+Epoll is an [indirection mechanism](#indirection) which allows the user to manipulate and monitor ressources without directly interfacing with raw fds. Instead, we interact with the Epoll API (ie: Application programming interface).
 
 ### A word about epoll's structures
 
@@ -41,19 +49,6 @@ Each nodes contains the fd associated with the ressource, as well as a pointer t
 That red-black tree is called the **interest list**. It is manipulated via `epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)`. More about this function [here](https://www.ibm.com/docs/en/zos/3.1.0?topic=functions-epoll-ctl-control-interface-epoll-file-descriptor).
 
 In addition to that, epoll also maintains a *linked list*, which holds a list of the fds that are already read
-
-
-## Sources
-
-- [Sockets interface](https://www.ibm.com/docs/en/aix/7.2?topic=sockets-interface)
-- [Epoll](https://www.sobyte.net/post/2022-04/epoll-efficiently)
-- [Buffered I/O operations](https://fgiesen.wordpress.com/2015/10/25/reading-and-writing-are-less-symmetric-than-you-probably-think/)
-- [How the Linux Syscalls works](https://www.youtube.com/watch?v=FkIWDAtVIUM) (video)
-- [Context switching](https://www.youtube.com/watch?v=H4SDPLiUnv4&t=310s) (video)
-- [Async I/O](https://jvns.ca/blog/2017/06/03/async-io-on-linux--select--poll--and-epoll/)
-
-
-The red-black tree allows O(log n) management of FDs, while the struct file reference enables direct access to the resource's state without traversing layers of indirection. => 
 
 ## Indirection
 
@@ -67,5 +62,14 @@ While often conflated, abstraction and indirection differ:
 - Indirection: Manages access through intermediaries (e.g., file descriptors pointing to struct file objects)
 
 They frequently coexist: abstraction hides complexity, while indirection enables modularity.
-
 David Wheeler’s aphorism — “All problems can be solved by another layer of indirection” — highlights its power, but RFC 1925 warns: “*It is always possible to add another level of indirection*” without solving the root issue/
+
+## Sources
+
+- [Sockets interface](https://www.ibm.com/docs/en/aix/7.2?topic=sockets-interface)
+- [More socket documentation](https://www.linuxhowtos.org/C_C++/socket.htm)
+- [Epoll](https://www.sobyte.net/post/2022-04/epoll-efficiently)
+- [Buffered I/O operations](https://fgiesen.wordpress.com/2015/10/25/reading-and-writing-are-less-symmetric-than-you-probably-think/)
+- [How the Linux Syscalls works](https://www.youtube.com/watch?v=FkIWDAtVIUM) (video)
+- [Context switching](https://www.youtube.com/watch?v=H4SDPLiUnv4&t=310s) (video)
+- [Async I/O](https://jvns.ca/blog/2017/06/03/async-io-on-linux--select--poll--and-epoll/)

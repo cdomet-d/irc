@@ -10,6 +10,7 @@ class Bot {
 
 	/*                               METHODS                                  */
 	static Bot &getInstance(int port, const std::string &pw);
+	bool requestConnection();
 	/*                               GETTERS                                  */
 
 	/*                               SETTERS                                  */
