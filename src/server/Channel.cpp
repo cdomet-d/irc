@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:04:48 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:36:48 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,16 +75,16 @@ void Channel::removeCli(mapChan curMap, int fdCli) {
 	}
 }
 
-void Channel::checkOnlyOperator() {
+void Channel::checkOnlyOperator(Client &oldOp) {
 	static Server &server = Server::GetServerInstance(0, "");
 
 	if (cliInChan_.size() >= 1) {
 		if (!cliIsOperator_.size()) {
-			addCli(OPCLI, cliInChan_.begin()->second);
-			RPL::send_(
-				cliInChan_.begin()->second->getFd(),
-				RPL_CHANOPE(cliInChan_.begin()->second->cliInfo.getNick(),
-							name_));
+			Client *cli = cliInChan_.begin()->second;
+			addCli(OPCLI, cli);
+			RPL::send_(cli->getFd(),
+						 RPL_MODE(oldOp.cliInfo.getPrefix(), name_,
+								  "+o", cli->cliInfo.getNick()));
 		}
 	}
 	if (cliInChan_.empty() == true) {
