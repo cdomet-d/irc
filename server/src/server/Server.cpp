@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 15:58:43 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:53:54 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ bool Server::handleData(int fd) {
 
 	Client *curCli = clients_.find(fd)->second;
 	if (bytes == 0) {
-		std::cout << "sending QUIT command" << std::endl;
+		//	std::cout << "sending QUIT command" << std::endl;
 		curCli->mess.setMess("QUIT\n");
 		buffer_manip::prepareCommand(*curCli);
 		return (true);
@@ -180,24 +180,6 @@ bool Server::handleData(int fd) {
 	return (true);
 }
 
-void checkOnlyOperator(Client &oldOp, Channel *curChan) {
-	static Server &server = Server::GetServerInstance(0, "");
-
-	if (curChan->getCliInChan().size() >= 1) {
-		if (!curChan->getOpCli().size()) {
-			Client *cli = curChan->getCliInChan().begin()->second;
-			curChan->addCli(OPCLI, cli);
-			RPL::send_(cli->getFd(),
-						 RPL_MODE(oldOp.cliInfo.getPrefix(), curChan->getName(),
-								  "+o", cli->cliInfo.getNick()));
-		}
-	}
-	if (curChan->getCliInChan().empty() == true) {
-		server.removeChan(curChan);
-		delete curChan;
-	}
-}
-
 void Server::addChan(Channel *curChan) {
 	channels_.insert(
 		std::pair< std::string, Channel * >(curChan->getName(), curChan));
@@ -209,6 +191,31 @@ void Server::removeChan(Channel *curChan) {
 void Server::removeCli(Client *curCli) {
 	removeNickFromUsedNicks(curCli->cliInfo.getNick());
 	clients_.erase(curCli->getFd());
+}
+
+void Server::checkChanInviteList(Client *sender) {
+	for (channelMapIt chan = channels_.begin(); chan != channels_.end();
+		 ++chan) {
+		if (chan->second->getInvitCli().find(sender->getFd()) !=
+			chan->second->getInvitCli().end())
+			RPL::send_(sender->getFd(),
+					   RPL_INVITELIST(sender->cliInfo.getNick(), chan->first));
+	}
+	RPL::send_(sender->getFd(), RPL_ENDOFINVITELIST(sender->cliInfo.getNick()));
+}
+
+Client *Server::findCli(int fd) {
+	clientMapIt currCliIt = clients_.find(fd);
+	if (currCliIt == clients_.end())
+		return (NULL);
+	return (currCliIt->second);
+}
+
+Channel *Server::findChan(std::string chanName) {
+	channelMapIt currChanIt = channels_.find(chanName);
+	if (currChanIt == channels_.end())
+		return (NULL);
+	return (currChanIt->second);
 }
 
 void Server::addNickToUsedNicks(const std::string &newNick, int fd) {

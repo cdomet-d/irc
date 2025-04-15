@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 18:38:56 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/15 14:30:06 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,7 @@ bool Channel::addClientToChan(Channel *curChan, Client *sender) {
 	sender->addOneChan(curChan->getName());
 	if (curChan->getOpCli().empty())
 		curChan->addCli(OPCLI, sender);
-	if (curChan->getInvitCli().find(sender->getFd())
-		!= curChan->getInvitCli().end())
-		curChan->removeCli(INVITECLI, sender->getFd());
+	curChan->removeCli(INVITECLI, sender->getFd());
 	return (true);
 }
 
@@ -72,6 +70,23 @@ void Channel::removeCli(mapChan curMap, int fdCli) {
 		break;
 	case INVITECLI:
 		cliInvited_.erase(fdCli);
+	}
+}
+
+void Channel::checkOnlyOperator(Client &oldOp) {
+	static Server &server = Server::GetServerInstance(0, "");
+
+	if (cliInChan_.size() >= 1) {
+		if (!cliIsOperator_.size()) {
+			Client *cli = cliInChan_.begin()->second;
+			addCli(OPCLI, cli);
+			RPL::send_(cli->getFd(), RPL_MODE(oldOp.cliInfo.getPrefix(), name_,
+											  "+o", cli->cliInfo.getNick()));
+		}
+	}
+	if (cliInChan_.empty() == true) {
+		server.removeChan(this);
+		delete this;
 	}
 }
 

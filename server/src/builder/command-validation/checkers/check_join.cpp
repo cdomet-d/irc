@@ -3,30 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   check_join.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/11 15:10:26 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:54:21 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "validator.hpp"
 
 bool check::join(CmdSpec &cmd, size_t idx) {
-	channelMap::const_iterator itChan;
+	Channel *currChan;
 
 	while (idx < cmd[channel_].size()) {
-		itChan = cmd.serv_.getAllChan().find(cmd[channel_][idx]);
-		if (itChan != cmd.serv_.getAllChan().end()) {
-			if (!check::join_::assessRequest(*itChan->second, cmd, idx)) {
+		currChan = cmd.serv_.findChan(cmd[channel_][idx]);
+		if (currChan != NULL) {
+			if (!check::join_::assessRequest(*currChan, cmd, idx)) {
 				cmd[channel_].rmParam(idx);
 				continue;
 			}
 		} else if (!check::join_::syntaxIsValid(cmd, idx)) {
 			cmd[channel_].rmParam(idx);
 			continue;
-		}
-		else
+		} else
 			check::len(cmd, idx);
 		idx++;
 	}

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:56:57 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/15 14:29:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void changeTopic(Channel &curChan, Client *curCli, std::string topic) {
 
 void topic(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
-	Channel &curChan = findCurChan(cmd[channel_][0]);
+	Channel &curChan = *cmd.serv_.findChan(cmd[channel_][0]);
 
 	if (!cmd[topic_].size())
 		checkTopic(curChan, sender);

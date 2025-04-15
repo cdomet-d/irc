@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 15:09:31 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:54:08 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void privmsg(CmdSpec &cmd) {
 			continue;
 		}
 
-		Channel &curChan = findCurChan(cmd[target_][nbTarg]);
+		Channel &curChan = *cmd.serv_.findChan(cmd[target_][nbTarg]);
 
 		for (clientMapIt itCli = curChan.getCliInChan().begin();
 			 itCli != curChan.getCliInChan().end(); ++itCli) {
