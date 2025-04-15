@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:53:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 17:15:37 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 /* ************************************************************************** */
 
 Server::Server(int port, std::string password)
-	: logfile("raw.log", std::ios::out | std::ios::app), port_(port),
+	: logfile("serv_.log", std::ios::out), port_(port),
 	  pass_(password) {
 	std::cout << "Server instance created" << std::endl;
 }
