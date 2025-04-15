@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/14 16:04:58 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:39:00 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ void invite(CmdSpec &cmd) {
 		return (server.checkChanInviteList(sender));
 
 	Channel &curChan = findCurChan(cmd[channel_][0]);
-	int fdTarget = server.getUsedNick().find(cmd[target_][0])->second;
-	Client *targetCli = server.getAllCli().find(fdTarget)->second;
+	int fdTarget = server.getFdFromNick(cmd[target_][0]);
+	Client *targetCli = server.findCli(fdTarget);
 
 	RPL::send_(sender->getFd(),
 			   RPL_INVITING(sender->cliInfo.getNick(),

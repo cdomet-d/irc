@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien <aljulien@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 11:15:00 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:38:13 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void kick(CmdSpec &cmd) {
 
 	for (size_t nbTarget = 0; nbTarget < cmd[target_].size(); nbTarget++) {
 		int fdTarget = server.getUsedNick().find(cmd[target_][0])->second;
-		target = server.getAllCli().find(fdTarget)->second;
+		target = server.findCli(fdTarget);
 
 		if (cmd[message_].size())
 			sendMessageChannel(

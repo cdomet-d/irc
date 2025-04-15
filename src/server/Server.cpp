@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/14 16:10:41 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:37:59 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,6 +218,13 @@ void Server::checkChanInviteList(Client *sender) {
 					   RPL_INVITELIST(sender->cliInfo.getNick(), chan->first));
 	}
 	RPL::send_(sender->getFd(), RPL_ENDOFINVITELIST(sender->cliInfo.getNick()));
+}
+
+Client *Server::findCli(int fd) {
+	clientMapIt currCliIt = clients_.find(fd);
+	if (currCliIt == clients_.end())
+		return (NULL);
+	return (currCliIt->second);	
 }
 
 void Server::addNickToUsedNicks(const std::string &newNick, int fd) {
