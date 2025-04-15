@@ -46,8 +46,8 @@ bool check::user(CmdSpec &cmd, size_t idx) {
 		std::string reply = cmd[username_][idx] + " " + cmd[hostname_][idx] +
 							" " + cmd[servername_][idx] + " " +
 							cmd[realname_][idx];
-		RPL::send_(cmd.getSdFd(), ERR_BADINPUT(cmd.getSdPre(), cmd.getName(),
-											   USERFORMAT, reply));
+		RPL::send_(cmd.getSdFd(),
+				   ERR_BADINPUT(cmd.getName(), USERFORMAT, reply));
 		return false;
 	}
 	return true;
