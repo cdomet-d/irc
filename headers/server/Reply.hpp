@@ -73,7 +73,7 @@
 #define RPL_ENDOFNAMES(nickname, channel) (":irc.bitchat.net 366 " + nickname + " " + channel + " :End of /NAMES list\r\n")
 #define RPL_UMODEIS(nickname, modes) (":irc.bitchat.net 221 " + nickname + " " + modes + "\r\n") //TODO : not used
 #define RPL_AWAY(nickname, message) (":irc.bitchat.net 301 " + nickname + " :" + message + "\r\n") //TODO : not used
-#define RPL_INVITELIST(nickname, channel) (":irc.bitchat.net 336 " + nickname + " " + channel + "\r\n")
+#define RPL_INVITELIST(nickname, channel) (":irc.bitchat.net 336 " + nickname + " " + channel + " :You have been invited\r\n")
 #define RPL_ENDOFINVITELIST(nickname) (":irc.bitchat.net 337 " + nickname + " :End of /INVITE list\r\n")
 #define RPL_WHOREPLY(nickname, channel, username, host, flag, realname) (":irc.bitchat.net 352 " + nickname + " " + channel + " " + username + " " + host + " irc.bitchat.net " + nickname + " " + flag + " :0 " + realname + "\r\n")
 #define RPL_ENDOFWHO(nickname, channel) (":irc.bitchat.net 315 " + nickname + " " + channel + " :End of /WHO list\r\n")
