@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 10:37:59 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:41:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,6 +225,13 @@ Client *Server::findCli(int fd) {
 	if (currCliIt == clients_.end())
 		return (NULL);
 	return (currCliIt->second);	
+}
+
+Channel *Server::findChan(std::string chanName) {
+	channelMapIt currChanIt = channels_.find(chanName);
+	if (currChanIt == channels_.end())
+		return (NULL);
+	return (currChanIt->second);	
 }
 
 void Server::addNickToUsedNicks(const std::string &newNick, int fd) {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 15:08:32 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:42:47 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@
 Channel *createChan(const std::string &chanName) {
 	static Server &server = Server::GetServerInstance(0, "");
 
-	channelMapIt it = server.getAllChan().find(chanName);
-	if (it != server.getAllChan().end())
-		return (it->second);
+	Channel *curChan = server.findChan(chanName);
+	if (curChan != NULL)
+		return (curChan);
 
 	Channel *newChan = new Channel(chanName);
 	newChan->setName(chanName);

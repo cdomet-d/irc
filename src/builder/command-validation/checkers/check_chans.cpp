@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_chans.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/11 15:10:22 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:44:39 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ bool check::chans_::onChan(std::string arg, const stringVec &arr) {
 
 bool check::chans_::isOp(CmdSpec &cmd, size_t idx) {
 	channelMap::const_iterator itChan;
-	itChan = cmd.serv_.getAllChan().find(cmd[channel_][idx]);
-	Channel chan = *itChan->second;
+	Channel chan = *cmd.serv_.findChan(cmd[channel_][idx]);
 
 	if ((cmd.getName() == "TOPIC" &&
 		 (cmd[topic_].empty() ||

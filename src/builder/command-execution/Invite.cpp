@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 10:39:00 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:53:23 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,14 @@
 #include "Server.hpp"
 
 void invite(CmdSpec &cmd) {
-	static Server &server = Server::GetServerInstance(0, "");
 	Client *sender = &cmd.getSender();
 
 	if (cmd[target_].empty())
-		return (server.checkChanInviteList(sender));
+		return (cmd.serv_.checkChanInviteList(sender));
 
-	Channel &curChan = findCurChan(cmd[channel_][0]);
-	int fdTarget = server.getFdFromNick(cmd[target_][0]);
-	Client *targetCli = server.findCli(fdTarget);
+	Channel &curChan = *cmd.serv_.findChan(cmd[channel_][0]);
+	int fdTarget = cmd.serv_.getFdFromNick(cmd[target_][0]);
+	Client *targetCli = cmd.serv_.findCli(fdTarget);
 
 	RPL::send_(sender->getFd(),
 			   RPL_INVITING(sender->cliInfo.getNick(),

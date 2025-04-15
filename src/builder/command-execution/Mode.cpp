@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 17:10:42 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:53:56 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,13 +126,6 @@ void executeFlag(std::string flag, std::string param, Channel &curChan) {
 		RPL::log(RPL::DEBUG, "Invalid flag : ", flag);
 }
 
-Channel &findCurChan(std::string chanName) {
-	static Server &server = Server::GetServerInstance(0, "");
-	channelMapIt curChanIt = server.getAllChan().find(chanName);
-
-	return (*curChanIt->second);
-}
-
 void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 	std::string negMode = "-";
 	std::string posMode = "+";
@@ -164,7 +157,7 @@ void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 
 void mode(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
-	Channel &curChan = findCurChan(cmd[channel_][0]);
+	Channel &curChan = *cmd.serv_.findChan(cmd[channel_][0]);
 
 	if (!cmd[flag_].size()) {
 		std::string modeArgs;

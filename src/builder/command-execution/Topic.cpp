@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 15:09:41 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:49:52 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void changeTopic(Channel &curChan, Client *curCli, std::string topic) {
 
 void topic(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
-	Channel &curChan = findCurChan(cmd[channel_][0]);
+	Channel &curChan = *cmd.serv_.findChan(cmd[channel_][0]);
 
 	// if no params (= topic is empty) after chanName, client only checks the
 	// topic

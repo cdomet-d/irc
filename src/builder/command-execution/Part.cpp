@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/10 16:05:31 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:52:29 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void part(CmdSpec &cmd) {
 		message = cmd[message_][0];
 
 	for (size_t nbChan = 0; nbChan < cmd[channel_].size(); nbChan++) {
-		Channel &curChan = findCurChan(cmd[channel_][nbChan]);
+		Channel &curChan = *cmd.serv_.findChan(cmd[channel_][nbChan]);
 		partMess(sender, curChan, message);
 		partOneChan(sender, curChan);
 		checkOnlyOperator(&curChan);

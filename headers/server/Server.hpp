@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 10:36:50 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:40:35 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ class Server {
 	void removeCli(Client *curCli);
 	void checkChanInviteList(Client *sender);
 	Client *findCli(int fd);
+	Channel *findChan(std::string chanName);
 
 	/*                               GETTERS                                  */
 	const nickMap &getUsedNick() const;

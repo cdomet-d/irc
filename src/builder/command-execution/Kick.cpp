@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 10:38:13 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 10:51:49 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,13 @@ void kickFromAllMap(Client *target, Channel &curChan) {
 }
 
 void kick(CmdSpec &cmd) {
-	static Server &server = Server::GetServerInstance(0, "");
-
-	Channel &curChan = findCurChan(cmd[channel_][0]);
+	Channel &curChan = *cmd.serv_.findChan(cmd[channel_][0]);
 	Client *sender = &cmd.getSender();
 	Client *target = NULL;
 
 	for (size_t nbTarget = 0; nbTarget < cmd[target_].size(); nbTarget++) {
-		int fdTarget = server.getUsedNick().find(cmd[target_][0])->second;
-		target = server.findCli(fdTarget);
+		int fdTarget = cmd.serv_.getFdFromNick(cmd[target_][0]);
+		target = cmd.serv_.findCli(fdTarget);
 
 		if (cmd[message_].size())
 			sendMessageChannel(
