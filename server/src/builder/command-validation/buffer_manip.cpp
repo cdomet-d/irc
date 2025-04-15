@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   buffer_manip.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/11 15:16:28 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/14 18:06:34 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool buffer_manip::prepareCommand(Client &sender) {
 		sender.mess.hasTrailing();
 		std::string buffer = sender.mess.getMess();
 		sender.mess.setCmdParam(vectorSplit(buffer, ' '));
-		if (sender.mess.getCmd() == "MODE")
+		if (sender.mess.getCmd() == "MODE" || sender.mess.getCmd() == "mode")
 			sender.mess.formatMode();
 		CmdManager &manager = CmdManager::getManagerInstance();
 		try {

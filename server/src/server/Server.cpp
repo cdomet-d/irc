@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 15:17:13 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 15:58:43 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,17 +180,16 @@ bool Server::handleData(int fd) {
 	return (true);
 }
 
-void checkOnlyOperator(Channel *curChan) {
+void checkOnlyOperator(Client &oldOp, Channel *curChan) {
 	static Server &server = Server::GetServerInstance(0, "");
 
 	if (curChan->getCliInChan().size() >= 1) {
 		if (!curChan->getOpCli().size()) {
-			curChan->addCli(OPCLI, curChan->getCliInChan().begin()->second);
-			RPL::send_(
-				curChan->getCliInChan().begin()->second->getFd(),
-				RPL_CHANOPE(
-					curChan->getCliInChan().begin()->second->cliInfo.getNick(),
-					curChan->getName()));
+			Client *cli = curChan->getCliInChan().begin()->second;
+			curChan->addCli(OPCLI, cli);
+			RPL::send_(cli->getFd(),
+						 RPL_MODE(oldOp.cliInfo.getPrefix(), curChan->getName(),
+								  "+o", cli->cliInfo.getNick()));
 		}
 	}
 	if (curChan->getCliInChan().empty() == true) {

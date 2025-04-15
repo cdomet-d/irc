@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 15:08:38 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 17:29:46 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,21 @@
 #include <limits>
 #include <sstream>
 
-void executeO(std::string flag, std::string param, Channel &curChan) {
+void executeO(std::string flag, std::string targ, Channel &curChan) {
 	Client *targetCli = NULL;
-	std::string targ = param.erase(param.size() - 1, 1);
 
 	for (clientMapIt targetIt = curChan.getCliInChan().begin();
-		 targetIt != curChan.getCliInChan().end(); ++targetIt) {
+	targetIt != curChan.getCliInChan().end(); ++targetIt) {
 		if (targetIt->second->cliInfo.getNick() == targ) {
 			targetCli = targetIt->second;
 			break;
 		}
 	}
-
-	if (targetCli == NULL) {
+	
+	if (targetCli == NULL)
 		return;
-	}
-
-	if (flag == "+o ") {
-		// std::cout << targetCli->getFd() << targetCli->cliInfo.getNick()
-		// 		  << std::endl;
+	
+	if (flag == "+o") {
 		curChan.addCli(OPCLI, targetCli);
 		RPL::send_(
 			targetCli->getFd(),

@@ -34,12 +34,12 @@ bool check::mess(CmdSpec &cmd, size_t idx) {
 }
 
 bool check::mess_::params(CmdSpec &cmd) {
-	if (cmd[target_].empty()) {
+	if (cmd[target_].empty() || cmd[target_][0].empty()) {
 		RPL::send_(cmd.getSdFd(),
 				   ERR_NORECIPIENT(cmd.getSdNick(), cmd.getName()));
 		return (false);
 	}
-	if (cmd[message_].empty()) {
+	if (cmd[message_].empty() || cmd[message_][0].empty()) {
 		RPL::send_(cmd.getSdFd(), ERR_NOTEXTTOSEND(cmd.getSdNick()));
 		return (false);
 	}

@@ -61,6 +61,7 @@ void CmdManager::generateCmds() {
 			.addParam(nickname_, new CmdParam())
 			.addChecker(check::register_::stageDone)
 			.addChecker(check::nick)
+			.addChecker(check::len)
 			.CmExecutor(nick)
 			.build());
 
@@ -75,6 +76,7 @@ void CmdManager::generateCmds() {
 			.addChecker(check::register_::isRegistered)
 			.addChecker(check::enoughParams)
 			.addChecker(check::user)
+			.addChecker(check::len)
 			.CmExecutor(user)
 			.build());
 
@@ -110,6 +112,7 @@ void CmdManager::generateCmds() {
 			.addChecker(check::chan)
 			.addChecker(check::chans_::isOp)
 			.addChecker(check::kick)
+			.addChecker(check::len)
 			.CmExecutor(kick)
 			.build());
 
@@ -160,6 +163,7 @@ void CmdManager::generateCmds() {
 			.addChecker(check::enoughParams)
 			.addChecker(check::chan)
 			.addChecker(check::chans_::isOp)
+			.addChecker(check::len)
 			.CmExecutor(topic)
 			.build());
 

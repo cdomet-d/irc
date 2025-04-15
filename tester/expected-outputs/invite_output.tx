@@ -24,8 +24,8 @@
 :irc.bitchat.net 443 chacham bobby #chan :is already on channel
 :chacham!c@localhost MODE #chan -i 
 :bobby!b@localhost PART #chan
-:chacham!c@localhost :Client Quit 
-:irc.bitchat.net chacham :You quitted the server, see you next time !
+:chacham!c@localhost QUIT :You quitted the server, see you next time !
+ERROR :Closing Link: localhost (Client Quit)
 :irc.bitchat.net NOTICE * :Valid password ! You may register
 :irc.bitchat.net NOTICE bobby :The nickname is valid and saved !
 :irc.bitchat.net 001 bobby :Welcome to the Bitchat Internet Relay Chat Network bobby!b@localhost
@@ -48,5 +48,5 @@
 :irc.bitchat.net 482 bobby #chan :You're not channel operator
 :bobby!b@localhost PART #chan
 :irc.bitchat.net 442 bobby #chan :You're not on that channel
-:bobby!b@localhost :Client Quit 
-:irc.bitchat.net bobby :You quitted the server, see you next time !
+:bobby!b@localhost QUIT :You quitted the server, see you next time !
+ERROR :Closing Link: localhost (Client Quit)

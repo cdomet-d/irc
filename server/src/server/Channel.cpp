@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/11 15:17:06 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/11 18:38:56 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,8 @@ void Channel::setModes() {
 	if (getTopicRestrict() == true)
 		modes.append("t");
 	modes_ = modes;
+	if (modes_ == "+")
+		modes_.clear();
 }
 
 void Channel::setMaxCli(int maxCli) {

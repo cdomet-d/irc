@@ -37,6 +37,7 @@ sleep 0.5
 
 #tests if clients receive appropriate messages
 echo "QUIT :bye bye" >&${client1_in_fd}
+sleep 0.5
 echo "QUIT" >&${client2_in_fd}
 
 sleep 3
@@ -48,6 +49,7 @@ wait $PID1 2>/dev/null
 wait $PID2 2>/dev/null
 
 cat outputs/client1_out > outputs/output.txt &
+sleep 1
 cat outputs/client2_out.txt >> outputs/output.txt &
 
 sleep 2
@@ -64,7 +66,7 @@ cat <<EOF > test_input.txt
 QUIT
 EOF
 
-timeout 2s nc 0.0.0.0 4444 < test_input.txt > outputs/output.txt
+timeout 2s nc 0.0.0.0 4444 < test_input.txt >> outputs/output.txt
 
 
 #TODO:
