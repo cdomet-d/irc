@@ -46,6 +46,6 @@ void part(CmdSpec &cmd) {
 		Channel &curChan = findCurChan(cmd[channel_][nbChan]);
 		partMess(sender, curChan, message);
 		partOneChan(sender, curChan);
-		checkOnlyOperator(&curChan);
+		checkOnlyOperator(*sender, &curChan);
 	}
 }

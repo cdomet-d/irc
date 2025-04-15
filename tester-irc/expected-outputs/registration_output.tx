@@ -1,9 +1,27 @@
-Please enter password
-Please enter password
-: NOTICE : Valid password ! You may register
-Please enter nickname
-Please enter nickname
-:Introducing new nick "alex"
-Please enter username
-Please enter username
-: NOTICE : Registration complete
+:irc.bitchat.net NOTICE * :Please enter password
+:irc.bitchat.net NOTICE * :Please enter password
+:irc.bitchat.net NOTICE * :Valid password ! You may register
+:irc.bitchat.net NOTICE * :Please enter nickname or username
+:irc.bitchat.net NOTICE * :The Username c is valid and saved !
+:irc.bitchat.net NOTICE * :Please enter nickname
+:irc.bitchat.net NOTICE * :Please enter nickname
+:irc.bitchat.net 001 alex :Welcome to the Bitchat Internet Relay Chat Network alex!c@localhost
+:irc.bitchat.net 002 alex :Your host is Bitchat, running version 1.0
+:irc.bitchat.net 003 alex :This server was created 14-04-2025 20:00:00
+:irc.bitchat.net 004 alex Bitchat 1.0 | k,o,l,i,t | k,o,l
+:irc.bitchat.net 005 alex CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 375 alex :- Bitchat Message of the day - 
+:irc.bitchat.net 372 alex :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 376 alex :End of /MOTD command
+:irc.bitchat.net NOTICE * :Valid password ! You may register
+:irc.bitchat.net NOTICE cha :The nickname is valid and saved !
+:irc.bitchat.net NOTICE cha :Please enter username
+:irc.bitchat.net NOTICE cha :Please enter username
+:irc.bitchat.net 001 cha :Welcome to the Bitchat Internet Relay Chat Network cha!c@localhost
+:irc.bitchat.net 002 cha :Your host is Bitchat, running version 1.0
+:irc.bitchat.net 003 cha :This server was created 14-04-2025 20:00:02
+:irc.bitchat.net 004 cha Bitchat 1.0 | k,o,l,i,t | k,o,l
+:irc.bitchat.net 005 cha CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 375 cha :- Bitchat Message of the day - 
+:irc.bitchat.net 372 cha :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 376 cha :End of /MOTD command

@@ -1,36 +1,54 @@
-:servername 451 * :You have not registered
-:servername NOTICE * :Valid password ! You may register
-:servername NOTICE * :Introducing new nick "chacham"
-:servername NOTICE chacham :Registration complete
-:chacham!~c@hostname JOIN #chan
-:servername MODE #chan +t
-:servername 353 chacham @ #chan :@chacham
-:servername 366 chacham #chan :End of /NAMES list.
-:servername 461 chacham TOPIC :Not enough parameters
-:servername 403 chacham #dontexist :No such channel
-:servername 403 chacham wrongchan :No such channel
-:chacham!~c@hostname TOPIC #chan :my sublime self
-:bobby!~b@hostname JOIN #chan
-:chacham!~c@hostname MODE #chan -t
-:bobby!~b@hostname TOPIC #chan :lol
-:bobby!~b@hostname TOPIC #chan :
-:servername NOTICE * : Valid password ! You may register
-:servername NOTICE * :Introducing new nick "bobby"
-:servername NOTICE bobby :Registration complete
-:servername 442 bobby #chan :You're not on that channel
-:servername 442 bobby #chan :You're not on that channel
-:bobby!~b@hostname JOIN #chan
-:servername 332 bobby #chan :my sublime self
-:servername 333 bobby #chan chacham!~c@hostname 1743159752
-:servername 353 bobby @ #chan :bobby @chacham
-:servername 366 bobby #chan :End of /NAMES list.
-:servername 332 bobby #chan :my sublime self
-:servername 333 bobby #chan chacham!~c@hostname 1743159752
-:servername 482 bobby #chan :You're not a channel operator
-:servername 403 bobby #chan,#chan2 :No such channel
-:chacham!~c@hostname MODE #chan -t
-:bobby!~b@hostname TOPIC #chan :lol
-:servername 332 bobby #chan :lol
-:servername 333 bobby #chan bobby!~b@hostname 1743160112
-:bobby!~b@hostname TOPIC #chan :
-:servername 331 bobby #chan :No topic is set.
+:irc.bitchat.net 451 * :You have not registered
+:irc.bitchat.net NOTICE * :Valid password ! You may register
+:irc.bitchat.net NOTICE chacham :The nickname is valid and saved !
+:irc.bitchat.net 001 chacham :Welcome to the Bitchat Internet Relay Chat Network chacham!c@localhost
+:irc.bitchat.net 002 chacham :Your host is Bitchat, running version 1.0
+:irc.bitchat.net 003 chacham :This server was created 11-04-2025 17:01:11
+:irc.bitchat.net 004 chacham Bitchat 1.0 | k,o,l,i,t | k,o,l
+:irc.bitchat.net 005 chacham CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 375 chacham :- Bitchat Message of the day - 
+:irc.bitchat.net 372 chacham :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 376 chacham :End of /MOTD command
+:chacham!c@localhost JOIN #chan
+:irc.bitchat.net MODE #chan +t 
+:irc.bitchat.net 353 chacham = #chan :@chacham
+:irc.bitchat.net 366 chacham #chan :End of /NAMES list
+:irc.bitchat.net 461 chacham TOPIC :Not enough parameters
+:irc.bitchat.net 403 chacham #dontexist :No such channel
+:irc.bitchat.net 403 chacham wrongchan :No such channel
+:chacham!c@localhost TOPIC #chan :my sublime self
+:chacham!c@localhost MODE #chan +t 
+:bobby!b@localhost JOIN #chan
+:chacham!c@localhost MODE #chan -t 
+:bobby!b@localhost TOPIC #chan :lol
+:bobby!b@localhost TOPIC #chan :
+:chacham!c@localhost QUIT :You quitted the server, see you next time !
+ERROR :Closing Link: localhost (Client Quit)
+:irc.bitchat.net NOTICE * :Valid password ! You may register
+:irc.bitchat.net NOTICE bobby :The nickname is valid and saved !
+:irc.bitchat.net 001 bobby :Welcome to the Bitchat Internet Relay Chat Network bobby!b@localhost
+:irc.bitchat.net 002 bobby :Your host is Bitchat, running version 1.0
+:irc.bitchat.net 003 bobby :This server was created 11-04-2025 17:01:12
+:irc.bitchat.net 004 bobby Bitchat 1.0 | k,o,l,i,t | k,o,l
+:irc.bitchat.net 005 bobby CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 375 bobby :- Bitchat Message of the day - 
+:irc.bitchat.net 372 bobby :Registration completed, you can join channels and start chatting !
+:irc.bitchat.net 376 bobby :End of /MOTD command
+:irc.bitchat.net 442 bobby #chan :You're not on that channel
+:irc.bitchat.net 442 bobby #chan :You're not on that channel
+:bobby!b@localhost JOIN #chan
+:irc.bitchat.net 332 bobby #chan :my sublime self
+:irc.bitchat.net 353 bobby = #chan :bobby @chacham
+:irc.bitchat.net 366 bobby #chan :End of /NAMES list
+:irc.bitchat.net 332 bobby #chan :my sublime self
+:irc.bitchat.net 482 bobby #chan :You're not channel operator
+:irc.bitchat.net 403 bobby #chan,#chan2 :No such channel
+:chacham!c@localhost MODE #chan -t 
+:bobby!b@localhost TOPIC #chan :lol
+:irc.bitchat.net 332 bobby #chan :lol
+:bobby!b@localhost TOPIC #chan :
+:irc.bitchat.net 331 bobby #chan :No topic is set
+:chacham!c@localhost QUIT :You quitted the server, see you next time !
+:chacham!c@localhost MODE #chan +o bobby
+:bobby!b@localhost QUIT :You quitted the server, see you next time !
+ERROR :Closing Link: localhost (Client Quit)

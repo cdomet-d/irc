@@ -30,6 +30,8 @@ MODE +i
 MODE wrongchan
 MODE #dontexist
 MODE #chan
+MODE #chan k-t
+MODE #chan u
 MODE #chan -t
 EOF
 
@@ -40,27 +42,42 @@ PASS 0
 NICK bobby
 USER b 0 * b
 JOIN #chan
+MODE #chan
 MODE #chan +i
 EOF
 
 sleep 0.5
 
 cat <<EOF >&${client1_in_fd}
-MODE #chan +itkol key bobby 2
-MODE #chan -itkol key bobby
-MODE #chan +k
-MODE #chan +l
-MODE #chan +l -10
-MODE #chan +l hehehe
-MODE #chan +o dontexist
-KICK #chan bobby
-MODE #chan +o bobby
-MODE #chan +i-i he he
+MODE #chan +ikol-t password bobby 2
 EOF
 
 sleep 0.5
 
-echo "QUIT" >&${client1_in_fd}
+cat <<EOF >&${client2_in_fd}
+MODE #chan +t
+EOF
+
+sleep 0.5
+
+cat <<EOF >&${client1_in_fd}
+MODE #chan -ikol bobby
+MODE #chan +k
+MODE #chan +k key
+MODE #chan +k keyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+MODE #chan +l
+MODE #chan +l -10
+MODE #chan +l hehehe
+MODE #chan +o dontexist
+MODE #chan -o dontexist
+KICK #chan bobby
+MODE #chan +o bobby
+MODE #chan +i-i he he
+QUIT
+EOF
+
+sleep 0.5
+
 echo "QUIT" >&${client2_in_fd}
 
 sleep 3
@@ -72,6 +89,7 @@ wait $PID1 2>/dev/null
 wait $PID2 2>/dev/null
 
 cat outputs/client1_out > outputs/output.txt &
+sleep 1
 cat outputs/client2_out.txt >> outputs/output.txt &
 
 sleep 2
