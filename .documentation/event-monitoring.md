@@ -24,7 +24,24 @@ Given the need to communicate easily between processes and across networks, the 
 
 By design, all operations on sockets are stored in the kernel buffer before being sent to or received from the hardware, which allows the frequency of hardware operations to be greatly reduced.
 
-More about the socket interfaces in the [sources](#sources).
+More about the socket interfaces with [the IBM documentation](https://www.ibm.com/docs/en/aix/7.2?topic=sockets-interface).
+
+## The notification mechanism
+
+In short, Epoll is a *notification mechanism* that monitors each socket associated kernel buffer, notifiying the kernel when the buffer is not empty (read) or when the buffer is full (write).
+
+Epoll is an [indirection mechanism](#indirection) which allows the user to manipulate and monitor ressources without directly interfacing with raw fds. Instead, we interact with the Epoll API (ie: Application programming interface). 
+
+### A word about epoll's structures
+
+Epolls stores the ressources transmitted by the user within a [red black tree](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree). That tree is stored in the kernel high-speed cache.
+
+Each nodes contains the fd associated with the ressource, as well as a pointer to a file structure containing metadata regarding that fd (read/write offsets, permissions, reference count (ie: the number of processes that share the ressource)...)
+
+That red-black tree is called the **interest list**. It is manipulated via `epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)`. More about this function [here](https://www.ibm.com/docs/en/zos/3.1.0?topic=functions-epoll-ctl-control-interface-epoll-file-descriptor).
+
+In addition to that, epoll also maintains a *linked list*, which holds a list of the fds that are already read
+
 
 ## Sources
 
@@ -33,3 +50,22 @@ More about the socket interfaces in the [sources](#sources).
 - [Buffered I/O operations](https://fgiesen.wordpress.com/2015/10/25/reading-and-writing-are-less-symmetric-than-you-probably-think/)
 - [How the Linux Syscalls works](https://www.youtube.com/watch?v=FkIWDAtVIUM) (video)
 - [Context switching](https://www.youtube.com/watch?v=H4SDPLiUnv4&t=310s) (video)
+- [Async I/O](https://jvns.ca/blog/2017/06/03/async-io-on-linux--select--poll--and-epoll/)
+
+
+The red-black tree allows O(log n) management of FDs, while the struct file reference enables direct access to the resource's state without traversing layers of indirection. => 
+
+## Indirection
+
+Indirection is a design patter that separate the desired outcome from the implementation details. More on this [here](https://stackoverflow.com/questions/18003544/what-does-level-of-indirection-mean-in-david-wheelers-aphorism).
+
+> Relation to Abstraction
+
+While often conflated, abstraction and indirection differ:
+
+- Abstraction: Aggregates details into a simplified interface (e.g., a "file" concept).
+- Indirection: Manages access through intermediaries (e.g., file descriptors pointing to struct file objects)
+
+They frequently coexist: abstraction hides complexity, while indirection enables modularity.
+
+David Wheeler’s aphorism — “All problems can be solved by another layer of indirection” — highlights its power, but RFC 1925 warns: “*It is always possible to add another level of indirection*” without solving the root issue/
