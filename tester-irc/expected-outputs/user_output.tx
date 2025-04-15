@@ -5,9 +5,9 @@
 :irc.bitchat.net 461 chacham USER :Not enough parameters
 :irc.bitchat.net 461 chacham USER :Not enough parameters
 :irc.bitchat.net 461 chacham USER :Not enough parameters
-:chacham!@localhost USER :format should be [<username> 0 * <realname>], is [c 000 * c]
-:chacham!@localhost USER :format should be [<username> 0 * <realname>], is [c 0 *** c]
-:irc.bitchat.net 001 chacham :Welcome to the Bitchat Internet Relay Chat Network chacham!aaaaaaaaaaaaahh@localhost
+:irc.bitchat.net NOTICE USER :format should be [<username> 0 * <realname>], is [c 000 * c]
+:irc.bitchat.net NOTICE USER :format should be [<username> 0 * <realname>], is [c 0 *** c]
+:irc.bitchat.net 001 chacham :Welcome to the Bitchat Internet Relay Chat Network chacham!aaaaaaaaaaaaaaaaah@localhost
 :irc.bitchat.net 002 chacham :Your host is Bitchat, running version 1.0
 :irc.bitchat.net 003 chacham :This server was created 11-04-2025 17:38:11
 :irc.bitchat.net 004 chacham Bitchat 1.0 | k,o,l,i,t | k,o,l
@@ -17,9 +17,9 @@
 :irc.bitchat.net 376 chacham :End of /MOTD command
 :irc.bitchat.net 462 chacham :You may not reregister
 :irc.bitchat.net 462 chacham :You may not reregister
-:chacham!aaaaaaaaaaaaahh@localhost JOIN #chan
+:chacham!aaaaaaaaaaaaaaaaah@localhost JOIN #chan
 :irc.bitchat.net MODE #chan +t 
 :irc.bitchat.net 353 chacham = #chan :@chacham
 :irc.bitchat.net 366 chacham #chan :End of /NAMES list
-:chacham!aaaaaaaaaaaaahh@localhost QUIT :You quitted the server, see you next time !
+:chacham!aaaaaaaaaaaaaaaaah@localhost QUIT :You quitted the server, see you next time !
 ERROR :Closing Link: localhost (Client Quit)

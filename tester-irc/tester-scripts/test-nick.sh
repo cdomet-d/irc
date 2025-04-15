@@ -62,6 +62,7 @@ sleep 0.5
 
 # ➤ Join pour les deux clients
 echo "JOIN #chan" >&${client1_in_fd}
+sleep 0.5
 echo "JOIN #chan" >&${client2_in_fd}
 
 sleep 0.5

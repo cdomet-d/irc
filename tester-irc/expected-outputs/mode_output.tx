@@ -26,11 +26,11 @@
 :bobby!b@localhost MODE #chan +t 
 :chacham!c@localhost MODE #chan -ikol bobby 
 :irc.bitchat.net 461 chacham MODE :Not enough parameters
-:chacham!c@localhost MODE #chan :Bad key (+k) - key len must be at least 8 and no more than 26
-:chacham!c@localhost MODE #chan :Bad key (+k) - key len must be at least 8 and no more than 26
+:irc.bitchat.net NOTICE #chan :Bad key (+k) - key len must be at least 8 and no more than 26
+:irc.bitchat.net NOTICE #chan :Bad key (+k) - key len must be at least 8 and no more than 26
 :irc.bitchat.net 461 chacham MODE :Not enough parameters
-:chacham!c@localhost MODE :format should be [0 - 9], is [-]
-:chacham!c@localhost MODE :format should be [0 - 9], is [h]
+:irc.bitchat.net NOTICE #chan :format should be [0 - 9], is [-10]
+:irc.bitchat.net NOTICE #chan :format should be [0 - 9], is [hehehe]
 :irc.bitchat.net 401 chacham dontexist :No such nick/channel
 :irc.bitchat.net 401 chacham dontexist :No such nick/channel
 :chacham!c@localhost KICK #chan bobby 
