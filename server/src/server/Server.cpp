@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 17:15:37 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/16 12:05:01 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,6 @@ bool Server::handleData(int fd) {
 
 	Client *curCli = clients_.find(fd)->second;
 	if (bytes == 0) {
-		//	std::cout << "sending QUIT command" << std::endl;
 		curCli->mess.setMess("QUIT\n");
 		buffer_manip::prepareCommand(*curCli);
 		return (true);
@@ -172,8 +171,7 @@ bool Server::handleData(int fd) {
 		inputCli.append(tmpBuf);
 		curCli->mess.setMess(inputCli);
 		if (curCli->mess.getMess().find('\n') != std::string::npos) {
-			std::string temp = curCli->mess.getMess();
-			RPL::log(RPL::GOT, temp);
+			RPL::log(RPL::GOT, curCli->mess.getMess());
 			buffer_manip::prepareCommand(*curCli);
 		}
 	}
