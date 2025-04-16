@@ -6,11 +6,11 @@
 class Bot {
   public:
 	/*                               ORTHODOX CLASS                           */
-	~Bot(void) {}
+	~Bot(void);
 
 	/*                               METHODS                                  */
 	static Bot &getInstance(int port, const std::string &pw);
-	bool requestConnection();
+	// bool requestConnection();
 	/*                               GETTERS                                  */
 
 	/*                               SETTERS                                  */
@@ -23,7 +23,7 @@ class Bot {
 	Bot(void);
 	Bot(int port, std::string pw);
 	Bot(const Bot &rhs);
-	Bot &operator=(const Bot &rhs);
+	// Bot &operator=(const Bot &rhs);
 };
 
 #endif
