@@ -8,6 +8,7 @@ BOT_INC:= -I $(BOT_HEA_DIR) \
 
 SRC_ROOT:=			main.cpp \
 					Bot.cpp \
+					Api.cpp \
 
 # ----------------------------- BOT FILE BUILDING PATH ----------------------- #
 
