@@ -3,7 +3,7 @@ c: Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
 SPDX-License-Identifier: curl
 Long: pass
 Arg: <phrase>
-Help: Passphrase for the private key
+Help: Pass phrase for the private key
 Protocols: SSH TLS
 Category: ssh tls auth
 Added: 7.9.3
@@ -17,4 +17,4 @@ Example:
 
 # `--pass`
 
-Passphrase for the private key used for SSH or TLS.
+Passphrase for the private key.

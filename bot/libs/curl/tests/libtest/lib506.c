@@ -42,8 +42,8 @@ struct userdata {
 static int locks[3];
 
 /* lock callback */
-static void test_lock(CURL *handle, curl_lock_data data,
-                      curl_lock_access laccess, void *useptr)
+static void my_lock(CURL *handle, curl_lock_data data,
+                    curl_lock_access laccess, void *useptr)
 {
   const char *what;
   struct userdata *user = (struct userdata *)useptr;
@@ -82,7 +82,7 @@ static void test_lock(CURL *handle, curl_lock_data data,
 }
 
 /* unlock callback */
-static void test_unlock(CURL *handle, curl_lock_data data, void *useptr)
+static void my_unlock(CURL *handle, curl_lock_data data, void *useptr)
 {
   const char *what;
   struct userdata *user = (struct userdata *)useptr;
@@ -127,7 +127,7 @@ static struct curl_slist *sethost(struct curl_slist *headers)
 
 
 /* the dummy thread function */
-static void *test_fire(void *ptr)
+static void *fire(void *ptr)
 {
   CURLcode code;
   struct curl_slist *headers;
@@ -172,9 +172,9 @@ static char *suburl(const char *base, int i)
 
 
 /* test function */
-CURLcode test(char *URL)
+int test(char *URL)
 {
-  CURLcode res;
+  int res;
   CURLSHcode scode = CURLSHE_OK;
   CURLcode code = CURLE_OK;
   char *url = NULL;
@@ -207,11 +207,11 @@ CURLcode test(char *URL)
 
   if(CURLSHE_OK == scode) {
     printf("CURLSHOPT_LOCKFUNC\n");
-    scode = curl_share_setopt(share, CURLSHOPT_LOCKFUNC, test_lock);
+    scode = curl_share_setopt(share, CURLSHOPT_LOCKFUNC, my_lock);
   }
   if(CURLSHE_OK == scode) {
     printf("CURLSHOPT_UNLOCKFUNC\n");
-    scode = curl_share_setopt(share, CURLSHOPT_UNLOCKFUNC, test_unlock);
+    scode = curl_share_setopt(share, CURLSHOPT_UNLOCKFUNC, my_unlock);
   }
   if(CURLSHE_OK == scode) {
     printf("CURLSHOPT_USERDATA\n");
@@ -261,6 +261,8 @@ CURLcode test(char *URL)
   curl_easy_cleanup(curl);
 
 
+  res = 0;
+
   /* start treads */
   for(i = 1; i <= THREADS; i++) {
 
@@ -270,13 +272,13 @@ CURLcode test(char *URL)
 
     /* simulate thread, direct call of "thread" function */
     printf("*** run %d\n",i);
-    test_fire(&tdata);
+    fire(&tdata);
 
     curl_free(tdata.url);
   }
 
 
-  /* fetch another one and save cookies */
+  /* fetch a another one and save cookies */
   printf("*** run %d\n", i);
   curl = curl_easy_init();
   if(!curl) {
@@ -325,8 +327,6 @@ CURLcode test(char *URL)
   test_setopt(curl, CURLOPT_COOKIEFILE, JAR);
   printf("CURLOPT_COOKIELIST RELOAD\n");
   test_setopt(curl, CURLOPT_COOKIELIST, "RELOAD");
-
-  res = CURLE_OK;
 
   code = curl_easy_getinfo(curl, CURLINFO_COOKIELIST, &cookies);
   if(code != CURLE_OK) {

@@ -34,7 +34,6 @@
 #include "inet_ntop.h"
 #include "strdup.h"
 #include "idn.h"
-#include "strparse.h"
 #include "curl_memrchr.h"
 
 /* The last 3 #include files should be in this order */
@@ -42,13 +41,13 @@
 #include "curl_memory.h"
 #include "memdebug.h"
 
-  /* MS-DOS/Windows style drive prefix, eg c: in c:foo */
+  /* MSDOS/Windows style drive prefix, eg c: in c:foo */
 #define STARTS_WITH_DRIVE_PREFIX(str) \
   ((('a' <= str[0] && str[0] <= 'z') || \
     ('A' <= str[0] && str[0] <= 'Z')) && \
    (str[1] == ':'))
 
-  /* MS-DOS/Windows style drive prefix, optionally with
+  /* MSDOS/Windows style drive prefix, optionally with
    * a '|' instead of ':', followed by a slash or NUL */
 #define STARTS_WITH_URL_DRIVE_PREFIX(str) \
   ((('a' <= (str)[0] && (str)[0] <= 'z') || \
@@ -60,11 +59,11 @@
 #define MAX_SCHEME_LEN 40
 
 /*
- * If USE_IPV6 is disabled, we still want to parse IPv6 addresses, so make
+ * If ENABLE_IPV6 is disabled, we still want to parse IPv6 addresses, so make
  * sure we have _some_ value for AF_INET6 without polluting our fake value
  * everywhere.
  */
-#if !defined(USE_IPV6) && !defined(AF_INET6)
+#if !defined(ENABLE_IPV6) && !defined(AF_INET6)
 #define AF_INET6 (AF_INET + 1)
 #endif
 
@@ -80,16 +79,10 @@ struct Curl_URL {
   char *path;
   char *query;
   char *fragment;
-  unsigned short portnum; /* the numerical version (if 'port' is set) */
-  BIT(query_present);    /* to support blank */
-  BIT(fragment_present); /* to support blank */
-  BIT(guessed_scheme);   /* when a URL without scheme is parsed */
+  long portnum; /* the numerical version */
 };
 
 #define DEFAULT_SCHEME "https"
-
-static CURLUcode parseurl_and_replace(const char *url, CURLU *u,
-                                      unsigned int flags);
 
 static void free_urlhandle(struct Curl_URL *u)
 {
@@ -106,33 +99,46 @@ static void free_urlhandle(struct Curl_URL *u)
 }
 
 /*
- * Find the separator at the end of the hostname, or the '?' in cases like
+ * Find the separator at the end of the host name, or the '?' in cases like
  * http://www.example.com?id=2380
  */
 static const char *find_host_sep(const char *url)
 {
+  const char *sep;
+  const char *query;
+
   /* Find the start of the hostname */
-  const char *sep = strstr(url, "//");
+  sep = strstr(url, "//");
   if(!sep)
     sep = url;
   else
     sep += 2;
 
-  /* Find first / or ? */
-  while(*sep && *sep != '/' && *sep != '?')
-    sep++;
+  query = strchr(sep, '?');
+  sep = strchr(sep, '/');
 
-  return sep;
+  if(!sep)
+    sep = url + strlen(url);
+
+  if(!query)
+    query = url + strlen(url);
+
+  return sep < query ? sep : query;
 }
 
 /* convert CURLcode to CURLUcode */
 #define cc2cu(x) ((x) == CURLE_TOO_LARGE ? CURLUE_TOO_LARGE :   \
                   CURLUE_OUT_OF_MEMORY)
+/*
+ * Decide whether a character in a URL must be escaped.
+ */
+#define urlchar_needs_escaping(c) (!(ISCNTRL(c) || ISSPACE(c) || ISGRAPH(c)))
 
+static const char hexdigits[] = "0123456789abcdef";
 /* urlencode_str() writes data into an output dynbuf and URL-encodes the
  * spaces in the source URL accordingly.
  *
- * URL encoding should be skipped for hostnames, otherwise IDN resolution
+ * URL encoding should be skipped for host names, otherwise IDN resolution
  * will fail.
  */
 static CURLUcode urlencode_str(struct dynbuf *o, const char *url,
@@ -143,39 +149,46 @@ static CURLUcode urlencode_str(struct dynbuf *o, const char *url,
   bool left = !query;
   const unsigned char *iptr;
   const unsigned char *host_sep = (const unsigned char *) url;
-  CURLcode result = CURLE_OK;
+  CURLcode result;
 
-  if(!relative) {
-    size_t n;
+  if(!relative)
     host_sep = (const unsigned char *) find_host_sep(url);
 
-    /* output the first piece as-is */
-    n = (const char *)host_sep - url;
-    result = Curl_dyn_addn(o, url, n);
-    len -= n;
-  }
+  for(iptr = (unsigned char *)url;    /* read from here */
+      len; iptr++, len--) {
 
-  for(iptr = host_sep; len && !result; iptr++, len--) {
+    if(iptr < host_sep) {
+      result = Curl_dyn_addn(o, iptr, 1);
+      if(result)
+        return cc2cu(result);
+      continue;
+    }
+
     if(*iptr == ' ') {
       if(left)
         result = Curl_dyn_addn(o, "%20", 3);
       else
         result = Curl_dyn_addn(o, "+", 1);
+      if(result)
+        return cc2cu(result);
+      continue;
     }
-    else if((*iptr < ' ') || (*iptr >= 0x7f)) {
-      unsigned char out[3]={'%'};
-      Curl_hexbyte(&out[1], *iptr, TRUE);
+
+    if(*iptr == '?')
+      left = FALSE;
+
+    if(urlchar_needs_escaping(*iptr)) {
+      char out[3]={'%'};
+      out[1] = hexdigits[*iptr>>4];
+      out[2] = hexdigits[*iptr & 0xf];
       result = Curl_dyn_addn(o, out, 3);
     }
-    else {
+    else
       result = Curl_dyn_addn(o, iptr, 1);
-      if(*iptr == '?')
-        left = FALSE;
-    }
+    if(result)
+      return cc2cu(result);
   }
 
-  if(result)
-    return cc2cu(result);
   return CURLUE_OK;
 }
 
@@ -190,7 +203,7 @@ static CURLUcode urlencode_str(struct dynbuf *o, const char *url,
 size_t Curl_is_absolute_url(const char *url, char *buf, size_t buflen,
                             bool guess_scheme)
 {
-  size_t i = 0;
+  int i = 0;
   DEBUGASSERT(!buf || (buflen > MAX_SCHEME_LEN));
   (void)buflen; /* only used in debug-builds */
   if(buf)
@@ -214,13 +227,15 @@ size_t Curl_is_absolute_url(const char *url, char *buf, size_t buflen,
   if(i && (url[i] == ':') && ((url[i + 1] == '/') || !guess_scheme)) {
     /* If this does not guess scheme, the scheme always ends with the colon so
        that this also detects data: URLs etc. In guessing mode, data: could
-       be the hostname "data" with a specified port number. */
+       be the host name "data" with a specified port number. */
 
     /* the length of the scheme is the name part only */
     size_t len = i;
     if(buf) {
-      Curl_strntolower(buf, url, i);
       buf[i] = 0;
+      while(i--) {
+        buf[i] = Curl_raw_tolower(url[i]);
+      }
     }
     return len;
   }
@@ -228,95 +243,173 @@ size_t Curl_is_absolute_url(const char *url, char *buf, size_t buflen,
 }
 
 /*
- * Concatenate a relative URL onto a base URL making it absolute.
+ * Concatenate a relative URL to a base URL making it absolute.
+ * URL-encodes any spaces.
+ * The returned pointer must be freed by the caller unless NULL
+ * (returns NULL on out of memory).
+ *
+ * Note that this function destroys the 'base' string.
  */
-static CURLUcode redirect_url(const char *base, const char *relurl,
-                              CURLU *u, unsigned int flags)
+static CURLcode concat_url(char *base, const char *relurl, char **newurl)
 {
-  struct dynbuf urlbuf;
+  /***
+   TRY to append this new path to the old URL
+   to the right of the host part. Oh crap, this is doomed to cause
+   problems in the future...
+  */
+  struct dynbuf newest;
+  char *protsep;
+  char *pathsep;
   bool host_changed = FALSE;
   const char *useurl = relurl;
-  const char *cutoff = NULL;
-  size_t prelen;
+  CURLcode result = CURLE_OK;
   CURLUcode uc;
+  *newurl = NULL;
 
-  /* protsep points to the start of the hostname, after [scheme]:// */
-  const char *protsep = base + strlen(u->scheme) + 3;
-  DEBUGASSERT(base && relurl && u); /* all set here */
-  if(!base)
-    return CURLUE_MALFORMED_INPUT; /* should never happen */
+  /* protsep points to the start of the host name */
+  protsep = strstr(base, "//");
+  if(!protsep)
+    protsep = base;
+  else
+    protsep += 2; /* pass the slashes */
 
-  /* handle different relative URL types */
-  switch(relurl[0]) {
-  case '/':
+  if('/' != relurl[0]) {
+    int level = 0;
+
+    /* First we need to find out if there's a ?-letter in the URL,
+       and cut it and the right-side of that off */
+    pathsep = strchr(protsep, '?');
+    if(pathsep)
+      *pathsep = 0;
+
+    /* we have a relative path to append to the last slash if there's one
+       available, or if the new URL is just a query string (starts with a
+       '?')  we append the new one at the end of the entire currently worked
+       out URL */
+    if(useurl[0] != '?') {
+      pathsep = strrchr(protsep, '/');
+      if(pathsep)
+        *pathsep = 0;
+    }
+
+    /* Check if there's any slash after the host name, and if so, remember
+       that position instead */
+    pathsep = strchr(protsep, '/');
+    if(pathsep)
+      protsep = pathsep + 1;
+    else
+      protsep = NULL;
+
+    /* now deal with one "./" or any amount of "../" in the newurl
+       and act accordingly */
+
+    if((useurl[0] == '.') && (useurl[1] == '/'))
+      useurl += 2; /* just skip the "./" */
+
+    while((useurl[0] == '.') &&
+          (useurl[1] == '.') &&
+          (useurl[2] == '/')) {
+      level++;
+      useurl += 3; /* pass the "../" */
+    }
+
+    if(protsep) {
+      while(level--) {
+        /* cut off one more level from the right of the original URL */
+        pathsep = strrchr(protsep, '/');
+        if(pathsep)
+          *pathsep = 0;
+        else {
+          *protsep = 0;
+          break;
+        }
+      }
+    }
+  }
+  else {
+    /* We got a new absolute path for this server */
+
     if(relurl[1] == '/') {
-      /* protocol-relative URL: //example.com/path */
-      cutoff = protsep;
-      useurl = &relurl[2];
+      /* the new URL starts with //, just keep the protocol part from the
+         original one */
+      *protsep = 0;
+      useurl = &relurl[2]; /* we keep the slashes from the original, so we
+                              skip the new ones */
       host_changed = TRUE;
     }
-    else
-      /* absolute /path */
-      cutoff = strchr(protsep, '/');
-    break;
-
-  case '#':
-    /* fragment-only change */
-    if(u->fragment)
-      cutoff = strchr(protsep, '#');
-    break;
-
-  default:
-    /* path or query-only change */
-    if(u->query && u->query[0])
-      /* remove existing query */
-      cutoff = strchr(protsep, '?');
-    else if(u->fragment && u->fragment[0])
-      /* Remove existing fragment */
-      cutoff = strchr(protsep, '#');
-
-    if(relurl[0] != '?') {
-      /* append a relative path after the last slash */
-      cutoff = memrchr(protsep, '/',
-                       cutoff ? (size_t)(cutoff - protsep) : strlen(protsep));
-      if(cutoff)
-        cutoff++; /* truncate after last slash */
+    else {
+      /* cut off the original URL from the first slash, or deal with URLs
+         without slash */
+      pathsep = strchr(protsep, '/');
+      if(pathsep) {
+        /* When people use badly formatted URLs, such as
+           "http://www.example.com?dir=/home/daniel" we must not use the first
+           slash, if there's a ?-letter before it! */
+        char *sep = strchr(protsep, '?');
+        if(sep && (sep < pathsep))
+          pathsep = sep;
+        *pathsep = 0;
+      }
+      else {
+        /* There was no slash. Now, since we might be operating on a badly
+           formatted URL, such as "http://www.example.com?id=2380" which
+           doesn't use a slash separator as it is supposed to, we need to check
+           for a ?-letter as well! */
+        pathsep = strchr(protsep, '?');
+        if(pathsep)
+          *pathsep = 0;
+      }
     }
-    break;
   }
 
-  prelen = cutoff ? (size_t)(cutoff - base) : strlen(base);
+  Curl_dyn_init(&newest, CURL_MAX_INPUT_LENGTH);
 
-  /* build new URL */
-  Curl_dyn_init(&urlbuf, CURL_MAX_INPUT_LENGTH);
+  /* copy over the root url part */
+  result = Curl_dyn_add(&newest, base);
+  if(result)
+    return result;
 
-  if(!Curl_dyn_addn(&urlbuf, base, prelen) &&
-     !urlencode_str(&urlbuf, useurl, strlen(useurl), !host_changed, FALSE)) {
-    uc = parseurl_and_replace(Curl_dyn_ptr(&urlbuf), u,
-                              flags & ~CURLU_PATH_AS_IS);
+  /* check if we need to append a slash */
+  if(('/' == useurl[0]) || (protsep && !*protsep) || ('?' == useurl[0]))
+    ;
+  else {
+    result = Curl_dyn_addn(&newest, "/", 1);
+    if(result)
+      return result;
   }
-  else
-    uc = CURLUE_OUT_OF_MEMORY;
 
-  Curl_dyn_free(&urlbuf);
-  return uc;
+  /* then append the new piece on the right side */
+  uc = urlencode_str(&newest, useurl, strlen(useurl), !host_changed,
+                     FALSE);
+  if(uc)
+    return (uc == CURLUE_TOO_LARGE) ? CURLE_TOO_LARGE : CURLE_OUT_OF_MEMORY;
+
+  *newurl = Curl_dyn_ptr(&newest);
+  return CURLE_OK;
 }
 
 /* scan for byte values <= 31, 127 and sometimes space */
-CURLUcode Curl_junkscan(const char *url, size_t *urllen, bool allowspace)
+static CURLUcode junkscan(const char *url, size_t *urllen, unsigned int flags)
 {
+  static const char badbytes[]={
+    /* */ 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+    0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
+    0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
+    0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f,
+    0x7f, 0x00 /* null-terminate */
+  };
   size_t n = strlen(url);
-  size_t i;
-  unsigned char control;
-  const unsigned char *p = (const unsigned char *)url;
+  size_t nfine;
+
   if(n > CURL_MAX_INPUT_LENGTH)
+    /* excessive input length */
     return CURLUE_MALFORMED_INPUT;
 
-  control = allowspace ? 0x1f : 0x20;
-  for(i = 0; i < n; i++) {
-    if(p[i] <= control || p[i] == 127)
-      return CURLUE_MALFORMED_INPUT;
-  }
+  nfine = strcspn(url, badbytes);
+  if((nfine != n) ||
+     (!(flags & CURLU_ALLOW_SPACE) && strchr(url, ' ')))
+    return CURLUE_MALFORMED_INPUT;
+
   *urllen = n;
   return CURLUE_OK;
 }
@@ -324,15 +417,15 @@ CURLUcode Curl_junkscan(const char *url, size_t *urllen, bool allowspace)
 /*
  * parse_hostname_login()
  *
- * Parse the login details (username, password and options) from the URL and
- * strip them out of the hostname
+ * Parse the login details (user name, password and options) from the URL and
+ * strip them out of the host name
  *
  */
 static CURLUcode parse_hostname_login(struct Curl_URL *u,
                                       const char *login,
                                       size_t len,
                                       unsigned int flags,
-                                      size_t *offset) /* to the hostname */
+                                      size_t *offset) /* to the host name */
 {
   CURLUcode result = CURLUE_OK;
   CURLcode ccode;
@@ -359,7 +452,7 @@ static CURLUcode parse_hostname_login(struct Curl_URL *u,
 
   /* We will now try to extract the
    * possible login information in a string like:
-   * ftp://user:password@ftp.site.example:8021/README */
+   * ftp://user:password@ftp.my.site:8021/README */
   ptr++;
 
   /* if this is a known scheme, get some details */
@@ -371,7 +464,7 @@ static CURLUcode parse_hostname_login(struct Curl_URL *u,
   ccode = Curl_parse_login_details(login, ptr - login - 1,
                                    &userp, &passwdp,
                                    (h && (h->flags & PROTOPT_URLOPTIONS)) ?
-                                   &optionsp : NULL);
+                                   &optionsp:NULL);
   if(ccode) {
     result = CURLUE_BAD_LOGIN;
     goto out;
@@ -379,7 +472,7 @@ static CURLUcode parse_hostname_login(struct Curl_URL *u,
 
   if(userp) {
     if(flags & CURLU_DISALLOW_USER) {
-      /* Option DISALLOW_USER is set and URL contains username. */
+      /* Option DISALLOW_USER is set and url contains username. */
       result = CURLUE_USER_NOT_ALLOWED;
       goto out;
     }
@@ -397,7 +490,7 @@ static CURLUcode parse_hostname_login(struct Curl_URL *u,
     u->options = optionsp;
   }
 
-  /* the hostname starts at this offset */
+  /* the host name starts at this offset */
   *offset = ptr - login;
   return CURLUE_OK;
 
@@ -416,7 +509,7 @@ out:
 UNITTEST CURLUcode Curl_parse_port(struct Curl_URL *u, struct dynbuf *host,
                                    bool has_scheme)
 {
-  const char *portptr;
+  char *portptr;
   char *hostname = Curl_dyn_ptr(host);
   /*
    * Find the end of an IPv6 address on the ']' ending bracket.
@@ -438,14 +531,15 @@ UNITTEST CURLUcode Curl_parse_port(struct Curl_URL *u, struct dynbuf *host,
     portptr = strchr(hostname, ':');
 
   if(portptr) {
-    curl_off_t port;
+    char *rest = NULL;
+    long port;
     size_t keep = portptr - hostname;
 
-    /* Browser behavior adaptation. If there is a colon with no digits after,
+    /* Browser behavior adaptation. If there's a colon with no digits after,
        just cut off the name there which makes us ignore the colon and just
        use the default port. Firefox, Chrome and Safari all do that.
 
-       Do not do it if the URL has no scheme, to make something that looks like
+       Don't do it if the URL has no scheme, to make something that looks like
        a scheme not work!
     */
     Curl_dyn_setlen(host, keep);
@@ -453,13 +547,21 @@ UNITTEST CURLUcode Curl_parse_port(struct Curl_URL *u, struct dynbuf *host,
     if(!*portptr)
       return has_scheme ? CURLUE_OK : CURLUE_BAD_PORT_NUMBER;
 
-    if(Curl_str_number(&portptr, &port, 0xffff) || *portptr)
+    if(!ISDIGIT(*portptr))
       return CURLUE_BAD_PORT_NUMBER;
 
-    u->portnum = (unsigned short) port;
+    port = strtol(portptr, &rest, 10);  /* Port number must be decimal */
+
+    if(port > 0xffff)
+      return CURLUE_BAD_PORT_NUMBER;
+
+    if(rest[0])
+      return CURLUE_BAD_PORT_NUMBER;
+
+    u->portnum = port;
     /* generate a new port number string to get rid of leading zeroes etc */
     free(u->port);
-    u->port = aprintf("%" CURL_FORMAT_CURL_OFF_T, port);
+    u->port = aprintf("%ld", port);
     if(!u->port)
       return CURLUE_OUT_OF_MEMORY;
   }
@@ -488,7 +590,7 @@ static CURLUcode ipv6_parse(struct Curl_URL *u, char *hostname,
       char zoneid[16];
       int i = 0;
       char *h = &hostname[len + 1];
-      /* pass '25' if present and is a URL encoded percent sign */
+      /* pass '25' if present and is a url encoded percent sign */
       if(!strncmp(h, "25", 2) && h[2] && (h[2] != ']'))
         h += 2;
       while(*h && (*h != ']') && (i < 15))
@@ -507,14 +609,19 @@ static CURLUcode ipv6_parse(struct Curl_URL *u, char *hostname,
     /* hostname is fine */
   }
 
-  /* Normalize the IPv6 address */
+  /* Check the IPv6 address. */
   {
     char dest[16]; /* fits a binary IPv6 address */
+    char norm[MAX_IPADR_LEN];
     hostname[hlen] = 0; /* end the address there */
-    if(1 != curlx_inet_pton(AF_INET6, hostname, dest))
+    if(1 != Curl_inet_pton(AF_INET6, hostname, dest))
       return CURLUE_BAD_IPV6;
-    if(curlx_inet_ntop(AF_INET6, dest, hostname, hlen)) {
-      hlen = strlen(hostname); /* might be shorter now */
+
+    /* check if it can be done shorter */
+    if(Curl_inet_ntop(AF_INET6, dest, norm, sizeof(norm)) &&
+       (strlen(norm) < hlen)) {
+      strcpy(hostname, norm);
+      hlen = strlen(norm);
       hostname[hlen + 1] = 0;
     }
     hostname[hlen] = ']'; /* restore ending bracket */
@@ -556,6 +663,7 @@ static CURLUcode hostname_check(struct Curl_URL *u, char *hostname,
  */
 
 #define HOST_ERROR   -1 /* out of memory */
+#define HOST_BAD     -2 /* bad IPv4 address */
 
 #define HOST_NAME    1
 #define HOST_IPV4    2
@@ -566,30 +674,22 @@ static int ipv4_normalize(struct dynbuf *host)
   bool done = FALSE;
   int n = 0;
   const char *c = Curl_dyn_ptr(host);
-  unsigned int parts[4] = {0, 0, 0, 0};
+  unsigned long parts[4] = {0, 0, 0, 0};
   CURLcode result = CURLE_OK;
 
   if(*c == '[')
     return HOST_IPV6;
 
   while(!done) {
-    int rc;
-    curl_off_t l;
-    if(*c == '0') {
-      if(c[1] == 'x') {
-        c += 2; /* skip the prefix */
-        rc = Curl_str_hex(&c, &l, UINT_MAX);
-      }
-      else
-        rc = Curl_str_octal(&c, &l, UINT_MAX);
-    }
-    else
-      rc = Curl_str_number(&c, &l, UINT_MAX);
-
-    if(rc)
+    char *endp = NULL;
+    unsigned long l;
+    if(!ISDIGIT(*c))
+      /* most importantly this doesn't allow a leading plus or minus */
       return HOST_NAME;
+    l = strtoul(c, &endp, 0);
 
-    parts[n] = (unsigned int)l;
+    parts[n] = l;
+    c = endp;
 
     switch(*c) {
     case '.':
@@ -606,6 +706,16 @@ static int ipv4_normalize(struct dynbuf *host)
     default:
       return HOST_NAME;
     }
+
+    /* overflow */
+    if((l == ULONG_MAX) && (errno == ERANGE))
+      return HOST_NAME;
+
+#if SIZEOF_LONG > 4
+    /* a value larger than 32 bits */
+    if(l > UINT_MAX)
+      return HOST_NAME;
+#endif
   }
 
   switch(n) {
@@ -613,30 +723,30 @@ static int ipv4_normalize(struct dynbuf *host)
     Curl_dyn_reset(host);
 
     result = Curl_dyn_addf(host, "%u.%u.%u.%u",
-                           (parts[0] >> 24),
-                           ((parts[0] >> 16) & 0xff),
-                           ((parts[0] >> 8) & 0xff),
-                           (parts[0] & 0xff));
+                           (unsigned int)(parts[0] >> 24),
+                           (unsigned int)((parts[0] >> 16) & 0xff),
+                           (unsigned int)((parts[0] >> 8) & 0xff),
+                           (unsigned int)(parts[0] & 0xff));
     break;
   case 1: /* a.b -- 8.24 bits */
     if((parts[0] > 0xff) || (parts[1] > 0xffffff))
       return HOST_NAME;
     Curl_dyn_reset(host);
     result = Curl_dyn_addf(host, "%u.%u.%u.%u",
-                           (parts[0]),
-                           ((parts[1] >> 16) & 0xff),
-                           ((parts[1] >> 8) & 0xff),
-                           (parts[1] & 0xff));
+                           (unsigned int)(parts[0]),
+                           (unsigned int)((parts[1] >> 16) & 0xff),
+                           (unsigned int)((parts[1] >> 8) & 0xff),
+                           (unsigned int)(parts[1] & 0xff));
     break;
   case 2: /* a.b.c -- 8.8.16 bits */
     if((parts[0] > 0xff) || (parts[1] > 0xff) || (parts[2] > 0xffff))
       return HOST_NAME;
     Curl_dyn_reset(host);
     result = Curl_dyn_addf(host, "%u.%u.%u.%u",
-                           (parts[0]),
-                           (parts[1]),
-                           ((parts[2] >> 8) & 0xff),
-                           (parts[2] & 0xff));
+                           (unsigned int)(parts[0]),
+                           (unsigned int)(parts[1]),
+                           (unsigned int)((parts[2] >> 8) & 0xff),
+                           (unsigned int)(parts[2] & 0xff));
     break;
   case 3: /* a.b.c.d -- 8.8.8.8 bits */
     if((parts[0] > 0xff) || (parts[1] > 0xff) || (parts[2] > 0xff) ||
@@ -644,10 +754,10 @@ static int ipv4_normalize(struct dynbuf *host)
       return HOST_NAME;
     Curl_dyn_reset(host);
     result = Curl_dyn_addf(host, "%u.%u.%u.%u",
-                           (parts[0]),
-                           (parts[1]),
-                           (parts[2]),
-                           (parts[3]));
+                           (unsigned int)(parts[0]),
+                           (unsigned int)(parts[1]),
+                           (unsigned int)(parts[2]),
+                           (unsigned int)(parts[3]));
     break;
   }
   if(result)
@@ -693,7 +803,7 @@ static CURLUcode parse_authority(struct Curl_URL *u,
   CURLcode result;
 
   /*
-   * Parse the login details and strip them out of the hostname.
+   * Parse the login details and strip them out of the host name.
    */
   uc = parse_hostname_login(u, auth, authlen, flags, &offset);
   if(uc)
@@ -726,6 +836,7 @@ static CURLUcode parse_authority(struct Curl_URL *u,
   case HOST_ERROR:
     uc = CURLUE_OUT_OF_MEMORY;
     break;
+  case HOST_BAD:
   default:
     uc = CURLUE_BAD_HOSTNAME; /* Bad IPv4 address even */
     break;
@@ -735,8 +846,8 @@ out:
   return uc;
 }
 
-/* used for HTTP/2 server push */
-CURLUcode Curl_url_set_authority(CURLU *u, const char *authority)
+CURLUcode Curl_url_set_authority(CURLU *u, const char *authority,
+                                 unsigned int flags)
 {
   CURLUcode result;
   struct dynbuf host;
@@ -744,8 +855,8 @@ CURLUcode Curl_url_set_authority(CURLU *u, const char *authority)
   DEBUGASSERT(authority);
   Curl_dyn_init(&host, CURL_MAX_INPUT_LENGTH);
 
-  result = parse_authority(u, authority, strlen(authority),
-                           CURLU_DISALLOW_USER, &host, !!u->scheme);
+  result = parse_authority(u, authority, strlen(authority), flags,
+                           &host, !!u->scheme);
   if(result)
     Curl_dyn_free(&host);
   else {
@@ -760,25 +871,6 @@ CURLUcode Curl_url_set_authority(CURLU *u, const char *authority)
  * https://datatracker.ietf.org/doc/html/rfc3986#section-5.2.4
  */
 
-static bool is_dot(const char **str, size_t *clen)
-{
-  const char *p = *str;
-  if(*p == '.') {
-    (*str)++;
-    (*clen)--;
-    return TRUE;
-  }
-  else if((*clen >= 3) &&
-          (p[0] == '%') && (p[1] == '2') && ((p[2] | 0x20) == 'e')) {
-    *str += 3;
-    *clen -= 3;
-    return TRUE;
-  }
-  return FALSE;
-}
-
-#define ISSLASH(x) ((x) == '/')
-
 /*
  * dedotdotify()
  * @unittest: 1395
@@ -787,7 +879,8 @@ static bool is_dot(const char **str, size_t *clen)
  * passed in and strips them off according to the rules in RFC 3986 section
  * 5.2.4.
  *
- * The function handles a path. It should not contain the query nor fragment.
+ * The function handles a query part ('?' + stuff) appended but it expects
+ * that fragments ('#' + stuff) have already been cut off.
  *
  * RETURNS
  *
@@ -796,109 +889,112 @@ static bool is_dot(const char **str, size_t *clen)
 UNITTEST int dedotdotify(const char *input, size_t clen, char **outp);
 UNITTEST int dedotdotify(const char *input, size_t clen, char **outp)
 {
-  struct dynbuf out;
-  CURLcode result = CURLE_OK;
+  char *outptr;
+  const char *endp = &input[clen];
+  char *out;
 
   *outp = NULL;
   /* the path always starts with a slash, and a slash has not dot */
-  if(clen < 2)
+  if((clen < 2) || !memchr(input, '.', clen))
     return 0;
 
-  Curl_dyn_init(&out, clen + 1);
+  out = malloc(clen + 1);
+  if(!out)
+    return 1; /* out of memory */
 
-  /*  A. If the input buffer begins with a prefix of "../" or "./", then
-      remove that prefix from the input buffer; otherwise, */
-  if(is_dot(&input, &clen)) {
-    const char *p = input;
-    size_t blen = clen;
+  *out = 0; /* null-terminates, for inputs like "./" */
+  outptr = out;
 
-    if(!clen)
-      /* . [end] */
-      goto end;
-    else if(ISSLASH(*p)) {
-      /* one dot followed by a slash */
-      input = p + 1;
-      clen--;
-    }
+  do {
+    bool dotdot = TRUE;
+    if(*input == '.') {
+      /*  A.  If the input buffer begins with a prefix of "../" or "./", then
+          remove that prefix from the input buffer; otherwise, */
 
-    /*  D. if the input buffer consists only of "." or "..", then remove
-        that from the input buffer; otherwise, */
-    else if(is_dot(&p, &blen)) {
-      if(!blen)
-        /* .. [end] */
-        goto end;
-      else if(ISSLASH(*p)) {
-        /* ../ */
-        input = p + 1;
-        clen = blen - 1;
+      if(!strncmp("./", input, 2)) {
+        input += 2;
+        clen -= 2;
       }
-    }
-  }
+      else if(!strncmp("../", input, 3)) {
+        input += 3;
+        clen -= 3;
+      }
+      /*  D.  if the input buffer consists only of "." or "..", then remove
+          that from the input buffer; otherwise, */
 
-  while(clen && !result) { /* until end of path content */
-    if(ISSLASH(*input)) {
-      const char *p = &input[1];
-      size_t blen = clen - 1;
-      /*  B. if the input buffer begins with a prefix of "/./" or "/.", where
+      else if(!strcmp(".", input) || !strcmp("..", input) ||
+              !strncmp(".?", input, 2) || !strncmp("..?", input, 3)) {
+        *out = 0;
+        break;
+      }
+      else
+        dotdot = FALSE;
+    }
+    else if(*input == '/') {
+      /*  B.  if the input buffer begins with a prefix of "/./" or "/.", where
           "."  is a complete path segment, then replace that prefix with "/" in
           the input buffer; otherwise, */
-      if(is_dot(&p, &blen)) {
-        if(!blen) { /* /. */
-          result = Curl_dyn_addn(&out, "/", 1);
-          break;
-        }
-        else if(ISSLASH(*p)) { /* /./ */
-          input = p;
-          clen = blen;
-          continue;
-        }
-
-        /*  C. if the input buffer begins with a prefix of "/../" or "/..",
-            where ".." is a complete path segment, then replace that prefix
-            with "/" in the input buffer and remove the last segment and its
-            preceding "/" (if any) from the output buffer; otherwise, */
-        else if(is_dot(&p, &blen) && (ISSLASH(*p) || !blen)) {
-          /* remove the last segment from the output buffer */
-          size_t len = Curl_dyn_len(&out);
-          if(len) {
-            char *ptr = Curl_dyn_ptr(&out);
-            char *last = memrchr(ptr, '/', len);
-            if(last)
-              /* trim the output at the slash */
-              Curl_dyn_setlen(&out, last - ptr);
-          }
-
-          if(blen) { /* /../ */
-            input = p;
-            clen = blen;
-            continue;
-          }
-          result = Curl_dyn_addn(&out, "/", 1);
-          break;
-        }
+      if(!strncmp("/./", input, 3)) {
+        input += 2;
+        clen -= 2;
       }
+      else if(!strcmp("/.", input) || !strncmp("/.?", input, 3)) {
+        *outptr++ = '/';
+        *outptr = 0;
+        break;
+      }
+
+      /*  C.  if the input buffer begins with a prefix of "/../" or "/..",
+          where ".." is a complete path segment, then replace that prefix with
+          "/" in the input buffer and remove the last segment and its
+          preceding "/" (if any) from the output buffer; otherwise, */
+
+      else if(!strncmp("/../", input, 4)) {
+        input += 3;
+        clen -= 3;
+        /* remove the last segment from the output buffer */
+        while(outptr > out) {
+          outptr--;
+          if(*outptr == '/')
+            break;
+        }
+        *outptr = 0; /* null-terminate where it stops */
+      }
+      else if(!strcmp("/..", input) || !strncmp("/..?", input, 4)) {
+        /* remove the last segment from the output buffer */
+        while(outptr > out) {
+          outptr--;
+          if(*outptr == '/')
+            break;
+        }
+        *outptr++ = '/';
+        *outptr = 0; /* null-terminate where it stops */
+        break;
+      }
+      else
+        dotdot = FALSE;
+    }
+    else
+      dotdot = FALSE;
+
+    if(!dotdot) {
+      /*  E.  move the first path segment in the input buffer to the end of
+          the output buffer, including the initial "/" character (if any) and
+          any subsequent characters up to, but not including, the next "/"
+          character or the end of the input buffer. */
+
+      do {
+        *outptr++ = *input++;
+        clen--;
+      } while(*input && (*input != '/') && (*input != '?'));
+      *outptr = 0;
     }
 
-    /*  E. move the first path segment in the input buffer to the end of
-        the output buffer, including the initial "/" character (if any) and
-        any subsequent characters up to, but not including, the next "/"
-        character or the end of the input buffer. */
+    /* continue until end of path */
+  } while(input < endp);
 
-    result = Curl_dyn_addn(&out, input, 1);
-    input++;
-    clen--;
-  }
-end:
-  if(!result) {
-    if(Curl_dyn_len(&out))
-      *outp = Curl_dyn_ptr(&out);
-    else {
-      *outp = strdup("");
-      if(!*outp)
-        return 1;
-    }
-  }
-  return result ? 1 : 0; /* success */
+  *outp = out;
+  return 0; /* success */
 }
 
 static CURLUcode parseurl(const char *url, CURLU *u, unsigned int flags)
@@ -918,7 +1014,7 @@ static CURLUcode parseurl(const char *url, CURLU *u, unsigned int flags)
 
   Curl_dyn_init(&host, CURL_MAX_INPUT_LENGTH);
 
-  result = Curl_junkscan(url, &urllen, !!(flags & CURLU_ALLOW_SPACE));
+  result = junkscan(url, &urllen, flags);
   if(result)
     goto fail;
 
@@ -936,7 +1032,7 @@ static CURLUcode parseurl(const char *url, CURLU *u, unsigned int flags)
     }
 
     /* path has been allocated large enough to hold this */
-    path = &url[5];
+    path = (char *)&url[5];
     pathlen = urllen - 5;
 
     u->scheme = strdup("file");
@@ -975,19 +1071,19 @@ static CURLUcode parseurl(const char *url, CURLU *u, unsigned int flags)
        * Appendix E, but believe me, it was meant to be there. --MK)
        */
       if(ptr[0] != '/' && !STARTS_WITH_URL_DRIVE_PREFIX(ptr)) {
-        /* the URL includes a hostname, it must match "localhost" or
+        /* the URL includes a host name, it must match "localhost" or
            "127.0.0.1" to be valid */
         if(checkprefix("localhost/", ptr) ||
            checkprefix("127.0.0.1/", ptr)) {
           ptr += 9; /* now points to the slash after the host */
         }
         else {
-#ifdef _WIN32
+#if defined(_WIN32)
           size_t len;
 
-          /* the hostname, NetBIOS computer name, can not contain disallowed
+          /* the host name, NetBIOS computer name, can not contain disallowed
              chars, and the delimiting slash character must be appended to the
-             hostname */
+             host name */
           path = strpbrk(ptr, "/\\:*?\"<>|");
           if(!path || *path != '/') {
             result = CURLUE_BAD_FILE_URL;
@@ -1023,11 +1119,11 @@ static CURLUcode parseurl(const char *url, CURLU *u, unsigned int flags)
       Curl_dyn_reset(&host);
 
 #if !defined(_WIN32) && !defined(MSDOS) && !defined(__CYGWIN__)
-    /* Do not allow Windows drive letters when not in Windows.
+    /* Don't allow Windows drive letters when not in Windows.
      * This catches both "file:/c:" and "file:c:" */
     if(('/' == path[0] && STARTS_WITH_URL_DRIVE_PREFIX(&path[1])) ||
        STARTS_WITH_URL_DRIVE_PREFIX(path)) {
-      /* File drive letters are only accepted in MS-DOS/Windows */
+      /* File drive letters are only accepted in MSDOS/Windows */
       result = CURLUE_BAD_FILE_URL;
       goto fail;
     }
@@ -1067,7 +1163,7 @@ static CURLUcode parseurl(const char *url, CURLU *u, unsigned int flags)
         result = CURLUE_BAD_SLASHES;
         goto fail;
       }
-      hostp = p; /* hostname starts here */
+      hostp = p; /* host name starts here */
     }
     else {
       /* no scheme! */
@@ -1093,7 +1189,7 @@ static CURLUcode parseurl(const char *url, CURLU *u, unsigned int flags)
       }
     }
 
-    /* find the end of the hostname + port number */
+    /* find the end of the host name + port number */
     hostlen = strcspn(hostp, "/?#");
     path = &hostp[hostlen];
 
@@ -1107,7 +1203,7 @@ static CURLUcode parseurl(const char *url, CURLU *u, unsigned int flags)
 
       if((flags & CURLU_GUESS_SCHEME) && !schemep) {
         const char *hostname = Curl_dyn_ptr(&host);
-        /* legacy curl-style guess based on hostname */
+        /* legacy curl-style guess based on host name */
         if(checkprefix("ftp.", hostname))
           schemep = "ftp";
         else if(checkprefix("dict.", hostname))
@@ -1128,7 +1224,6 @@ static CURLUcode parseurl(const char *url, CURLU *u, unsigned int flags)
           result = CURLUE_OUT_OF_MEMORY;
           goto fail;
         }
-        u->guessed_scheme = TRUE;
       }
     }
     else if(flags & CURLU_NO_AUTHORITY) {
@@ -1147,7 +1242,6 @@ static CURLUcode parseurl(const char *url, CURLU *u, unsigned int flags)
   fragment = strchr(path, '#');
   if(fragment) {
     fraglen = pathlen - (fragment - path);
-    u->fragment_present = TRUE;
     if(fraglen > 1) {
       /* skip the leading '#' in the copy but include the terminating null */
       if(flags & CURLU_URLENCODE) {
@@ -1175,7 +1269,6 @@ static CURLUcode parseurl(const char *url, CURLU *u, unsigned int flags)
     size_t qlen = fragment ? (size_t)(fragment - query) :
       pathlen - (query - path);
     pathlen -= qlen;
-    u->query_present = TRUE;
     if(qlen > 1) {
       if(flags & CURLU_URLENCODE) {
         struct dynbuf enc;
@@ -1234,7 +1327,7 @@ static CURLUcode parseurl(const char *url, CURLU *u, unsigned int flags)
     if(!(flags & CURLU_PATH_AS_IS)) {
       /* remove ../ and ./ sequences according to RFC3986 */
       char *dedot;
-      int err = dedotdotify(path, pathlen, &dedot);
+      int err = dedotdotify((char *)path, pathlen, &dedot);
       if(err) {
         result = CURLUE_OUT_OF_MEMORY;
         goto fail;
@@ -1311,8 +1404,6 @@ CURLU *curl_url_dup(const CURLU *in)
     DUP(u, in, fragment);
     DUP(u, in, zoneid);
     u->portnum = in->portnum;
-    u->fragment_present = in->fragment_present;
-    u->query_present = in->query_present;
   }
   return u;
 fail:
@@ -1326,8 +1417,8 @@ CURLUcode curl_url_get(const CURLU *u, CURLUPart what,
   const char *ptr;
   CURLUcode ifmissing = CURLUE_UNKNOWN_PART;
   char portbuf[7];
-  bool urldecode = (flags & CURLU_URLDECODE) ? 1 : 0;
-  bool urlencode = (flags & CURLU_URLENCODE) ? 1 : 0;
+  bool urldecode = (flags & CURLU_URLDECODE)?1:0;
+  bool urlencode = (flags & CURLU_URLENCODE)?1:0;
   bool punycode = FALSE;
   bool depunyfy = FALSE;
   bool plusdecode = FALSE;
@@ -1343,8 +1434,6 @@ CURLUcode curl_url_get(const CURLU *u, CURLUPart what,
     ptr = u->scheme;
     ifmissing = CURLUE_NO_SCHEME;
     urldecode = FALSE; /* never for schemes */
-    if((flags & CURLU_NO_GUESS_SCHEME) && u->guessed_scheme)
-      return CURLUE_NO_SCHEME;
     break;
   case CURLUPART_USER:
     ptr = u->user;
@@ -1361,8 +1450,8 @@ CURLUcode curl_url_get(const CURLU *u, CURLUPart what,
   case CURLUPART_HOST:
     ptr = u->host;
     ifmissing = CURLUE_NO_HOST;
-    punycode = (flags & CURLU_PUNYCODE) ? 1 : 0;
-    depunyfy = (flags & CURLU_PUNY2IDN) ? 1 : 0;
+    punycode = (flags & CURLU_PUNYCODE)?1:0;
+    depunyfy = (flags & CURLU_PUNY2IDN)?1:0;
     break;
   case CURLUPART_ZONEID:
     ptr = u->zoneid;
@@ -1373,7 +1462,7 @@ CURLUcode curl_url_get(const CURLU *u, CURLUPart what,
     ifmissing = CURLUE_NO_PORT;
     urldecode = FALSE; /* never for port */
     if(!ptr && (flags & CURLU_DEFAULT_PORT) && u->scheme) {
-      /* there is no stored port number, but asked to deliver
+      /* there's no stored port number, but asked to deliver
          a default one for the scheme */
       const struct Curl_handler *h = Curl_get_scheme_handler(u->scheme);
       if(h) {
@@ -1399,53 +1488,39 @@ CURLUcode curl_url_get(const CURLU *u, CURLUPart what,
     ptr = u->query;
     ifmissing = CURLUE_NO_QUERY;
     plusdecode = urldecode;
-    if(ptr && !ptr[0] && !(flags & CURLU_GET_EMPTY))
-      /* there was a blank query and the user do not ask for it */
-      ptr = NULL;
     break;
   case CURLUPART_FRAGMENT:
     ptr = u->fragment;
     ifmissing = CURLUE_NO_FRAGMENT;
-    if(!ptr && u->fragment_present && flags & CURLU_GET_EMPTY)
-      /* there was a blank fragment and the user asks for it */
-      ptr = "";
     break;
   case CURLUPART_URL: {
     char *url;
-    const char *scheme;
+    char *scheme;
     char *options = u->options;
     char *port = u->port;
     char *allochost = NULL;
-    bool show_fragment =
-      u->fragment || (u->fragment_present && flags & CURLU_GET_EMPTY);
-    bool show_query =
-      (u->query && u->query[0]) ||
-      (u->query_present && flags & CURLU_GET_EMPTY);
-    punycode = (flags & CURLU_PUNYCODE) ? 1 : 0;
-    depunyfy = (flags & CURLU_PUNY2IDN) ? 1 : 0;
+    punycode = (flags & CURLU_PUNYCODE)?1:0;
+    depunyfy = (flags & CURLU_PUNY2IDN)?1:0;
     if(u->scheme && strcasecompare("file", u->scheme)) {
-      url = aprintf("file://%s%s%s%s%s",
+      url = aprintf("file://%s%s%s",
                     u->path,
-                    show_query ? "?": "",
-                    u->query ? u->query : "",
-                    show_fragment ? "#": "",
-                    u->fragment ? u->fragment : "");
+                    u->fragment? "#": "",
+                    u->fragment? u->fragment : "");
     }
     else if(!u->host)
       return CURLUE_NO_HOST;
     else {
       const struct Curl_handler *h = NULL;
-      char schemebuf[MAX_SCHEME_LEN + 5];
       if(u->scheme)
         scheme = u->scheme;
       else if(flags & CURLU_DEFAULT_SCHEME)
-        scheme = DEFAULT_SCHEME;
+        scheme = (char *) DEFAULT_SCHEME;
       else
         return CURLUE_NO_SCHEME;
 
       h = Curl_get_scheme_handler(scheme);
       if(!port && (flags & CURLU_DEFAULT_PORT)) {
-        /* there is no stored port number, but asked to deliver
+        /* there's no stored port number, but asked to deliver
            a default one for the scheme */
         if(h) {
           msnprintf(portbuf, sizeof(portbuf), "%u", h->defport);
@@ -1506,13 +1581,8 @@ CURLUcode curl_url_get(const CURLU *u, CURLUPart what,
         }
       }
 
-      if(!(flags & CURLU_NO_GUESS_SCHEME) || !u->guessed_scheme)
-        msnprintf(schemebuf, sizeof(schemebuf), "%s://", scheme);
-      else
-        schemebuf[0] = 0;
-
-      url = aprintf("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s",
-                    schemebuf,
+      url = aprintf("%s://%s%s%s%s%s%s%s%s%s%s%s%s%s%s",
+                    scheme,
                     u->user ? u->user : "",
                     u->password ? ":": "",
                     u->password ? u->password : "",
@@ -1523,10 +1593,10 @@ CURLUcode curl_url_get(const CURLU *u, CURLUPart what,
                     port ? ":": "",
                     port ? port : "",
                     u->path ? u->path : "/",
-                    show_query ? "?": "",
-                    u->query ? u->query : "",
-                    show_fragment ? "#": "",
-                    u->fragment ? u->fragment : "");
+                    (u->query && u->query[0]) ? "?": "",
+                    (u->query && u->query[0]) ? u->query : "",
+                    u->fragment? "#": "",
+                    u->fragment? u->fragment : "");
       free(allochost);
     }
     if(!url)
@@ -1617,7 +1687,8 @@ CURLUcode curl_url_set(CURLU *u, CURLUPart what,
                        const char *part, unsigned int flags)
 {
   char **storep = NULL;
-  bool urlencode = (flags & CURLU_URLENCODE) ? 1 : 0;
+  long port = 0;
+  bool urlencode = (flags & CURLU_URLENCODE)? 1 : 0;
   bool plusencode = FALSE;
   bool urlskipslash = FALSE;
   bool leadingslash = FALSE;
@@ -1634,7 +1705,6 @@ CURLUcode curl_url_set(CURLU *u, CURLUPart what,
       break;
     case CURLUPART_SCHEME:
       storep = &u->scheme;
-      u->guessed_scheme = FALSE;
       break;
     case CURLUPART_USER:
       storep = &u->user;
@@ -1660,11 +1730,9 @@ CURLUcode curl_url_set(CURLU *u, CURLUPart what,
       break;
     case CURLUPART_QUERY:
       storep = &u->query;
-      u->query_present = FALSE;
       break;
     case CURLUPART_FRAGMENT:
       storep = &u->fragment;
-      u->fragment_present = FALSE;
       break;
     default:
       return CURLUE_UNKNOWN_PART;
@@ -1707,7 +1775,6 @@ CURLUcode curl_url_set(CURLU *u, CURLUPart what,
     }
     else
       return CURLUE_BAD_SCHEME;
-    u->guessed_scheme = FALSE;
     break;
   }
   case CURLUPART_USER:
@@ -1727,23 +1794,18 @@ CURLUcode curl_url_set(CURLU *u, CURLUPart what,
     storep = &u->zoneid;
     break;
   case CURLUPART_PORT:
-    if(!ISDIGIT(part[0]))
-      /* not a number */
+  {
+    char *endp;
+    urlencode = FALSE; /* never */
+    port = strtol(part, &endp, 10);  /* Port number must be decimal */
+    if((port <= 0) || (port > 0xffff))
       return CURLUE_BAD_PORT_NUMBER;
-    else {
-      char *tmp;
-      curl_off_t port;
-      if(Curl_str_number(&part, &port, 0xffff) || *part)
-        /* weirdly provided number, not good! */
-        return CURLUE_BAD_PORT_NUMBER;
-      tmp = aprintf("%" CURL_FORMAT_CURL_OFF_T, port);
-      if(!tmp)
-        return CURLUE_OUT_OF_MEMORY;
-      free(u->port);
-      u->port = tmp;
-      u->portnum = (unsigned short)port;
-      return CURLUE_OK;
-    }
+    if(*endp)
+      /* weirdly provided number, not good! */
+      return CURLUE_BAD_PORT_NUMBER;
+    storep = &u->port;
+  }
+  break;
   case CURLUPART_PATH:
     urlskipslash = TRUE;
     leadingslash = TRUE; /* enforce */
@@ -1751,14 +1813,12 @@ CURLUcode curl_url_set(CURLU *u, CURLUPart what,
     break;
   case CURLUPART_QUERY:
     plusencode = urlencode;
-    appendquery = (flags & CURLU_APPENDQUERY) ? 1 : 0;
+    appendquery = (flags & CURLU_APPENDQUERY)?1:0;
     equalsencode = appendquery;
     storep = &u->query;
-    u->query_present = TRUE;
     break;
   case CURLUPART_FRAGMENT:
     storep = &u->fragment;
-    u->fragment_present = TRUE;
     break;
   case CURLUPART_URL: {
     /*
@@ -1767,24 +1827,34 @@ CURLUcode curl_url_set(CURLU *u, CURLUPart what,
      * If the existing contents is enough for a URL, allow a relative URL to
      * replace it.
      */
+    CURLcode result;
     CURLUcode uc;
     char *oldurl;
+    char *redired_url;
 
     if(!nalloc)
       /* a blank URL is not a valid URL */
       return CURLUE_MALFORMED_INPUT;
 
-    /* if the new thing is absolute or the old one is not (we could not get an
-     * absolute URL in 'oldurl'), then replace the existing with the new. */
+    /* if the new thing is absolute or the old one is not
+     * (we could not get an absolute url in 'oldurl'),
+     * then replace the existing with the new. */
     if(Curl_is_absolute_url(part, NULL, 0,
-                            flags & (CURLU_GUESS_SCHEME|CURLU_DEFAULT_SCHEME))
+                            flags & (CURLU_GUESS_SCHEME|
+                                     CURLU_DEFAULT_SCHEME))
        || curl_url_get(u, CURLUPART_URL, &oldurl, flags)) {
       return parseurl_and_replace(part, u, flags);
     }
-    DEBUGASSERT(oldurl); /* it is set here */
-    /* apply the relative part to create a new URL */
-    uc = redirect_url(oldurl, part, u, flags);
+
+    /* apply the relative part to create a new URL
+     * and replace the existing one with it. */
+    result = concat_url(oldurl, part, &redired_url);
     free(oldurl);
+    if(result)
+      return cc2cu(result);
+
+    uc = parseurl_and_replace(redired_url, u, flags);
+    free(redired_url);
     return uc;
   }
   default:
@@ -1822,8 +1892,9 @@ CURLUcode curl_url_set(CURLU *u, CURLUPart what,
             return cc2cu(result);
         }
         else {
-          unsigned char out[3]={'%'};
-          Curl_hexbyte(&out[1], *i, TRUE);
+          char out[3]={'%'};
+          out[1] = hexdigits[*i>>4];
+          out[2] = hexdigits[*i & 0xf];
           result = Curl_dyn_addn(&enc, out, 3);
           if(result)
             return cc2cu(result);
@@ -1882,26 +1953,10 @@ nomem:
     else if(what == CURLUPART_HOST) {
       size_t n = Curl_dyn_len(&enc);
       if(!n && (flags & CURLU_NO_AUTHORITY)) {
-        /* Skip hostname check, it is allowed to be empty. */
+        /* Skip hostname check, it's allowed to be empty. */
       }
       else {
-        bool bad = FALSE;
-        if(!n)
-          bad = TRUE; /* empty hostname is not okay */
-        else if(!urlencode) {
-          /* if the host name part was not URL encoded here, it was set ready
-             URL encoded so we need to decode it to check */
-          size_t dlen;
-          char *decoded = NULL;
-          CURLcode result =
-            Curl_urldecode(newp, n, &decoded, &dlen, REJECT_CTRL);
-          if(result || hostname_check(u, decoded, dlen))
-            bad = TRUE;
-          free(decoded);
-        }
-        else if(hostname_check(u, (char *)CURL_UNCONST(newp), n))
-          bad = TRUE;
-        if(bad) {
+        if(!n || hostname_check(u, (char *)newp, n)) {
           Curl_dyn_free(&enc);
           return CURLUE_BAD_HOSTNAME;
         }
@@ -1909,7 +1964,11 @@ nomem:
     }
 
     free(*storep);
-    *storep = (char *)CURL_UNCONST(newp);
+    *storep = (char *)newp;
   }
+  /* set after the string, to make it not assigned if the allocation above
+     fails */
+  if(port)
+    u->portnum = port;
   return CURLUE_OK;
 }

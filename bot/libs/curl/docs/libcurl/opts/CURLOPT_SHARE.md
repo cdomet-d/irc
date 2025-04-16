@@ -9,7 +9,6 @@ See-also:
   - CURLSHOPT_SHARE (3)
 Protocol:
   - All
-Added-in: 7.10
 ---
 
 # NAME
@@ -48,8 +47,6 @@ Set this option to NULL again to stop using that share object.
 
 NULL
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -80,11 +77,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Always
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK

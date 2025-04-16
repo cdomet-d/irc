@@ -11,7 +11,6 @@ See-also:
   - libcurl-errors (3)
 Protocol:
   - All
-Added-in: 7.73.0
 ---
 
 # NAME
@@ -72,8 +71,6 @@ transfer returned a **CURLE_PROXY** error. That error code matches the
 
 The error code is zero (**CURLPX_OK**) if no response code was available.
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -97,11 +94,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.73.0
 
 # RETURN VALUE
 
-curl_easy_getinfo(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

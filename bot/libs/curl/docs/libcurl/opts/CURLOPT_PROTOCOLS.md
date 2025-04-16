@@ -10,7 +10,6 @@ See-also:
   - CURLOPT_URL (3)
 Protocol:
   - All
-Added-in: 7.19.4
 ---
 
 # NAME
@@ -29,9 +28,9 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_PROTOCOLS, long bitmask);
 
 This option is deprecated. We strongly recommend using
 CURLOPT_PROTOCOLS_STR(3) instead because this option cannot control all
-available protocols.
+available protocols!
 
-Pass a long that holds a bitmask of protocol bits. If used, this bitmask
+Pass a long that holds a bitmask of CURLPROTO_* defines. If used, this bitmask
 limits what protocols libcurl may use in the transfer. This allows you to have
 a libcurl built to support a wide range of protocols but still limit specific
 transfers to only be allowed to use a subset of them. By default libcurl
@@ -74,8 +73,6 @@ CURLPROTO_TFTP
 
 All protocols built-in.
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -96,15 +93,10 @@ int main(int argc, char **argv)
 }
 ~~~
 
-# DEPRECATED
+# AVAILABILITY
 
-Deprecated since 7.85.0.
-
-# %AVAILABILITY%
+Added in 7.19.4. Deprecated since 7.85.0.
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

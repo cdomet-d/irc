@@ -14,7 +14,6 @@ TLS-backend:
   - mbedTLS
   - Schannel
   - wolfSSL
-Added-in: 7.17.0
 ---
 
 # NAME
@@ -33,20 +32,15 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_KEYPASSWD, char *pwd);
 
 Pass a pointer to a null-terminated string as parameter. It is used as the
 password required to use the CURLOPT_SSLKEY(3) or
-CURLOPT_SSH_PRIVATE_KEYFILE(3) private key. You never need a passphrase to
+CURLOPT_SSH_PRIVATE_KEYFILE(3) private key. You never need a pass phrase to
 load a certificate but you need one to load your private key.
 
 The application does not have to keep the string around after setting this
 option.
 
-Using this option multiple times makes the last set string override the
-previous ones. Set it to NULL to disable its use again.
-
 # DEFAULT
 
 NULL
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -66,16 +60,12 @@ int main(void)
 }
 ~~~
 
-# HISTORY
+# AVAILABILITY
 
 This option was known as CURLOPT_SSLKEYPASSWD up to 7.16.4 and
 CURLOPT_SSLCERTPASSWD up to 7.9.2.
 
-# %AVAILABILITY%
-
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if TLS enabled, CURLE_UNKNOWN_OPTION if not, or
+CURLE_OUT_OF_MEMORY if there was insufficient heap space.

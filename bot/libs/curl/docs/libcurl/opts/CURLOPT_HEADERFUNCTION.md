@@ -14,7 +14,6 @@ Protocol:
   - POP3
   - IMAP
   - SMTP
-Added-in: 7.7.2
 ---
 
 # NAME
@@ -43,12 +42,12 @@ shown above.
 This callback function gets invoked by libcurl as soon as it has received
 header data. The header callback is called once for each header and only
 complete header lines are passed on to the callback. Parsing headers is easy
-to do using this callback. *buffer* points to the delivered data, and the size
-of that data is *nitems*; *size* is always 1. The provided header line is not
-null-terminated. Do not modify the passed in buffer.
+to do using this callback. *buffer* points to the delivered data, and the
+size of that data is *nitems*; *size* is always 1. The provide header
+line is not null-terminated!
 
-The pointer named *userdata* is the one you set with the CURLOPT_HEADERDATA(3)
-option.
+The pointer named *userdata* is the one you set with the
+CURLOPT_HEADERDATA(3) option.
 
 Your callback should return the number of bytes actually taken care of. If
 that amount differs from the amount passed to your callback function, it
@@ -101,8 +100,6 @@ although strictly they are just continuations of the previous lines.
 
 Nothing.
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -127,11 +124,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Always
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK

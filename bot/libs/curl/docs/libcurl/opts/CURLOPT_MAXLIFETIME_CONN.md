@@ -11,7 +11,6 @@ See-also:
   - CURLOPT_TIMEOUT (3)
 Protocol:
   - All
-Added-in: 7.80.0
 ---
 
 # NAME
@@ -44,9 +43,7 @@ If set to 0, this behavior is disabled: all connections are eligible for reuse.
 
 # DEFAULT
 
-0 seconds (i.e., disabled)
-
-# %PROTOCOLS%
+Default *maxlifetime* is 0 seconds (i.e., disabled).
 
 # EXAMPLE
 
@@ -65,11 +62,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.80.0
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK.

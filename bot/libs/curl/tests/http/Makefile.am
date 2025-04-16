@@ -35,11 +35,10 @@ testenv/httpd.py                      \
 testenv/mod_curltest/mod_curltest.c   \
 testenv/nghttpx.py                    \
 testenv/ports.py                      \
-testenv/vsftpd.py                     \
 testenv/ws_echo_server.py
 
 EXTRA_DIST =           \
-CMakeLists.txt         \
+config.ini.in          \
 conftest.py            \
 requirements.txt       \
 scorecard.py           \
@@ -58,14 +57,7 @@ test_12_reuse.py       \
 test_13_proxy_auth.py  \
 test_14_auth.py        \
 test_15_tracing.py     \
-test_16_info.py        \
-test_17_ssl_use.py     \
-test_18_methods.py     \
-test_19_shutdown.py    \
 test_20_websockets.py  \
-test_30_vsftpd.py      \
-test_31_vsftpds.py     \
-test_32_ftps_vsftpd.py \
 $(TESTENV)
 
 clean-local:

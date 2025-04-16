@@ -9,8 +9,7 @@ Protocol:
 See-also:
   - CURLOPT_HTTPPOST (3)
   - CURLOPT_POSTFIELDS (3)
-  - CURLOPT_UPLOAD (3)
-Added-in: 7.1
+  - CURLOPT_PUT (3)
 ---
 
 # NAME
@@ -72,8 +71,6 @@ you should set a new request type explicitly as described above.
 
 0, disabled
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -94,11 +91,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Along with HTTP
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if HTTP is supported, and CURLE_UNKNOWN_OPTION if not.

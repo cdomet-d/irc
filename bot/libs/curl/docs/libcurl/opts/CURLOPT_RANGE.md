@@ -15,7 +15,6 @@ Protocol:
   - FILE
   - RTSP
   - SFTP
-Added-in: 7.1
 ---
 
 # NAME
@@ -39,13 +38,9 @@ left out and X and Y are byte indexes.
 HTTP transfers also support several intervals, separated with commas as in
 *"X-Y,N-M"*. Using this kind of multiple intervals causes the HTTP server
 to send the response document in pieces (using standard MIME separation
-techniques) as a multiple part response which libcurl returns as-is. It
-contains meta information in addition to the requested bytes. Parsing or
-otherwise transforming this response is the responsibility of the caller.
-
-Unfortunately, the HTTP standard (RFC 7233 section 3.1) allows servers to
-ignore range requests so even when you set CURLOPT_RANGE(3) for a request, you
-may end up getting the full response sent back.
+techniques). Unfortunately, the HTTP standard (RFC 7233 section 3.1) allows
+servers to ignore range requests so even when you set CURLOPT_RANGE(3)
+for a request, you may end up getting the full response sent back.
 
 For RTSP, the formatting of a range should follow RFC 2326 Section 12.29. For
 RTSP, byte ranges are **not** permitted. Instead, ranges should be given in
@@ -54,8 +49,7 @@ RTSP, byte ranges are **not** permitted. Instead, ranges should be given in
 For HTTP PUT uploads this option should not be used, since it may conflict with
 other options.
 
-Using this option multiple times makes the last set string override the
-previous ones. Set it to NULL to disable its use again.
+Pass a NULL to this option to disable the use of ranges.
 
 The application does not have to keep the string around after setting this
 option.
@@ -63,8 +57,6 @@ option.
 # DEFAULT
 
 NULL
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -84,15 +76,11 @@ int main(void)
 }
 ~~~
 
-# HISTORY
+# AVAILABILITY
 
 FILE since 7.18.0, RTSP since 7.20.0
 
-# %AVAILABILITY%
-
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK on success or
+CURLE_OUT_OF_MEMORY if there was insufficient heap space.

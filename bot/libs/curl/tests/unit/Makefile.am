@@ -36,10 +36,9 @@ AM_CPPFLAGS = -I$(top_srcdir)/include        \
               -I$(top_builddir)/lib          \
               -I$(top_srcdir)/lib            \
               -I$(top_srcdir)/src            \
-              -I$(top_srcdir)/tests/libtest  \
-              -I$(top_srcdir)/tests/unit
+              -I$(top_srcdir)/tests/libtest
 
-EXTRA_DIST = CMakeLists.txt README.md
+EXTRA_DIST = Makefile.inc CMakeLists.txt README.md
 
 CFLAGS += @CURL_CFLAG_EXTRAS@
 
@@ -48,45 +47,23 @@ LIBS = $(BLANK_AT_MAKETIME)
 
 LDADD = $(top_builddir)/src/libcurltool.la   \
         $(top_builddir)/lib/libcurlu.la      \
-        @LIBCURL_PC_LDFLAGS_PRIVATE@ @LIBCURL_PC_LIBS_PRIVATE@
+        @LDFLAGS@ @LIBCURL_LIBS@
 
 AM_CPPFLAGS += -DCURL_STATICLIB -DUNITTESTS
-if DEBUGBUILD
-AM_CPPFLAGS += -DDEBUGBUILD
-endif
-if CURLDEBUG
-AM_CPPFLAGS += -DCURLDEBUG
-endif
-
-BUNDLE=units
-
-if BUILD_UNITTESTS
-if USE_TEST_BUNDLES
-unit_bundle.c: $(top_srcdir)/tests/mk-bundle.pl Makefile.inc
-	@PERL@ $(top_srcdir)/tests/mk-bundle.pl $(srcdir) > unit_bundle.c
-
-noinst_PROGRAMS = $(BUNDLE)
-nodist_units_SOURCES = unit_bundle.c
-CLEANFILES = unit_bundle.c
-else
-# Makefile.inc provides neat definitions
-include Makefile.inc
-noinst_PROGRAMS = $(UNITPROGS)
-endif
-else
-noinst_PROGRAMS =
-endif
 
 CHECKSRC = $(CS_$(V))
 CS_0 = @echo "  RUN     " $@;
 CS_1 =
 CS_ = $(CS_0)
 
-# ignore generated C files since they play by slightly different rules!
 checksrc:
-	$(CHECKSRC)(@PERL@ $(top_srcdir)/scripts/checksrc.pl -D$(srcdir) \
-	  -W$(srcdir)/unit_bundle.c \
-	  $(srcdir)/*.[ch])
+	$(CHECKSRC)@PERL@ $(top_srcdir)/scripts/checksrc.pl $(srcdir)/*.[ch]
 
-clean-local:
-	rm -f $(BUNDLE)
+# Makefile.inc provides neat definitions
+include Makefile.inc
+
+if BUILD_UNITTESTS
+noinst_PROGRAMS = $(UNITPROGS)
+else
+noinst_PROGRAMS =
+endif

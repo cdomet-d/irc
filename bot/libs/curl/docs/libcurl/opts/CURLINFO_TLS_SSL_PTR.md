@@ -18,7 +18,6 @@ TLS-backend:
   - Schannel
   - Secure Transport
   - wolfSSL
-Added-in: 7.48.0
 ---
 
 # NAME
@@ -58,11 +57,12 @@ struct curl_tlssessioninfo {
 };
 ~~~
 
-The *backend* struct member is one of these defines: CURLSSLBACKEND_NONE (when
-built without TLS support), CURLSSLBACKEND_WOLFSSL,
-CURLSSLBACKEND_SECURETRANSPORT, CURLSSLBACKEND_GNUTLS, CURLSSLBACKEND_MBEDTLS,
-CURLSSLBACKEND_NSS, CURLSSLBACKEND_OPENSSL or CURLSSLBACKEND_SCHANNEL. (Note
-that the OpenSSL forks are all reported as just OpenSSL here.)
+The *backend* struct member is one of the defines in the CURLSSLBACKEND_*
+series: CURLSSLBACKEND_NONE (when built without TLS support),
+CURLSSLBACKEND_WOLFSSL, CURLSSLBACKEND_SECURETRANSPORT, CURLSSLBACKEND_GNUTLS,
+CURLSSLBACKEND_MBEDTLS, CURLSSLBACKEND_NSS, CURLSSLBACKEND_OPENSSL,
+CURLSSLBACKEND_SCHANNEL or CURLSSLBACKEND_MESALINK. (Note that the OpenSSL
+forks are all reported as just OpenSSL here.)
 
 The *internals* struct member points to a TLS library specific pointer for
 the active ("in use") SSL connection, with the following underlying types:
@@ -94,8 +94,6 @@ as well:
 ## wolfSSL
 
 **SSL ***
-
-##
 
 If the *internals* pointer is NULL then either the SSL backend is not
 supported, an SSL session has not yet been established or the connection is no
@@ -133,8 +131,6 @@ How are you using this option? Are you affected by any of these limitations?
 Please let us know by making a comment at
 https://github.com/curl/curl/issues/685
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -168,16 +164,13 @@ int main(int argc, char **argv)
 }
 ~~~
 
-# HISTORY
+# AVAILABILITY
+
+Added in 7.48.0.
 
 This option supersedes CURLINFO_TLS_SESSION(3) which was added in 7.34.0.
 This option is exactly the same as that option except in the case of OpenSSL.
 
-# %AVAILABILITY%
-
 # RETURN VALUE
 
-curl_easy_getinfo(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

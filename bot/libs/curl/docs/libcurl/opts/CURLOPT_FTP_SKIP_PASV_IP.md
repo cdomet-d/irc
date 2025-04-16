@@ -9,7 +9,6 @@ Protocol:
 See-also:
   - CURLOPT_FTPPORT (3)
   - CURLOPT_FTP_USE_EPRT (3)
-Added-in: 7.15.0
 ---
 
 # NAME
@@ -43,8 +42,6 @@ This option has no effect if PORT, EPRT or EPSV is used instead of PASV.
 
 1 since 7.74.0, was 0 before then.
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -64,11 +61,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.14.2
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

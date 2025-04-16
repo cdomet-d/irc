@@ -24,28 +24,23 @@
  *
  ***************************************************************************/
 
-#include "../curl_setup.h"
+#include "curl_setup.h"
 
 #if defined(HAVE_GSSAPI) && defined(USE_SPNEGO)
 
 #include <curl/curl.h>
 
-#include "vauth.h"
-#include "../urldata.h"
-#include "../curl_base64.h"
-#include "../curl_gssapi.h"
-#include "../warnless.h"
-#include "../curl_multibyte.h"
-#include "../sendf.h"
+#include "vauth/vauth.h"
+#include "urldata.h"
+#include "curl_base64.h"
+#include "curl_gssapi.h"
+#include "warnless.h"
+#include "curl_multibyte.h"
+#include "sendf.h"
 
 /* The last #include files should be: */
-#include "../curl_memory.h"
-#include "../memdebug.h"
-
-#if defined(__GNUC__) && defined(__APPLE__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
+#include "curl_memory.h"
+#include "memdebug.h"
 
 /*
  * Curl_auth_is_spnego_supported()
@@ -70,10 +65,10 @@ bool Curl_auth_is_spnego_supported(void)
  * Parameters:
  *
  * data        [in]     - The session handle.
- * userp       [in]     - The username in the format User or Domain\User.
+ * userp       [in]     - The user name in the format User or Domain\User.
  * passwdp     [in]     - The user's password.
  * service     [in]     - The service type such as http, smtp, pop or imap.
- * host        [in]     - The hostname.
+ * host        [in]     - The host name.
  * chlg64      [in]     - The optional base64 encoded challenge message.
  * nego        [in/out] - The Negotiate data struct being used and modified.
  *
@@ -96,16 +91,14 @@ CURLcode Curl_auth_decode_spnego_message(struct Curl_easy *data,
   gss_buffer_desc spn_token = GSS_C_EMPTY_BUFFER;
   gss_buffer_desc input_token = GSS_C_EMPTY_BUFFER;
   gss_buffer_desc output_token = GSS_C_EMPTY_BUFFER;
-  gss_channel_bindings_t chan_bindings = GSS_C_NO_CHANNEL_BINDINGS;
-  struct gss_channel_bindings_struct chan;
 
   (void) user;
   (void) password;
 
   if(nego->context && nego->status == GSS_S_COMPLETE) {
     /* We finished successfully our part of authentication, but server
-     * rejected it (since we are again here). Exit with an error since we
-     * cannot invent anything better */
+     * rejected it (since we're again here). Exit with an error since we
+     * can't invent anything better */
     Curl_auth_cleanup_spnego(nego);
     return CURLE_LOGIN_DENIED;
   }
@@ -155,21 +148,13 @@ CURLcode Curl_auth_decode_spnego_message(struct Curl_easy *data,
     input_token.length = chlglen;
   }
 
-  /* Set channel binding data if available */
-  if(Curl_dyn_len(&nego->channel_binding_data)) {
-    memset(&chan, 0, sizeof(struct gss_channel_bindings_struct));
-    chan.application_data.length = Curl_dyn_len(&nego->channel_binding_data);
-    chan.application_data.value = Curl_dyn_ptr(&nego->channel_binding_data);
-    chan_bindings = &chan;
-  }
-
   /* Generate our challenge-response message */
   major_status = Curl_gss_init_sec_context(data,
                                            &minor_status,
                                            &nego->context,
                                            nego->spn,
                                            &Curl_spnego_mech_oid,
-                                           chan_bindings,
+                                           GSS_C_NO_CHANNEL_BINDINGS,
                                            &input_token,
                                            &output_token,
                                            TRUE,
@@ -292,9 +277,5 @@ void Curl_auth_cleanup_spnego(struct negotiatedata *nego)
   nego->havenegdata = FALSE;
   nego->havemultiplerequests = FALSE;
 }
-
-#if defined(__GNUC__) && defined(__APPLE__)
-#pragma GCC diagnostic pop
-#endif
 
 #endif /* HAVE_GSSAPI && USE_SPNEGO */

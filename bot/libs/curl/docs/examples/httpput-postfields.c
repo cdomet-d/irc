@@ -27,6 +27,7 @@
  */
 #include <stdio.h>
 #include <fcntl.h>
+#include <sys/stat.h>
 #include <curl/curl.h>
 
 static const char olivertwist[]=
@@ -57,7 +58,7 @@ int main(int argc, char **argv)
 
   url = argv[1];
 
-  /* In Windows, this inits the Winsock stuff */
+  /* In windows, this inits the winsock stuff */
   curl_global_init(CURL_GLOBAL_ALL);
 
   /* get a curl handle */

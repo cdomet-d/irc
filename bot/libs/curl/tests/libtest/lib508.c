@@ -25,7 +25,7 @@
 
 #include "memdebug.h"
 
-static char testdata[]="this is what we post to the silly web server\n";
+static char data[]="this is what we post to the silly web server\n";
 
 struct WriteThis {
   char *readptr;
@@ -49,15 +49,15 @@ static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userp)
   return 0;                         /* no more data left to deliver */
 }
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
   CURL *curl;
   CURLcode res = CURLE_OK;
 
   struct WriteThis pooh;
 
-  pooh.readptr = testdata;
-  pooh.sizeleft = strlen(testdata);
+  pooh.readptr = data;
+  pooh.sizeleft = strlen(data);
 
   if(curl_global_init(CURL_GLOBAL_ALL) != CURLE_OK) {
     fprintf(stderr, "curl_global_init() failed\n");

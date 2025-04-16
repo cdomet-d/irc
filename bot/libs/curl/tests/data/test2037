@@ -27,17 +27,20 @@ MooMoo
 SSL
 SSLpinning
 !Schannel
-local-http
 </features>
 <server>
-https test-localhost.pem
+https Server-localhost-sv.pem
 </server>
 <name>
 simple HTTPS GET with PEM public key pinning
 </name>
 <command>
--4 --cacert %CERTDIR/certs/test-ca.crt --pinnedpubkey %CERTDIR/certs/test-localhost.pub.pem https://localhost:%HTTPSPORT/%TESTNUMBER
+--cacert %SRCDIR/certs/EdelCurlRoot-ca.crt --pinnedpubkey %SRCDIR/certs/Server-localhost-sv.pub.pem https://localhost:%HTTPSPORT/%TESTNUMBER
 </command>
+# Ensure that we're running on localhost because we're checking the host name
+<precheck>
+perl -e "print 'Test requires default test server host' if ( '%HOSTIP' ne '127.0.0.1' );"
+</precheck>
 </client>
 
 #

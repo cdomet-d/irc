@@ -10,7 +10,6 @@ See-also:
   - curl_mime_init (3)
 Protocol:
   - HTTP
-Added-in: 7.1
 ---
 
 # NAME
@@ -105,7 +104,7 @@ you must make sure strlen() on the data pointer returns zero.
 
 ## CURLFORM_CONTENTSLENGTH
 
-(This option is deprecated. Use *CURLFORM_CONTENTLEN* instead.)
+(This option is deprecated. Use *CURLFORM_CONTENTLEN* instead!)
 
 followed by a long giving the length of the contents. Note that for
 *CURLFORM_STREAM* contents, this option is mandatory.
@@ -202,8 +201,6 @@ must not free the list until after you have called curl_easy_cleanup(3)
 for the curl handle.
 
 See example below.
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -302,7 +299,7 @@ int main(void)
 }
 ~~~
 
-# DEPRECATED
+# AVAILABILITY
 
 Deprecated in 7.56.0. Before this release, field names were allowed to contain
 zero-valued bytes. The pseudo-filename "-" to read stdin is discouraged
@@ -311,9 +308,7 @@ effective data size can then not be automatically determined, resulting in a
 chunked encoding transfer. Backslashes and double quotes in field and
 filenames are now escaped before transmission.
 
-# %AVAILABILITY%
-
 # RETURN VALUE
 
 0 means everything was OK, non-zero means an error occurred corresponding to a
-`CURL_FORMADD_*` constant defined in *\<curl/curl.h\>*.
+CURL_FORMADD_* constant defined in *\<curl/curl.h\>*.

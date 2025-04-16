@@ -11,7 +11,6 @@ See-also:
   - curl_easy_setopt (3)
 Protocol:
   - All
-Added-in: 8.7.0
 ---
 
 # NAME
@@ -31,8 +30,6 @@ CURLcode curl_easy_getinfo(CURL *handle, CURLINFO_USED_PROXY,
 
 Pass a pointer to a long. It gets set to zero set if no proxy was used in the
 previous transfer or a non-zero value if a proxy was used.
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -61,11 +58,10 @@ int main(int argc, char *argv[])
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 8.7.0
 
 # RETURN VALUE
 
-curl_easy_getinfo(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

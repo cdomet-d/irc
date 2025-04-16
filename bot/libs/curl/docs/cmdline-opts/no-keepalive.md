@@ -8,14 +8,13 @@ Added: 7.18.0
 Multi: boolean
 See-also:
   - keepalive-time
-  - keepalive-cnt
 Example:
   - --no-keepalive $URL
 ---
 
 # `--no-keepalive`
 
-Disable the use of keepalive messages on the TCP connection. curl otherwise
+Disables the use of keepalive messages on the TCP connection. curl otherwise
 enables them by default.
 
 Note that this is the negated option name documented. You can thus use

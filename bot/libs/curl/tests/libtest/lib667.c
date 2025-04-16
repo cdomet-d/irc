@@ -25,7 +25,7 @@
 
 #include "memdebug.h"
 
-static char testdata[]=
+static char data[]=
   "dummy";
 
 struct WriteThis {
@@ -36,7 +36,7 @@ struct WriteThis {
 static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userp)
 {
   struct WriteThis *pooh = (struct WriteThis *)userp;
-  int eof;
+  int eof = !*pooh->readptr;
 
   if(size*nmemb < 1)
     return 0;
@@ -54,12 +54,13 @@ static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userp)
   return 0;                         /* no more data left to deliver */
 }
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
   CURL *easy = NULL;
   curl_mime *mime = NULL;
   curl_mimepart *part;
-  CURLcode res = TEST_ERR_FAILURE;
+  CURLcode result;
+  int res = TEST_ERR_FAILURE;
   struct WriteThis pooh;
 
   /*
@@ -84,8 +85,8 @@ CURLcode test(char *URL)
   test_setopt(easy, CURLOPT_HEADER, 1L);
 
   /* Prepare the callback structure. */
-  pooh.readptr = testdata;
-  pooh.sizeleft = (curl_off_t) strlen(testdata);
+  pooh.readptr = data;
+  pooh.sizeleft = (curl_off_t) strlen(data);
 
   /* Build the mime tree. */
   mime = curl_mime_init(easy);
@@ -99,9 +100,10 @@ CURLcode test(char *URL)
   test_setopt(easy, CURLOPT_MIMEPOST, mime);
 
   /* Send data. */
-  res = curl_easy_perform(easy);
-  if(res != CURLE_OK) {
+  result = curl_easy_perform(easy);
+  if(result) {
     fprintf(stderr, "curl_easy_perform() failed\n");
+    res = (int) result;
   }
 
 test_cleanup:

@@ -42,22 +42,22 @@
    things build. */
 
 struct tftphdr {
-  unsigned short th_opcode; /* packet type */
-  unsigned short th_block;  /* all sorts of things */
-  char th_data[1];          /* data or error string */
+  short th_opcode;         /* packet type */
+  unsigned short th_block; /* all sorts of things */
+  char th_data[1];         /* data or error string */
 } PACKED_STRUCT;
 
 #define th_stuff th_block
 #define th_code  th_block
 #define th_msg   th_data
 
-#define TFTP_EUNDEF    0
-#define TFTP_ENOTFOUND 1
-#define TFTP_EACCESS   2
-#define TFTP_ENOSPACE  3
-#define TFTP_EBADOP    4
-#define TFTP_EBADID    5
-#define TFTP_EEXISTS   6
-#define TFTP_ENOUSER   7
+#define EUNDEF    0
+#define ENOTFOUND 1
+#define EACCESS   2
+#define ENOSPACE  3
+#define EBADOP    4
+#define EBADID    5
+#define EEXISTS   6
+#define ENOUSER   7
 
 #endif /* HEADER_CURL_SERVER_TFTP_H */

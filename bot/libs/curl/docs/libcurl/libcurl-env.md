@@ -8,7 +8,6 @@ See-also:
   - libcurl-env-dbg (3)
 Protocol:
   - All
-Added-in: n/a
 ---
 
 # NAME
@@ -51,8 +50,8 @@ backend at first use. If no selection is done by the program using libcurl,
 this variable's selection is used. Setting a name that is not a built-in
 alternative makes libcurl stay with the default.
 
-SSL backend names (case-insensitive): BearSSL, GnuTLS, mbedTLS, OpenSSL,
-Rustls, Schannel, Secure-Transport, wolfSSL
+SSL backend names (case-insensitive): BearSSL, GnuTLS, mbedTLS,
+nss, OpenSSL, rustls, Schannel, Secure-Transport, wolfSSL
 
 ## `HOME`
 

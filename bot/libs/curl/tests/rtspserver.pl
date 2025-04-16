@@ -34,7 +34,10 @@ BEGIN {
 use serverhelp qw(
     server_pidfilename
     server_logfilename
-    server_exe
+    );
+
+use pathhelp qw(
+    exe_ext
     );
 
 my $verbose = 0;     # set to 1 for debugging
@@ -130,4 +133,4 @@ $flags .= "--pidfile \"$pidfile\" ".
 $flags .= "--ipv$ipvnum --port $port --srcdir \"$srcdir\"";
 
 $| = 1;
-exec("exec ".server_exe('rtspd')." $flags");
+exec("exec server/rtspd".exe_ext('SRV')." $flags");

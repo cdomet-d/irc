@@ -3,7 +3,7 @@
 <keywords>
 HTTP
 HTTP PUT
-Expect: 100-continue
+Expect
 </keywords>
 </info>
 # Server-side

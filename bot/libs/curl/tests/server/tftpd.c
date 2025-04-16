@@ -55,9 +55,7 @@
 #ifdef HAVE_SYS_IOCTL_H
 #include <sys/ioctl.h>
 #endif
-#ifndef UNDER_CE
 #include <signal.h>
-#endif
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
 #endif
@@ -83,6 +81,9 @@
 
 #include <ctype.h>
 
+#define ENABLE_CURLX_PRINTF
+/* make the curlx header define all printf() functions to use the curlx_*
+   versions instead */
 #include "curlx.h" /* from the private lib dir */
 #include "getpart.h"
 #include "util.h"
@@ -150,22 +151,28 @@ struct bf {
 #undef MIN
 #define MIN(x,y) ((x)<(y)?(x):(y))
 
+#ifndef DEFAULT_LOGFILE
+#define DEFAULT_LOGFILE "log/tftpd.log"
+#endif
+
 #define REQUEST_DUMP  "server.input"
+
+#define DEFAULT_PORT 8999 /* UDP */
 
 /*****************************************************************************
 *                              GLOBAL VARIABLES                              *
 *****************************************************************************/
 
 static struct errmsg errmsgs[] = {
-  { TFTP_EUNDEF,       "Undefined error code" },
-  { TFTP_ENOTFOUND,    "File not found" },
-  { TFTP_EACCESS,      "Access violation" },
-  { TFTP_ENOSPACE,     "Disk full or allocation exceeded" },
-  { TFTP_EBADOP,       "Illegal TFTP operation" },
-  { TFTP_EBADID,       "Unknown transfer ID" },
-  { TFTP_EEXISTS,      "File already exists" },
-  { TFTP_ENOUSER,      "No such user" },
-  { -1,                0 }
+  { EUNDEF,       "Undefined error code" },
+  { ENOTFOUND,    "File not found" },
+  { EACCESS,      "Access violation" },
+  { ENOSPACE,     "Disk full or allocation exceeded" },
+  { EBADOP,       "Illegal TFTP operation" },
+  { EBADID,       "Unknown transfer ID" },
+  { EEXISTS,      "File already exists" },
+  { ENOUSER,      "No such user" },
+  { -1,           0 }
 };
 
 static const struct formats formata[] = {
@@ -183,7 +190,7 @@ static int current;     /* index of buffer in use */
 static int newline = 0;    /* fillbuf: in middle of newline expansion */
 static int prevchar = -1;  /* putbuf: previous char (cr check) */
 
-static tftphdr_storage_t trsbuf;
+static tftphdr_storage_t buf;
 static tftphdr_storage_t ackbuf;
 
 static srvr_sockaddr_union_t from;
@@ -194,8 +201,19 @@ static curl_socket_t peer = CURL_SOCKET_BAD;
 static unsigned int timeout;
 static unsigned int maxtimeout = 5 * TIMEOUT;
 
-static int tftpd_wrotepidfile = 0;
-static int tftpd_wroteportfile = 0;
+#ifdef ENABLE_IPV6
+static bool use_ipv6 = FALSE;
+#endif
+static const char *ipv_inuse = "IPv4";
+
+const char *serverlogfile = DEFAULT_LOGFILE;
+static const char *logdir = "log";
+static char loglockfile[256];
+static const char *pidname = ".tftpd.pid";
+static const char *portname = NULL; /* none by default */
+static int serverlogslocked = 0;
+static int wrotepidfile = 0;
+static int wroteportfile = 0;
 
 #ifdef HAVE_SIGSETJMP
 static sigjmp_buf timeoutbuf;
@@ -223,8 +241,7 @@ static int synchnet(curl_socket_t);
 
 static int do_tftp(struct testcase *test, struct tftphdr *tp, ssize_t size);
 
-static int validate_access(struct testcase *test,
-                           const char *filename, unsigned short mode);
+static int validate_access(struct testcase *test, const char *fname, int mode);
 
 static void sendtftp(struct testcase *test, const struct formats *pf);
 
@@ -259,9 +276,6 @@ static void mysignal(int sig, void (*handler)(int))
   sigaction(sig, &sa, NULL);
 }
 
-#ifdef HAVE_SIGSETJMP
-CURL_NORETURN
-#endif
 static void timer(int signum)
 {
   (void)signum;
@@ -270,12 +284,12 @@ static void timer(int signum)
 
   timeout += rexmtval;
   if(timeout >= maxtimeout) {
-    if(tftpd_wrotepidfile) {
-      tftpd_wrotepidfile = 0;
+    if(wrotepidfile) {
+      wrotepidfile = 0;
       unlink(pidname);
     }
-    if(tftpd_wroteportfile) {
-      tftpd_wroteportfile = 0;
+    if(wroteportfile) {
+      wroteportfile = 0;
       unlink(portname);
     }
     if(serverlogslocked) {
@@ -324,8 +338,8 @@ static struct tftphdr *r_init(void)
 /* Have emptied current buffer by sending to net and getting ack.
    Free it and return next buffer filled with data.
  */
-static int readit(struct testcase *test, struct tftphdr * volatile *dpp,
-                  int convert /* if true, convert to ASCII */)
+static int readit(struct testcase *test, struct tftphdr **dpp,
+                  int convert /* if true, convert to ascii */)
 {
   struct bf *b;
 
@@ -341,11 +355,11 @@ static int readit(struct testcase *test, struct tftphdr * volatile *dpp,
 }
 
 /*
- * fill the input buffer, doing ASCII conversions if requested
+ * fill the input buffer, doing ascii conversions if requested
  * conversions are  lf -> cr, lf  and cr -> cr, nul
  */
 static void read_ahead(struct testcase *test,
-                       int convert /* if true, convert to ASCII */)
+                       int convert /* if true, convert to ascii */)
 {
   int i;
   char *p;
@@ -410,9 +424,9 @@ static int writeit(struct testcase *test, struct tftphdr * volatile *dpp,
   bfs[current].counter = ct;      /* set size of data to write */
   current = !current;             /* switch to other buffer */
   if(bfs[current].counter != BF_FREE)     /* if not free */
-    write_behind(test, convert);          /* flush it */
+    write_behind(test, convert);     /* flush it */
   bfs[current].counter = BF_ALLOC;        /* mark as alloc'd */
-  *dpp = &bfs[current].buf.hdr;
+  *dpp =  &bfs[current].buf.hdr;
   return ct;                      /* this is a lie of course */
 }
 
@@ -433,20 +447,21 @@ static ssize_t write_behind(struct testcase *test, int convert)
   struct tftphdr *dp;
 
   b = &bfs[nextone];
-  if(b->counter < -1)             /* anything to flush? */
+  if(b->counter < -1)            /* anything to flush? */
     return 0;                     /* just nop if nothing to do */
 
   if(!test->ofile) {
     char outfile[256];
     msnprintf(outfile, sizeof(outfile), "%s/upload.%ld", logdir, test->testno);
-    test->ofile = open(outfile, O_CREAT|O_RDWR|CURL_O_BINARY, 0777);
+#ifdef _WIN32
+    test->ofile = open(outfile, O_CREAT|O_RDWR|O_BINARY, 0777);
+#else
+    test->ofile = open(outfile, O_CREAT|O_RDWR, 0777);
+#endif
     if(test->ofile == -1) {
       logmsg("Couldn't create and/or open file %s for upload!", outfile);
       return -1; /* failure! */
     }
-  }
-  else if(test->ofile <= 0) {
-    return -1; /* failure! */
   }
 
   count = b->counter;             /* remember byte count */
@@ -496,29 +511,30 @@ skipit:
 
 static int synchnet(curl_socket_t f /* socket to flush */)
 {
+
+#if defined(HAVE_IOCTLSOCKET)
+  unsigned long i;
+#else
+  int i;
+#endif
   int j = 0;
   char rbuf[PKTSIZE];
   srvr_sockaddr_union_t fromaddr;
   curl_socklen_t fromaddrlen;
 
   for(;;) {
-#if defined(HAVE_IOCTLSOCKET_CAMEL_FIONBIO)
-    long i;
-    (void) IoctlSocket(f, FIONBIO, &i);
-#elif defined(HAVE_IOCTLSOCKET)
-    unsigned long i;
+#if defined(HAVE_IOCTLSOCKET)
     (void) ioctlsocket(f, FIONREAD, &i);
 #else
-    int i;
     (void) ioctl(f, FIONREAD, &i);
 #endif
     if(i) {
       j++;
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
       if(!use_ipv6)
 #endif
         fromaddrlen = sizeof(fromaddr.sa4);
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
       else
         fromaddrlen = sizeof(fromaddr.sa6);
 #endif
@@ -537,7 +553,7 @@ int main(int argc, char **argv)
   struct tftphdr *tp;
   ssize_t n = 0;
   int arg = 1;
-  unsigned short port = 8999; /* UDP */
+  unsigned short port = DEFAULT_PORT;
   curl_socket_t sock = CURL_SOCKET_BAD;
   int flag;
   int rc;
@@ -547,14 +563,10 @@ int main(int argc, char **argv)
 
   memset(&test, 0, sizeof(test));
 
-  pidname = ".tftpd.pid";
-  serverlogfile = "log/tftpd.log";
-  serverlogslocked = 0;
-
-  while(argc > arg) {
+  while(argc>arg) {
     if(!strcmp("--version", argv[arg])) {
       printf("tftpd IPv4%s\n",
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
              "/IPv6"
 #else
              ""
@@ -564,33 +576,33 @@ int main(int argc, char **argv)
     }
     else if(!strcmp("--pidfile", argv[arg])) {
       arg++;
-      if(argc > arg)
+      if(argc>arg)
         pidname = argv[arg++];
     }
     else if(!strcmp("--portfile", argv[arg])) {
       arg++;
-      if(argc > arg)
+      if(argc>arg)
         portname = argv[arg++];
     }
     else if(!strcmp("--logfile", argv[arg])) {
       arg++;
-      if(argc > arg)
+      if(argc>arg)
         serverlogfile = argv[arg++];
     }
     else if(!strcmp("--logdir", argv[arg])) {
       arg++;
-      if(argc > arg)
+      if(argc>arg)
         logdir = argv[arg++];
     }
     else if(!strcmp("--ipv4", argv[arg])) {
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
       ipv_inuse = "IPv4";
       use_ipv6 = FALSE;
 #endif
       arg++;
     }
     else if(!strcmp("--ipv6", argv[arg])) {
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
       ipv_inuse = "IPv6";
       use_ipv6 = TRUE;
 #endif
@@ -598,17 +610,17 @@ int main(int argc, char **argv)
     }
     else if(!strcmp("--port", argv[arg])) {
       arg++;
-      if(argc > arg) {
+      if(argc>arg) {
         char *endptr;
         unsigned long ulnum = strtoul(argv[arg], &endptr, 10);
-        port = util_ultous(ulnum);
+        port = curlx_ultous(ulnum);
         arg++;
       }
     }
     else if(!strcmp("--srcdir", argv[arg])) {
       arg++;
-      if(argc > arg) {
-        srcpath = argv[arg];
+      if(argc>arg) {
+        path = argv[arg];
         arg++;
       }
     }
@@ -631,24 +643,24 @@ int main(int argc, char **argv)
             logdir, SERVERLOGS_LOCKDIR, ipv_inuse);
 
 #ifdef _WIN32
-  if(win32_init())
-    return 2;
+  win32_init();
+  atexit(win32_cleanup);
 #endif
 
   install_signal_handlers(true);
 
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
   if(!use_ipv6)
 #endif
     sock = socket(AF_INET, SOCK_DGRAM, 0);
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
   else
     sock = socket(AF_INET6, SOCK_DGRAM, 0);
 #endif
 
   if(CURL_SOCKET_BAD == sock) {
     error = SOCKERRNO;
-    logmsg("Error creating socket (%d) %s", error, sstrerror(error));
+    logmsg("Error creating socket: (%d) %s", error, sstrerror(error));
     result = 1;
     goto tftpd_cleanup;
   }
@@ -657,13 +669,13 @@ int main(int argc, char **argv)
   if(0 != setsockopt(sock, SOL_SOCKET, SO_REUSEADDR,
             (void *)&flag, sizeof(flag))) {
     error = SOCKERRNO;
-    logmsg("setsockopt(SO_REUSEADDR) failed with error (%d) %s",
+    logmsg("setsockopt(SO_REUSEADDR) failed with error: (%d) %s",
            error, sstrerror(error));
     result = 1;
     goto tftpd_cleanup;
   }
 
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
   if(!use_ipv6) {
 #endif
     memset(&me.sa4, 0, sizeof(me.sa4));
@@ -671,7 +683,7 @@ int main(int argc, char **argv)
     me.sa4.sin_addr.s_addr = INADDR_ANY;
     me.sa4.sin_port = htons(port);
     rc = bind(sock, &me.sa, sizeof(me.sa4));
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
   }
   else {
     memset(&me.sa6, 0, sizeof(me.sa6));
@@ -680,10 +692,10 @@ int main(int argc, char **argv)
     me.sa6.sin6_port = htons(port);
     rc = bind(sock, &me.sa, sizeof(me.sa6));
   }
-#endif /* USE_IPV6 */
+#endif /* ENABLE_IPV6 */
   if(0 != rc) {
     error = SOCKERRNO;
-    logmsg("Error binding socket on port %hu (%d) %s", port, error,
+    logmsg("Error binding socket on port %hu: (%d) %s", port, error,
            sstrerror(error));
     result = 1;
     goto tftpd_cleanup;
@@ -694,18 +706,18 @@ int main(int argc, char **argv)
        port we actually got and update the listener port value with it. */
     curl_socklen_t la_size;
     srvr_sockaddr_union_t localaddr;
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
     if(!use_ipv6)
 #endif
       la_size = sizeof(localaddr.sa4);
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
     else
       la_size = sizeof(localaddr.sa6);
 #endif
     memset(&localaddr.sa, 0, (size_t)la_size);
     if(getsockname(sock, &localaddr.sa, &la_size) < 0) {
       error = SOCKERRNO;
-      logmsg("getsockname() failed with error (%d) %s",
+      logmsg("getsockname() failed with error: (%d) %s",
              error, sstrerror(error));
       sclose(sock);
       goto tftpd_cleanup;
@@ -714,7 +726,7 @@ int main(int argc, char **argv)
     case AF_INET:
       port = ntohs(localaddr.sa4.sin_port);
       break;
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
     case AF_INET6:
       port = ntohs(localaddr.sa6.sin6_port);
       break;
@@ -733,15 +745,15 @@ int main(int argc, char **argv)
     }
   }
 
-  tftpd_wrotepidfile = write_pidfile(pidname);
-  if(!tftpd_wrotepidfile) {
+  wrotepidfile = write_pidfile(pidname);
+  if(!wrotepidfile) {
     result = 1;
     goto tftpd_cleanup;
   }
 
   if(portname) {
-    tftpd_wroteportfile = write_portfile(portname, port);
-    if(!tftpd_wroteportfile) {
+    wroteportfile = write_portfile(portname, port);
+    if(!wroteportfile) {
       result = 1;
       goto tftpd_cleanup;
     }
@@ -751,15 +763,15 @@ int main(int argc, char **argv)
 
   for(;;) {
     fromlen = sizeof(from);
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
     if(!use_ipv6)
 #endif
       fromlen = sizeof(from.sa4);
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
     else
       fromlen = sizeof(from.sa6);
 #endif
-    n = (ssize_t)recvfrom(sock, &trsbuf.storage[0], sizeof(trsbuf.storage), 0,
+    n = (ssize_t)recvfrom(sock, &buf.storage[0], sizeof(buf.storage), 0,
                           &from.sa, &fromlen);
     if(got_exit_signal)
       break;
@@ -772,7 +784,7 @@ int main(int argc, char **argv)
     set_advisor_read_lock(loglockfile);
     serverlogslocked = 1;
 
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
     if(!use_ipv6) {
 #endif
       from.sa4.sin_family = AF_INET;
@@ -787,7 +799,7 @@ int main(int argc, char **argv)
         result = 1;
         break;
       }
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
     }
     else {
       from.sa6.sin6_family = AF_INET6;
@@ -807,7 +819,7 @@ int main(int argc, char **argv)
 
     maxtimeout = 5*TIMEOUT;
 
-    tp = &trsbuf.hdr;
+    tp = &buf.hdr;
     tp->th_opcode = ntohs(tp->th_opcode);
     if(tp->th_opcode == opcode_RRQ || tp->th_opcode == opcode_WRQ) {
       memset(&test, 0, sizeof(test));
@@ -844,9 +856,9 @@ tftpd_cleanup:
   if(got_exit_signal)
     logmsg("signalled to die");
 
-  if(tftpd_wrotepidfile)
+  if(wrotepidfile)
     unlink(pidname);
-  if(tftpd_wroteportfile)
+  if(wroteportfile)
     unlink(portname);
 
   if(serverlogslocked) {
@@ -858,7 +870,7 @@ tftpd_cleanup:
 
   if(got_exit_signal) {
     logmsg("========> %s tftpd (port: %d pid: %ld) exits with signal (%d)",
-           ipv_inuse, (int)port, (long)curlx_getpid(), exit_signal);
+           ipv_inuse, (int)port, (long)getpid(), exit_signal);
     /*
      * To properly set the return status of the process we
      * must raise the same signal SIGINT or SIGTERM that we
@@ -894,8 +906,8 @@ static int do_tftp(struct testcase *test, struct tftphdr *tp, ssize_t size)
   server = fopen(dumpfile, "ab");
   if(!server) {
     int error = errno;
-    logmsg("fopen() failed with error (%d) %s", error, strerror(error));
-    logmsg("Error opening file '%s'", dumpfile);
+    logmsg("fopen() failed with error: %d %s", error, strerror(error));
+    logmsg("Error opening file: %s", dumpfile);
     return -1;
   }
 
@@ -906,7 +918,7 @@ static int do_tftp(struct testcase *test, struct tftphdr *tp, ssize_t size)
   filename = cp;
   do {
     bool endofit = true;
-    while(cp < &trsbuf.storage[size]) {
+    while(cp < &buf.storage[size]) {
       if(*cp == '\0') {
         endofit = false;
         break;
@@ -919,7 +931,7 @@ static int do_tftp(struct testcase *test, struct tftphdr *tp, ssize_t size)
 
     /* before increasing pointer, make sure it is still within the legal
        space */
-    if((cp + 1) < &trsbuf.storage[size]) {
+    if((cp + 1) < &buf.storage[size]) {
       ++cp;
       if(first) {
         /* store the mode since we need it later */
@@ -940,8 +952,8 @@ static int do_tftp(struct testcase *test, struct tftphdr *tp, ssize_t size)
       break;
   } while(1);
 
-  if(*cp || !mode) {
-    nak(TFTP_EBADOP);
+  if(*cp) {
+    nak(EBADOP);
     fclose(server);
     return 3;
   }
@@ -960,7 +972,7 @@ static int do_tftp(struct testcase *test, struct tftphdr *tp, ssize_t size)
     if(strcmp(pf->f_mode, mode) == 0)
       break;
   if(!pf->f_mode) {
-    nak(TFTP_EBADOP);
+    nak(EBADOP);
     return 2;
   }
   ecode = validate_access(test, filename, tp->th_opcode);
@@ -993,7 +1005,7 @@ static int do_tftp(struct testcase *test, struct tftphdr *tp, ssize_t size)
 }
 
 /* Based on the testno, parse the correct server commands. */
-static int tftpd_parse_servercmd(struct testcase *req)
+static int parse_servercmd(struct testcase *req)
 {
   FILE *stream;
   int error;
@@ -1001,7 +1013,7 @@ static int tftpd_parse_servercmd(struct testcase *req)
   stream = test2fopen(req->testno, logdir);
   if(!stream) {
     error = errno;
-    logmsg("fopen() failed with error (%d) %s", error, strerror(error));
+    logmsg("fopen() failed with error: %d %s", error, strerror(error));
     logmsg("  Couldn't open test file %ld", req->testno);
     return 1; /* done */
   }
@@ -1015,7 +1027,7 @@ static int tftpd_parse_servercmd(struct testcase *req)
     error = getpart(&orgcmd, &cmdsize, "reply", "servercmd", stream);
     fclose(stream);
     if(error) {
-      logmsg("getpart() failed with error (%d)", error);
+      logmsg("getpart() failed with error: %d", error);
       return 1; /* done */
     }
 
@@ -1058,7 +1070,7 @@ static int tftpd_parse_servercmd(struct testcase *req)
  * Validate file access.
  */
 static int validate_access(struct testcase *test,
-                           const char *filename, unsigned short mode)
+                           const char *filename, int mode)
 {
   char *ptr;
 
@@ -1107,7 +1119,7 @@ static int validate_access(struct testcase *test,
 
     test->testno = testno;
 
-    (void)tftpd_parse_servercmd(test);
+    (void)parse_servercmd(test);
 
     stream = test2fopen(testno, logdir);
 
@@ -1116,17 +1128,17 @@ static int validate_access(struct testcase *test,
 
     if(!stream) {
       int error = errno;
-      logmsg("fopen() failed with error (%d) %s", error, strerror(error));
+      logmsg("fopen() failed with error: %d %s", error, strerror(error));
       logmsg("Couldn't open test file for test: %ld", testno);
-      return TFTP_EACCESS;
+      return EACCESS;
     }
     else {
       size_t count;
       int error = getpart(&test->buffer, &count, "reply", partbuf, stream);
       fclose(stream);
       if(error) {
-        logmsg("getpart() failed with error (%d)", error);
-        return TFTP_EACCESS;
+        logmsg("getpart() failed with error: %d", error);
+        return EACCESS;
       }
       if(test->buffer) {
         test->rptr = test->buffer; /* set read pointer */
@@ -1134,12 +1146,12 @@ static int validate_access(struct testcase *test,
         test->rcount = count;     /* set data left to read */
       }
       else
-        return TFTP_EACCESS;
+        return EACCESS;
     }
   }
   else {
     logmsg("no slash found in path");
-    return TFTP_EACCESS; /* failure */
+    return EACCESS; /* failure */
   }
 
   logmsg("file opened and all is good");
@@ -1163,12 +1175,12 @@ static void sendtftp(struct testcase *test, const struct formats *pf)
   mysignal(SIGALRM, timer);
 #endif
   do {
-    size = readit(test, (struct tftphdr * volatile *)&sdp, pf->f_convert);
+    size = readit(test, (struct tftphdr **)&sdp, pf->f_convert);
     if(size < 0) {
       nak(errno + 100);
       return;
     }
-    sdp->th_opcode = htons(opcode_DATA);
+    sdp->th_opcode = htons((unsigned short)opcode_DATA);
     sdp->th_block = htons(sendblock);
     timeout = 0;
 #ifdef HAVE_SIGSETJMP
@@ -1203,7 +1215,7 @@ send_data:
         logmsg("read: fail");
         return;
       }
-      sap->th_opcode = ntohs(sap->th_opcode);
+      sap->th_opcode = ntohs((unsigned short)sap->th_opcode);
       sap->th_block = ntohs(sap->th_block);
 
       if(sap->th_opcode == opcode_ERROR) {
@@ -1246,7 +1258,7 @@ static void recvtftp(struct testcase *test, const struct formats *pf)
   rap = &ackbuf.hdr;
   do {
     timeout = 0;
-    rap->th_opcode = htons(opcode_ACK);
+    rap->th_opcode = htons((unsigned short)opcode_ACK);
     rap->th_block = htons(recvblock);
     recvblock++;
 #ifdef HAVE_SIGSETJMP
@@ -1275,7 +1287,7 @@ send_ack:
         logmsg("read: fail");
         goto abort;
       }
-      rdp->th_opcode = ntohs(rdp->th_opcode);
+      rdp->th_opcode = ntohs((unsigned short)rdp->th_opcode);
       rdp->th_block = ntohs(rdp->th_block);
       if(rdp->th_opcode == opcode_ERROR)
         goto abort;
@@ -1295,7 +1307,7 @@ send_ack:
       if(size < 0)
         nak(errno + 100);
       else
-        nak(TFTP_ENOSPACE);
+        nak(ENOSPACE);
       goto abort;
     }
   } while(size == SEGSIZE);
@@ -1306,7 +1318,8 @@ send_ack:
     test->ofile = 0;
   }
 
-  rap->th_opcode = htons(opcode_ACK);  /* send the "final" ack */
+  rap->th_opcode = htons((unsigned short)opcode_ACK);  /* send the "final"
+                                                          ack */
   rap->th_block = htons(recvblock);
   (void) swrite(peer, &ackbuf.storage[0], 4);
 #if defined(HAVE_ALARM) && defined(SIGALRM)
@@ -1314,7 +1327,7 @@ send_ack:
   alarm(rexmtval);
 #endif
   /* normally times out and quits */
-  n = sread(peer, &trsbuf.storage[0], sizeof(trsbuf.storage));
+  n = sread(peer, &buf.storage[0], sizeof(buf.storage));
 #ifdef HAVE_ALARM
   alarm(0);
 #endif
@@ -1344,15 +1357,15 @@ static void nak(int error)
   int length;
   struct errmsg *pe;
 
-  tp = &trsbuf.hdr;
-  tp->th_opcode = htons(opcode_ERROR);
+  tp = &buf.hdr;
+  tp->th_opcode = htons((unsigned short)opcode_ERROR);
   tp->th_code = htons((unsigned short)error);
   for(pe = errmsgs; pe->e_code >= 0; pe++)
     if(pe->e_code == error)
       break;
   if(pe->e_code < 0) {
     pe->e_msg = strerror(error - 100);
-    tp->th_code = TFTP_EUNDEF;   /* set 'undef' errorcode */
+    tp->th_code = EUNDEF;   /* set 'undef' errorcode */
   }
   length = (int)strlen(pe->e_msg);
 
@@ -1360,6 +1373,6 @@ static void nak(int error)
    * report from glibc with FORTIFY_SOURCE */
   memcpy(tp->th_msg, pe->e_msg, length + 1);
   length += 5;
-  if(swrite(peer, &trsbuf.storage[0], length) != length)
+  if(swrite(peer, &buf.storage[0], length) != length)
     logmsg("nak: fail\n");
 }

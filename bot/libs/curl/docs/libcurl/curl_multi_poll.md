@@ -11,12 +11,11 @@ See-also:
   - curl_multi_wakeup (3)
 Protocol:
   - All
-Added-in: 7.66.0
 ---
 
 # NAME
 
-curl_multi_poll - poll on all easy handles in a multi handle
+curl_multi_poll - polls on all easy handles in a multi handle
 
 # SYNOPSIS
 
@@ -87,22 +86,14 @@ priority read events such as out of band data.
 Bit flag to curl_waitfd.events indicating the socket should poll on write
 events such as the socket being clear to write without blocking.
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
-extern void handle_fd(int);
-
 int main(void)
 {
   CURL *easy_handle;
   CURLM *multi_handle;
   int still_running = 0;
-  int myfd = 2; /* this is our own file descriptor */
-
-  multi_handle = curl_multi_init();
-  easy_handle = curl_easy_init();
 
   /* add the individual easy handle */
   curl_multi_add_handle(multi_handle, easy_handle);
@@ -114,19 +105,8 @@ int main(void)
     mc = curl_multi_perform(multi_handle, &still_running);
 
     if(mc == CURLM_OK) {
-      struct curl_waitfd myown;
-      myown.fd = myfd;
-      myown.events = CURL_WAIT_POLLIN; /* wait for input */
-      myown.revents = 0; /* clear it */
-
-      /* wait for activity on curl's descriptors or on our own,
-         or timeout */
-      mc = curl_multi_poll(multi_handle, &myown, 1, 1000, &numfds);
-
-      if(myown.revents) {
-        /* did our descriptor receive an event? */
-        handle_fd(myfd);
-      }
+      /* wait for activity or timeout */
+      mc = curl_multi_poll(multi_handle, NULL, 0, 1000, &numfds);
     }
 
     if(mc != CURLM_OK) {
@@ -140,11 +120,11 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.66.0.
 
 # RETURN VALUE
 
-This function returns a CURLMcode indicating success or error.
-
-CURLM_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+CURLMcode type, general libcurl multi interface error code. See
+libcurl-errors(3)

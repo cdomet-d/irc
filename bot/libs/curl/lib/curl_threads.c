@@ -35,9 +35,7 @@
 #endif
 
 #include "curl_threads.h"
-#ifdef BUILDING_LIBCURL
 #include "curl_memory.h"
-#endif
 /* The last #include file should be: */
 #include "memdebug.h"
 
@@ -82,12 +80,11 @@ err:
   return curl_thread_t_null;
 }
 
-void Curl_thread_destroy(curl_thread_t *hnd)
+void Curl_thread_destroy(curl_thread_t hnd)
 {
-  if(*hnd != curl_thread_t_null) {
-    pthread_detach(**hnd);
-    free(*hnd);
-    *hnd = curl_thread_t_null;
+  if(hnd != curl_thread_t_null) {
+    pthread_detach(*hnd);
+    free(hnd);
   }
 }
 
@@ -103,48 +100,38 @@ int Curl_thread_join(curl_thread_t *hnd)
 
 #elif defined(USE_THREADS_WIN32)
 
-curl_thread_t Curl_thread_create(
-#if defined(CURL_WINDOWS_UWP) || defined(UNDER_CE)
-                                 DWORD
-#else
-                                 unsigned int
-#endif
-                                 (CURL_STDCALL *func) (void *),
+/* !checksrc! disable SPACEBEFOREPAREN 1 */
+curl_thread_t Curl_thread_create(unsigned int (CURL_STDCALL *func) (void *),
                                  void *arg)
 {
-#if defined(CURL_WINDOWS_UWP) || defined(UNDER_CE)
+#ifdef _WIN32_WCE
   typedef HANDLE curl_win_thread_handle_t;
 #else
   typedef uintptr_t curl_win_thread_handle_t;
 #endif
   curl_thread_t t;
   curl_win_thread_handle_t thread_handle;
-#if defined(CURL_WINDOWS_UWP) || defined(UNDER_CE)
+#ifdef _WIN32_WCE
   thread_handle = CreateThread(NULL, 0, func, arg, 0, NULL);
 #else
   thread_handle = _beginthreadex(NULL, 0, func, arg, 0, NULL);
 #endif
   t = (curl_thread_t)thread_handle;
   if((t == 0) || (t == LongToHandle(-1L))) {
-#ifdef UNDER_CE
+#ifdef _WIN32_WCE
     DWORD gle = GetLastError();
-    /* !checksrc! disable ERRNOVAR 1 */
-    int err = (gle == ERROR_ACCESS_DENIED ||
-               gle == ERROR_NOT_ENOUGH_MEMORY) ?
-               EACCES : EINVAL;
-    CURL_SETERRNO(err);
+    errno = ((gle == ERROR_ACCESS_DENIED ||
+              gle == ERROR_NOT_ENOUGH_MEMORY) ?
+             EACCES : EINVAL);
 #endif
     return curl_thread_t_null;
   }
   return t;
 }
 
-void Curl_thread_destroy(curl_thread_t *hnd)
+void Curl_thread_destroy(curl_thread_t hnd)
 {
-  if(*hnd != curl_thread_t_null) {
-    CloseHandle(*hnd);
-    *hnd = curl_thread_t_null;
-  }
+  CloseHandle(hnd);
 }
 
 int Curl_thread_join(curl_thread_t *hnd)
@@ -156,7 +143,9 @@ int Curl_thread_join(curl_thread_t *hnd)
   int ret = (WaitForSingleObjectEx(*hnd, INFINITE, FALSE) == WAIT_OBJECT_0);
 #endif
 
-  Curl_thread_destroy(hnd);
+  Curl_thread_destroy(*hnd);
+
+  *hnd = curl_thread_t_null;
 
   return ret;
 }

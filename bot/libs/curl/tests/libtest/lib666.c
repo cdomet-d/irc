@@ -25,9 +25,9 @@
 
 #include "memdebug.h"
 
-static char testbuf[17000]; /* more than 16K */
+static char buffer[17000]; /* more than 16K */
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
   CURL *curl = NULL;
   CURLcode res = CURLE_OK;
@@ -37,12 +37,12 @@ CURLcode test(char *URL)
 
   /* Checks huge binary-encoded mime post. */
 
-  /* Create a testbuf with pseudo-binary data. */
-  for(i = 0; i < sizeof(testbuf); i++)
+  /* Create a buffer with pseudo-binary data. */
+  for(i = 0; i < sizeof(buffer); i++)
     if(i % 77 == 76)
-      testbuf[i] = '\n';
+      buffer[i] = '\n';
     else
-      testbuf[i] = (char) (0x41 + i % 26); /* A...Z */
+      buffer[i] = (char) (0x41 + i % 26); /* A...Z */
 
   if(curl_global_init(CURL_GLOBAL_ALL) != CURLE_OK) {
     fprintf(stderr, "curl_global_init() failed\n");
@@ -52,7 +52,7 @@ CURLcode test(char *URL)
   curl = curl_easy_init();
   if(!curl) {
     fprintf(stderr, "curl_easy_init() failed\n");
-    res = TEST_ERR_MAJOR_BAD;
+    res = (CURLcode) TEST_ERR_MAJOR_BAD;
     goto test_cleanup;
   }
 
@@ -60,13 +60,13 @@ CURLcode test(char *URL)
   mime = curl_mime_init(curl);
   if(!mime) {
     fprintf(stderr, "curl_mime_init() failed\n");
-    res = TEST_ERR_MAJOR_BAD;
+    res = (CURLcode) TEST_ERR_MAJOR_BAD;
     goto test_cleanup;
   }
   part = curl_mime_addpart(mime);
   if(!part) {
     fprintf(stderr, "curl_mime_addpart() failed\n");
-    res = TEST_ERR_MAJOR_BAD;
+    res = (CURLcode) TEST_ERR_MAJOR_BAD;
     goto test_cleanup;
   }
   res = curl_mime_name(part, "upfile");
@@ -79,7 +79,7 @@ CURLcode test(char *URL)
     fprintf(stderr, "curl_mime_filename() failed\n");
     goto test_cleanup;
   }
-  res = curl_mime_data(part, testbuf, sizeof(testbuf));
+  res = curl_mime_data(part, buffer, sizeof(buffer));
   if(res) {
     fprintf(stderr, "curl_mime_data() failed\n");
     goto test_cleanup;

@@ -9,7 +9,6 @@ See-also:
   - CURLOPT_CONV_TO_NETWORK_FUNCTION (3)
 Protocol:
   - All
-Added-in: 7.15.4
 ---
 
 # NAME
@@ -73,8 +72,6 @@ You need to override these definitions if they are different on your system.
 
 NULL
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -103,18 +100,13 @@ int main(void)
 }
 ~~~
 
-# DEPRECATED
+# AVAILABILITY
 
 Not available and deprecated since 7.82.0.
 
 Available only if **CURL_DOES_CONVERSIONS** was defined when libcurl was
 built.
 
-# %AVAILABILITY%
-
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

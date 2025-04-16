@@ -25,7 +25,7 @@
 
 #include "memdebug.h"
 
-static char testdata[]="this is what we post to the silly web server\n";
+static char data[]="this is what we post to the silly web server\n";
 
 struct WriteThis {
   char *readptr;
@@ -53,7 +53,7 @@ static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userp)
   return tocopy;
 }
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
   CURL *curl;
   CURLcode res = CURLE_OK;
@@ -64,15 +64,14 @@ CURLcode test(char *URL)
 #if (defined(_WIN32) || defined(__CYGWIN__))
     printf("Windows TCP does not deliver response data but reports "
            "CONNABORTED\n");
-    return TEST_ERR_FAILURE; /* skip since it fails on Windows without
-                                workaround */
+    return 1; /* skip since test will fail on Windows without workaround */
 #else
-    return CURLE_OK; /* sure, run this! */
+    return 0; /* sure, run this! */
 #endif
   }
 
-  pooh.readptr = testdata;
-  pooh.sizeleft = strlen(testdata);
+  pooh.readptr = data;
+  pooh.sizeleft = strlen(data);
 
   if(curl_global_init(CURL_GLOBAL_ALL)) {
     fprintf(stderr, "curl_global_init() failed\n");

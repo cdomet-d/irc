@@ -25,16 +25,15 @@
 
 #include "memdebug.h"
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
-  CURLcode res = CURLE_OK;
+  int res = 0;
   CURLcode easyret;
   CURLMcode multiret;
   CURLSHcode shareret;
   CURLUcode urlret;
   (void)URL;
 
-  /* NOLINTBEGIN(clang-analyzer-optin.core.EnumCastOutOfRange) */
   curl_easy_strerror((CURLcode)INT_MAX);
   curl_multi_strerror((CURLMcode)INT_MAX);
   curl_share_strerror((CURLSHcode)INT_MAX);
@@ -43,7 +42,6 @@ CURLcode test(char *URL)
   curl_multi_strerror((CURLMcode)-INT_MAX);
   curl_share_strerror((CURLSHcode)-INT_MAX);
   curl_url_strerror((CURLUcode)-INT_MAX);
-  /* NOLINTEND(clang-analyzer-optin.core.EnumCastOutOfRange) */
   for(easyret = CURLE_OK; easyret <= CURL_LAST; easyret++) {
     printf("e%d: %s\n", (int)easyret, curl_easy_strerror(easyret));
   }
@@ -58,5 +56,5 @@ CURLcode test(char *URL)
     printf("u%d: %s\n", (int)urlret, curl_url_strerror(urlret));
   }
 
-  return res;
+  return (int)res;
 }

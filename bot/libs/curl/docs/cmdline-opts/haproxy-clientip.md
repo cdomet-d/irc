@@ -16,7 +16,7 @@ Example:
 
 # `--haproxy-clientip`
 
-Set a client IP in HAProxy PROXY protocol v1 header at the beginning of the
+Sets a client IP in HAProxy PROXY protocol v1 header at the beginning of the
 connection.
 
 For valid requests, IPv4 addresses must be indicated as a series of exactly

@@ -25,7 +25,7 @@
 
 #include "memdebug.h"
 
-static char testdata[]= "dummy";
+static char data[]= "dummy";
 
 struct WriteThis {
   char *readptr;
@@ -48,12 +48,13 @@ static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userp)
   return len;
 }
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
   CURL *easy = NULL;
   curl_mime *mime = NULL;
   curl_mimepart *part;
-  CURLcode res = TEST_ERR_FAILURE;
+  CURLcode result;
+  int res = TEST_ERR_FAILURE;
   struct WriteThis pooh1, pooh2;
 
   /*
@@ -77,8 +78,8 @@ CURLcode test(char *URL)
   test_setopt(easy, CURLOPT_HEADER, 1L);
 
   /* Prepare the callback structures. */
-  pooh1.readptr = testdata;
-  pooh1.sizeleft = (curl_off_t) strlen(testdata);
+  pooh1.readptr = data;
+  pooh1.sizeleft = (curl_off_t) strlen(data);
   pooh2 = pooh1;
 
   /* Build the mime tree. */
@@ -86,7 +87,7 @@ CURLcode test(char *URL)
   part = curl_mime_addpart(mime);
   curl_mime_name(part, "field1");
   /* Early end of data detection can be done because the data size is known. */
-  curl_mime_data_cb(part, (curl_off_t) strlen(testdata),
+  curl_mime_data_cb(part, (curl_off_t) strlen(data),
                     read_callback, NULL, NULL, &pooh1);
   part = curl_mime_addpart(mime);
   curl_mime_name(part, "field2");
@@ -103,9 +104,10 @@ CURLcode test(char *URL)
   test_setopt(easy, CURLOPT_MIMEPOST, mime);
 
   /* Send data. */
-  res = curl_easy_perform(easy);
-  if(res != CURLE_OK) {
+  result = curl_easy_perform(easy);
+  if(result) {
     fprintf(stderr, "curl_easy_perform() failed\n");
+    res = (int) result;
   }
 
 test_cleanup:

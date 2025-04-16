@@ -33,9 +33,9 @@ static char *suburl(const char *base, int i)
 /*
  * Test Session ID capture
  */
-CURLcode test(char *URL)
+int test(char *URL)
 {
-  CURLcode res;
+  int res;
   CURL *curl;
   char *stream_uri = NULL;
   char *rtsp_session_id;
@@ -110,8 +110,6 @@ CURLcode test(char *URL)
 
     test_setopt(curl, CURLOPT_RTSP_REQUEST, CURL_RTSPREQ_TEARDOWN);
     res = curl_easy_perform(curl);
-    if(res)
-      goto test_cleanup;
 
     /* Clear for the next go-round */
     test_setopt(curl, CURLOPT_RTSP_SESSION_ID, NULL);

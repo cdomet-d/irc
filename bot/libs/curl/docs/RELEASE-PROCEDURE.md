@@ -1,14 +1,10 @@
-<!--
-Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
-
-SPDX-License-Identifier: curl
--->
-
 curl release procedure - how to do a release
 ============================================
 
 in the source code repo
 -----------------------
+
+- run `./scripts/copyright.pl` and correct possible omissions
 
 - edit `RELEASE-NOTES` to be accurate
 
@@ -20,7 +16,9 @@ in the source code repo
   tag and we use underscores instead of dots in the version number. Make sure
   the tag is GPG signed (using -s).
 
-- run `./scripts/dmaketgz 7.34.0` to build the release tarballs.
+- run `./maketgz 7.34.0` to build the release tarballs. It is important that
+  you run this on a machine with the correct set of autotools etc installed as
+  this is what is shipped and used by most users on \*nix like systems.
 
 - push the git commits and the new tag
 
@@ -56,10 +54,6 @@ inform
 - send an email to curl-users, curl-announce and curl-library. Insert the
   RELEASE-NOTES into the mail.
 
-- if there are any advisories associated with the release, send each markdown
-  file to the above lists as well as to `oss-security@lists.openwall.com`
-  (unless the problem is unique to the non-open operating systems)
-
 celebrate
 ---------
 
@@ -94,28 +88,6 @@ of common public holidays or when the lead release manager is unavailable, the
 release date can be moved forwards or backwards a full week. This is then
 advertised well in advance.
 
-Release Candidates
-------------------
-
-We ship release candidate tarballs on three occasions in preparation for the
-pending release:
-
-- Release candidate one (**rc1**) ships the same Saturday the feature freeze
-  starts. Twenty-five days before the release.
-
-- Release candidate two (**rc2**) ships nine days later, sixteen days before
-  the release. On a Monday.
-
-- Release candidate tree (**rc3**) ships nine days later, seven days before
-  the release. On a Wednesday.
-
-Release candidate tarballs are ephemeral and each such tarball is only kept
-around for a few weeks. They are provided on their dedicated webpage at:
-https://curl.se/rc/
-
-**Do not use release candidates in production**. They are work in progress.
-Use them for testing and verification only. Use actual releases in production.
-
 Critical problems
 -----------------
 
@@ -131,11 +103,14 @@ push for it.
 Coming dates
 ------------
 
-Based on the description above, here are some planned future release dates:
+Based on the description above, here are some planned release dates (at the
+time of this writing):
 
-- February 5, 2025
-- April 2, 2025
-- May 28, 2025
-- July 23, 2025
-- September 17, 2025
-- November 12, 2025
+- May 22, 2024
+- July 17, 2024
+- September 11, 2024
+- November 6, 2024
+- January 8, 2025
+- March 5, 2025
+- April 30, 2025
+- June 25, 2025

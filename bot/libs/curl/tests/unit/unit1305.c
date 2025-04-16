@@ -33,6 +33,7 @@
 #  include <arpa/inet.h>
 #endif
 
+#define ENABLE_CURLX_PRINTF
 #include "curlx.h"
 
 #include "hash.h"
@@ -40,20 +41,20 @@
 
 #include "memdebug.h" /* LAST include file */
 
-static struct Curl_easy *testdata;
-static struct Curl_dnscache hp;
+static struct Curl_easy *data;
+static struct Curl_hash hp;
 static char *data_key;
 static struct Curl_dns_entry *data_node;
 
 static CURLcode unit_setup(void)
 {
-  testdata = curl_easy_init();
-  if(!testdata) {
+  data = curl_easy_init();
+  if(!data) {
     curl_global_cleanup();
     return CURLE_OUT_OF_MEMORY;
   }
 
-  Curl_dnscache_init(&hp, 7);
+  Curl_init_dnscache(&hp, 7);
   return CURLE_OK;
 }
 
@@ -64,9 +65,9 @@ static void unit_stop(void)
     free(data_node);
   }
   free(data_key);
-  Curl_dnscache_destroy(&hp);
+  Curl_hash_destroy(&hp);
 
-  curl_easy_cleanup(testdata);
+  curl_easy_cleanup(data);
   curl_global_cleanup();
 }
 
@@ -121,8 +122,8 @@ UNITTEST_START
     abort_unless(rc == CURLE_OK, "data node creation failed");
     key_len = strlen(data_key);
 
-    data_node->refcount = 1; /* hash will hold the reference */
-    nodep = Curl_hash_add(&hp.entries, data_key, key_len + 1, data_node);
+    data_node->inuse = 1; /* hash will hold the reference */
+    nodep = Curl_hash_add(&hp, data_key, key_len + 1, data_node);
     abort_unless(nodep, "insertion into hash failed");
     /* Freeing will now be done by Curl_hash_destroy */
     data_node = NULL;

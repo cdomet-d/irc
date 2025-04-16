@@ -30,9 +30,7 @@
 
  */
 
-#ifndef UNDER_CE
 #include <signal.h>
-#endif
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
 #endif
@@ -49,6 +47,9 @@
 #include <netinet/tcp.h> /* for TCP_NODELAY */
 #endif
 
+#define ENABLE_CURLX_PRINTF
+/* make the curlx header define all printf() functions to use the curlx_*
+   versions instead */
 #include "curlx.h" /* from the private lib dir */
 #include "getpart.h"
 #include "inet_pton.h"
@@ -58,26 +59,43 @@
 /* include memdebug.h last */
 #include "memdebug.h"
 
+#ifdef USE_WINSOCK
+#undef  EINTR
+#define EINTR    4 /* errno.h value */
+#undef  EAGAIN
+#define EAGAIN  11 /* errno.h value */
+#undef  ERANGE
+#define ERANGE  34 /* errno.h value */
+#endif
+
+static enum {
+  socket_domain_inet = AF_INET
+#ifdef ENABLE_IPV6
+  , socket_domain_inet6 = AF_INET6
+#endif
+#ifdef USE_UNIX_SOCKETS
+  , socket_domain_unix = AF_UNIX
+#endif
+} socket_domain = AF_INET;
 static bool use_gopher = FALSE;
+static int serverlogslocked = 0;
 static bool is_proxy = FALSE;
 
-#undef REQBUFSIZ
 #define REQBUFSIZ (2*1024*1024)
 
 #define MAX_SLEEP_TIME_MS 250
 
-static long sws_prevtestno = -1;    /* previous test number we served */
-static long sws_prevpartno = -1;    /* previous part number we served */
-static bool sws_prevbounce = FALSE; /* instructs the server to override the
-                                       requested part number to
-                                       prevpartno + 1 when prevtestno and
-                                       current test are the same */
+static long prevtestno = -1;    /* previous test number we served */
+static long prevpartno = -1;    /* previous part number we served */
+static bool prevbounce = FALSE; /* instructs the server to increase the part
+                                   number for a test in case the identical
+                                   testno+partno request shows up again */
 
 #define RCMD_NORMALREQ 0 /* default request, use the tests file normally */
 #define RCMD_IDLE      1 /* told to sit idle */
 #define RCMD_STREAM    2 /* told to stream */
 
-struct sws_httprequest {
+struct httprequest {
   char reqbuf[REQBUFSIZ]; /* buffer area for the incoming request */
   bool connect_request; /* if a CONNECT */
   unsigned short connect_port; /* the port number CONNECT used */
@@ -91,7 +109,7 @@ struct sws_httprequest {
   bool auth;      /* Authorization header present in the incoming request */
   size_t cl;      /* Content-Length of the incoming request */
   bool digest;    /* Authorization digest header found */
-  bool ntlm;      /* Authorization NTLM header found */
+  bool ntlm;      /* Authorization ntlm header found */
   int delay;      /* if non-zero, delay this number of msec after connect */
   int writedelay; /* if non-zero, delay this number of milliseconds between
                      writes in the response */
@@ -101,7 +119,7 @@ struct sws_httprequest {
                      - skip bytes. */
   int rcmd;       /* doing a special command, see defines above */
   int prot_version;  /* HTTP version * 10 */
-  int callcount;  /* times sws_ProcessRequest() gets called */
+  int callcount;  /* times ProcessRequest() gets called */
   bool skipall;   /* skip all incoming data */
   bool noexpect;  /* refuse Expect: (don't read the body) */
   bool connmon;   /* monitor the state of the connection, log disconnects */
@@ -117,6 +135,19 @@ struct sws_httprequest {
 static curl_socket_t all_sockets[MAX_SOCKETS];
 static size_t num_sockets = 0;
 
+static int ProcessRequest(struct httprequest *req);
+static void storerequest(const char *reqbuf, size_t totalsize);
+
+#define DEFAULT_PORT 8999
+
+#ifndef DEFAULT_LOGFILE
+#define DEFAULT_LOGFILE "log/sws.log"
+#endif
+
+const char *serverlogfile = DEFAULT_LOGFILE;
+static const char *logdir = "log";
+static char loglockfile[256];
+
 #define SWSVERSION "curl test suite HTTP server/0.1"
 
 #define REQUEST_DUMP  "server.input"
@@ -128,7 +159,8 @@ static size_t num_sockets = 0;
 #define RESPONSE_PROXY_DUMP "proxy.response"
 
 /* file in which additional instructions may be found */
-static const char *cmdfile = "log/server.cmd";
+#define DEFAULT_CMDFILE "log/server.cmd"
+const char *cmdfile = DEFAULT_CMDFILE;
 
 /* very-big-path support */
 #define MAXDOCNAMELEN 140000
@@ -162,10 +194,17 @@ static const char *cmdfile = "log/server.cmd";
 
 #define END_OF_HEADERS "\r\n\r\n"
 
+enum {
+  DOCNUMBER_NOTHING = -4,
+  DOCNUMBER_QUIT    = -3,
+  DOCNUMBER_WERULEZ = -2,
+  DOCNUMBER_404     = -1
+};
+
 static const char *end_of_headers = END_OF_HEADERS;
 
 /* sent as reply to a QUIT */
-static const char *docquit_sws =
+static const char *docquit =
 "HTTP/1.1 200 Goodbye" END_OF_HEADERS;
 
 /* send back this on 404 file not found */
@@ -185,13 +224,12 @@ static const char *doc404 = "HTTP/1.1 404 Not Found\r\n"
 /* work around for handling trailing headers */
 static int already_recv_zeroed_chunk = FALSE;
 
-#ifdef TCP_NODELAY
 /* returns true if the current socket is an IP one */
 static bool socket_domain_is_ip(void)
 {
   switch(socket_domain) {
   case AF_INET:
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
   case AF_INET6:
 #endif
     return true;
@@ -200,10 +238,9 @@ static bool socket_domain_is_ip(void)
     return false;
   }
 }
-#endif
 
 /* parse the file on disk that might have a test number for us */
-static int parse_cmdfile(struct sws_httprequest *req)
+static int parse_cmdfile(struct httprequest *req)
 {
   FILE *f = fopen(cmdfile, FOPEN_READTEXT);
   if(f) {
@@ -221,7 +258,7 @@ static int parse_cmdfile(struct sws_httprequest *req)
 }
 
 /* based on the testno, parse the correct server commands */
-static int sws_parse_servercmd(struct sws_httprequest *req)
+static int parse_servercmd(struct httprequest *req)
 {
   FILE *stream;
   int error;
@@ -232,7 +269,7 @@ static int sws_parse_servercmd(struct sws_httprequest *req)
 
   if(!stream) {
     error = errno;
-    logmsg("fopen() failed with error (%d) %s", error, strerror(error));
+    logmsg("fopen() failed with error: %d %s", error, strerror(error));
     logmsg("  Couldn't open test file %ld", req->testno);
     req->open = FALSE; /* closes connection */
     return 1; /* done */
@@ -247,7 +284,7 @@ static int sws_parse_servercmd(struct sws_httprequest *req)
     error = getpart(&orgcmd, &cmdsize, "reply", "servercmd", stream);
     fclose(stream);
     if(error) {
-      logmsg("getpart() failed with error (%d)", error);
+      logmsg("getpart() failed with error: %d", error);
       req->open = FALSE; /* closes connection */
       return 1; /* done */
     }
@@ -325,7 +362,7 @@ static int sws_parse_servercmd(struct sws_httprequest *req)
   return 0; /* OK! */
 }
 
-static int sws_ProcessRequest(struct sws_httprequest *req)
+static int ProcessRequest(struct httprequest *req)
 {
   char *line = &req->reqbuf[req->checkindex];
   bool chunked = FALSE;
@@ -338,7 +375,7 @@ static int sws_ProcessRequest(struct sws_httprequest *req)
   req->callcount++;
 
   logmsg("Process %zu bytes request%s", req->offset,
-         req->callcount > 1 ? " [CONTINUED]" : "");
+         req->callcount > 1?" [CONTINUED]":"");
 
   /* try to figure out the request characteristics as soon as possible, but
      only once! */
@@ -489,7 +526,7 @@ static int sws_ProcessRequest(struct sws_httprequest *req)
             if(!ulnum || (ulnum > 65535UL))
               logmsg("Invalid CONNECT port received");
             else
-              req->connect_port = util_ultous(ulnum);
+              req->connect_port = curlx_ultous(ulnum);
 
           }
           logmsg("Port number: %d, test case number: %ld",
@@ -506,7 +543,7 @@ static int sws_ProcessRequest(struct sws_httprequest *req)
         req->testno = DOCNUMBER_404;
       }
       else
-        sws_parse_servercmd(req);
+        parse_servercmd(req);
     }
     else if((req->offset >= 3)) {
       unsigned char *l = (unsigned char *)line;
@@ -535,7 +572,7 @@ static int sws_ProcessRequest(struct sws_httprequest *req)
   }
 
   /* find and parse <servercmd> for this test */
-  sws_parse_servercmd(req);
+  parse_servercmd(req);
 
   if(use_gopher) {
     /* when using gopher we cannot check the request until the entire
@@ -588,20 +625,26 @@ static int sws_ProcessRequest(struct sws_httprequest *req)
          request including the body before we return. If we've been told to
          ignore the content-length, we will return as soon as all headers
          have been received */
-      curl_off_t clen;
-      const char *p = line + strlen("Content-Length:");
-      if(curlx_str_numblanks(&p, &clen)) {
+      char *endptr;
+      char *ptr = line + 15;
+      unsigned long clen = 0;
+      while(*ptr && ISSPACE(*ptr))
+        ptr++;
+      endptr = ptr;
+      errno = 0;
+      clen = strtoul(ptr, &endptr, 10);
+      if((ptr == endptr) || !ISSPACE(*endptr) || (ERANGE == errno)) {
         /* this assumes that a zero Content-Length is valid */
-        logmsg("Found invalid '%s' in the request", line);
+        logmsg("Found invalid Content-Length: (%s) in the request", ptr);
         req->open = FALSE; /* closes connection */
         return 1; /* done */
       }
       if(req->skipall)
         req->cl = 0;
       else
-        req->cl = (size_t)clen - req->skip;
+        req->cl = clen - req->skip;
 
-      logmsg("Found Content-Length: %zu in the request", (size_t)clen);
+      logmsg("Found Content-Length: %lu in the request", clen);
       if(req->skip)
         logmsg("... but will abort after %zu bytes", req->cl);
     }
@@ -742,7 +785,7 @@ static int sws_ProcessRequest(struct sws_httprequest *req)
 }
 
 /* store the entire request in a file */
-static void sws_storerequest(const char *reqbuf, size_t totalsize)
+static void storerequest(const char *reqbuf, size_t totalsize)
 {
   int res;
   int error = 0;
@@ -752,7 +795,7 @@ static void sws_storerequest(const char *reqbuf, size_t totalsize)
   char dumpfile[256];
 
   msnprintf(dumpfile, sizeof(dumpfile), "%s/%s",
-            logdir, is_proxy ? REQUEST_PROXY_DUMP : REQUEST_DUMP);
+            logdir, is_proxy?REQUEST_PROXY_DUMP:REQUEST_DUMP);
 
   if(!reqbuf)
     return;
@@ -761,10 +804,9 @@ static void sws_storerequest(const char *reqbuf, size_t totalsize)
 
   do {
     dump = fopen(dumpfile, "ab");
-    /* !checksrc! disable ERRNOVAR 1 */
   } while(!dump && ((error = errno) == EINTR));
   if(!dump) {
-    logmsg("[2] Error opening file %s error (%d) %s",
+    logmsg("[2] Error opening file %s error: %d %s",
            dumpfile, error, strerror(error));
     logmsg("Failed to write request input ");
     return;
@@ -772,19 +814,18 @@ static void sws_storerequest(const char *reqbuf, size_t totalsize)
 
   writeleft = totalsize;
   do {
-    written = fwrite(&reqbuf[totalsize-writeleft], 1, writeleft, dump);
+    written = fwrite(&reqbuf[totalsize-writeleft],
+                     1, writeleft, dump);
     if(got_exit_signal)
       goto storerequest_cleanup;
     if(written > 0)
       writeleft -= written;
-    error = errno;
-    /* !checksrc! disable ERRNOVAR 1 */
-  } while((writeleft > 0) && (error == EINTR));
+  } while((writeleft > 0) && ((error = errno) == EINTR));
 
   if(writeleft == 0)
     logmsg("Wrote request (%zu bytes) input to %s", totalsize, dumpfile);
   else if(writeleft > 0) {
-    logmsg("Error writing file %s error (%d) %s",
+    logmsg("Error writing file %s error: %d %s",
            dumpfile, error, strerror(error));
     logmsg("Wrote only (%zu bytes) of (%zu bytes) request input to %s",
            totalsize-writeleft, totalsize, dumpfile);
@@ -792,13 +833,15 @@ static void sws_storerequest(const char *reqbuf, size_t totalsize)
 
 storerequest_cleanup:
 
-  res = fclose(dump);
+  do {
+    res = fclose(dump);
+  } while(res && ((error = errno) == EINTR));
   if(res)
-    logmsg("Error closing file %s error (%d) %s",
-           dumpfile, errno, strerror(errno));
+    logmsg("Error closing file %s error: %d %s",
+           dumpfile, error, strerror(error));
 }
 
-static void init_httprequest(struct sws_httprequest *req)
+static void init_httprequest(struct httprequest *req)
 {
   req->checkindex = 0;
   req->offset = 0;
@@ -825,11 +868,11 @@ static void init_httprequest(struct sws_httprequest *req)
   req->upgrade_request = 0;
 }
 
-static int sws_send_doc(curl_socket_t sock, struct sws_httprequest *req);
+static int send_doc(curl_socket_t sock, struct httprequest *req);
 
 /* returns 1 if the connection should be serviced again immediately, 0 if there
    is no data waiting, or < 0 if it should be closed */
-static int sws_get_request(curl_socket_t sock, struct sws_httprequest *req)
+static int get_request(curl_socket_t sock, struct httprequest *req)
 {
   int fail = 0;
   char *reqbuf = req->reqbuf;
@@ -839,11 +882,11 @@ static int sws_get_request(curl_socket_t sock, struct sws_httprequest *req)
   if(req->upgrade_request) {
     /* upgraded connection, work it differently until end of connection */
     logmsg("Upgraded connection, this is no longer HTTP/1");
-    sws_send_doc(sock, req);
+    send_doc(sock, req);
 
     /* dump the request received so far to the external file */
     reqbuf[req->offset] = '\0';
-    sws_storerequest(reqbuf, req->offset);
+    storerequest(reqbuf, req->offset);
     req->offset = 0;
 
     /* read websocket traffic */
@@ -856,30 +899,21 @@ static int sws_get_request(curl_socket_t sock, struct sws_httprequest *req)
           logmsg("Got %zu bytes from client", got);
         }
 
-        if((got == -1) &&
-           ((SOCKERRNO == EAGAIN) || (SOCKERRNO == SOCKEWOULDBLOCK))) {
+        if((got == -1) && ((EAGAIN == errno) || (EWOULDBLOCK == errno))) {
           int rc;
           fd_set input;
           fd_set output;
-          struct timeval timeout = {0};
-          timeout.tv_sec = 1; /* 1000 ms */
+          struct timeval timeout = {1, 0}; /* 1000 ms */
 
           logmsg("Got EAGAIN from sread");
           FD_ZERO(&input);
           FD_ZERO(&output);
           got = 0;
-#if defined(__DJGPP__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warith-conversion"
-#endif
           FD_SET(sock, &input);
-#if defined(__DJGPP__)
-#pragma GCC diagnostic pop
-#endif
           do {
             logmsg("Wait until readable");
             rc = select((int)sock + 1, &input, &output, NULL, &timeout);
-          } while(rc < 0 && SOCKERRNO == SOCKEINTR && !got_exit_signal);
+          } while(rc < 0 && errno == EINTR && !got_exit_signal);
           logmsg("readable %d", rc);
           if(rc)
             got = 1;
@@ -893,7 +927,7 @@ static int sws_get_request(curl_socket_t sock, struct sws_httprequest *req)
       logmsg("log the websocket traffic");
       /* dump the incoming websocket traffic to the external file */
       reqbuf[req->offset] = '\0';
-      sws_storerequest(reqbuf, req->offset);
+      storerequest(reqbuf, req->offset);
       req->offset = 0;
     }
     init_httprequest(req);
@@ -922,17 +956,17 @@ static int sws_get_request(curl_socket_t sock, struct sws_httprequest *req)
     }
     else if(got < 0) {
       int error = SOCKERRNO;
-      if(EAGAIN == error || SOCKEWOULDBLOCK == error) {
+      if(EAGAIN == error || EWOULDBLOCK == error) {
         /* nothing to read at the moment */
         return 0;
       }
-      logmsg("recv() returned error (%d) %s", error, sstrerror(error));
+      logmsg("recv() returned error: (%d) %s", error, sstrerror(error));
       fail = 1;
     }
     if(fail) {
       /* dump the request received so far to the external file */
       reqbuf[req->offset] = '\0';
-      sws_storerequest(reqbuf, req->offset);
+      storerequest(reqbuf, req->offset);
       return -1;
     }
 
@@ -941,7 +975,7 @@ static int sws_get_request(curl_socket_t sock, struct sws_httprequest *req)
     req->offset += (size_t)got;
     reqbuf[req->offset] = '\0';
 
-    req->done_processing = sws_ProcessRequest(req);
+    req->done_processing = ProcessRequest(req);
     if(got_exit_signal)
       return -1;
   }
@@ -963,7 +997,7 @@ static int sws_get_request(curl_socket_t sock, struct sws_httprequest *req)
 
   /* at the end of a request dump it to an external file */
   if(fail || req->done_processing)
-    sws_storerequest(reqbuf, req->offset);
+    storerequest(reqbuf, req->offset);
   if(got_exit_signal)
     return -1;
 
@@ -971,7 +1005,7 @@ static int sws_get_request(curl_socket_t sock, struct sws_httprequest *req)
 }
 
 /* returns -1 on failure */
-static int sws_send_doc(curl_socket_t sock, struct sws_httprequest *req)
+static int send_doc(curl_socket_t sock, struct httprequest *req)
 {
   ssize_t written;
   size_t count;
@@ -990,7 +1024,7 @@ static int sws_send_doc(curl_socket_t sock, struct sws_httprequest *req)
   char responsedump[256];
 
   msnprintf(responsedump, sizeof(responsedump), "%s/%s",
-            logdir, is_proxy ? RESPONSE_PROXY_DUMP : RESPONSE_DUMP);
+            logdir, is_proxy?RESPONSE_PROXY_DUMP:RESPONSE_DUMP);
 
   switch(req->rcmd) {
   default:
@@ -1023,7 +1057,7 @@ static int sws_send_doc(curl_socket_t sock, struct sws_httprequest *req)
     switch(req->testno) {
     case DOCNUMBER_QUIT:
       logmsg("Replying to QUIT");
-      buffer = docquit_sws;
+      buffer = docquit;
       break;
     case DOCNUMBER_WERULEZ:
       /* we got a "friends?" question, reply back that we sure are */
@@ -1053,7 +1087,7 @@ static int sws_send_doc(curl_socket_t sock, struct sws_httprequest *req)
 
     /* select the <data> tag for "normal" requests and the <connect> one
        for CONNECT requests (within the <reply> section) */
-    const char *section = req->connect_request ? "connect" : "data";
+    const char *section = req->connect_request?"connect":"data";
 
     if(req->partno)
       msnprintf(partbuf, sizeof(partbuf), "%s%ld", section, req->partno);
@@ -1065,14 +1099,14 @@ static int sws_send_doc(curl_socket_t sock, struct sws_httprequest *req)
     stream = test2fopen(req->testno, logdir);
     if(!stream) {
       error = errno;
-      logmsg("fopen() failed with error (%d) %s", error, strerror(error));
+      logmsg("fopen() failed with error: %d %s", error, strerror(error));
       return 0;
     }
     else {
       error = getpart(&ptr, &count, "reply", partbuf, stream);
       fclose(stream);
       if(error) {
-        logmsg("getpart() failed with error (%d)", error);
+        logmsg("getpart() failed with error: %d", error);
         return 0;
       }
       buffer = ptr;
@@ -1087,7 +1121,7 @@ static int sws_send_doc(curl_socket_t sock, struct sws_httprequest *req)
     stream = test2fopen(req->testno, logdir);
     if(!stream) {
       error = errno;
-      logmsg("fopen() failed with error (%d) %s", error, strerror(error));
+      logmsg("fopen() failed with error: %d %s", error, strerror(error));
       free(ptr);
       return 0;
     }
@@ -1096,7 +1130,7 @@ static int sws_send_doc(curl_socket_t sock, struct sws_httprequest *req)
       error = getpart(&cmd, &cmdsize, "reply", "postcmd", stream);
       fclose(stream);
       if(error) {
-        logmsg("getpart() failed with error (%d)", error);
+        logmsg("getpart() failed with error: %d", error);
         free(ptr);
         return 0;
       }
@@ -1117,17 +1151,17 @@ static int sws_send_doc(curl_socket_t sock, struct sws_httprequest *req)
     logmsg("connection close instruction \"swsclose\" found in response");
   }
   if(strstr(buffer, "swsbounce")) {
-    sws_prevbounce = TRUE;
+    prevbounce = TRUE;
     logmsg("enable \"swsbounce\" in the next request");
   }
   else
-    sws_prevbounce = FALSE;
+    prevbounce = FALSE;
 
   dump = fopen(responsedump, "ab");
   if(!dump) {
     error = errno;
-    logmsg("fopen() failed with error (%d) %s", error, strerror(error));
-    logmsg("  [5] Error opening file '%s'", responsedump);
+    logmsg("fopen() failed with error: %d %s", error, strerror(error));
+    logmsg("  [5] Error opening file: %s", responsedump);
     free(ptr);
     free(cmd);
     return -1;
@@ -1145,7 +1179,7 @@ static int sws_send_doc(curl_socket_t sock, struct sws_httprequest *req)
 retry:
     written = swrite(sock, buffer, num);
     if(written < 0) {
-      if((SOCKEWOULDBLOCK == SOCKERRNO) || (EAGAIN == SOCKERRNO)) {
+      if((EWOULDBLOCK == SOCKERRNO) || (EAGAIN == SOCKERRNO)) {
         wait_ms(10);
         goto retry;
       }
@@ -1176,10 +1210,12 @@ retry:
     }
   } while((count > 0) && !got_exit_signal);
 
-  res = fclose(dump);
+  do {
+    res = fclose(dump);
+  } while(res && ((error = errno) == EINTR));
   if(res)
-    logmsg("Error closing file %s error (%d) %s",
-           responsedump, errno, strerror(errno));
+    logmsg("Error closing file %s error: %d %s",
+           responsedump, error, strerror(error));
 
   if(got_exit_signal) {
     free(ptr);
@@ -1191,8 +1227,8 @@ retry:
     logmsg("Sending response failed. Only (%zu bytes) of (%zu bytes) "
            "were sent",
            responsesize-count, responsesize);
-    sws_prevtestno = req->testno;
-    sws_prevpartno = req->partno;
+    prevtestno = req->testno;
+    prevpartno = req->partno;
     free(ptr);
     free(cmd);
     return -1;
@@ -1217,9 +1253,9 @@ retry:
             res = wait_ms(250);
             if(res) {
               /* should not happen */
-              error = SOCKERRNO;
-              logmsg("wait_ms() failed with error (%d) %s",
-                     error, sstrerror(error));
+              error = errno;
+              logmsg("wait_ms() failed with error: (%d) %s",
+                     error, strerror(error));
               break;
             }
           }
@@ -1237,10 +1273,10 @@ retry:
     } while(ptr && *ptr);
   }
   free(cmd);
-  req->open = use_gopher ? FALSE : persistent;
+  req->open = use_gopher?FALSE:persistent;
 
-  sws_prevtestno = req->testno;
-  sws_prevpartno = req->partno;
+  prevtestno = req->testno;
+  prevpartno = req->partno;
 
   return 0;
 }
@@ -1254,7 +1290,7 @@ static curl_socket_t connect_to(const char *ipaddr, unsigned short port)
   const char *op_br = "";
   const char *cl_br = "";
 
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
   if(socket_domain == AF_INET6) {
     op_br = "[";
     cl_br = "]";
@@ -1271,7 +1307,7 @@ static curl_socket_t connect_to(const char *ipaddr, unsigned short port)
   serverfd = socket(socket_domain, SOCK_STREAM, 0);
   if(CURL_SOCKET_BAD == serverfd) {
     error = SOCKERRNO;
-    logmsg("Error creating socket for server connection (%d) %s",
+    logmsg("Error creating socket for server connection: (%d) %s",
            error, sstrerror(error));
     return CURL_SOCKET_BAD;
   }
@@ -1286,23 +1322,12 @@ static curl_socket_t connect_to(const char *ipaddr, unsigned short port)
   }
 #endif
 
-  /* We want to do the connect() in a non-blocking mode, since
-   * Windows has an internal retry logic that may lead to long
-   * timeouts if the peer is not listening. */
-  if(0 != curlx_nonblock(serverfd, TRUE)) {
-    error = SOCKERRNO;
-    logmsg("curlx_nonblock(TRUE) failed with error (%d) %s",
-           error, sstrerror(error));
-    sclose(serverfd);
-    return CURL_SOCKET_BAD;
-  }
-
   switch(socket_domain) {
   case AF_INET:
     memset(&serveraddr.sa4, 0, sizeof(serveraddr.sa4));
     serveraddr.sa4.sin_family = AF_INET;
     serveraddr.sa4.sin_port = htons(port);
-    if(curlx_inet_pton(AF_INET, ipaddr, &serveraddr.sa4.sin_addr) < 1) {
+    if(Curl_inet_pton(AF_INET, ipaddr, &serveraddr.sa4.sin_addr) < 1) {
       logmsg("Error inet_pton failed AF_INET conversion of '%s'", ipaddr);
       sclose(serverfd);
       return CURL_SOCKET_BAD;
@@ -1310,12 +1335,12 @@ static curl_socket_t connect_to(const char *ipaddr, unsigned short port)
 
     rc = connect(serverfd, &serveraddr.sa, sizeof(serveraddr.sa4));
     break;
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
   case AF_INET6:
     memset(&serveraddr.sa6, 0, sizeof(serveraddr.sa6));
     serveraddr.sa6.sin6_family = AF_INET6;
     serveraddr.sa6.sin6_port = htons(port);
-    if(curlx_inet_pton(AF_INET6, ipaddr, &serveraddr.sa6.sin6_addr) < 1) {
+    if(Curl_inet_pton(AF_INET6, ipaddr, &serveraddr.sa6.sin6_addr) < 1) {
       logmsg("Error inet_pton failed AF_INET6 conversion of '%s'", ipaddr);
       sclose(serverfd);
       return CURL_SOCKET_BAD;
@@ -1323,7 +1348,7 @@ static curl_socket_t connect_to(const char *ipaddr, unsigned short port)
 
     rc = connect(serverfd, &serveraddr.sa, sizeof(serveraddr.sa6));
     break;
-#endif /* USE_IPV6 */
+#endif /* ENABLE_IPV6 */
 #ifdef USE_UNIX_SOCKETS
   case AF_UNIX:
     logmsg("Proxying through Unix socket is not (yet?) supported.");
@@ -1338,58 +1363,14 @@ static curl_socket_t connect_to(const char *ipaddr, unsigned short port)
 
   if(rc) {
     error = SOCKERRNO;
-    if((error == SOCKEINPROGRESS) || (error == SOCKEWOULDBLOCK)) {
-      fd_set output;
-      struct timeval timeout = {0};
-      timeout.tv_sec = 1; /* 1000 ms */
-
-      FD_ZERO(&output);
-#if defined(__DJGPP__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warith-conversion"
-#endif
-      FD_SET(serverfd, &output);
-#if defined(__DJGPP__)
-#pragma GCC diagnostic pop
-#endif
-      while(1) {
-        rc = select((int)serverfd + 1, NULL, &output, NULL, &timeout);
-        if(rc < 0 && SOCKERRNO != SOCKEINTR)
-          goto error;
-        else if(rc > 0) {
-          curl_socklen_t errSize = sizeof(error);
-          if(0 != getsockopt(serverfd, SOL_SOCKET, SO_ERROR,
-                             (void *)&error, &errSize))
-            error = SOCKERRNO;
-          if((0 == error) || (SOCKEISCONN == error))
-            goto success;
-          else if((error != SOCKEINPROGRESS) && (error != SOCKEWOULDBLOCK))
-            goto error;
-        }
-        else if(!rc) {
-          logmsg("Timeout connecting to server port %hu", port);
-          sclose(serverfd);
-          return CURL_SOCKET_BAD;
-        }
-      }
-    }
-error:
-    logmsg("Error connecting to server port %hu (%d) %s",
+    logmsg("Error connecting to server port %hu: (%d) %s",
            port, error, sstrerror(error));
     sclose(serverfd);
     return CURL_SOCKET_BAD;
   }
-success:
+
   logmsg("connected fine to %s%s%s:%hu, now tunnel",
          op_br, ipaddr, cl_br, port);
-
-  if(0 != curlx_nonblock(serverfd, FALSE)) {
-    error = SOCKERRNO;
-    logmsg("curlx_nonblock(FALSE) failed with error (%d) %s",
-           error, sstrerror(error));
-    sclose(serverfd);
-    return CURL_SOCKET_BAD;
-  }
 
   return serverfd;
 }
@@ -1408,8 +1389,8 @@ success:
 
 #define data_or_ctrl(x) ((x)?"DATA":"CTRL")
 
-#define SWS_CTRL  0
-#define SWS_DATA  1
+#define CTRL  0
+#define DATA  1
 
 static void http_connect(curl_socket_t *infdp,
                          curl_socket_t rootfd,
@@ -1429,13 +1410,13 @@ static void http_connect(curl_socket_t *infdp,
   bool poll_server_wr[2] = { TRUE, TRUE };
   bool primary = FALSE;
   bool secondary = FALSE;
-  int max_tunnel_idx; /* SWS_CTRL or SWS_DATA */
+  int max_tunnel_idx; /* CTRL or DATA */
   int loop;
   int i;
   int timeout_count = 0;
 
   /* primary tunnel client endpoint already connected */
-  clientfd[SWS_CTRL] = *infdp;
+  clientfd[CTRL] = *infdp;
 
   /* Sleep here to make sure the client reads CONNECT response's
      'end of headers' separate from the server data that follows.
@@ -1445,8 +1426,8 @@ static void http_connect(curl_socket_t *infdp,
   if(got_exit_signal)
     goto http_connect_cleanup;
 
-  serverfd[SWS_CTRL] = connect_to(ipaddr, ipport);
-  if(serverfd[SWS_CTRL] == CURL_SOCKET_BAD)
+  serverfd[CTRL] = connect_to(ipaddr, ipport);
+  if(serverfd[CTRL] == CURL_SOCKET_BAD)
     goto http_connect_cleanup;
 
   /* Primary tunnel socket endpoints are now connected. Tunnel data back and
@@ -1454,36 +1435,28 @@ static void http_connect(curl_socket_t *infdp,
      tunnel, simultaneously allowing establishment, operation and teardown of
      a secondary tunnel that may be used for passive FTP data connection. */
 
-  max_tunnel_idx = SWS_CTRL;
+  max_tunnel_idx = CTRL;
   primary = TRUE;
 
   while(!got_exit_signal) {
 
     fd_set input;
     fd_set output;
+    struct timeval timeout = {1, 0}; /* 1000 ms */
     ssize_t rc;
     curl_socket_t maxfd = (curl_socket_t)-1;
-    struct timeval timeout = {0};
-    timeout.tv_sec = 1; /* 1000 ms */
 
     FD_ZERO(&input);
     FD_ZERO(&output);
 
-    if((clientfd[SWS_DATA] == CURL_SOCKET_BAD) &&
-       (serverfd[SWS_DATA] == CURL_SOCKET_BAD) &&
-       poll_client_rd[SWS_CTRL] && poll_client_wr[SWS_CTRL] &&
-       poll_server_rd[SWS_CTRL] && poll_server_wr[SWS_CTRL]) {
+    if((clientfd[DATA] == CURL_SOCKET_BAD) &&
+       (serverfd[DATA] == CURL_SOCKET_BAD) &&
+       poll_client_rd[CTRL] && poll_client_wr[CTRL] &&
+       poll_server_rd[CTRL] && poll_server_wr[CTRL]) {
       /* listener socket is monitored to allow client to establish
          secondary tunnel only when this tunnel is not established
          and primary one is fully operational */
-#if defined(__DJGPP__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warith-conversion"
-#endif
       FD_SET(rootfd, &input);
-#if defined(__DJGPP__)
-#pragma GCC diagnostic pop
-#endif
       maxfd = rootfd;
     }
 
@@ -1493,28 +1466,14 @@ static void http_connect(curl_socket_t *infdp,
       if(clientfd[i] != CURL_SOCKET_BAD) {
         if(poll_client_rd[i]) {
           /* unless told not to do so, monitor readability */
-#if defined(__DJGPP__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warith-conversion"
-#endif
           FD_SET(clientfd[i], &input);
-#if defined(__DJGPP__)
-#pragma GCC diagnostic pop
-#endif
           if(clientfd[i] > maxfd)
             maxfd = clientfd[i];
         }
         if(poll_client_wr[i] && toc[i]) {
           /* unless told not to do so, monitor writability
              if there is data ready to be sent to client */
-#if defined(__DJGPP__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warith-conversion"
-#endif
           FD_SET(clientfd[i], &output);
-#if defined(__DJGPP__)
-#pragma GCC diagnostic pop
-#endif
           if(clientfd[i] > maxfd)
             maxfd = clientfd[i];
         }
@@ -1523,28 +1482,14 @@ static void http_connect(curl_socket_t *infdp,
       if(serverfd[i] != CURL_SOCKET_BAD) {
         if(poll_server_rd[i]) {
           /* unless told not to do so, monitor readability */
-#if defined(__DJGPP__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warith-conversion"
-#endif
           FD_SET(serverfd[i], &input);
-#if defined(__DJGPP__)
-#pragma GCC diagnostic pop
-#endif
           if(serverfd[i] > maxfd)
             maxfd = serverfd[i];
         }
         if(poll_server_wr[i] && tos[i]) {
           /* unless told not to do so, monitor writability
              if there is data ready to be sent to server */
-#if defined(__DJGPP__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warith-conversion"
-#endif
           FD_SET(serverfd[i], &output);
-#if defined(__DJGPP__)
-#pragma GCC diagnostic pop
-#endif
           if(serverfd[i] > maxfd)
             maxfd = serverfd[i];
         }
@@ -1555,7 +1500,7 @@ static void http_connect(curl_socket_t *infdp,
 
     do {
       rc = select((int)maxfd + 1, &input, &output, NULL, &timeout);
-    } while(rc < 0 && SOCKERRNO == SOCKEINTR && !got_exit_signal);
+    } while(rc < 0 && errno == EINTR && !got_exit_signal);
 
     if(got_exit_signal)
       break;
@@ -1568,17 +1513,17 @@ static void http_connect(curl_socket_t *infdp,
       /* ---------------------------------------------------------- */
 
       /* passive mode FTP may establish a secondary tunnel */
-      if((clientfd[SWS_DATA] == CURL_SOCKET_BAD) &&
-         (serverfd[SWS_DATA] == CURL_SOCKET_BAD) && FD_ISSET(rootfd, &input)) {
+      if((clientfd[DATA] == CURL_SOCKET_BAD) &&
+         (serverfd[DATA] == CURL_SOCKET_BAD) && FD_ISSET(rootfd, &input)) {
         /* a new connection on listener socket (most likely from client) */
         curl_socket_t datafd = accept(rootfd, NULL, NULL);
         if(datafd != CURL_SOCKET_BAD) {
-          static struct sws_httprequest *req2;
+          static struct httprequest *req2;
           int err = 0;
           if(!req2) {
             req2 = malloc(sizeof(*req2));
             if(!req2)
-              goto http_connect_cleanup;  /* fail */
+              exit(1);
           }
           memset(req2, 0, sizeof(*req2));
           logmsg("====> Client connect DATA");
@@ -1593,7 +1538,7 @@ static void http_connect(curl_socket_t *infdp,
 #endif
           init_httprequest(req2);
           while(!req2->done_processing) {
-            err = sws_get_request(datafd, req2);
+            err = get_request(datafd, req2);
             if(err < 0) {
               /* this socket must be closed, done or not */
               break;
@@ -1602,26 +1547,26 @@ static void http_connect(curl_socket_t *infdp,
 
           /* skip this and close the socket if err < 0 */
           if(err >= 0) {
-            err = sws_send_doc(datafd, req2);
+            err = send_doc(datafd, req2);
             if(!err && req2->connect_request) {
               /* sleep to prevent triggering libcurl known bug #39. */
               for(loop = 2; (loop > 0) && !got_exit_signal; loop--)
                 wait_ms(250);
               if(!got_exit_signal) {
                 /* connect to the server */
-                serverfd[SWS_DATA] = connect_to(ipaddr, req2->connect_port);
-                if(serverfd[SWS_DATA] != CURL_SOCKET_BAD) {
+                serverfd[DATA] = connect_to(ipaddr, req2->connect_port);
+                if(serverfd[DATA] != CURL_SOCKET_BAD) {
                   /* secondary tunnel established, now we have two
                      connections */
-                  poll_client_rd[SWS_DATA] = TRUE;
-                  poll_client_wr[SWS_DATA] = TRUE;
-                  poll_server_rd[SWS_DATA] = TRUE;
-                  poll_server_wr[SWS_DATA] = TRUE;
-                  max_tunnel_idx = SWS_DATA;
+                  poll_client_rd[DATA] = TRUE;
+                  poll_client_wr[DATA] = TRUE;
+                  poll_server_rd[DATA] = TRUE;
+                  poll_server_wr[DATA] = TRUE;
+                  max_tunnel_idx = DATA;
                   secondary = TRUE;
-                  toc[SWS_DATA] = 0;
-                  tos[SWS_DATA] = 0;
-                  clientfd[SWS_DATA] = datafd;
+                  toc[DATA] = 0;
+                  tos[DATA] = 0;
+                  clientfd[DATA] = datafd;
                   datafd = CURL_SOCKET_BAD;
                 }
               }
@@ -1772,7 +1717,7 @@ static void http_connect(curl_socket_t *infdp,
               clientfd[i] = CURL_SOCKET_BAD;
               if(serverfd[i] == CURL_SOCKET_BAD) {
                 logmsg("[%s] ENDING", data_or_ctrl(i));
-                if(i == SWS_DATA)
+                if(i == DATA)
                   secondary = FALSE;
                 else
                   primary = FALSE;
@@ -1786,7 +1731,7 @@ static void http_connect(curl_socket_t *infdp,
               serverfd[i] = CURL_SOCKET_BAD;
               if(clientfd[i] == CURL_SOCKET_BAD) {
                 logmsg("[%s] ENDING", data_or_ctrl(i));
-                if(i == SWS_DATA)
+                if(i == DATA)
                   secondary = FALSE;
                 else
                   primary = FALSE;
@@ -1798,7 +1743,7 @@ static void http_connect(curl_socket_t *infdp,
 
       /* ---------------------------------------------------------- */
 
-      max_tunnel_idx = secondary ? SWS_DATA : SWS_CTRL;
+      max_tunnel_idx = secondary ? DATA : CTRL;
 
       if(!primary)
         /* exit loop upon primary tunnel teardown */
@@ -1816,7 +1761,7 @@ static void http_connect(curl_socket_t *infdp,
 
 http_connect_cleanup:
 
-  for(i = SWS_DATA; i >= SWS_CTRL; i--) {
+  for(i = DATA; i >= CTRL; i--) {
     if(serverfd[i] != CURL_SOCKET_BAD) {
       logmsg("[%s] CLOSING server socket (cleanup)", data_or_ctrl(i));
       shutdown(serverfd[i], SHUT_RDWR);
@@ -1836,7 +1781,7 @@ http_connect_cleanup:
   *infdp = CURL_SOCKET_BAD;
 }
 
-static void http_upgrade(struct sws_httprequest *req)
+static void http_upgrade(struct httprequest *req)
 {
   (void)req;
   logmsg("Upgraded to ... %u", req->upgrade_request);
@@ -1867,18 +1812,18 @@ static curl_socket_t accept_connection(curl_socket_t sock)
 
   if(CURL_SOCKET_BAD == msgsock) {
     error = SOCKERRNO;
-    if(EAGAIN == error || SOCKEWOULDBLOCK == error) {
+    if(EAGAIN == error || EWOULDBLOCK == error) {
       /* nothing to accept */
       return 0;
     }
-    logmsg("MAJOR ERROR, accept() failed with error (%d) %s",
+    logmsg("MAJOR ERROR: accept() failed with error: (%d) %s",
            error, sstrerror(error));
     return CURL_SOCKET_BAD;
   }
 
   if(0 != curlx_nonblock(msgsock, TRUE)) {
     error = SOCKERRNO;
-    logmsg("curlx_nonblock failed with error (%d) %s",
+    logmsg("curlx_nonblock failed with error: (%d) %s",
            error, sstrerror(error));
     sclose(msgsock);
     return CURL_SOCKET_BAD;
@@ -1887,7 +1832,7 @@ static curl_socket_t accept_connection(curl_socket_t sock)
   if(0 != setsockopt(msgsock, SOL_SOCKET, SO_KEEPALIVE,
                      (void *)&flag, sizeof(flag))) {
     error = SOCKERRNO;
-    logmsg("setsockopt(SO_KEEPALIVE) failed with error (%d) %s",
+    logmsg("setsockopt(SO_KEEPALIVE) failed with error: (%d) %s",
            error, sstrerror(error));
     sclose(msgsock);
     return CURL_SOCKET_BAD;
@@ -1925,8 +1870,7 @@ static curl_socket_t accept_connection(curl_socket_t sock)
 
 /* returns 1 if the connection should be serviced again immediately, 0 if there
    is no data waiting, or < 0 if it should be closed */
-static int service_connection(curl_socket_t msgsock,
-                              struct sws_httprequest *req,
+static int service_connection(curl_socket_t msgsock, struct httprequest *req,
                               curl_socket_t listensock,
                               const char *connecthost,
                               int keepalive_secs)
@@ -1935,27 +1879,28 @@ static int service_connection(curl_socket_t msgsock,
     return -1;
 
   while(!req->done_processing) {
-    int rc = sws_get_request(msgsock, req);
+    int rc = get_request(msgsock, req);
     if(rc <= 0) {
       /* Nothing further to read now, possibly because the socket was closed */
       return rc;
     }
   }
 
-  if(sws_prevbounce) {
+  if(prevbounce) {
     /* bounce treatment requested */
-    if(req->testno == sws_prevtestno) {
-      req->partno = sws_prevpartno + 1;
+    if((req->testno == prevtestno) &&
+       (req->partno == prevpartno)) {
+      req->partno++;
       logmsg("BOUNCE part number to %ld", req->partno);
     }
     else {
-      sws_prevbounce = FALSE;
-      sws_prevtestno = -1;
-      sws_prevpartno = -1;
+      prevbounce = FALSE;
+      prevtestno = -1;
+      prevpartno = -1;
     }
   }
 
-  sws_send_doc(msgsock, req);
+  send_doc(msgsock, req);
   if(got_exit_signal)
     return -1;
 
@@ -2007,16 +1952,19 @@ int main(int argc, char *argv[])
   int wrotepidfile = 0;
   int wroteportfile = 0;
   int flag;
-  unsigned short port = 8999;
+  unsigned short port = DEFAULT_PORT;
 #ifdef USE_UNIX_SOCKETS
   const char *unix_socket = NULL;
   bool unlink_socket = false;
 #endif
-  struct sws_httprequest *req = NULL;
+  const char *pidname = ".http.pid";
+  const char *portname = ".http.port";
+  struct httprequest *req = NULL;
   int rc = 0;
   int error;
   int arg = 1;
   const char *connecthost = "127.0.0.1";
+  const char *socket_type = "IPv4";
   char port_str[11];
   const char *location_str = port_str;
   int keepalive_secs = 5;
@@ -2025,15 +1973,10 @@ int main(int argc, char *argv[])
   /* a default CONNECT port is basically pointless but still ... */
   size_t socket_idx;
 
-  pidname = ".http.pid";
-  portname = ".http.port";
-  serverlogfile = "log/sws.log";
-  serverlogslocked = 0;
-
-  while(argc > arg) {
+  while(argc>arg) {
     if(!strcmp("--version", argv[arg])) {
       puts("sws IPv4"
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
              "/IPv6"
 #endif
 #ifdef USE_UNIX_SOCKETS
@@ -2044,27 +1987,27 @@ int main(int argc, char *argv[])
     }
     else if(!strcmp("--pidfile", argv[arg])) {
       arg++;
-      if(argc > arg)
+      if(argc>arg)
         pidname = argv[arg++];
     }
     else if(!strcmp("--portfile", argv[arg])) {
       arg++;
-      if(argc > arg)
+      if(argc>arg)
         portname = argv[arg++];
     }
     else if(!strcmp("--logfile", argv[arg])) {
       arg++;
-      if(argc > arg)
+      if(argc>arg)
         serverlogfile = argv[arg++];
     }
     else if(!strcmp("--logdir", argv[arg])) {
       arg++;
-      if(argc > arg)
+      if(argc>arg)
         logdir = argv[arg++];
     }
     else if(!strcmp("--cmdfile", argv[arg])) {
       arg++;
-      if(argc > arg)
+      if(argc>arg)
         cmdfile = argv[arg++];
     }
     else if(!strcmp("--gopher", argv[arg])) {
@@ -2080,7 +2023,7 @@ int main(int argc, char *argv[])
       arg++;
     }
     else if(!strcmp("--ipv6", argv[arg])) {
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
       socket_type = "IPv6";
       socket_domain = AF_INET6;
       location_str = port_str;
@@ -2089,7 +2032,7 @@ int main(int argc, char *argv[])
     }
     else if(!strcmp("--unix-socket", argv[arg])) {
       arg++;
-      if(argc > arg) {
+      if(argc>arg) {
 #ifdef USE_UNIX_SOCKETS
         unix_socket = argv[arg];
         if(strlen(unix_socket) >= sizeof(me.sau.sun_path)) {
@@ -2107,7 +2050,7 @@ int main(int argc, char *argv[])
     }
     else if(!strcmp("--port", argv[arg])) {
       arg++;
-      if(argc > arg) {
+      if(argc>arg) {
         char *endptr;
         unsigned long ulnum = strtoul(argv[arg], &endptr, 10);
         if((endptr != argv[arg] + strlen(argv[arg])) ||
@@ -2116,20 +2059,20 @@ int main(int argc, char *argv[])
                   argv[arg]);
           return 0;
         }
-        port = util_ultous(ulnum);
+        port = curlx_ultous(ulnum);
         arg++;
       }
     }
     else if(!strcmp("--srcdir", argv[arg])) {
       arg++;
-      if(argc > arg) {
-        srcpath = argv[arg];
+      if(argc>arg) {
+        path = argv[arg];
         arg++;
       }
     }
     else if(!strcmp("--keepalive", argv[arg])) {
       arg++;
-      if(argc > arg) {
+      if(argc>arg) {
         char *endptr;
         unsigned long ulnum = strtoul(argv[arg], &endptr, 10);
         if((endptr != argv[arg] + strlen(argv[arg])) ||
@@ -2138,7 +2081,7 @@ int main(int argc, char *argv[])
                   "be number of seconds\n", argv[arg]);
           return 0;
         }
-        keepalive_secs = util_ultous(ulnum);
+        keepalive_secs = curlx_ultous(ulnum);
         arg++;
       }
     }
@@ -2147,7 +2090,7 @@ int main(int argc, char *argv[])
          what the client asks for, but also use this as a hint that we run as
          a proxy and do a few different internal choices */
       arg++;
-      if(argc > arg) {
+      if(argc>arg) {
         connecthost = argv[arg];
         arg++;
         is_proxy = TRUE;
@@ -2177,8 +2120,8 @@ int main(int argc, char *argv[])
             is_proxy ? "-proxy" : "", socket_type);
 
 #ifdef _WIN32
-  if(win32_init())
-    return 2;
+  win32_init();
+  atexit(win32_cleanup);
 #endif
 
   install_signal_handlers(false);
@@ -2194,7 +2137,7 @@ int main(int argc, char *argv[])
 
   if(CURL_SOCKET_BAD == sock) {
     error = SOCKERRNO;
-    logmsg("Error creating socket (%d) %s", error, sstrerror(error));
+    logmsg("Error creating socket: (%d) %s", error, sstrerror(error));
     goto sws_cleanup;
   }
 
@@ -2202,13 +2145,13 @@ int main(int argc, char *argv[])
   if(0 != setsockopt(sock, SOL_SOCKET, SO_REUSEADDR,
                      (void *)&flag, sizeof(flag))) {
     error = SOCKERRNO;
-    logmsg("setsockopt(SO_REUSEADDR) failed with error (%d) %s",
+    logmsg("setsockopt(SO_REUSEADDR) failed with error: (%d) %s",
            error, sstrerror(error));
     goto sws_cleanup;
   }
   if(0 != curlx_nonblock(sock, TRUE)) {
     error = SOCKERRNO;
-    logmsg("curlx_nonblock failed with error (%d) %s",
+    logmsg("curlx_nonblock failed with error: (%d) %s",
            error, sstrerror(error));
     goto sws_cleanup;
   }
@@ -2221,7 +2164,7 @@ int main(int argc, char *argv[])
     me.sa4.sin_port = htons(port);
     rc = bind(sock, &me.sa, sizeof(me.sa4));
     break;
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
   case AF_INET6:
     memset(&me.sa6, 0, sizeof(me.sa6));
     me.sa6.sin6_family = AF_INET6;
@@ -2229,7 +2172,7 @@ int main(int argc, char *argv[])
     me.sa6.sin6_port = htons(port);
     rc = bind(sock, &me.sa, sizeof(me.sa6));
     break;
-#endif /* USE_IPV6 */
+#endif /* ENABLE_IPV6 */
 #ifdef USE_UNIX_SOCKETS
   case AF_UNIX:
     rc = bind_unix_socket(sock, unix_socket, &me.sau);
@@ -2239,11 +2182,11 @@ int main(int argc, char *argv[])
     error = SOCKERRNO;
 #ifdef USE_UNIX_SOCKETS
     if(socket_domain == AF_UNIX)
-      logmsg("Error binding socket on path %s (%d) %s",
+      logmsg("Error binding socket on path %s: (%d) %s",
              unix_socket, error, sstrerror(error));
     else
 #endif
-      logmsg("Error binding socket on port %hu (%d) %s",
+      logmsg("Error binding socket on port %hu: (%d) %s",
              port, error, sstrerror(error));
     goto sws_cleanup;
   }
@@ -2253,18 +2196,18 @@ int main(int argc, char *argv[])
        port we actually got and update the listener port value with it. */
     curl_socklen_t la_size;
     srvr_sockaddr_union_t localaddr;
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
     if(socket_domain != AF_INET6)
 #endif
       la_size = sizeof(localaddr.sa4);
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
     else
       la_size = sizeof(localaddr.sa6);
 #endif
     memset(&localaddr.sa, 0, (size_t)la_size);
     if(getsockname(sock, &localaddr.sa, &la_size) < 0) {
       error = SOCKERRNO;
-      logmsg("getsockname() failed with error (%d) %s",
+      logmsg("getsockname() failed with error: (%d) %s",
              error, sstrerror(error));
       sclose(sock);
       goto sws_cleanup;
@@ -2273,7 +2216,7 @@ int main(int argc, char *argv[])
     case AF_INET:
       port = ntohs(localaddr.sa4.sin_port);
       break;
-#ifdef USE_IPV6
+#ifdef ENABLE_IPV6
     case AF_INET6:
       port = ntohs(localaddr.sa6.sin6_port);
       break;
@@ -2300,10 +2243,10 @@ int main(int argc, char *argv[])
          protocol_type, socket_type, location_str);
 
   /* start accepting connections */
-  rc = listen(sock, 50);
+  rc = listen(sock, 5);
   if(0 != rc) {
     error = SOCKERRNO;
-    logmsg("listen() failed with error (%d) %s", error, sstrerror(error));
+    logmsg("listen() failed with error: (%d) %s", error, sstrerror(error));
     goto sws_cleanup;
   }
 
@@ -2325,8 +2268,8 @@ int main(int argc, char *argv[])
   if(!wroteportfile)
     goto sws_cleanup;
 
-  /* initialization of httprequest struct is done before sws_get_request(),
-     but the pipelining struct field must be initialized previously to FALSE
+  /* initialization of httprequest struct is done before get_request(), but
+     the pipelining struct field must be initialized previously to FALSE
      every time a new connection arrives. */
 
   init_httprequest(req);
@@ -2334,10 +2277,9 @@ int main(int argc, char *argv[])
   for(;;) {
     fd_set input;
     fd_set output;
+    struct timeval timeout = {0, 250000L}; /* 250 ms */
     curl_socket_t maxfd = (curl_socket_t)-1;
     int active;
-    struct timeval timeout = {0};
-    timeout.tv_usec = 250000L; /* 250 ms */
 
     /* Clear out closed sockets */
     for(socket_idx = num_sockets - 1; socket_idx >= 1; --socket_idx) {
@@ -2359,14 +2301,7 @@ int main(int argc, char *argv[])
 
     for(socket_idx = 0; socket_idx < num_sockets; ++socket_idx) {
       /* Listen on all sockets */
-#if defined(__DJGPP__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warith-conversion"
-#endif
       FD_SET(all_sockets[socket_idx], &input);
-#if defined(__DJGPP__)
-#pragma GCC diagnostic pop
-#endif
       if(all_sockets[socket_idx] > maxfd)
         maxfd = all_sockets[socket_idx];
     }
@@ -2376,14 +2311,14 @@ int main(int argc, char *argv[])
 
     do {
       rc = select((int)maxfd + 1, &input, &output, NULL, &timeout);
-    } while(rc < 0 && SOCKERRNO == SOCKEINTR && !got_exit_signal);
+    } while(rc < 0 && errno == EINTR && !got_exit_signal);
 
     if(got_exit_signal)
       goto sws_cleanup;
 
     if(rc < 0) {
       error = SOCKERRNO;
-      logmsg("select() failed with error (%d) %s", error, sstrerror(error));
+      logmsg("select() failed with error: (%d) %s", error, sstrerror(error));
       goto sws_cleanup;
     }
 
@@ -2399,8 +2334,8 @@ int main(int argc, char *argv[])
       curl_socket_t msgsock;
       do {
         msgsock = accept_connection(sock);
-        logmsg("accept_connection %" FMT_SOCKET_T
-               " returned %" FMT_SOCKET_T, sock, msgsock);
+        logmsg("accept_connection %" CURL_FORMAT_SOCKET_T
+               " returned %" CURL_FORMAT_SOCKET_T, sock, msgsock);
         if(CURL_SOCKET_BAD == msgsock)
           goto sws_cleanup;
         if(req->delay)
@@ -2428,7 +2363,7 @@ int main(int argc, char *argv[])
 
             if(req->connmon) {
               const char *keepopen = "[DISCONNECT]\n";
-              sws_storerequest(keepopen, strlen(keepopen));
+              storerequest(keepopen, strlen(keepopen));
             }
 
             if(!req->open)
@@ -2486,7 +2421,7 @@ sws_cleanup:
     sclose(sock);
 
 #ifdef USE_UNIX_SOCKETS
-  if(unlink_socket && socket_domain == AF_UNIX && unix_socket) {
+  if(unlink_socket && socket_domain == AF_UNIX) {
     rc = unlink(unix_socket);
     logmsg("unlink(%s) = %d (%s)", unix_socket, rc, strerror(rc));
   }
@@ -2511,7 +2446,7 @@ sws_cleanup:
 
   if(got_exit_signal) {
     logmsg("========> %s sws (%s pid: %ld) exits with signal (%d)",
-           socket_type, location_str, (long)curlx_getpid(), exit_signal);
+           socket_type, location_str, (long)getpid(), exit_signal);
     /*
      * To properly set the return status of the process we
      * must raise the same signal SIGINT or SIGTERM that we

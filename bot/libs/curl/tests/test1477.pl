@@ -49,7 +49,7 @@ sub scanheader {
         $line++;
         if($_ =~ /^  (CURL(E|UE|SHE|HE|M)_[A-Z0-9_]*)/) {
             my ($name)=($1);
-            if(($name !~ /(OBSOLETE|CURLE_RESERVED)/) && ($name !~ /_LAST\z/)) {
+            if(($name !~ /OBSOLETE/) && ($name !~ /_LAST\z/)) {
                 push @hnames, $name;
                 if($wherefrom{$name}) {
                     print STDERR "double: $name\n";
@@ -89,7 +89,7 @@ scanmanpage($manpge);
 print "Result\n";
 for my $h (sort @hnames) {
     if(!$manfrom{$h}) {
-        printf "$h from %s, not in manpage\n", $wherefrom{$h};
+        printf "$h from %s, not in man page\n", $wherefrom{$h};
     }
 }
 

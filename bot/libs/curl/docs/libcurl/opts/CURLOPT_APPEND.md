@@ -10,8 +10,6 @@ See-also:
   - CURLOPT_UPLOAD (3)
 Protocol:
   - FTP
-  - SFTP
-Added-in: 7.17.0
 ---
 
 # NAME
@@ -35,8 +33,6 @@ instead of overwrite it. This is only useful when uploading to an FTP site.
 
 0 (disabled)
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -54,15 +50,10 @@ int main(void)
 }
 ~~~
 
-# HISTORY
+# AVAILABILITY
 
 This option was known as CURLOPT_FTPAPPEND up to 7.16.4
 
-# %AVAILABILITY%
-
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

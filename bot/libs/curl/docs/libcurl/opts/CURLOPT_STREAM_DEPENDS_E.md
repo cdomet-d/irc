@@ -11,7 +11,6 @@ See-also:
   - CURLOPT_STREAM_WEIGHT (3)
 Protocol:
   - HTTP
-Added-in: 7.46.0
 ---
 
 # NAME
@@ -29,7 +28,7 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_STREAM_DEPENDS_E,
 
 # DESCRIPTION
 
-Pass a `CURL` pointer in *dephandle* to identify the stream within the same
+Pass a CURL pointer in *dephandle* to identify the stream within the same
 connection that this stream is depending upon exclusively. That means it
 depends on it and sets the Exclusive bit.
 
@@ -51,8 +50,6 @@ option to have an actual effect.
 
 NULL
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -67,16 +64,15 @@ int main(void)
     curl_easy_setopt(curl2, CURLOPT_URL, "https://example.com/two");
     curl_easy_setopt(curl2, CURLOPT_STREAM_DEPENDS_E, curl);
 
-    /* then add both to a multi handle and transfer them */
+    /* then add both to a multi handle and transfer them! */
   }
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.46.0
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

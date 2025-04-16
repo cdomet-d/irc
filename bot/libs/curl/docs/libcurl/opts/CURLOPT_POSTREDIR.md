@@ -12,7 +12,6 @@ See-also:
   - CURLOPT_POSTFIELDS (3)
 Protocol:
   - HTTP
-Added-in: 7.19.1
 ---
 
 # NAME
@@ -49,8 +48,6 @@ when setting CURLOPT_FOLLOWLOCATION(3).
 
 0
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -72,16 +69,11 @@ int main(void)
 }
 ~~~
 
-# HISTORY
+# AVAILABILITY
 
-This option was known as CURLOPT_POST301 up to 7.19.0 as it only supported the
-301 then. CURL_REDIR_POST_303 was added in 7.26.0.
-
-# %AVAILABILITY%
+Added in 7.17.1. This option was known as CURLOPT_POST301 up to 7.19.0 as it
+only supported the 301 then. CURL_REDIR_POST_303 was added in 7.26.0.
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

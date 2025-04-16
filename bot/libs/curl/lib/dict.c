@@ -65,15 +65,6 @@
 /* The last #include file should be: */
 #include "memdebug.h"
 
-
-#define DICT_MATCH "/MATCH:"
-#define DICT_MATCH2 "/M:"
-#define DICT_MATCH3 "/FIND:"
-#define DICT_DEFINE "/DEFINE:"
-#define DICT_DEFINE2 "/D:"
-#define DICT_DEFINE3 "/LOOKUP:"
-
-
 /*
  * Forward declarations.
  */
@@ -85,7 +76,7 @@ static CURLcode dict_do(struct Curl_easy *data, bool *done);
  */
 
 const struct Curl_handler Curl_handler_dict = {
-  "dict",                               /* scheme */
+  "DICT",                               /* scheme */
   ZERO_NULL,                            /* setup_connection */
   dict_do,                              /* do_it */
   ZERO_NULL,                            /* done */
@@ -99,10 +90,8 @@ const struct Curl_handler Curl_handler_dict = {
   ZERO_NULL,                            /* perform_getsock */
   ZERO_NULL,                            /* disconnect */
   ZERO_NULL,                            /* write_resp */
-  ZERO_NULL,                            /* write_resp_hd */
   ZERO_NULL,                            /* connection_check */
   ZERO_NULL,                            /* attach connection */
-  ZERO_NULL,                            /* follow */
   PORT_DICT,                            /* defport */
   CURLPROTO_DICT,                       /* protocol */
   CURLPROTO_DICT,                       /* family */
@@ -156,7 +145,7 @@ static CURLcode sendf(struct Curl_easy *data, const char *fmt, ...)
 
   for(;;) {
     /* Write the buffer to the socket */
-    result = Curl_xfer_send(data, sptr, write_len, FALSE, &bytes_written);
+    result = Curl_xfer_send(data, sptr, write_len, &bytes_written);
 
     if(result)
       break;
@@ -221,8 +210,16 @@ static CURLcode dict_do(struct Curl_easy *data, bool *done)
 
     if(!word || (*word == (char)0)) {
       infof(data, "lookup word is missing");
+      word = (char *)"default";
     }
-    eword = unescape_word((!word || (*word == (char)0)) ? "default" : word);
+    if(!database || (*database == (char)0)) {
+      database = (char *)"!";
+    }
+    if(!strategy || (*strategy == (char)0)) {
+      strategy = (char *)".";
+    }
+
+    eword = unescape_word(word);
     if(!eword) {
       result = CURLE_OUT_OF_MEMORY;
       goto error;
@@ -235,15 +232,15 @@ static CURLcode dict_do(struct Curl_easy *data, bool *done)
                    "%s "    /* strategy */
                    "%s\r\n" /* word */
                    "QUIT\r\n",
-                   (!database || (*database == (char)0)) ? "!" : database,
-                   (!strategy || (*strategy == (char)0)) ? "." : strategy,
+                   database,
+                   strategy,
                    eword);
 
     if(result) {
       failf(data, "Failed sending DICT request");
       goto error;
     }
-    Curl_xfer_setup1(data, CURL_XFER_RECV, -1, FALSE); /* no upload */
+    Curl_xfer_setup(data, FIRSTSOCKET, -1, FALSE, -1); /* no upload */
   }
   else if(strncasecompare(path, DICT_DEFINE, sizeof(DICT_DEFINE)-1) ||
           strncasecompare(path, DICT_DEFINE2, sizeof(DICT_DEFINE2)-1) ||
@@ -264,8 +261,13 @@ static CURLcode dict_do(struct Curl_easy *data, bool *done)
 
     if(!word || (*word == (char)0)) {
       infof(data, "lookup word is missing");
+      word = (char *)"default";
     }
-    eword = unescape_word((!word || (*word == (char)0)) ? "default" : word);
+    if(!database || (*database == (char)0)) {
+      database = (char *)"!";
+    }
+
+    eword = unescape_word(word);
     if(!eword) {
       result = CURLE_OUT_OF_MEMORY;
       goto error;
@@ -277,14 +279,14 @@ static CURLcode dict_do(struct Curl_easy *data, bool *done)
                    "%s "     /* database */
                    "%s\r\n"  /* word */
                    "QUIT\r\n",
-                   (!database || (*database == (char)0)) ? "!" : database,
+                   database,
                    eword);
 
     if(result) {
       failf(data, "Failed sending DICT request");
       goto error;
     }
-    Curl_xfer_setup1(data, CURL_XFER_RECV, -1, FALSE);
+    Curl_xfer_setup(data, FIRSTSOCKET, -1, FALSE, -1);
   }
   else {
 
@@ -306,7 +308,7 @@ static CURLcode dict_do(struct Curl_easy *data, bool *done)
         goto error;
       }
 
-      Curl_xfer_setup1(data, CURL_XFER_RECV, -1, FALSE);
+      Curl_xfer_setup(data, FIRSTSOCKET, -1, FALSE, -1);
     }
   }
 

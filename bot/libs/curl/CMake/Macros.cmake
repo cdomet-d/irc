@@ -21,76 +21,60 @@
 # SPDX-License-Identifier: curl
 #
 ###########################################################################
-# File defines convenience macros for available feature testing
+#File defines convenience macros for available feature testing
 
 # Check if header file exists and add it to the list.
 # This macro is intended to be called multiple times with a sequence of
 # possibly dependent header files.  Some headers depend on others to be
 # compiled correctly.
-macro(check_include_file_concat_curl _file _variable)
-  check_include_files("${CURL_INCLUDES};${_file}" ${_variable})
-  if(${_variable})
-    list(APPEND CURL_INCLUDES ${_file})
+macro(check_include_file_concat FILE VARIABLE)
+  check_include_files("${CURL_INCLUDES};${FILE}" ${VARIABLE})
+  if(${VARIABLE})
+    set(CURL_INCLUDES ${CURL_INCLUDES} ${FILE})
+    set(CURL_TEST_DEFINES "${CURL_TEST_DEFINES} -D${VARIABLE}")
   endif()
 endmacro()
 
-set(CURL_TEST_DEFINES "")  # Initialize global variable
-
 # For other curl specific tests, use this macro.
-# Return result in variable: CURL_TEST_OUTPUT
-macro(curl_internal_test _curl_test)
-  if(NOT DEFINED "${_curl_test}")
-    string(REPLACE ";" " " _cmake_required_definitions "${CMAKE_REQUIRED_DEFINITIONS}")
-    set(_curl_test_add_libraries "")
+macro(curl_internal_test CURL_TEST)
+  if(NOT DEFINED "${CURL_TEST}")
+    set(MACRO_CHECK_FUNCTION_DEFINITIONS
+      "-D${CURL_TEST} ${CURL_TEST_DEFINES} ${CMAKE_REQUIRED_FLAGS}")
     if(CMAKE_REQUIRED_LIBRARIES)
-      set(_curl_test_add_libraries
+      set(CURL_TEST_ADD_LIBRARIES
         "-DLINK_LIBRARIES:STRING=${CMAKE_REQUIRED_LIBRARIES}")
     endif()
 
-    message(STATUS "Performing Test ${_curl_test}")
-    try_compile(${_curl_test}
-      ${PROJECT_BINARY_DIR}
-      "${CMAKE_CURRENT_SOURCE_DIR}/CMake/CurlTests.c"
-      CMAKE_FLAGS
-        "-DCOMPILE_DEFINITIONS:STRING=-D${_curl_test} ${CURL_TEST_DEFINES} ${CMAKE_REQUIRED_FLAGS} ${_cmake_required_definitions}"
-        "${_curl_test_add_libraries}"
-      OUTPUT_VARIABLE CURL_TEST_OUTPUT)
-    if(${_curl_test})
-      set(${_curl_test} 1 CACHE INTERNAL "Curl test")
-      message(STATUS "Performing Test ${_curl_test} - Success")
+    message(STATUS "Performing Test ${CURL_TEST}")
+    try_compile(${CURL_TEST}
+      ${CMAKE_BINARY_DIR}
+      ${CMAKE_CURRENT_SOURCE_DIR}/CMake/CurlTests.c
+      CMAKE_FLAGS -DCOMPILE_DEFINITIONS:STRING=${MACRO_CHECK_FUNCTION_DEFINITIONS}
+      "${CURL_TEST_ADD_LIBRARIES}"
+      OUTPUT_VARIABLE OUTPUT)
+    if(${CURL_TEST})
+      set(${CURL_TEST} 1 CACHE INTERNAL "Curl test ${FUNCTION}")
+      message(STATUS "Performing Test ${CURL_TEST} - Success")
+      file(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeOutput.log
+        "Performing Test ${CURL_TEST} passed with the following output:\n"
+        "${OUTPUT}\n")
     else()
-      set(${_curl_test} "" CACHE INTERNAL "Curl test")
-      message(STATUS "Performing Test ${_curl_test} - Failed")
+      message(STATUS "Performing Test ${CURL_TEST} - Failed")
+      set(${CURL_TEST} "" CACHE INTERNAL "Curl test ${FUNCTION}")
+      file(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeError.log
+        "Performing Test ${CURL_TEST} failed with the following output:\n"
+        "${OUTPUT}\n")
     endif()
   endif()
 endmacro()
 
-macro(curl_dependency_option _option_name _find_name _desc_name)
-  set(${_option_name} "AUTO" CACHE STRING "Build curl with ${_desc_name} support (AUTO, ON or OFF)")
-  set_property(CACHE ${_option_name} PROPERTY STRINGS "AUTO" "ON" "OFF")
+macro(optional_dependency DEPENDENCY)
+  set(CURL_${DEPENDENCY} AUTO CACHE STRING "Build curl with ${DEPENDENCY} support (AUTO, ON or OFF)")
+  set_property(CACHE CURL_${DEPENDENCY} PROPERTY STRINGS AUTO ON OFF)
 
-  if(${_option_name} STREQUAL "AUTO")
-    find_package(${_find_name})
-  elseif(${_option_name})
-    find_package(${_find_name} REQUIRED)
+  if(CURL_${DEPENDENCY} STREQUAL AUTO)
+    find_package(${DEPENDENCY})
+  elseif(CURL_${DEPENDENCY})
+    find_package(${DEPENDENCY} REQUIRED)
   endif()
-endmacro()
-
-# Convert the passed paths to libpath linker options and add them to CMAKE_REQUIRED_*.
-macro(curl_required_libpaths _libpaths_arg)
-  if(CMAKE_VERSION VERSION_LESS 3.31)
-    set(_libpaths "${_libpaths_arg}")
-    foreach(_libpath IN LISTS _libpaths)
-      list(APPEND CMAKE_REQUIRED_LINK_OPTIONS "${CMAKE_LIBRARY_PATH_FLAG}${_libpath}")
-    endforeach()
-  else()
-    list(APPEND CMAKE_REQUIRED_LINK_DIRECTORIES "${_libpaths_arg}")
-  endif()
-endmacro()
-
-# Pre-fill variables set by a check_type_size() call.
-macro(curl_prefill_type_size _type _size)
-  set(HAVE_SIZEOF_${_type} TRUE)
-  set(SIZEOF_${_type} ${_size})
-  set(SIZEOF_${_type}_CODE "#define SIZEOF_${_type} ${_size}")
 endmacro()

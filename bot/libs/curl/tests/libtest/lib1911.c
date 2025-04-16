@@ -31,9 +31,9 @@
    define not publicly exposed so we set our own */
 #define MAX_INPUT_LENGTH 8000000
 
-static char testbuf[MAX_INPUT_LENGTH + 2];
+static char buffer[MAX_INPUT_LENGTH + 2];
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
   const struct curl_easyoption *o;
   CURL *easy;
@@ -44,14 +44,14 @@ CURLcode test(char *URL)
   easy = curl_easy_init();
   if(!easy) {
     curl_global_cleanup();
-    return TEST_ERR_EASY_INIT;
+    return 1;
   }
 
   /* make it a null-terminated C string with just As */
-  memset(testbuf, 'A', MAX_INPUT_LENGTH + 1);
-  testbuf[MAX_INPUT_LENGTH + 1] = 0;
+  memset(buffer, 'A', MAX_INPUT_LENGTH + 1);
+  buffer[MAX_INPUT_LENGTH + 1] = 0;
 
-  printf("string length: %d\n", (int)strlen(testbuf));
+  printf("string length: %d\n", (int)strlen(buffer));
 
   for(o = curl_easy_option_next(NULL);
       o;
@@ -76,7 +76,7 @@ CURLcode test(char *URL)
 
       /* This is a string. Make sure that passing in a string longer
          CURL_MAX_INPUT_LENGTH returns an error */
-      result = curl_easy_setopt(easy, o->id, testbuf);
+      result = curl_easy_setopt(easy, o->id, buffer);
       switch(result) {
       case CURLE_BAD_FUNCTION_ARGUMENT: /* the most normal */
       case CURLE_UNKNOWN_OPTION: /* left out from the build */
@@ -86,7 +86,7 @@ CURLcode test(char *URL)
       default:
         /* all other return codes are unexpected */
         fprintf(stderr, "curl_easy_setopt(%s...) returned %d\n",
-                o->name, result);
+                o->name, (int)result);
         error++;
         break;
       }
@@ -94,5 +94,5 @@ CURLcode test(char *URL)
   }
   curl_easy_cleanup(easy);
   curl_global_cleanup();
-  return error == 0 ? CURLE_OK : TEST_ERR_FAILURE;
+  return error;
 }

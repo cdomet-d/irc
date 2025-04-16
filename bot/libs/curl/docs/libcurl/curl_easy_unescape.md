@@ -6,15 +6,14 @@ Section: 3
 Source: libcurl
 See-also:
   - curl_easy_escape (3)
-  - curl_url_get (3)
+  - curl_free (3)
 Protocol:
   - All
-Added-in: 7.15.4
 ---
 
 # NAME
 
-curl_easy_unescape - URL decode a string
+curl_easy_unescape - URL decodes the given string
 
 # SYNOPSIS
 
@@ -47,8 +46,6 @@ TPF, but it was otherwise ignored.
 
 You must curl_free(3) the returned string when you are done with it.
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -59,7 +56,7 @@ int main(void)
     int decodelen;
     char *decoded = curl_easy_unescape(curl, "%63%75%72%6c", 12, &decodelen);
     if(decoded) {
-      /* do not assume printf() works on the decoded data */
+      /* do not assume printf() works on the decoded data! */
       printf("Decoded: ");
       /* ... */
       curl_free(decoded);
@@ -69,7 +66,9 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.15.4 and replaces the old curl_unescape(3) function.
 
 # RETURN VALUE
 

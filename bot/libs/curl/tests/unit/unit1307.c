@@ -275,15 +275,16 @@ enum system {
 
 UNITTEST_START
 {
+  int testnum = sizeof(tests) / sizeof(struct testcase);
   int i;
   enum system machine;
 
 #ifdef HAVE_FNMATCH
-#ifdef __APPLE__
-  machine = SYSTEM_MACOS;
-#else
-  machine = SYSTEM_LINUX;
-#endif
+  if(strstr(OS, "apple") || strstr(OS, "darwin")) {
+    machine = SYSTEM_MACOS;
+  }
+  else
+    machine = SYSTEM_LINUX;
   printf("Tested with system fnmatch(), %s-style\n",
          machine == SYSTEM_LINUX ? "linux" : "mac");
 #else
@@ -291,7 +292,7 @@ UNITTEST_START
   machine = SYSTEM_CUSTOM;
 #endif
 
-  for(i = 0; i < (int)CURL_ARRAYSIZE(tests); i++) {
+  for(i = 0; i < testnum; i++) {
     int result = tests[i].result;
     int rc = Curl_fnmatch(NULL, tests[i].pattern, tests[i].string);
     if(result & (LINUX_DIFFER|MAC_DIFFER)) {

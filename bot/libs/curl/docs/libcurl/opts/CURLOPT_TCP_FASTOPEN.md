@@ -7,8 +7,7 @@ Source: libcurl
 See-also:
   - CURLOPT_SSL_FALSESTART (3)
 Protocol:
-  - TCP
-Added-in: 7.49.0
+  - All
 ---
 
 # NAME
@@ -38,8 +37,6 @@ Fast Open is also known to be problematic on or across certain networks.
 
 0
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -54,15 +51,12 @@ int main(void)
 }
 ~~~
 
-# NOTES
+# AVAILABILITY
 
-This option is only supported on Linux and macOS 10.11 or later.
-
-# %AVAILABILITY%
+Added in 7.49.0. This option is currently only supported on Linux and macOS
+10.11 or later.
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if fast open is supported by the operating system, otherwise
+returns CURLE_NOT_BUILT_IN.

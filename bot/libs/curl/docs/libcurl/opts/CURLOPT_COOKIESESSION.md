@@ -10,7 +10,6 @@ See-also:
   - CURLOPT_COOKIEJAR (3)
 Protocol:
   - HTTP
-Added-in: 7.9.7
 ---
 
 # NAME
@@ -42,8 +41,6 @@ the same session.
 
 0
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -67,11 +64,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Along with HTTP
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK

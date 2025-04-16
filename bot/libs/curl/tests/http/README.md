@@ -10,12 +10,10 @@ This is an additional test suite using a combination of Apache httpd and nghttpx
 
 # Usage
 
-The test cases and necessary files are in `tests/http`. You can invoke
-`pytest` from there or from the top level curl checkout and it finds all
-tests.
+The test cases and necessary files are in `tests/http`. You can invoke `pytest` from there or from the top level curl checkout and it will find all tests.
 
 ```
-curl> pytest test/http
+curl> pytest
 platform darwin -- Python 3.9.15, pytest-6.2.0, py-1.10.0, pluggy-0.13.1
 rootdir: /Users/sei/projects/curl
 collected 5 items
@@ -26,23 +24,22 @@ tests/http/test_01_basic.py .....
 Pytest takes arguments. `-v` increases its verbosity and can be used several times. `-k <expr>` can be used to run only matching test cases. The `expr` can be something resembling a python test or just a string that needs to match test cases in their names.
 
 ```
-curl/tests/http> pytest -vv -k test_01_02
+curl> pytest -vv -k test_01_02
 ```
 
 runs all test cases that have `test_01_02` in their name. This does not have to be the start of the name.
 
-Depending on your setup, some test cases may be skipped and appear as `s` in
-the output. If you run pytest verbose, it also gives you the reason for
-skipping.
+Depending on your setup, some test cases may be skipped and appear as `s` in the output. If you run pytest verbose, it will also give you the reason for skipping.
+
 
 # Prerequisites
 
-You need:
+You will need:
 
 1. a recent Python, the `cryptography` module and, of course, `pytest`
-2. an apache httpd development version. On Debian/Ubuntu, the package `apache2-dev` has this
+2. a apache httpd development version. On Debian/Ubuntu, the package `apache2-dev` has this.
 3. a local `curl` project build
-3. optionally, a `nghttpx` with HTTP/3 enabled or h3 test cases are skipped
+3. optionally, a `nghttpx` with HTTP/3 enabled or h3 test cases will be skipped.
 
 ### Configuration
 
@@ -50,33 +47,31 @@ Via curl's `configure` script you may specify:
 
   * `--with-test-nghttpx=<path-of-nghttpx>` if you have nghttpx to use somewhere outside your `$PATH`.
   * `--with-test-httpd=<httpd-install-path>` if you have an Apache httpd installed somewhere else. On Debian/Ubuntu it will otherwise look into `/usr/bin` and `/usr/sbin` to find those.
-  * `--with-test-caddy=<caddy-install-path>` if you have a Caddy web server installed somewhere else.
-  * `--with-test-vsftpd=<vsftpd-install-path>` if you have a vsftpd ftp  server installed somewhere else.
 
 ## Usage Tips
 
 Several test cases are parameterized, for example with the HTTP version to use. If you want to run a test with a particular protocol only, use a command line like:
 
 ```
-curl/tests/http> pytest -k "test_02_06 and h2"
+curl> pytest -k "test_02_06 and h2"
 ```
 
-Test cases can be repeated, with the `pytest-repeat` module (`pip install pytest-repeat`). Like in:
+Several test cases can be repeated, they all have the `repeat` parameter. To make this work, you have to start `pytest` in the test directory itself (for some unknown reason). Like in:
 
 ```
-curl/tests/http> pytest -k "test_02_06 and h2" --count=100
+curl/tests/http> pytest -k "test_02_06 and h2" --repeat=100
 ```
 
 which then runs this test case a hundred times. In case of flaky tests, you can make pytest stop on the first one with:
 
 ```
-curl/tests/http> pytest -k "test_02_06 and h2" --count=100 --maxfail=1
+curl/tests/http> pytest -k "test_02_06 and h2" --repeat=100 --maxfail=1
 ```
 
 which allow you to inspect output and log files for the failed run. Speaking of log files, the verbosity of pytest is also used to collect curl trace output. If you specify `-v` three times, the `curl` command is started with `--trace`:
 
 ```
-curl/tests/http> pytest -vvv -k "test_02_06 and h2" --count=100 --maxfail=1
+curl/tests/http> pytest -vvv -k "test_02_06 and h2" --repeat=100 --maxfail=1
 ```
 
 all of curl's output and trace file are found in `tests/http/gen/curl`.
@@ -89,23 +84,12 @@ There is a lot of [`pytest` documentation](https://docs.pytest.org/) with exampl
 
 In `conftest.py` 3 "fixtures" are defined that are used by all test cases:
 
-1. `env`: the test environment. It is an instance of class
-   `testenv/env.py:Env`. It holds all information about paths, availability of
-   features (HTTP/3), port numbers to use, domains and SSL certificates for
-   those.
-2. `httpd`: the Apache httpd instance, configured and started, then stopped at
-   the end of the test suite. It has sites configured for the domains from
-   `env`. It also loads a local module `mod_curltest?` and makes it available
-   in certain locations. (more on mod_curltest below).
-3. `nghttpx`: an instance of nghttpx that provides HTTP/3 support. `nghttpx`
-   proxies those requests to the `httpd` server. In a direct mapping, so you
-   may access all the resources under the same path as with HTTP/2. Only the
-   port number used for HTTP/3 requests are different.
+1. `env`: the test environment. It is an instance of class `testenv/env.py:Env`. It holds all information about paths, availability of features (HTTP/3!), port numbers to use, domains and SSL certificates for those.
+2. `httpd`: the Apache httpd instance, configured and started, then stopped at the end of the test suite. It has sites configured for the domains from `env`. It also loads a local module `mod_curltest?` and makes it available in certain locations. (more on mod_curltest below).
+3. `nghttpx`: an instance of nghttpx that provides HTTP/3 support. `nghttpx` proxies those requests to the `httpd` server. In a direct mapping, so you may access all the resources under the same path as with HTTP/2. Only the port number used for HTTP/3 requests will be different.
 
-`pytest` manages these fixture so that they are created once and terminated
-before exit. This means you can `Ctrl-C` a running pytest and the server then
-shutdowns. Only when you brutally chop its head off, might there be servers
-left behind.
+`pytest` manages these fixture so that they are created once and terminated before exit. This means you can `Ctrl-C` a running pytest and the server will shutdown. Only when you brutally chop its head off, might there be servers left
+behind.
 
 ### Test Cases
 
@@ -141,10 +125,4 @@ The module adds 2 "handlers" to the Apache server (right now). Handler are piece
   * `s`: seconds (the default)
   * `ms`: milliseconds
 
-As you can see, `mod_curltest`'s tweak handler allow to simulate many kinds of
-responses. An example of its use is `test_03_01` where responses are delayed
-using `chunk_delay`. This gives the response a defined duration and the test
-uses that to reload `httpd` in the middle of the first request. A graceful
-reload in httpd lets ongoing requests finish, but closes the connection
-afterwards and tears down the serving process. The following request then
-needs to open a new connection. This is verified by the test case.
+As you can see, `mod_curltest`'s tweak handler allow to simulate many kinds of responses. An example of its use is `test_03_01` where responses are delayed using `chunk_delay`. This gives the response a defined duration and the test uses that to reload `httpd` in the middle of the first request. A graceful reload in httpd lets ongoing requests finish, but will close the connection afterwards and tear down the serving process. The following request need then to open a new connection. This is verified by the test case.

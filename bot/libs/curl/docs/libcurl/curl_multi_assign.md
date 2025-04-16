@@ -9,7 +9,6 @@ See-also:
   - curl_multi_socket_action (3)
 Protocol:
   - All
-Added-in: 7.15.5
 ---
 
 # NAME
@@ -48,23 +47,29 @@ functionality.
 
 It is acceptable to call this function from your multi callback functions.
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
 int main(void)
 {
   CURLM *multi = curl_multi_init();
-  int private = 123;
-  curl_socket_t fd = 0; /* file descriptor to associate our data with */
+  void *ourstructp; /* pointer to our data */
+  curl_socket_t fd; /* file descriptor to associate our data with */
 
   /* make our struct pointer associated with socket fd */
-  CURLMcode mc = curl_multi_assign(multi, fd, &private);
+  CURLMcode mc = curl_multi_assign(multi, fd, ourstructp);
   if(mc)
     printf("error: %s\n", curl_multi_strerror(mc));
 }
 ~~~
+
+# AVAILABILITY
+
+Added in 7.15.5
+
+# RETURN VALUE
+
+The standard CURLMcode for multi interface error codes.
 
 # TYPICAL USAGE
 
@@ -73,15 +78,6 @@ semi-dynamic data for each socket that we must wait for action on when using
 the curl_multi_socket_action(3) approach.
 
 When our socket-callback gets called by libcurl and we get to know about yet
-another socket to wait for, we can use curl_multi_assign(3) to point out the
-particular data so that when we get updates about this same socket again, we
-do not have to find the struct associated with this socket by ourselves.
-
-# %AVAILABILITY%
-
-# RETURN VALUE
-
-This function returns a CURLMcode indicating success or error.
-
-CURLM_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+another socket to wait for, we can use curl_multi_assign(3) to point out
+the particular data so that when we get updates about this same socket again,
+we do not have to find the struct associated with this socket by ourselves.

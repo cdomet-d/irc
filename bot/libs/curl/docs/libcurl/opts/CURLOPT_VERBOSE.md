@@ -11,7 +11,6 @@ See-also:
   - curl_global_trace (3)
 Protocol:
   - All
-Added-in: 7.1
 ---
 
 # NAME
@@ -43,8 +42,6 @@ CURLOPT_DEBUGFUNCTION(3).
 
 0, meaning disabled.
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -63,11 +60,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Always
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK

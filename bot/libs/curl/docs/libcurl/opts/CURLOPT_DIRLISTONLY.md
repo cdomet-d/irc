@@ -11,7 +11,6 @@ Protocol:
   - FTP
   - SFTP
   - POP3
-Added-in: 7.17.0
 ---
 
 # NAME
@@ -37,9 +36,6 @@ messages on the POP3 server. This can be used to change the default behavior
 of libcurl, when combined with a URL that contains a message ID, to perform a
 "scan listing" which can then be used to determine the size of an email.
 
-For FILE, this option has no effect yet as directories are always listed in
-this mode.
-
 Note: For FTP this causes a NLST command to be sent to the FTP server. Beware
 that some FTP servers list only files in their response to NLST; they might
 not include subdirectories and symbolic links.
@@ -53,8 +49,6 @@ effectively breaks that feature.
 # DEFAULT
 
 0, disabled
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -76,16 +70,11 @@ int main(void)
 }
 ~~~
 
-# HISTORY
+# AVAILABILITY
 
 This option was known as CURLOPT_FTPLISTONLY up to 7.16.4. POP3 is supported
 since 7.21.5.
 
-# %AVAILABILITY%
-
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

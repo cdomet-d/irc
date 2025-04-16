@@ -9,7 +9,6 @@ See-also:
   - curl_easy_setopt (3)
 Protocol:
   - All
-Added-in: 7.12.2
 ---
 
 # NAME
@@ -30,16 +29,6 @@ Pass a pointer to a long to receive the errno variable from a connect failure.
 Note that the value is only set on failure, it is not reset upon a successful
 operation. The number is OS and system specific.
 
-libcurl network-related errors that may have a saved errno are:
-CURLE_COULDNT_CONNECT, CURLE_FAILED_INIT, CURLE_INTERFACE_FAILED,
-CURLE_OPERATION_TIMEDOUT, CURLE_RECV_ERROR, CURLE_SEND_ERROR.
-
-Since 8.8.0 libcurl clears the easy handle's saved errno before performing the
-transfer. Prior versions did not clear the saved errno, which means if a saved
-errno is retrieved it could be from a previous transfer on the same handle.
-
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -53,7 +42,7 @@ int main(void)
     if(res != CURLE_OK) {
       long error;
       res = curl_easy_getinfo(curl, CURLINFO_OS_ERRNO, &error);
-      if(!res && error) {
+      if(res && error) {
         printf("Errno: %ld\n", error);
       }
     }
@@ -62,11 +51,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.12.2
 
 # RETURN VALUE
 
-curl_easy_getinfo(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

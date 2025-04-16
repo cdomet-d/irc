@@ -12,7 +12,6 @@ Protocol:
   - TLS
 TLS-backend:
   - OpenSSL
-Added-in: 7.12.3
 ---
 
 # NAME
@@ -37,8 +36,6 @@ available at runtime. **NOTE:** you must call curl_slist_free_all(3)
 on the list pointer once you are done with it, as libcurl does not free this
 data for you.
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -59,11 +56,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.12.3. Available in OpenSSL builds with "engine" support.
 
 # RETURN VALUE
 
-curl_easy_getinfo(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

@@ -67,15 +67,8 @@ static int sockopt_cb(void *clientp,
   return CURL_SOCKOPT_ALREADY_CONNECTED;
 }
 
-#if defined(__AMIGA__)
-#define my_inet_pton(x,y,z) inet_pton(x,(unsigned char *)y,z)
-#else
-#define my_inet_pton(x,y,z) inet_pton(x,y,z)
-#endif
-
-
 /* Expected args: URL IP PORT */
-CURLcode test(char *URL)
+int test(char *URL)
 {
   CURL *curl = NULL;
   CURLcode res = TEST_ERR_MAJOR_BAD;
@@ -85,7 +78,7 @@ CURLcode test(char *URL)
   unsigned short port;
 
   if(!strcmp("check", URL))
-    return CURLE_OK; /* no output makes it not skipped */
+    return 0; /* no output makes it not skipped */
 
   port = (unsigned short)atoi(libtest_arg3);
 
@@ -108,7 +101,7 @@ CURLcode test(char *URL)
   serv_addr.sin_family = AF_INET;
   serv_addr.sin_port = htons(port);
 
-  if(my_inet_pton(AF_INET, libtest_arg2, &serv_addr.sin_addr) <= 0) {
+  if(inet_pton(AF_INET, libtest_arg2, &serv_addr.sin_addr) <= 0) {
     fprintf(stderr, "inet_pton failed\n");
     goto test_cleanup;
   }
@@ -139,18 +132,18 @@ CURLcode test(char *URL)
   res = curl_easy_perform(curl);
 
 test_cleanup:
-  curl_easy_cleanup(curl);
   if(client_fd != CURL_SOCKET_BAD)
     sclose(client_fd);
+  curl_easy_cleanup(curl);
   curl_global_cleanup();
 
   return res;
 }
 #else
-CURLcode test(char *URL)
+int test(char *URL)
 {
   (void)URL;
   printf("lacks inet_pton\n");
-  return CURLE_OK;
+  return 0;
 }
 #endif

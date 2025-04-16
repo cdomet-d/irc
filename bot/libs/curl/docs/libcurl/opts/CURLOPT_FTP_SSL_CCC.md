@@ -10,7 +10,6 @@ See-also:
   - CURLOPT_FTPSSLAUTH (3)
   - CURLOPT_PROTOCOLS_STR (3)
   - CURLOPT_USE_SSL (3)
-Added-in: 7.16.1
 ---
 
 # NAME
@@ -50,8 +49,6 @@ Initiate the shutdown and wait for a reply.
 
 CURLFTPSSL_CCC_NONE
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -70,11 +67,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.16.1
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

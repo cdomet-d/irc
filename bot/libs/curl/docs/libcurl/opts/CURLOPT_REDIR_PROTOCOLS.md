@@ -11,7 +11,6 @@ See-also:
   - CURLOPT_REDIR_PROTOCOLS_STR (3)
 Protocol:
   - HTTP
-Added-in: 7.19.4
 ---
 
 # NAME
@@ -30,12 +29,12 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_REDIR_PROTOCOLS, long bitmask);
 
 This option is deprecated. We strongly recommend using
 CURLOPT_REDIR_PROTOCOLS_STR(3) instead because this option cannot
-control all available protocols.
+control all available protocols!
 
-Pass a long that holds a bitmask of protocol bits. If used, this bitmask
+Pass a long that holds a bitmask of CURLPROTO_* defines. If used, this bitmask
 limits what protocols libcurl may use in a transfer that it follows to in a
-redirect when CURLOPT_FOLLOWLOCATION(3) is enabled. This allows you to limit
-specific transfers to only be allowed to use a subset of protocols in
+redirect when CURLOPT_FOLLOWLOCATION(3) is enabled. This allows you to
+limit specific transfers to only be allowed to use a subset of protocols in
 redirections.
 
 Protocols denied by CURLOPT_PROTOCOLS(3) are not overridden by this
@@ -84,8 +83,6 @@ HTTP, HTTPS, FTP and FTPS (Added in 7.65.2).
 Older versions defaulted to all protocols except FILE, SCP and since 7.40.0
 SMB and SMBS.
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -106,15 +103,11 @@ int main(int argc, char **argv)
 }
 ~~~
 
-# DEPRECATED
+# AVAILABILITY
 
-Deprecated since 7.85.0.
-
-# %AVAILABILITY%
+Added in 7.19.4, before then it would follow all protocols. Deprecated
+since 7.85.0.
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

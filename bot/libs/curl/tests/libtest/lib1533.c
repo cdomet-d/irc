@@ -98,16 +98,15 @@ static size_t write_callback(char *ptr, size_t size, size_t nmemb,
 }
 
 
-static CURLcode perform_and_check_connections(CURL *curl,
-                                              const char *description,
-                                              long expected_connections)
+static int perform_and_check_connections(CURL *curl, const char *description,
+                                         long expected_connections)
 {
   CURLcode res;
   long connections = 0;
 
   res = curl_easy_perform(curl);
   if(res != CURLE_OK) {
-    fprintf(stderr, "curl_easy_perform() failed with %d\n", res);
+    fprintf(stderr, "curl_easy_perform() failed with %d\n", (int)res);
     return TEST_ERR_MAJOR_BAD;
   }
 
@@ -128,12 +127,11 @@ static CURLcode perform_and_check_connections(CURL *curl,
 }
 
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
   struct cb_data data;
   CURL *curl = NULL;
-  CURLcode res = TEST_ERR_FAILURE;
-  CURLcode result;
+  int res = TEST_ERR_FAILURE;
 
   if(curl_global_init(CURL_GLOBAL_ALL) != CURLE_OK) {
     fprintf(stderr, "curl_global_init() failed\n");
@@ -159,19 +157,17 @@ CURLcode test(char *URL)
   test_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
   test_setopt(curl, CURLOPT_WRITEDATA, &data);
 
-  result = perform_and_check_connections(curl,
+  res = perform_and_check_connections(curl,
     "First request without CURLOPT_KEEP_SENDING_ON_ERROR", 1);
-  if(result != TEST_ERR_SUCCESS) {
-    res = result;
+  if(res != TEST_ERR_SUCCESS) {
     goto test_cleanup;
   }
 
   reset_data(&data, curl);
 
-  result = perform_and_check_connections(curl,
+  res = perform_and_check_connections(curl,
     "Second request without CURLOPT_KEEP_SENDING_ON_ERROR", 1);
-  if(result != TEST_ERR_SUCCESS) {
-    res = result;
+  if(res != TEST_ERR_SUCCESS) {
     goto test_cleanup;
   }
 
@@ -179,19 +175,17 @@ CURLcode test(char *URL)
 
   reset_data(&data, curl);
 
-  result = perform_and_check_connections(curl,
+  res = perform_and_check_connections(curl,
     "First request with CURLOPT_KEEP_SENDING_ON_ERROR", 1);
-  if(result != TEST_ERR_SUCCESS) {
-    res = result;
+  if(res != TEST_ERR_SUCCESS) {
     goto test_cleanup;
   }
 
   reset_data(&data, curl);
 
-  result = perform_and_check_connections(curl,
+  res = perform_and_check_connections(curl,
     "Second request with CURLOPT_KEEP_SENDING_ON_ERROR", 0);
-  if(result != TEST_ERR_SUCCESS) {
-    res = result;
+  if(res != TEST_ERR_SUCCESS) {
     goto test_cleanup;
   }
 
@@ -203,5 +197,5 @@ test_cleanup:
 
   curl_global_cleanup();
 
-  return res;
+  return (int)res;
 }

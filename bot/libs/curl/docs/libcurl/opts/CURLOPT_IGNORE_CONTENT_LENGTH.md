@@ -10,7 +10,6 @@ Protocol:
 See-also:
   - CURLOPT_HTTP_VERSION (3)
   - CURLOPT_MAXFILESIZE_LARGE (3)
-Added-in: 7.14.1
 ---
 
 # NAME
@@ -46,8 +45,6 @@ Only use this option if strictly necessary.
 
 0
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -65,15 +62,11 @@ int main(void)
 }
 ~~~
 
-# HISTORY
+# AVAILABILITY
 
-Support for FTP added in 7.46.0.
-
-# %AVAILABILITY%
+Added in 7.14.1. Support for FTP added in 7.46.0. This option is not working
+for HTTP when libcurl is built to use the hyper backend.
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

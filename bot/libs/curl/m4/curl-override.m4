@@ -44,14 +44,15 @@ dnl -------------------------------------------------
 dnl This is done to prevent compiler warning
 dnl 'function declaration isn't a prototype'
 dnl in function main. This requires at least
-dnl a C89 compiler and does not support K&R.
+dnl a c89 compiler and does not support K&R.
 
 m4_define([AC_LANG_PROGRAM(C)],
 [$1
-int main(void)
+int main (void)
 {
 $2
-  return 0;
+ ;
+ return 0;
 }])
 
 dnl Override Autoconf's AC_LANG_CALL (C)
@@ -92,6 +93,6 @@ extern "C"
 #endif
 char $1 ();
 #if defined __stub_$1 || defined __stub___$1
-#error force compilation error
+choke me
 #endif
 ], [return $1 ();])])

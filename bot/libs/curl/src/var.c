@@ -23,6 +23,8 @@
  ***************************************************************************/
 #include "tool_setup.h"
 
+#define ENABLE_CURLX_PRINTF
+/* use our own printf() functions */
 #include "curlx.h"
 
 #include "tool_cfgable.h"
@@ -56,19 +58,19 @@ static char *Memdup(const char *data, size_t len)
 /* free everything */
 void varcleanup(struct GlobalConfig *global)
 {
-  struct tool_var *list = global->variables;
+  struct var *list = global->variables;
   while(list) {
-    struct tool_var *t = list;
+    struct var *t = list;
     list = list->next;
-    free(CURL_UNCONST(t->content));
+    free((char *)t->content);
     free(t);
   }
 }
 
-static const struct tool_var *varcontent(struct GlobalConfig *global,
-                                         const char *name, size_t nlen)
+static const struct var *varcontent(struct GlobalConfig *global,
+                                    const char *name, size_t nlen)
 {
-  struct tool_var *list = global->variables;
+  struct var *list = global->variables;
   while(list) {
     if((strlen(list->name) == nlen) &&
        !strncmp(name, list->name, nlen)) {
@@ -91,8 +93,6 @@ static const struct tool_var *varcontent(struct GlobalConfig *global,
 #define FUNC_URL_LEN (sizeof(FUNC_URL) - 1)
 #define FUNC_B64 "b64"
 #define FUNC_B64_LEN (sizeof(FUNC_B64) - 1)
-#define FUNC_64DEC "64dec" /* base64 decode */
-#define FUNC_64DEC_LEN (sizeof(FUNC_64DEC) - 1)
 
 static ParameterError varfunc(struct GlobalConfig *global,
                               char *c, /* content */
@@ -110,7 +110,7 @@ static ParameterError varfunc(struct GlobalConfig *global,
     if(*f == '}')
       /* end of functions */
       break;
-    /* On entry, this is known to be a colon already. In subsequent laps, it
+    /* On entry, this is known to be a colon already.  In subsequent laps, it
        is also known to be a colon since that is part of the FUNCMATCH()
        checks */
     f++;
@@ -119,7 +119,7 @@ static ParameterError varfunc(struct GlobalConfig *global,
       f += FUNC_TRIM_LEN;
       if(clen) {
         /* skip leading white space, including CRLF */
-        while(ISSPACE(*c)) {
+        while(*c && ISSPACE(*c)) {
           c++;
           len--;
         }
@@ -177,27 +177,6 @@ static ParameterError varfunc(struct GlobalConfig *global,
         if(curlx_dyn_addn(out, enc, elen))
           err = PARAM_NO_MEM;
         curl_free(enc);
-        if(err)
-          break;
-      }
-    }
-    else if(FUNCMATCH(f, FUNC_64DEC, FUNC_64DEC_LEN)) {
-      f += FUNC_64DEC_LEN;
-      curlx_dyn_reset(out);
-      if(clen) {
-        unsigned char *enc;
-        size_t elen;
-        CURLcode result = curlx_base64_decode(c, &enc, &elen);
-        /* put it in the output */
-        if(result) {
-          if(curlx_dyn_add(out, "[64dec-fail]"))
-            err = PARAM_NO_MEM;
-        }
-        else {
-          if(curlx_dyn_addn(out, enc, elen))
-            err = PARAM_NO_MEM;
-          curl_free(enc);
-        }
         if(err)
           break;
       }
@@ -308,9 +287,9 @@ ParameterError varexpand(struct GlobalConfig *global,
           char *value;
           size_t vlen = 0;
           struct curlx_dynbuf buf;
-          const struct tool_var *v = varcontent(global, name, nlen);
+          const struct var *v = varcontent(global, name, nlen);
           if(v) {
-            value = (char *)CURL_UNCONST(v->content);
+            value = (char *)v->content;
             vlen = v->clen;
           }
           else
@@ -374,17 +353,17 @@ static ParameterError addvariable(struct GlobalConfig *global,
                                   size_t clen,
                                   bool contalloc)
 {
-  struct tool_var *p;
-  const struct tool_var *check = varcontent(global, name, nlen);
+  struct var *p;
+  const struct var *check = varcontent(global, name, nlen);
   DEBUGASSERT(nlen);
   if(check)
     notef(global, "Overwriting variable '%s'", check->name);
 
-  p = calloc(1, sizeof(struct tool_var) + nlen);
+  p = calloc(1, sizeof(struct var) + nlen);
   if(p) {
     memcpy(p->name, name, nlen);
 
-    p->content = contalloc ? content : Memdup(content, clen);
+    p->content = contalloc ? content: Memdup(content, clen);
     if(p->content) {
       p->clen = clen;
 
@@ -396,8 +375,6 @@ static ParameterError addvariable(struct GlobalConfig *global,
   }
   return PARAM_NO_MEM;
 }
-
-#define MAX_FILENAME 10000
 
 ParameterError setvariable(struct GlobalConfig *global,
                            const char *input)
@@ -412,8 +389,6 @@ ParameterError setvariable(struct GlobalConfig *global,
   bool import = FALSE;
   char *ge = NULL;
   char buf[MAX_VAR_LEN];
-  curl_off_t startoffset = 0;
-  curl_off_t endoffset = CURL_OFF_T_MAX;
 
   if(*input == '%') {
     import = TRUE;
@@ -448,70 +423,36 @@ ParameterError setvariable(struct GlobalConfig *global,
       clen = strlen(ge);
     }
   }
-  if(*line == '[' && ISDIGIT(line[1])) {
-    /* is there a byte range specified? [num-num] */
-    line++;
-    if(curlx_str_number(&line, &startoffset, CURL_OFF_T_MAX) ||
-       curlx_str_single(&line, '-'))
-      return PARAM_VAR_SYNTAX;
-    if(curlx_str_single(&line, ']')) {
-      if(curlx_str_number(&line, &endoffset, CURL_OFF_T_MAX) ||
-         curlx_str_single(&line, ']'))
-        return PARAM_VAR_SYNTAX;
-    }
-    if(startoffset > endoffset)
-      return PARAM_VAR_SYNTAX;
-  }
   if(content)
     ;
   else if(*line == '@') {
     /* read from file or stdin */
     FILE *file;
     bool use_stdin;
-    struct dynbuf fname;
     line++;
-
-    curlx_dyn_init(&fname, MAX_FILENAME);
-
     use_stdin = !strcmp(line, "-");
     if(use_stdin)
       file = stdin;
     else {
       file = fopen(line, "rb");
       if(!file) {
-        errorf(global, "Failed to open %s: %s", line,
-               strerror(errno));
-        err = PARAM_READ_ERROR;
+        errorf(global, "Failed to open %s", line);
+        return PARAM_READ_ERROR;
       }
     }
-    if(!err) {
-      err = file2memory_range(&content, &clen, file, startoffset, endoffset);
-      /* in case of out of memory, this should fail the entire operation */
-      if(clen)
-        contalloc = TRUE;
-    }
-    curlx_dyn_free(&fname);
-    if(!use_stdin && file)
+    err = file2memory(&content, &clen, file);
+    /* in case of out of memory, this should fail the entire operation */
+    contalloc = TRUE;
+    if(!use_stdin)
       fclose(file);
     if(err)
       return err;
   }
   else if(*line == '=') {
     line++;
-    clen = strlen(line);
     /* this is the exact content */
-    content = (char *)CURL_UNCONST(line);
-    if(startoffset || (endoffset != CURL_OFF_T_MAX)) {
-      if(startoffset >= (curl_off_t)clen)
-        clen = 0;
-      else {
-        /* make the end offset no larger than the last byte */
-        if(endoffset >= (curl_off_t)clen)
-          endoffset = clen - 1;
-        clen = (size_t)(endoffset - startoffset) + 1;
-        content += startoffset;
-      }
-    }
+    content = (char *)line;
+    clen = strlen(line);
   }
   else {
     warnf(global, "Bad --variable syntax, skipping: %s", input);

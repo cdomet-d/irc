@@ -9,7 +9,6 @@ See-also:
   - CURLOPT_PROXYTYPE (3)
 Protocol:
   - All
-Added-in: 7.19.4
 ---
 
 # NAME
@@ -40,8 +39,6 @@ option.
 
 See above
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -59,15 +56,11 @@ int main(void)
 }
 ~~~
 
-# DEPRECATED
+# AVAILABILITY
 
-Deprecated since 7.49.0
-
-# %AVAILABILITY%
+Added in 7.19.4, deprecated in 7.49.0
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, CURLE_UNKNOWN_OPTION if not, or
+CURLE_OUT_OF_MEMORY if there was insufficient heap space.

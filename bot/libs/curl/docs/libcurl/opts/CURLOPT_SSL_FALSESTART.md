@@ -10,7 +10,6 @@ Protocol:
   - TLS
 TLS-backend:
   - Secure Transport
-Added-in: 7.42.0
 ---
 
 # NAME
@@ -38,8 +37,6 @@ when performing a full handshake.
 
 0
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -54,11 +51,12 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.42.0. This option is currently only supported by the Secure
+Transport (on iOS 7.0 or later, or OS X 10.9 or later) TLS backend.
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if false start is supported by the SSL backend, otherwise
+returns CURLE_NOT_BUILT_IN.

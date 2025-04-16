@@ -22,100 +22,96 @@
 #
 ###########################################################################
 
-SERVERPROGS = resolve rtspd sockfilt sws tftpd socksd disabled mqttd
-
-MEMDEBUG = \
-  ../../lib/memdebug.c \
-  ../../lib/memdebug.h
+noinst_PROGRAMS = getpart resolve rtspd sockfilt sws tftpd fake_ntlm    \
+ socksd disabled mqttd
 
 CURLX_SRCS = \
-  ../../lib/mprintf.c \
-  ../../lib/nonblock.c \
-  ../../lib/strparse.c \
-  ../../lib/strequal.c \
-  ../../lib/warnless.c \
-  ../../lib/timediff.c \
-  ../../lib/timeval.c \
-  ../../lib/dynbuf.c \
-  ../../lib/strcase.c \
-  ../../lib/strdup.c \
-  ../../lib/curl_get_line.c \
-  ../../lib/curl_multibyte.c \
-  ../../lib/version_win32.c
+ ../../lib/mprintf.c \
+ ../../lib/nonblock.c \
+ ../../lib/strtoofft.c \
+ ../../lib/warnless.c \
+ ../../lib/timediff.c \
+ ../../lib/dynbuf.c \
+ ../../lib/strdup.c \
+ ../../lib/strcase.c \
+ ../../lib/curl_multibyte.c
 
 CURLX_HDRS = \
-  ../../lib/curlx.h \
-  ../../lib/curl_ctype.h \
-  ../../lib/nonblock.h \
-  ../../lib/strcase.h \
-  ../../lib/warnless.h \
-  ../../lib/timediff.h \
-  ../../lib/timeval.h \
-  ../../lib/dynbuf.h \
-  ../../lib/strcase.h \
-  ../../lib/strdup.h \
-  ../../lib/curl_get_line.h \
-  ../../lib/curl_multibyte.h \
-  ../../lib/version_win32.h
+ ../../lib/curlx.h \
+ ../../lib/nonblock.h \
+ ../../lib/strtoofft.h \
+ ../../lib/warnless.h \
+ ../../lib/timediff.h \
+ ../../lib/curl_ctype.h \
+ ../../lib/dynbuf.h \
+ ../../lib/strdup.h \
+ ../../lib/curl_multibyte.h
+
+USEFUL = \
+ getpart.c \
+ getpart.h \
+ server_setup.h \
+ ../../lib/base64.c \
+ ../../lib/curl_base64.h \
+ ../../lib/memdebug.c \
+ ../../lib/memdebug.h
 
 UTIL = \
-  getpart.c \
-  getpart.h \
-  util.c \
-  util.h \
-  server_setup.h \
-  ../../lib/base64.c \
-  ../../lib/curl_base64.h \
-  ../../lib/strerror.c \
-  ../../lib/strerror.h
+ util.c \
+ util.h
 
-FIRSTFILES = \
-  first.c \
-  first.h
+getpart_SOURCES = $(CURLX_SRCS) $(CURLX_HDRS) $(USEFUL) \
+ testpart.c
+getpart_LDADD = @CURL_NETWORK_AND_TIME_LIBS@
+getpart_CFLAGS = $(AM_CFLAGS)
 
-INET_PTON = \
-  ../../lib/inet_pton.c
-
-resolve_SOURCES = $(MEMDEBUG) $(CURLX_SRCS) $(CURLX_HDRS) $(UTIL) \
-  resolve.c
+resolve_SOURCES = $(CURLX_SRCS) $(CURLX_HDRS) $(USEFUL) $(UTIL) \
+ resolve.c
 resolve_LDADD = @CURL_NETWORK_AND_TIME_LIBS@
 resolve_CFLAGS = $(AM_CFLAGS)
 
-rtspd_SOURCES = $(MEMDEBUG) $(CURLX_SRCS) $(CURLX_HDRS) $(UTIL) \
-  server_sockaddr.h \
-  rtspd.c
+rtspd_SOURCES = $(CURLX_SRCS) $(CURLX_HDRS) $(USEFUL) $(UTIL) \
+ server_sockaddr.h \
+ rtspd.c
 rtspd_LDADD = @CURL_NETWORK_AND_TIME_LIBS@
 rtspd_CFLAGS = $(AM_CFLAGS)
 
-sockfilt_SOURCES = $(MEMDEBUG) $(CURLX_SRCS) $(CURLX_HDRS) $(UTIL) $(INET_PTON) \
-  server_sockaddr.h \
-  sockfilt.c
+sockfilt_SOURCES = $(CURLX_SRCS) $(CURLX_HDRS) $(USEFUL) $(UTIL) \
+ server_sockaddr.h \
+ sockfilt.c \
+ ../../lib/inet_pton.c
 sockfilt_LDADD = @CURL_NETWORK_AND_TIME_LIBS@
 sockfilt_CFLAGS = $(AM_CFLAGS)
 
-socksd_SOURCES = $(MEMDEBUG) $(CURLX_SRCS) $(CURLX_HDRS) $(UTIL) $(INET_PTON) \
-  server_sockaddr.h \
-  socksd.c
+socksd_SOURCES = $(CURLX_SRCS) $(CURLX_HDRS) $(USEFUL) $(UTIL) \
+ server_sockaddr.h socksd.c \
+ ../../lib/inet_pton.c
 socksd_LDADD = @CURL_NETWORK_AND_TIME_LIBS@
 socksd_CFLAGS = $(AM_CFLAGS)
 
-mqttd_SOURCES = $(MEMDEBUG) $(CURLX_SRCS) $(CURLX_HDRS) $(UTIL) \
-  server_sockaddr.h \
-  mqttd.c
+mqttd_SOURCES = $(CURLX_SRCS) $(CURLX_HDRS) $(USEFUL) $(UTIL) \
+ server_sockaddr.h mqttd.c \
+ ../../lib/inet_pton.c
 mqttd_LDADD = @CURL_NETWORK_AND_TIME_LIBS@
 mqttd_CFLAGS = $(AM_CFLAGS)
 
-sws_SOURCES = $(MEMDEBUG) $(CURLX_SRCS) $(CURLX_HDRS) $(UTIL) $(INET_PTON) \
-  server_sockaddr.h \
-  sws.c
+sws_SOURCES = $(CURLX_SRCS) $(CURLX_HDRS) $(USEFUL) $(UTIL) \
+ server_sockaddr.h \
+ sws.c \
+ ../../lib/inet_pton.c
 sws_LDADD = @CURL_NETWORK_AND_TIME_LIBS@
 sws_CFLAGS = $(AM_CFLAGS)
 
-tftpd_SOURCES = $(MEMDEBUG) $(CURLX_SRCS) $(CURLX_HDRS) $(UTIL) \
-  server_sockaddr.h \
-  tftpd.c \
-  tftp.h
+tftpd_SOURCES = $(CURLX_SRCS) $(CURLX_HDRS) $(USEFUL) $(UTIL) \
+ server_sockaddr.h \
+ tftpd.c \
+ tftp.h
 tftpd_LDADD = @CURL_NETWORK_AND_TIME_LIBS@
 tftpd_CFLAGS = $(AM_CFLAGS)
+
+fake_ntlm_SOURCES = $(CURLX_SRCS) $(CURLX_HDRS) $(USEFUL) $(UTIL) \
+ fake_ntlm.c
+fake_ntlm_LDADD = @CURL_NETWORK_AND_TIME_LIBS@
+fake_ntlm_CFLAGS = $(AM_CFLAGS)
 
 disabled_SOURCES = disabled.c

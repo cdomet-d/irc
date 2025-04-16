@@ -26,7 +26,7 @@
 #include "testutil.h"
 #include "memdebug.h"
 
-#ifdef _WIN32
+#if defined(_WIN32)
 
 struct timeval tutil_tvnow(void)
 {
@@ -133,15 +133,10 @@ double tutil_tvdiff_secs(struct timeval newer, struct timeval older)
 #ifdef _WIN32
 HMODULE win32_load_system_library(const TCHAR *filename)
 {
-#if defined(CURL_WINDOWS_UWP) || defined(UNDER_CE)
-  (void)filename;
-  return NULL;
-#else
   size_t filenamelen = _tcslen(filename);
   size_t systemdirlen = GetSystemDirectory(NULL, 0);
   size_t written;
   TCHAR *path;
-  HMODULE module;
 
   if(!filenamelen || filenamelen > 32768 ||
      !systemdirlen || systemdirlen > 32768)
@@ -154,21 +149,14 @@ HMODULE win32_load_system_library(const TCHAR *filename)
 
   /* if written >= systemdirlen then nothing was written */
   written = GetSystemDirectory(path, (unsigned int)systemdirlen);
-  if(!written || written >= systemdirlen) {
-    free(path);
+  if(!written || written >= systemdirlen)
     return NULL;
-  }
 
   if(path[written - 1] != _T('\\'))
     path[written++] = _T('\\');
 
   _tcscpy(path + written, filename);
 
-  module = LoadLibrary(path);
-
-  free(path);
-
-  return module;
-#endif
+  return LoadLibrary(path);
 }
 #endif

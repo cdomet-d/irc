@@ -11,7 +11,6 @@ See-also:
   - CURLOPT_MAXREDIRS (3)
 Protocol:
   - All
-Added-in: 7.7
 ---
 
 # NAME
@@ -28,18 +27,18 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_MAXCONNECTS, long amount);
 
 # DESCRIPTION
 
-Pass a long. The set *amount* is the maximum number of connections that
-libcurl may keep alive in its connection cache after use. The default is 5,
-and there is not much point in changing this value unless you are perfectly
-aware of how this works. This concerns connections using any of the protocols
-that support persistent connections.
+Pass a long. The set *amount* is the maximum number of simultaneously open
+persistent connections that libcurl may cache in the pool associated with this
+handle. The default is 5, and there is not much point in changing this value
+unless you are perfectly aware of how this works. This concerns connections
+using any of the protocols that support persistent connections.
 
-When reaching the maximum limit, curl closes the oldest connection present in
-the cache to prevent the number of connections from increasing.
+When reaching the maximum limit, curl closes the oldest one in the cache to
+prevent increasing the number of open connections.
 
 If you already have performed transfers with this curl handle, setting a
-smaller CURLOPT_MAXCONNECTS(3) than before may cause open connections to get
-closed unnecessarily.
+smaller CURLOPT_MAXCONNECTS(3) than before may cause open connections to
+get closed unnecessarily.
 
 If you add this easy handle to a multi handle, this setting is not
 acknowledged, and you must instead use curl_multi_setopt(3) and the
@@ -48,8 +47,6 @@ CURLMOPT_MAXCONNECTS(3) option.
 # DEFAULT
 
 5
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -67,11 +64,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Always
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK

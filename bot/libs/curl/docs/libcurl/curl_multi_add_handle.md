@@ -12,7 +12,6 @@ See-also:
   - curl_multi_socket_action (3)
 Protocol:
   - All
-Added-in: 7.9.6
 ---
 
 # NAME
@@ -64,8 +63,6 @@ first the easy handle and then the multi handle:
 
 3 - curl_multi_cleanup(3)
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -84,11 +81,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.9.6
 
 # RETURN VALUE
 
-This function returns a CURLMcode indicating success or error.
-
-CURLM_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+CURLMcode type, general libcurl multi interface error code.

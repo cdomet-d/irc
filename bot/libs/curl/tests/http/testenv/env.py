@@ -24,19 +24,19 @@
 #
 ###########################################################################
 #
-import gzip
 import logging
 import os
 import re
-import shutil
 import socket
 import subprocess
-import tempfile
+import sys
 from configparser import ConfigParser, ExtendedInterpolation
 from datetime import timedelta
 from typing import Optional
 
-from .certs import CertificateSpec, Credentials, TestCA
+import pytest
+
+from .certs import CertificateSpec, TestCA, Credentials
 from .ports import alloc_ports
 
 
@@ -52,9 +52,10 @@ def init_config_from(conf_path):
 
 
 TESTS_HTTPD_PATH = os.path.dirname(os.path.dirname(__file__))
-TOP_PATH = os.path.join(os.getcwd(), os.path.pardir)
-DEF_CONFIG = init_config_from(os.path.join(TOP_PATH, 'tests', 'http', 'config.ini'))
-CURL = os.path.join(TOP_PATH, 'src', 'curl')
+DEF_CONFIG = init_config_from(os.path.join(TESTS_HTTPD_PATH, 'config.ini'))
+
+TOP_PATH = os.path.dirname(os.path.dirname(TESTS_HTTPD_PATH))
+CURL = os.path.join(TOP_PATH, 'src/curl')
 
 
 class EnvConfig:
@@ -63,63 +64,50 @@ class EnvConfig:
         self.tests_dir = TESTS_HTTPD_PATH
         self.gen_dir = os.path.join(self.tests_dir, 'gen')
         self.project_dir = os.path.dirname(os.path.dirname(self.tests_dir))
-        self.build_dir = TOP_PATH
         self.config = DEF_CONFIG
         # check cur and its features
         self.curl = CURL
         if 'CURL' in os.environ:
             self.curl = os.environ['CURL']
         self.curl_props = {
-            'version_string': '',
-            'version': '',
-            'os': '',
-            'fullname': '',
-            'features_string': '',
-            'features': set(),
-            'protocols_string': '',
-            'protocols': set(),
-            'libs': set(),
-            'lib_versions': set(),
+            'version': None,
+            'os': None,
+            'fullname': None,
+            'features': [],
+            'protocols': [],
+            'libs': [],
+            'lib_versions': [],
         }
-        self.curl_is_debug = False
         self.curl_protos = []
         p = subprocess.run(args=[self.curl, '-V'],
                            capture_output=True, text=True)
         if p.returncode != 0:
-            raise RuntimeError(f'{self.curl} -V failed with exit code: {p.returncode}')
-        if p.stderr.startswith('WARNING:'):
-            self.curl_is_debug = True
-        for line in p.stdout.splitlines(keepends=False):
-            if line.startswith('curl '):
-                self.curl_props['version_string'] = line
-                m = re.match(r'^curl (?P<version>\S+) (?P<os>\S+) (?P<libs>.*)$', line)
+            assert False, f'{self.curl} -V failed with exit code: {p.returncode}'
+        for l in p.stdout.splitlines(keepends=False):
+            if l.startswith('curl '):
+                m = re.match(r'^curl (?P<version>\S+) (?P<os>\S+) (?P<libs>.*)$', l)
                 if m:
                     self.curl_props['fullname'] = m.group(0)
                     self.curl_props['version'] = m.group('version')
                     self.curl_props['os'] = m.group('os')
-                    self.curl_props['lib_versions'] = {
+                    self.curl_props['lib_versions'] = [
                         lib.lower() for lib in m.group('libs').split(' ')
-                    }
-                    self.curl_props['libs'] = {
-                        re.sub(r'/[a-z0-9.-]*', '', lib) for lib in self.curl_props['lib_versions']
-                    }
-            if line.startswith('Features: '):
-                self.curl_props['features_string'] = line[10:]
-                self.curl_props['features'] = {
-                    feat.lower() for feat in line[10:].split(' ')
-                }
-            if line.startswith('Protocols: '):
-                self.curl_props['protocols_string'] = line[11:]
-                self.curl_props['protocols'] = {
-                    prot.lower() for prot in line[11:].split(' ')
-                }
+                    ]
+                    self.curl_props['libs'] = [
+                        re.sub(r'/.*', '', lib) for lib in self.curl_props['lib_versions']
+                    ]
+            if l.startswith('Features: '):
+                self.curl_props['features'] = [
+                    feat.lower() for feat in l[10:].split(' ')
+                ]
+            if l.startswith('Protocols: '):
+                self.curl_props['protocols'] = [
+                    prot.lower() for prot in l[11:].split(' ')
+                ]
 
         self.ports = alloc_ports(port_specs={
-            'ftp': socket.SOCK_STREAM,
-            'ftps': socket.SOCK_STREAM,
             'http': socket.SOCK_STREAM,
             'https': socket.SOCK_STREAM,
-            'nghttpx_https': socket.SOCK_STREAM,
             'proxy': socket.SOCK_STREAM,
             'proxys': socket.SOCK_STREAM,
             'h2proxys': socket.SOCK_STREAM,
@@ -128,6 +116,7 @@ class EnvConfig:
             'ws': socket.SOCK_STREAM,
         })
         self.httpd = self.config['httpd']['httpd']
+        self.apachectl = self.config['httpd']['apachectl']
         self.apxs = self.config['httpd']['apxs']
         if len(self.apxs) == 0:
             self.apxs = None
@@ -140,18 +129,12 @@ class EnvConfig:
         self.htdocs_dir = os.path.join(self.gen_dir, 'htdocs')
         self.tld = 'http.curl.se'
         self.domain1 = f"one.{self.tld}"
-        self.domain1brotli = f"brotli.one.{self.tld}"
         self.domain2 = f"two.{self.tld}"
-        self.ftp_domain = f"ftp.{self.tld}"
         self.proxy_domain = f"proxy.{self.tld}"
-        self.expired_domain = f"expired.{self.tld}"
         self.cert_specs = [
-            CertificateSpec(domains=[self.domain1, self.domain1brotli, 'localhost', '127.0.0.1'], key_type='rsa2048'),
+            CertificateSpec(domains=[self.domain1, 'localhost'], key_type='rsa2048'),
             CertificateSpec(domains=[self.domain2], key_type='rsa2048'),
-            CertificateSpec(domains=[self.ftp_domain], key_type='rsa2048'),
             CertificateSpec(domains=[self.proxy_domain, '127.0.0.1'], key_type='rsa2048'),
-            CertificateSpec(domains=[self.expired_domain], key_type='rsa2048',
-                            valid_from=timedelta(days=-100), valid_to=timedelta(days=-10)),
             CertificateSpec(name="clientsX", sub_specs=[
                CertificateSpec(name="user1", client=True),
             ]),
@@ -184,46 +167,9 @@ class EnvConfig:
                 if p.returncode != 0:
                     # not a working caddy
                     self.caddy = None
-                m = re.match(r'v?(\d+\.\d+\.\d+).*', p.stdout)
-                if m:
-                    self._caddy_version = m.group(1)
-                else:
-                    raise RuntimeError(f'Unable to determine cadd version from: {p.stdout}')
-            # TODO: specify specific exceptions here
-            except:  # noqa: E722
+                self._caddy_version = re.sub(r' .*', '', p.stdout.strip())
+            except:
                 self.caddy = None
-
-        self.vsftpd = self.config['vsftpd']['vsftpd']
-        self._vsftpd_version = None
-        if self.vsftpd is not None:
-            try:
-                with tempfile.TemporaryFile('w+') as tmp:
-                    p = subprocess.run(args=[self.vsftpd, '-v'],
-                                       capture_output=True, text=True, stdin=tmp)
-                    if p.returncode != 0:
-                        # not a working vsftpd
-                        self.vsftpd = None
-                    if p.stderr:
-                        ver_text = p.stderr
-                    else:
-                        # Oddly, some versions of vsftpd write to stdin (!)
-                        # instead of stderr, which is odd but works. If there
-                        # is nothing on stderr, read the file on stdin and use
-                        # any data there instead.
-                        tmp.seek(0)
-                        ver_text = tmp.read()
-                m = re.match(r'vsftpd: version (\d+\.\d+\.\d+)', ver_text)
-                if m:
-                    self._vsftpd_version = m.group(1)
-                elif len(p.stderr) == 0:
-                    # vsftp does not use stdout or stderr for printing its version... -.-
-                    self._vsftpd_version = 'unknown'
-                else:
-                    raise Exception(f'Unable to determine VsFTPD version from: {p.stderr}')
-            except Exception:
-                self.vsftpd = None
-
-        self._tcpdump = shutil.which('tcpdump')
 
     @property
     def httpd_version(self):
@@ -235,8 +181,8 @@ class EnvConfig:
                     log.error(f'{self.apxs} failed to query HTTPD_VERSION: {p}')
                 else:
                     self._httpd_version = p.stdout.strip()
-            except Exception:
-                log.exception(f'{self.apxs} failed to run')
+            except Exception as e:
+                log.error(f'{self.apxs} failed to run: {e}')
         return self._httpd_version
 
     def versiontuple(self, v):
@@ -249,24 +195,21 @@ class EnvConfig:
         hv = self.versiontuple(self.httpd_version)
         return hv >= self.versiontuple(minv)
 
-    def caddy_is_at_least(self, minv):
-        if self.caddy_version is None:
-            return False
-        hv = self.versiontuple(self.caddy_version)
-        return hv >= self.versiontuple(minv)
-
     def is_complete(self) -> bool:
         return os.path.isfile(self.httpd) and \
+               os.path.isfile(self.apachectl) and \
                self.apxs is not None and \
                os.path.isfile(self.apxs)
 
     def get_incomplete_reason(self) -> Optional[str]:
         if self.httpd is None or len(self.httpd.strip()) == 0:
-            return 'httpd not configured, see `--with-test-httpd=<path>`'
+            return f'httpd not configured, see `--with-test-httpd=<path>`'
         if not os.path.isfile(self.httpd):
             return f'httpd ({self.httpd}) not found'
+        if not os.path.isfile(self.apachectl):
+            return f'apachectl ({self.apachectl}) not found'
         if self.apxs is None:
-            return "command apxs not found (commonly provided in apache2-dev)"
+            return f"command apxs not found (commonly provided in apache2-dev)"
         if not os.path.isfile(self.apxs):
             return f"apxs ({self.apxs}) not found"
         return None
@@ -278,14 +221,6 @@ class EnvConfig:
     @property
     def caddy_version(self):
         return self._caddy_version
-
-    @property
-    def vsftpd_version(self):
-        return self._vsftpd_version
-
-    @property
-    def tcpdmp(self) -> Optional[str]:
-        return self._tcpdump
 
 
 class Env:
@@ -310,7 +245,7 @@ class Env:
 
     @staticmethod
     def have_ssl_curl() -> bool:
-        return Env.curl_has_feature('ssl') or Env.curl_has_feature('multissl')
+        return 'ssl' in Env.CONFIG.curl_props['features']
 
     @staticmethod
     def have_h2_curl() -> bool:
@@ -325,26 +260,8 @@ class Env:
         return libname.lower() in Env.CONFIG.curl_props['libs']
 
     @staticmethod
-    def curl_uses_ossl_quic() -> bool:
-        if Env.have_h3_curl():
-            return not Env.curl_uses_lib('ngtcp2') and Env.curl_uses_lib('nghttp3')
-        return False
-
-    @staticmethod
-    def curl_version_string() -> str:
-        return Env.CONFIG.curl_props['version_string']
-
-    @staticmethod
-    def curl_features_string() -> str:
-        return Env.CONFIG.curl_props['features_string']
-
-    @staticmethod
     def curl_has_feature(feature: str) -> bool:
         return feature.lower() in Env.CONFIG.curl_props['features']
-
-    @staticmethod
-    def curl_protocols_string() -> str:
-        return Env.CONFIG.curl_props['protocols_string']
 
     @staticmethod
     def curl_has_protocol(protocol: str) -> bool:
@@ -359,7 +276,7 @@ class Env:
         return 'unknown'
 
     @staticmethod
-    def curl_lib_version_at_least(libname: str, min_version) -> bool:
+    def curl_lib_version_at_least(libname: str, min_version) -> str:
         lversion = Env.curl_lib_version(libname)
         if lversion != 'unknown':
             return Env.CONFIG.versiontuple(min_version) <= \
@@ -379,22 +296,6 @@ class Env:
         return Env.CONFIG.curl_props['version']
 
     @staticmethod
-    def curl_is_debug() -> bool:
-        return Env.CONFIG.curl_is_debug
-
-    @staticmethod
-    def curl_can_early_data() -> bool:
-        return Env.curl_uses_lib('gnutls') or \
-            Env.curl_uses_lib('wolfssl') or \
-            Env.curl_uses_lib('quictls') or \
-            Env.curl_uses_lib('openssl')
-
-    @staticmethod
-    def curl_can_h3_early_data() -> bool:
-        return Env.curl_can_early_data() and \
-            Env.curl_uses_lib('ngtcp2')
-
-    @staticmethod
     def have_h3() -> bool:
         return Env.have_h3_curl() and Env.have_h3_server()
 
@@ -411,28 +312,12 @@ class Env:
         return Env.CONFIG.caddy_version
 
     @staticmethod
-    def caddy_is_at_least(minv) -> bool:
-        return Env.CONFIG.caddy_is_at_least(minv)
-
-    @staticmethod
     def httpd_is_at_least(minv) -> bool:
         return Env.CONFIG.httpd_is_at_least(minv)
 
     @staticmethod
     def has_caddy() -> bool:
         return Env.CONFIG.caddy is not None
-
-    @staticmethod
-    def has_vsftpd() -> bool:
-        return Env.CONFIG.vsftpd is not None
-
-    @staticmethod
-    def vsftpd_version() -> str:
-        return Env.CONFIG.vsftpd_version
-
-    @staticmethod
-    def tcpdump() -> Optional[str]:
-        return Env.CONFIG.tcpdmp
 
     def __init__(self, pytestconfig=None):
         self._verbose = pytestconfig.option.verbose \
@@ -480,10 +365,6 @@ class Env:
         return self.CONFIG.project_dir
 
     @property
-    def build_dir(self) -> str:
-        return self.CONFIG.build_dir
-
-    @property
     def ca(self):
         return self._ca
 
@@ -492,32 +373,16 @@ class Env:
         return self.CONFIG.htdocs_dir
 
     @property
-    def tld(self) -> str:
-        return self.CONFIG.tld
-
-    @property
     def domain1(self) -> str:
         return self.CONFIG.domain1
-
-    @property
-    def domain1brotli(self) -> str:
-        return self.CONFIG.domain1brotli
 
     @property
     def domain2(self) -> str:
         return self.CONFIG.domain2
 
     @property
-    def ftp_domain(self) -> str:
-        return self.CONFIG.ftp_domain
-
-    @property
     def proxy_domain(self) -> str:
         return self.CONFIG.proxy_domain
-
-    @property
-    def expired_domain(self) -> str:
-        return self.CONFIG.expired_domain
 
     @property
     def http_port(self) -> int:
@@ -526,10 +391,6 @@ class Env:
     @property
     def https_port(self) -> int:
         return self.CONFIG.ports['https']
-
-    @property
-    def nghttpx_https_port(self) -> int:
-        return self.CONFIG.ports['nghttpx_https']
 
     @property
     def h3_port(self) -> int:
@@ -542,14 +403,6 @@ class Env:
     @property
     def proxys_port(self) -> int:
         return self.CONFIG.ports['proxys']
-
-    @property
-    def ftp_port(self) -> int:
-        return self.CONFIG.ports['ftp']
-
-    @property
-    def ftps_port(self) -> int:
-        return self.CONFIG.ports['ftps']
 
     @property
     def h2proxys_port(self) -> int:
@@ -572,10 +425,6 @@ class Env:
         return self.CONFIG.ports['caddy']
 
     @property
-    def vsftpd(self) -> str:
-        return self.CONFIG.vsftpd
-
-    @property
     def ws_port(self) -> int:
         return self.CONFIG.ports['ws']
 
@@ -586,6 +435,10 @@ class Env:
     @property
     def httpd(self) -> str:
         return self.CONFIG.httpd
+
+    @property
+    def apachectl(self) -> str:
+        return self.CONFIG.apachectl
 
     @property
     def apxs(self) -> str:
@@ -604,51 +457,33 @@ class Env:
     def ci_run(self) -> bool:
         return "CURL_CI" in os.environ
 
-    def port_for(self, alpn_proto: Optional[str] = None):
+    def authority_for(self, domain: str, alpn_proto: Optional[str] = None):
         if alpn_proto is None or \
                 alpn_proto in ['h2', 'http/1.1', 'http/1.0', 'http/0.9']:
-            return self.https_port
+            return f'{domain}:{self.https_port}'
         if alpn_proto in ['h3']:
-            return self.h3_port
-        return self.http_port
+            return f'{domain}:{self.h3_port}'
+        return f'{domain}:{self.http_port}'
 
-    def authority_for(self, domain: str, alpn_proto: Optional[str] = None):
-        return f'{domain}:{self.port_for(alpn_proto=alpn_proto)}'
-
-    def make_data_file(self, indir: str, fname: str, fsize: int,
-                       line_length: int = 1024) -> str:
-        if line_length < 11:
-            raise RuntimeError('line_length less than 11 not supported')
+    def make_data_file(self, indir: str, fname: str, fsize: int) -> str:
         fpath = os.path.join(indir, fname)
         s10 = "0123456789"
-        s = round((line_length / 10) + 1) * s10
-        s = s[0:line_length-11]
+        s = (101 * s10) + s10[0:3]
         with open(fpath, 'w') as fd:
-            for i in range(int(fsize / line_length)):
+            for i in range(int(fsize / 1024)):
                 fd.write(f"{i:09d}-{s}\n")
-            remain = int(fsize % line_length)
+            remain = int(fsize % 1024)
             if remain != 0:
-                i = int(fsize / line_length) + 1
-                fd.write(f"{i:09d}-{s}"[0:remain-1] + "\n")
+                i = int(fsize / 1024) + 1
+                s = f"{i:09d}-{s}\n"
+                fd.write(s[0:remain])
         return fpath
 
-    def make_data_gzipbomb(self, indir: str, fname: str, fsize: int) -> str:
-        fpath = os.path.join(indir, fname)
-        gzpath = f'{fpath}.gz'
-        varpath = f'{fpath}.var'
-
-        with open(fpath, 'w') as fd:
-            fd.write('not what we are looking for!\n')
-        count = int(fsize / 1024)
-        zero1k = bytearray(1024)
-        with gzip.open(gzpath, 'wb') as fd:
-            for _ in range(count):
-                fd.write(zero1k)
-        with open(varpath, 'w') as fd:
-            fd.write(f'URI: {fname}\n')
-            fd.write('\n')
-            fd.write(f'URI: {fname}.gz\n')
-            fd.write('Content-Type: text/plain\n')
-            fd.write('Content-Encoding: x-gzip\n')
-            fd.write('\n')
-        return fpath
+    def make_clients(self):
+        client_dir = os.path.join(self.project_dir, 'tests/http/clients')
+        p = subprocess.run(['make'], capture_output=True, text=True,
+                           cwd=client_dir)
+        if p.returncode != 0:
+            pytest.exit(f"`make`in {client_dir} failed:\n{p.stderr}")
+            return False
+        return True

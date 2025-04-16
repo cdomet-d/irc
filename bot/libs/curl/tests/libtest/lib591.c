@@ -35,11 +35,11 @@
 
 #define TEST_HANG_TIMEOUT 60 * 1000
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
   CURL *easy = NULL;
   CURLM *multi = NULL;
-  CURLcode res = CURLE_OK;
+  int res = 0;
   int running;
   int msgs_left;
   CURLMsg *msg;
@@ -49,9 +49,9 @@ CURLcode test(char *URL)
 
   upload = fopen(libtest_arg3, "rb");
   if(!upload) {
-    fprintf(stderr, "fopen() failed with error (%d) %s\n",
+    fprintf(stderr, "fopen() failed with error: %d (%s)\n",
             errno, strerror(errno));
-    fprintf(stderr, "Error opening file '%s'\n", libtest_arg3);
+    fprintf(stderr, "Error opening file: (%s)\n", libtest_arg3);
     return TEST_ERR_FOPEN;
   }
 

@@ -21,7 +21,7 @@
  * SPDX-License-Identifier: curl
  *
  ***************************************************************************/
-/* used for test case 533, 534, 535 and 546 */
+/* used for test case 533, 534 and 535 */
 
 #include "test.h"
 
@@ -33,9 +33,9 @@
 
 #define TEST_HANG_TIMEOUT 60 * 1000
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
-  CURLcode res = CURLE_OK;
+  int res = 0;
   CURL *curl = NULL;
   int running;
   CURLM *m = NULL;

@@ -12,7 +12,6 @@ See-also:
   - CURLOPT_RESOLVE (3)
 Protocol:
   - All
-Added-in: 7.9.3
 ---
 
 # NAME
@@ -55,8 +54,6 @@ Since version 8.1.0, libcurl prunes entries from the DNS cache if it exceeds
 
 60
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -81,11 +78,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Always
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK

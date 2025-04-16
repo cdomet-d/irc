@@ -22,21 +22,6 @@
 #
 #***************************************************************************
 
-!MESSAGE
-!MESSAGE WARNING:
-!MESSAGE
-!MESSAGE The winbuild build system is deprecated and will be removed in
-!MESSAGE September 2025 in favor of the CMake build system.
-!MESSAGE
-!MESSAGE Please see docs/INSTALL-CMAKE.md : "Migrating from winbuild builds"
-!MESSAGE
-!MESSAGE To use the winbuild build system you must acknowledge this warning by
-!MESSAGE setting command line option WINBUILD_ACKNOWLEDGE_DEPRECATED=yes
-!MESSAGE
-!IF "$(WINBUILD_ACKNOWLEDGE_DEPRECATED)"!="yes"
-!ERROR The user must acknowledge the deprecation warning to continue.
-!ENDIF
-
 !IF "$(MODE)"=="static"
 TARGET = $(LIB_NAME_STATIC)
 AS_DLL = false
@@ -58,12 +43,14 @@ CFGSET=true
 !ENDIF
 
 !INCLUDE "../lib/Makefile.inc"
-CSOURCES=$(CSOURCES:  = )
 LIBCURL_OBJS=$(CSOURCES:.c=.obj)
 
 !INCLUDE "../src/Makefile.inc"
-CURL_CFILES=$(CURL_CFILES:  = )
-CURL_OBJS=$(CURL_CFILES:.c=.obj)
+
+# tool_hugehelp has a special rule
+CURL_OBJS=$(CURL_CFILES:tool_hugehelp.c=)
+
+CURL_OBJS=$(CURL_OBJS:.c=.obj)
 
 
 # backwards compatible check for USE_SSPI
@@ -108,7 +95,7 @@ USE_SSPI = false
 !ENDIF
 
 !IFNDEF ENABLE_SCHANNEL
-!IF DEFINED(WITH_SSL) || DEFINED(WITH_MBEDTLS) || DEFINED(WITH_WOLFSSL)
+!IF DEFINED(WITH_SSL) || DEFINED(WITH_MBEDTLS)
 USE_SCHANNEL = false
 !ELSE
 USE_SCHANNEL = $(USE_SSPI)
@@ -186,11 +173,6 @@ USE_MBEDTLS = true
 MBEDTLS     = $(WITH_MBEDTLS)
 !ENDIF
 
-!IF "$(WITH_WOLFSSL)"=="dll" || "$(WITH_WOLFSSL)"=="static"
-USE_WOLFSSL = true
-WOLFSSL     = $(WITH_WOLFSSL)
-!ENDIF
-
 !IF "$(WITH_CARES)"=="dll"
 USE_CARES = true
 CARES     = dll
@@ -245,10 +227,6 @@ CONFIG_NAME_LIB = $(CONFIG_NAME_LIB)-ssl-$(SSL)
 CONFIG_NAME_LIB = $(CONFIG_NAME_LIB)-mbedtls-$(MBEDTLS)
 !ENDIF
 
-!IF "$(USE_WOLFSSL)"=="true"
-CONFIG_NAME_LIB = $(CONFIG_NAME_LIB)-wolfssl-$(WOLFSSL)
-!ENDIF
-
 !IF "$(USE_CARES)"=="true"
 CONFIG_NAME_LIB = $(CONFIG_NAME_LIB)-cares-$(CARES)
 !ENDIF
@@ -297,13 +275,15 @@ CURL_DIROBJ = ..\builds\$(CONFIG_NAME_LIB)-obj-curl
 DIRDIST = ..\builds\$(CONFIG_NAME_LIB)\
 
 $(MODE):
-	@echo LIBCURL_OBJS = \> LIBCURL_OBJS.inc
-	@for %%i in ($(LIBCURL_OBJS)) do @echo $(LIBCURL_DIROBJ)/%%i \>> LIBCURL_OBJS.inc
-	@echo. >> LIBCURL_OBJS.inc
+	@SET DIROBJ=$(LIBCURL_DIROBJ)
+	@SET MACRO_NAME=LIBCURL_OBJS
+	@SET OUTFILE=LIBCURL_OBJS.inc
+	@CALL gen_resp_file.bat $(LIBCURL_OBJS)
 
-	@echo CURL_OBJS = \> CURL_OBJS.inc
-	@for %%i in ($(CURL_OBJS)) do @echo $(CURL_DIROBJ)/%%i \>> CURL_OBJS.inc
-	@echo. >> CURL_OBJS.inc
+	@SET DIROBJ=$(CURL_DIROBJ)
+	@SET MACRO_NAME=CURL_OBJS
+	@SET OUTFILE=CURL_OBJS.inc
+	@CALL gen_resp_file.bat $(CURL_OBJS)
 
 	@SET CONFIG_NAME_LIB=$(CONFIG_NAME_LIB)
 	@SET MACHINE=$(MACHINE)

@@ -9,7 +9,6 @@ See-also:
   - CURLOPT_QUOTE (3)
 Protocol:
   - TELNET
-Added-in: 7.7
 ---
 
 # NAME
@@ -32,17 +31,9 @@ negotiations. The variables should be in the format \<option=value\>. libcurl
 supports the options **TTYPE**, **XDISPLOC** and **NEW_ENV**. See the TELNET
 standard for details.
 
-Using this option multiple times makes the last set list override the previous
-ones. Set it to NULL to disable its use again.
-
-libcurl does not copy the list, it needs to be kept around until after the
-transfer has completed.
-
 # DEFAULT
 
 NULL
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -64,11 +55,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Along with TELNET
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if TELNET is supported, and CURLE_UNKNOWN_OPTION if not.

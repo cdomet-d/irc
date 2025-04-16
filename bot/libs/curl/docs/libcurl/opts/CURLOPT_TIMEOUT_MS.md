@@ -11,7 +11,6 @@ See-also:
   - CURLOPT_TIMEOUT (3)
 Protocol:
   - All
-Added-in: 7.16.2
 ---
 
 # NAME
@@ -35,9 +34,7 @@ See CURLOPT_TIMEOUT(3) for details.
 
 # DEFAULT
 
-0 (zero) which means it never times out during transfer.
-
-# %PROTOCOLS%
+Default timeout is 0 (zero) which means it never times out during transfer.
 
 # EXAMPLE
 
@@ -56,11 +53,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Always
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK

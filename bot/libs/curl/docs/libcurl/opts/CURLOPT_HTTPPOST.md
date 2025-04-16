@@ -13,7 +13,6 @@ See-also:
   - curl_formadd (3)
   - curl_formfree (3)
   - curl_mime_init (3)
-Added-in: 7.1
 ---
 
 # NAME
@@ -49,8 +48,6 @@ CURLOPT_NOBODY(3) to 0.
 # DEFAULT
 
 NULL
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -92,15 +89,10 @@ int main(void)
 }
 ~~~
 
-# DEPRECATED
+# AVAILABILITY
 
-Deprecated in 7.56.0.
-
-# %AVAILABILITY%
+As long as HTTP is enabled. Deprecated in 7.56.0.
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if HTTP is enabled, and CURLE_UNKNOWN_OPTION if not.

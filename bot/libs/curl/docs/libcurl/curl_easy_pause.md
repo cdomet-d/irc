@@ -9,7 +9,6 @@ See-also:
   - curl_easy_reset (3)
 Protocol:
   - All
-Added-in: 7.18.0
 ---
 
 # NAME
@@ -98,8 +97,6 @@ buffering 32 megabyte of data for a paused stream.
 When such a paused stream is unpaused again, any buffered data is delivered
 first.
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -108,7 +105,7 @@ int main(void)
   CURL *curl = curl_easy_init();
   if(curl) {
     /* pause a transfer in both directions */
-    curl_easy_pause(curl, CURLPAUSE_RECV | CURLPAUSE_SEND);
+    curl_easy_pause(curl, CURL_READFUNC_PAUSE | CURL_WRITEFUNC_PAUSE);
 
   }
 }
@@ -134,13 +131,12 @@ size worth of data that curl cannot stop but instead needs to cache while the
 transfer is paused. This means that if a window size of 64 MB is used, libcurl
 might end up having to cache 64 MB of data.
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.18.0.
 
 # RETURN VALUE
 
-This function returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3). If CURLOPT_ERRORBUFFER(3) was set with curl_easy_setopt(3)
-there can be an error message stored in the error buffer when non-zero is
-returned.
+CURLE_OK (zero) means that the option was set properly, and a non-zero return
+code means something wrong occurred after the new state was set. See the
+libcurl-errors(3) man page for the full list with descriptions.

@@ -28,11 +28,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef UNDER_CE
-#define strerror(e) "?"
-#else
 #include <errno.h>
-#endif
+
+/* somewhat unix-specific */
+#include <sys/time.h>
+#include <unistd.h>
 
 /* curl stuff */
 #include <curl/curl.h>
@@ -69,7 +69,7 @@ void dump(const char *text, unsigned int num, unsigned char *ptr, size_t size,
   fprintf(stderr, "%u %s, %lu bytes (0x%lx)\n",
           num, text, (unsigned long)size, (unsigned long)size);
 
-  for(i = 0; i < size; i += width) {
+  for(i = 0; i<size; i += width) {
 
     fprintf(stderr, "%4.4lx: ", (unsigned long)i);
 
@@ -90,7 +90,7 @@ void dump(const char *text, unsigned int num, unsigned char *ptr, size_t size,
         break;
       }
       fprintf(stderr, "%c",
-              (ptr[i + c] >= 0x20) && (ptr[i + c] < 0x80) ? ptr[i + c] : '.');
+              (ptr[i + c] >= 0x20) && (ptr[i + c]<0x80)?ptr[i + c]:'.');
       /* check again for 0D0A, to avoid an extra \n if it's at width */
       if(nohex && (i + c + 2 < size) && ptr[i + c + 1] == 0x0D &&
          ptr[i + c + 2] == 0x0A) {
@@ -142,7 +142,7 @@ int my_trace(CURL *handle, curl_infotype type,
   return 0;
 }
 
-static int setup(struct transfer *t, int num)
+static void setup(struct transfer *t, int num)
 {
   char filename[128];
   CURL *hnd;
@@ -155,7 +155,7 @@ static int setup(struct transfer *t, int num)
   if(!t->out) {
     fprintf(stderr, "error: could not open file %s for writing: %s\n",
             filename, strerror(errno));
-    return 1;
+    exit(1);
   }
 
   /* write to this file */
@@ -179,7 +179,6 @@ static int setup(struct transfer *t, int num)
   /* wait for pipe connection to confirm */
   curl_easy_setopt(hnd, CURLOPT_PIPEWAIT, 1L);
 #endif
-  return 0;
 }
 
 /*
@@ -205,8 +204,7 @@ int main(int argc, char **argv)
   multi_handle = curl_multi_init();
 
   for(i = 0; i < num_transfers; i++) {
-    if(setup(&trans[i], i))
-      return 1;
+    setup(&trans[i], i);
 
     /* add the individual transfer */
     curl_multi_add_handle(multi_handle, trans[i].easy);

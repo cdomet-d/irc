@@ -56,6 +56,18 @@
 #include "curl_memory.h"
 #include "memdebug.h"
 
+/*
+ * Curl_ipvalid() checks what CURL_IPRESOLVE_* requirements that might've
+ * been set and returns TRUE if they are OK.
+ */
+bool Curl_ipvalid(struct Curl_easy *data, struct connectdata *conn)
+{
+  if(conn->ip_version == CURL_IPRESOLVE_V6)
+    return Curl_ipv6works(data);
+
+  return TRUE;
+}
+
 #if defined(CURLRES_SYNCH)
 
 #ifdef DEBUG_ADDRINFO
@@ -75,7 +87,7 @@ static void dump_addrinfo(const struct Curl_addrinfo *ai)
 #endif
 
 /*
- * Curl_sync_getaddrinfo() when built IPv6-enabled (non-threading and
+ * Curl_getaddrinfo() when built IPv6-enabled (non-threading and
  * non-ares version).
  *
  * Returns name information about the given hostname and port number. If
@@ -83,10 +95,10 @@ static void dump_addrinfo(const struct Curl_addrinfo *ai)
  * to memory we need to free after use. That memory *MUST* be freed with
  * Curl_freeaddrinfo(), nothing else.
  */
-struct Curl_addrinfo *Curl_sync_getaddrinfo(struct Curl_easy *data,
-                                            const char *hostname,
-                                            int port,
-                                            int ip_version)
+struct Curl_addrinfo *Curl_getaddrinfo(struct Curl_easy *data,
+                                       const char *hostname,
+                                       int port,
+                                       int *waitp)
 {
   struct addrinfo hints;
   struct Curl_addrinfo *res;
@@ -98,7 +110,9 @@ struct Curl_addrinfo *Curl_sync_getaddrinfo(struct Curl_easy *data,
 #endif
   int pf = PF_INET;
 
-  if((ip_version != CURL_IPRESOLVE_V4) && Curl_ipv6works(data))
+  *waitp = 0; /* synchronous response only */
+
+  if((data->conn->ip_version != CURL_IPRESOLVE_V4) && Curl_ipv6works(data))
     /* The stack seems to be IPv6-enabled */
     pf = PF_UNSPEC;
 
@@ -110,10 +124,10 @@ struct Curl_addrinfo *Curl_sync_getaddrinfo(struct Curl_easy *data,
 #ifndef USE_RESOLVE_ON_IPS
   /*
    * The AI_NUMERICHOST must not be set to get synthesized IPv6 address from
-   * an IPv4 address on iOS and macOS.
+   * an IPv4 address on iOS and Mac OS X.
    */
-  if((1 == curlx_inet_pton(AF_INET, hostname, addrbuf)) ||
-     (1 == curlx_inet_pton(AF_INET6, hostname, addrbuf))) {
+  if((1 == Curl_inet_pton(AF_INET, hostname, addrbuf)) ||
+     (1 == Curl_inet_pton(AF_INET6, hostname, addrbuf))) {
     /* the given address is numerical only, prevent a reverse lookup */
     hints.ai_flags = AI_NUMERICHOST;
   }

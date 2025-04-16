@@ -10,7 +10,6 @@ See-also:
   - CURLOPT_UPLOAD (3)
 Protocol:
   - All
-Added-in: 7.11.0
 ---
 
 # NAME
@@ -48,8 +47,6 @@ and sending a different amount may lead to errors.
 
 Unset
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -73,15 +70,10 @@ int main(void)
 }
 ~~~
 
-# HISTORY
+# AVAILABILITY
 
 SMTP support added in 7.23.0
 
-# %AVAILABILITY%
-
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

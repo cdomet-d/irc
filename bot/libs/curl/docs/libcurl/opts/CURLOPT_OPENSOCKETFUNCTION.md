@@ -10,7 +10,6 @@ See-also:
   - CURLOPT_SOCKOPTFUNCTION (3)
 Protocol:
   - All
-Added-in: 7.17.1
 ---
 
 # NAME
@@ -60,30 +59,21 @@ is allowed to modify the address or refuse to connect completely. The callback
 function should return the newly created socket or *CURL_SOCKET_BAD* in
 case no connection could be established or another error was detected. Any
 additional *setsockopt(2)* calls can of course be done on the socket at
-the user's discretion.
-
-If *CURL_SOCKET_BAD* is returned by the callback then libcurl treats it as a
-failed connection and tries to open a socket to connect to a different IP
-address associated with the transfer. If there are no more addresses to try
-then libcurl fails the transfer with error code *CURLE_COULDNT_CONNECT*.
-
-You can get the IP address that curl is opening the socket for by casting
-*address-\>addr* to `sockaddr_in` if *address-\>family* is `AF_INET`, or to
-`sockaddr_in6` if *address-\>family* is `AF_INET6`. For an example of how that
-data can be compared against refer to *docs/examples/block_ip.c*.
+the user's discretion. A *CURL_SOCKET_BAD* return value from the callback
+function signals an unrecoverable error to libcurl and it returns
+*CURLE_COULDNT_CONNECT* from the function that triggered this callback.
+This return code can be used for IP address block listing.
 
 If you want to pass in a socket with an already established connection, pass
-the socket back with this callback and then use CURLOPT_SOCKOPTFUNCTION(3) to
-signal that it already is connected.
+the socket back with this callback and then use
+CURLOPT_SOCKOPTFUNCTION(3) to signal that it already is connected.
 
 # DEFAULT
 
-The equivalent of this:
+The default behavior is the equivalent of this:
 ~~~c
    return socket(addr->family, addr->socktype, addr->protocol);
 ~~~
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -131,11 +121,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.17.1.
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

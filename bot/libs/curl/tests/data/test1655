@@ -2,7 +2,7 @@
 <info>
 <keywords>
 unittest
-DOH
+doh
 </keywords>
 </info>
 
@@ -17,7 +17,7 @@ unittest
 DoH
 </features>
 <name>
-unit test for doh_req_encode
+unit test for doh_encode
 </name>
 </client>
 </testcase>

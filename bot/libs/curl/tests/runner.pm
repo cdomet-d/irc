@@ -47,6 +47,7 @@ BEGIN {
         readtestkeywords
         restore_test_env
         runner_init
+        runnerac_clearlocks
         runnerac_shutdown
         runnerac_stopservers
         runnerac_test_preprocess
@@ -87,6 +88,7 @@ use processhelp qw(
     );
 use servers qw(
     checkcmd
+    clearlocks
     initserverconfig
     serverfortest
     stopserver
@@ -99,11 +101,8 @@ use testutil qw(
     clearlogs
     logmsg
     runclient
-    exerunner
     shell_quote
     subbase64
-    subsha256base64file
-    substrippemfile
     subnewlines
     );
 use valgrind;
@@ -125,7 +124,8 @@ our $tortalloc;
 
 # local variables
 my %oldenv;       # environment variables before test is started
-my $CURLLOG = "commands.log"; # all command lines run
+my $UNITDIR="./unit";
+my $CURLLOG="$LOGDIR/commands.log"; # all command lines run
 my $defserverlogslocktimeout = 5; # timeout to await server logs lock removal
 my $defpostcommanddelay = 0; # delay between command and postcheck sections
 my $multiprocess;   # nonzero with a separate test runner process
@@ -190,7 +190,7 @@ sub runner_init {
             $SIG{INT} = 'IGNORE';
             $SIG{TERM} = 'IGNORE';
             eval {
-                # some msys2 perl versions don't define SIGUSR1, also missing from Win32 Perl
+                # some msys2 perl versions don't define SIGUSR1
                 $SIG{USR1} = 'IGNORE';
             };
 
@@ -261,7 +261,7 @@ sub event_loop {
 #
 sub checktestcmd {
     my ($cmd)=@_;
-    my @testpaths=($LIBDIR . ".libs", "$LIBDIR");
+    my @testpaths=("$LIBDIR/.libs", "$LIBDIR");
     return checkcmd($cmd, @testpaths);
 }
 
@@ -307,7 +307,7 @@ sub prepro {
     for my $s (@entiretest) {
         my $f = $s;
         $line++;
-        if($s =~ /^ *%if ([A-Za-z0-9!_-]*)/) {
+        if($s =~ /^ *%if (.*)/) {
             my $cond = $1;
             my $rev = 0;
 
@@ -354,7 +354,8 @@ sub prepro {
             # The processor does CRLF replacements in the <data*> sections if
             # necessary since those parts might be read by separate servers.
             if($s =~ /^ *<data(.*)\>/) {
-                if($1 =~ /crlf="yes"/) {
+                if($1 =~ /crlf="yes"/ ||
+                   ($feature{"hyper"} && ($keywords{"HTTP"} || $keywords{"HTTPS"}))) {
                     $data_crlf = 1;
                 }
             }
@@ -363,8 +364,6 @@ sub prepro {
             }
             subvariables(\$s, $testnum, "%");
             subbase64(\$s);
-            subsha256base64file(\$s);
-            substrippemfile(\$s);
             subnewlines(0, \$s) if($data_crlf);
             push @out, $s;
         }
@@ -400,32 +399,6 @@ sub logslocked {
         }
     }
     return @locks;
-}
-
-#######################################################################
-# Wait log locks to be unlocked
-#
-sub waitlockunlock {
-    # If a server logs advisor read lock file exists, it is an indication
-    # that the server has not yet finished writing out all its log files,
-    # including server request log files used for protocol verification.
-    # So, if the lock file exists the script waits here a certain amount
-    # of time until the server removes it, or the given time expires.
-    my $serverlogslocktimeout = shift;
-
-    if($serverlogslocktimeout) {
-        my $lockretry = $serverlogslocktimeout * 20;
-        my @locks;
-        while((@locks = logslocked()) && $lockretry--) {
-            portable_sleep(0.05);
-        }
-        if(($lockretry < 0) &&
-           ($serverlogslocktimeout >= $defserverlogslocktimeout)) {
-            logmsg "Warning: server logs lock timeout ",
-                   "($serverlogslocktimeout seconds) expired (locks: " .
-                   join(", ", @locks) . ")\n";
-        }
-    }
 }
 
 #######################################################################
@@ -505,7 +478,7 @@ sub torture {
         if($valgrind && !$gdbthis) {
             my @valgrindoption = getpart("verify", "valgrind");
             if((!@valgrindoption) || ($valgrindoption[0] !~ /disable/)) {
-                my $valgrindcmd = shell_quote($valgrind) . " ";
+                my $valgrindcmd = "$valgrind ";
                 $valgrindcmd .= "$valgrind_tool " if($valgrind_tool);
                 $valgrindcmd .= "--quiet --leak-check=yes ";
                 $valgrindcmd .= "--suppressions=$srcdir/valgrind.supp ";
@@ -689,7 +662,7 @@ sub singletest_setenv {
                         logmsg "Skipping LD_PRELOAD due to lack of OS support\n" if($verbose);
                         next;
                     }
-                    if($feature{"Debug"} || !$has_shared) {
+                    if($feature{"debug"} || !$has_shared) {
                         logmsg "Skipping LD_PRELOAD due to no release shared build\n" if($verbose);
                         next;
                     }
@@ -776,7 +749,7 @@ sub singletest_prepare {
         my $filename=$fileattr{'name'};
         if(@inputfile || $filename) {
             if(!$filename) {
-                logmsg " $testnum: IGNORED: Section client=>file has no name attribute\n";
+                logmsg " $testnum: IGNORED: section client=>file has no name attribute\n";
                 return -1;
             }
             my $fileContent = join('', @inputfile);
@@ -845,11 +818,10 @@ sub singletest_run {
 
     my @codepieces = getpart("client", "tool");
     my $tool="";
-    my $tool_name="";  # without exe extension
     if(@codepieces) {
-        $tool_name = $codepieces[0];
-        chomp $tool_name;
-        $tool = $tool_name . exe_ext('TOOL');
+        $tool = $codepieces[0];
+        chomp $tool;
+        $tool .= exe_ext('TOOL');
     }
 
     my $disablevalgrind;
@@ -885,23 +857,10 @@ sub singletest_run {
         else {
             $cmdargs .= "--trace-ascii $LOGDIR/trace$testnum ";
         }
-        $cmdargs .= "--trace-config all ";
         $cmdargs .= "--trace-time ";
         if($run_event_based) {
             $cmdargs .= "--test-event ";
             $fail_due_event_based--;
-        }
-        if($run_duphandle) {
-            $cmdargs .= "--test-duphandle ";
-            my @dis = getpart("client", "disable");
-            if(@dis) {
-                chomp $dis[0] if($dis[0]);
-                if($dis[0] eq "test-duphandle") {
-                    # marked to not run with duphandle
-                    logmsg " $testnum: IGNORED: Can't run test-duphandle\n";
-                    return (-1, 0, 0, "", "", 0);
-                }
-            }
         }
         $cmdargs .= $cmd;
         if ($proxy_address) {
@@ -914,45 +873,20 @@ sub singletest_run {
 
         # Default the tool to a unit test with the same name as the test spec
         if($keywords{"unittest"} && !$tool) {
-            $tool_name="unit$testnum";
-            $tool = $tool_name . exe_ext('TOOL');
+            $tool="unit$testnum";
         }
 
         if($tool =~ /^lib/) {
-            if($bundle) {
-                $tool = "libtests" . exe_ext('TOOL');
-            }
-            $CMDLINE=$LIBDIR . $tool;
-        }
-        elsif($tool =~ /^tool/) {
-            if($bundle) {
-                $tool = "tunits" . exe_ext('TOOL')
-            }
-            $CMDLINE=$TUNITDIR . $tool;
+            $CMDLINE="$LIBDIR/$tool";
         }
         elsif($tool =~ /^unit/) {
-            if($bundle) {
-                $tool = "units" . exe_ext('TOOL')
-            }
-            $CMDLINE=$UNITDIR . $tool;
+            $CMDLINE="$UNITDIR/$tool";
         }
 
         if(! -f $CMDLINE) {
             logmsg " $testnum: IGNORED: The tool set in the test case for this: '$tool' does not exist\n";
             return (-1, 0, 0, "", "", 0);
         }
-
-        $CMDLINE=exerunner() . $CMDLINE;
-
-        if($bundle) {
-            if($gdbthis) {
-                $cmdargs =" $tool_name$cmdargs";
-            }
-            else {
-                $CMDLINE.=" $tool_name";
-            }
-        }
-
         $DBGCURL=$CMDLINE;
     }
 
@@ -985,10 +919,7 @@ sub singletest_run {
     }
 
     if(!$tool) {
-        $CMDLINE=exerunner() . shell_quote($CURL);
-        if((!$cmdhash{'option'}) || ($cmdhash{'option'} !~ /no-q/)) {
-            $CMDLINE .= " -q";
-        }
+        $CMDLINE=shell_quote($CURL);
     }
 
     if(use_valgrind() && !$disablevalgrind) {
@@ -1009,8 +940,7 @@ sub singletest_run {
         logmsg "$CMDLINE\n";
     }
 
-    open(my $cmdlog, ">", "$LOGDIR/$CURLLOG") ||
-        die "Failure writing log file";
+    open(my $cmdlog, ">", $CURLLOG) || die "Failure writing log file";
     print $cmdlog "$CMDLINE\n";
     close($cmdlog) || die "Failure writing log file";
 
@@ -1093,12 +1023,30 @@ sub singletest_clean {
         }
     }
 
+    # If a server logs advisor read lock file exists, it is an indication
+    # that the server has not yet finished writing out all its log files,
+    # including server request log files used for protocol verification.
+    # So, if the lock file exists the script waits here a certain amount
+    # of time until the server removes it, or the given time expires.
     my $serverlogslocktimeout = $defserverlogslocktimeout;
     my %cmdhash = getpartattr("client", "command");
     if($cmdhash{'timeout'}) {
         # test is allowed to override default server logs lock timeout
         if($cmdhash{'timeout'} =~ /(\d+)/) {
             $serverlogslocktimeout = $1 if($1 >= 0);
+        }
+    }
+    if($serverlogslocktimeout) {
+        my $lockretry = $serverlogslocktimeout * 20;
+        my @locks;
+        while((@locks = logslocked()) && $lockretry--) {
+            portable_sleep(0.05);
+        }
+        if(($lockretry < 0) &&
+           ($serverlogslocktimeout >= $defserverlogslocktimeout)) {
+            logmsg "Warning: server logs lock timeout ",
+                   "($serverlogslocktimeout seconds) expired (locks: " .
+                   join(", ", @locks) . ")\n";
         }
     }
 
@@ -1119,6 +1067,12 @@ sub singletest_clean {
 
     portable_sleep($postcommanddelay) if($postcommanddelay);
 
+    # timestamp removal of server logs advisor read lock
+    $$testtimings{"timesrvrlog"} = Time::HiRes::time();
+
+    # test definition might instruct to stop some servers
+    # stop also all servers relative to the given one
+
     my @killtestservers = getpart("client", "killserver");
     if(@killtestservers) {
         foreach my $server (@killtestservers) {
@@ -1129,16 +1083,6 @@ sub singletest_clean {
             }
         }
     }
-
-    # wait for any servers left running to release their locks
-    waitlockunlock($serverlogslocktimeout);
-
-    # timestamp removal of server logs advisor read lock
-    $$testtimings{"timesrvrlog"} = Time::HiRes::time();
-
-    # test definition might instruct to stop some servers
-    # stop also all servers relative to the given one
-
     return 0;
 }
 
@@ -1149,11 +1093,6 @@ sub singletest_postcheck {
 
     # run the postcheck command
     my @postcheck= getpart("client", "postcheck");
-    if(@postcheck) {
-        die "test$testnum uses client/postcheck";
-    }
-
-    @postcheck= getpart("verify", "postcheck");
     if(@postcheck) {
         my $cmd = join("", @postcheck);
         chomp $cmd;
@@ -1204,9 +1143,6 @@ sub runner_test_preprocess {
     ###################################################################
     # Start the servers needed to run this test case
     my ($why, $error) = singletest_startservers($testnum, \%testtimings);
-
-    # make sure no locks left for responsive test
-    waitlockunlock($defserverlogslocktimeout);
 
     if(!$why) {
 
@@ -1282,6 +1218,12 @@ sub runner_test_run {
     restore_test_env(0);
 
     return (0, clearlogs(), \%testtimings, $cmdres, $CURLOUT, $tool, $usedvalgrind);
+}
+
+# Async call runner_clearlocks
+# Called by controller
+sub runnerac_clearlocks {
+    return controlleripccall(\&runner_clearlocks, @_);
 }
 
 # Async call runner_shutdown
@@ -1396,7 +1338,6 @@ sub runnerar_ready {
     my $rin = "";
     my %idbyfileno;
     my $maxfileno=0;
-    my @ready_runners = ();
     foreach my $p (keys(%controllerr)) {
         my $fd = fileno($controllerr{$p});
         vec($rin, $fd, 1) = 1;
@@ -1419,11 +1360,10 @@ sub runnerar_ready {
                 return (undef, $idbyfileno{$fd});
             }
             if(vec($rout, $fd, 1)) {
-                push(@ready_runners, $idbyfileno{$fd});
+                return ($idbyfileno{$fd}, undef);
             }
         }
-        die "Internal pipe readiness inconsistency\n" if(!@ready_runners);
-        return (@ready_runners, undef);
+        die "Internal pipe readiness inconsistency\n";
     }
     return (undef, undef);
 }
@@ -1477,7 +1417,10 @@ sub ipcrecv {
     # print "ipcrecv $funcname\n";
     # Synchronously call the desired function
     my @res;
-    if($funcname eq "runner_shutdown") {
+    if($funcname eq "runner_clearlocks") {
+        @res = runner_clearlocks(@$argsarrayref);
+    }
+    elsif($funcname eq "runner_shutdown") {
         runner_shutdown(@$argsarrayref);
         # Special case: no response will be forthcoming
         return 1;
@@ -1510,6 +1453,18 @@ sub ipcrecv {
 
     return 0;
 }
+
+###################################################################
+# Kill the server processes that still have lock files in a directory
+sub runner_clearlocks {
+    my ($lockdir)=@_;
+    if(clearlogs()) {
+        logmsg "Warning: log messages were lost\n";
+    }
+    clearlocks($lockdir);
+    return clearlogs();
+}
+
 
 ###################################################################
 # Kill all server processes

@@ -10,7 +10,6 @@ See-also:
   - curl_easy_setopt (3)
 Protocol:
   - HTTP
-Added-in: 7.10.7
 ---
 
 # NAME
@@ -30,8 +29,6 @@ CURLcode curl_easy_getinfo(CURL *handle, CURLINFO_HTTP_CONNECTCODE, long *p);
 Pass a pointer to a long to receive the last received HTTP proxy response code
 to a CONNECT request. The returned value is zero if no such response code was
 available.
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -57,11 +54,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.10.7
 
 # RETURN VALUE
 
-curl_easy_getinfo(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

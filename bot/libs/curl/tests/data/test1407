@@ -35,7 +35,6 @@ pop3://%HOSTIP:%POP3PORT/%TESTNUMBER -l -u user:secret --libcurl %LOGDIR/test%TE
 # Need ftp so the FTP options are written in the --libcurl template
 <features>
 ftp
---libcurl
 </features>
 </client>
 

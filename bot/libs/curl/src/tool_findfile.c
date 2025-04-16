@@ -24,9 +24,8 @@
 #include "tool_setup.h"
 
 #ifdef HAVE_PWD_H
-#undef __NO_NET_API /* required for AmigaOS to declare getpwuid() */
-#include <pwd.h>
-#define __NO_NET_API
+#  undef __NO_NET_API /* required for building for AmigaOS */
+#  include <pwd.h>
 #endif
 
 #ifdef HAVE_SYS_STAT_H
@@ -36,7 +35,7 @@
 #include <fcntl.h>
 #endif
 
-#include <curlx.h>
+#include <curl/mprintf.h>
 
 #include "tool_findfile.h"
 
@@ -52,7 +51,7 @@ struct finder {
    in the findfile() function */
 static const struct finder conf_list[] = {
   { "CURL_HOME", NULL, FALSE },
-  { "XDG_CONFIG_HOME", NULL, TRUE },
+  { "XDG_CONFIG_HOME", NULL, FALSE }, /* index == 1, used in the code */
   { "HOME", NULL, FALSE },
 #ifdef _WIN32
   { "USERPROFILE", NULL, FALSE },
@@ -73,9 +72,9 @@ static char *checkhome(const char *home, const char *fname, bool dotscore)
   for(i = 0; i < (dotscore ? 2 : 1); i++) {
     char *c;
     if(dotscore)
-      c = aprintf("%s" DIR_CHAR "%c%s", home, pref[i], &fname[1]);
+      c = curl_maprintf("%s" DIR_CHAR "%c%s", home, pref[i], &fname[1]);
     else
-      c = aprintf("%s" DIR_CHAR "%s", home, fname);
+      c = curl_maprintf("%s" DIR_CHAR "%s", home, fname);
     if(c) {
       int fd = open(c, O_RDONLY);
       if(fd >= 0) {
@@ -98,11 +97,12 @@ static char *checkhome(const char *home, const char *fname, bool dotscore)
  *
  * 1. Iterate over the environment variables in order, and if set, check for
  *    the given file to be accessed there, then it is a match.
- * 2. Non-Windows: try getpwuid
+ * 2. Non-windows: try getpwuid
  */
 char *findfile(const char *fname, int dotscore)
 {
   int i;
+  bool xdg = FALSE;
   DEBUGASSERT(fname && fname[0]);
   DEBUGASSERT((dotscore != 1) || (fname[0] == '.'));
 
@@ -114,19 +114,21 @@ char *findfile(const char *fname, int dotscore)
     if(home) {
       char *path;
       const char *filename = fname;
+      if(i == 1 /* XDG_CONFIG_HOME */)
+        xdg = TRUE;
       if(!home[0]) {
         curl_free(home);
         continue;
       }
       if(conf_list[i].append) {
-        char *c = aprintf("%s%s", home, conf_list[i].append);
+        char *c = curl_maprintf("%s%s", home, conf_list[i].append);
         curl_free(home);
         if(!c)
           return NULL;
         home = c;
       }
       if(conf_list[i].withoutdot) {
-        if(!dotscore) {
+        if(!dotscore || xdg) {
           /* this is not looking for .curlrc, or the XDG_CONFIG_HOME was
              defined so we skip the extended check */
           curl_free(home);

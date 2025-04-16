@@ -9,7 +9,6 @@ See-also:
   - CURLMOPT_PIPELINING_SITE_BL (3)
 Protocol:
   - HTTP
-Added-in: 7.30.0
 ---
 
 # NAME
@@ -42,9 +41,7 @@ Pass a NULL pointer to clear the block list.
 
 # DEFAULT
 
-NULL, which means that there is no block list.
-
-# %PROTOCOLS%
+The default value is NULL, which means that there is no block list.
 
 # EXAMPLE
 
@@ -62,11 +59,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.30.0
 
 # RETURN VALUE
 
-curl_multi_setopt(3) returns a CURLMcode indicating success or error.
-
-CURLM_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLM_OK if the option is supported, and CURLM_UNKNOWN_OPTION if not.

@@ -10,7 +10,6 @@ See-also:
   - CURLOPT_FOLLOWLOCATION (3)
 Protocol:
   - HTTP
-Added-in: 7.5
 ---
 
 # NAME
@@ -41,8 +40,6 @@ to get stuck in never-ending redirect loops.
 
 30 (since 8.3.0), it was previously unlimited.
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -64,11 +61,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Along with HTTP
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if HTTP is supported, and CURLE_UNKNOWN_OPTION if not.

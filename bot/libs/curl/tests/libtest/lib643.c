@@ -25,7 +25,7 @@
 
 #include "memdebug.h"
 
-static char testdata[]=
+static char data[]=
   "dummy\n";
 
 struct WriteThis {
@@ -36,14 +36,12 @@ struct WriteThis {
 static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userp)
 {
   struct WriteThis *pooh = (struct WriteThis *)userp;
-  int eof;
+  int eof = !*pooh->readptr;
 
   if(size*nmemb < 1)
     return 0;
 
-#ifdef LIB645
-  eof = !*pooh->readptr;
-#else
+#ifndef LIB645
   eof = pooh->sizeleft <= 0;
   if(!eof)
     pooh->sizeleft--;
@@ -58,7 +56,7 @@ static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userp)
   return 0;                         /* no more data left to deliver */
 }
 
-static CURLcode test_once(char *URL, bool oldstyle)
+static int once(char *URL, bool oldstyle)
 {
   CURL *curl;
   CURLcode res = CURLE_OK;
@@ -69,9 +67,9 @@ static CURLcode test_once(char *URL, bool oldstyle)
   struct WriteThis pooh2;
   curl_off_t datasize = -1;
 
-  pooh.readptr = testdata;
+  pooh.readptr = data;
 #ifndef LIB645
-  datasize = (curl_off_t)strlen(testdata);
+  datasize = (curl_off_t)strlen(data);
 #endif
   pooh.sizeleft = datasize;
 
@@ -124,9 +122,9 @@ static CURLcode test_once(char *URL, bool oldstyle)
   /* Now add the same data with another name and make it not look like
      a file upload but still using the callback */
 
-  pooh2.readptr = testdata;
+  pooh2.readptr = data;
 #ifndef LIB645
-  datasize = (curl_off_t)strlen(testdata);
+  datasize = (curl_off_t)strlen(data);
 #endif
   pooh2.sizeleft = datasize;
 
@@ -225,7 +223,7 @@ test_cleanup:
   return res;
 }
 
-static CURLcode cyclic_add(void)
+static int cyclic_add(void)
 {
   CURL *easy = curl_easy_init();
   curl_mime *mime = curl_mime_init(easy);
@@ -244,23 +242,23 @@ static CURLcode cyclic_add(void)
   curl_easy_cleanup(easy);
   if(a1 != CURLE_BAD_FUNCTION_ARGUMENT)
     /* that should have failed */
-    return TEST_ERR_FAILURE;
+    return 1;
 
-  return CURLE_OK;
+  return 0;
 }
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
-  CURLcode res;
+  int res;
 
   if(curl_global_init(CURL_GLOBAL_ALL) != CURLE_OK) {
     fprintf(stderr, "curl_global_init() failed\n");
     return TEST_ERR_MAJOR_BAD;
   }
 
-  res = test_once(URL, TRUE); /* old */
+  res = once(URL, TRUE); /* old */
   if(!res)
-    res = test_once(URL, FALSE); /* new */
+    res = once(URL, FALSE); /* new */
 
   if(!res)
     res = cyclic_add();

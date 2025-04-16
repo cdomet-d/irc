@@ -29,14 +29,14 @@
 #include <tchar.h>
 #endif
 
-#ifndef UNDER_CE
 #include <signal.h>
-#endif
 
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
 #endif
 
+#define ENABLE_CURLX_PRINTF
+/* use our own printf() functions */
 #include "curlx.h"
 
 #include "tool_cfgable.h"
@@ -65,15 +65,6 @@
 int vms_show = 0;
 #endif
 
-#if defined(__AMIGA__)
-#if defined(__GNUC__)
-#define CURL_USED __attribute__((used))
-#else
-#define CURL_USED
-#endif
-static const char CURL_USED min_stack[] = "$STACK:16384";
-#endif
-
 #ifdef __MINGW32__
 /*
  * There seems to be no way to escape "*" in command-line arguments with MinGW
@@ -90,7 +81,7 @@ int _CRT_glob = 0;
 #if defined(HAVE_PIPE) && defined(HAVE_FCNTL)
 /*
  * Ensure that file descriptors 0, 1 and 2 (stdin, stdout, stderr) are
- * open before starting to run. Otherwise, the first three network
+ * open before starting to run.  Otherwise, the first three network
  * sockets opened by curl could be used for input sources, downloaded data
  * or error logs as they will effectively be stdin, stdout and/or stderr.
  *
@@ -117,9 +108,9 @@ static void memory_tracking_init(void)
 {
   char *env;
   /* if CURL_MEMDEBUG is set, this starts memory tracking message logging */
-  env = curl_getenv("CURL_MEMDEBUG");
+  env = curlx_getenv("CURL_MEMDEBUG");
   if(env) {
-    /* use the value as filename */
+    /* use the value as file name */
     char fname[CURL_MT_LOGFNAME_BUFSIZE];
     if(strlen(env) >= CURL_MT_LOGFNAME_BUFSIZE)
       env[CURL_MT_LOGFNAME_BUFSIZE-1] = '\0';
@@ -131,17 +122,17 @@ static void memory_tracking_init(void)
        without an alloc! */
   }
   /* if CURL_MEMLIMIT is set, this enables fail-on-alloc-number-N feature */
-  env = curl_getenv("CURL_MEMLIMIT");
+  env = curlx_getenv("CURL_MEMLIMIT");
   if(env) {
-    curl_off_t num;
-    const char *p = env;
-    if(!curlx_str_number(&p, &num, LONG_MAX))
-      curl_dbg_memlimit((long)num);
+    char *endptr;
+    long num = strtol(env, &endptr, 10);
+    if((endptr != env) && (endptr == env + strlen(env)) && (num > 0))
+      curl_dbg_memlimit(num);
     curl_free(env);
   }
 }
 #else
-#  define memory_tracking_init() tool_nop_stmt
+#  define memory_tracking_init() Curl_nop_stmt
 #endif
 
 /*
@@ -153,7 +144,7 @@ static CURLcode main_init(struct GlobalConfig *config)
 {
   CURLcode result = CURLE_OK;
 
-#ifdef __DJGPP__
+#if defined(__DJGPP__) || defined(__GO32__)
   /* stop stat() wasting time */
   _djstat_flags |= _STAT_INODE | _STAT_EXEC_MAGIC | _STAT_DIRSIZE;
 #endif
@@ -197,13 +188,13 @@ static CURLcode main_init(struct GlobalConfig *config)
 
 static void free_globalconfig(struct GlobalConfig *config)
 {
-  curlx_safefree(config->trace_dump);
+  Curl_safefree(config->trace_dump);
 
   if(config->trace_fopened && config->trace_stream)
     fclose(config->trace_stream);
   config->trace_stream = NULL;
 
-  curlx_safefree(config->libcurl);
+  Curl_safefree(config->libcurl);
 }
 
 /*
@@ -226,9 +217,9 @@ static void main_free(struct GlobalConfig *config)
 /*
 ** curl tool main function.
 */
-#if defined(_UNICODE) && !defined(UNDER_CE)
-#if defined(__GNUC__) || defined(__clang__)
-/* GCC does not know about wmain() */
+#ifdef _UNICODE
+#if defined(__GNUC__)
+/* GCC doesn't know about wmain() */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-prototypes"
 #pragma GCC diagnostic ignored "-Wmissing-declarations"
@@ -244,7 +235,7 @@ int main(int argc, char *argv[])
 
   tool_init_stderr();
 
-#if defined(_WIN32) && !defined(UNDER_CE)
+#ifdef _WIN32
   /* Undocumented diagnostic option to list the full paths of all loaded
      modules. This is purposely pre-init. */
   if(argc == 2 && !_tcscmp(argv[1], _T("--dump-module-paths"))) {
@@ -254,13 +245,11 @@ int main(int argc, char *argv[])
     curl_slist_free_all(head);
     return head ? 0 : 1;
   }
-#endif
-#ifdef _WIN32
   /* win32_init must be called before other init routines. */
   result = win32_init();
   if(result) {
     errorf(&global, "(%d) Windows-specific init failed", result);
-    return (int)result;
+    return result;
   }
 #endif
 
@@ -299,8 +288,8 @@ int main(int argc, char *argv[])
 #endif
 }
 
-#if defined(_UNICODE) && !defined(UNDER_CE)
-#if defined(__GNUC__) || defined(__clang__)
+#ifdef _UNICODE
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif
 #endif

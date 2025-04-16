@@ -33,7 +33,7 @@
  *
  * Written by Jeff Pohlmeyer, converted to use epoll by Josh Bialkowski
 
-Requires a Linux system with epoll
+Requires a linux system with epoll
 
 When running, the program creates the named pipe "hiper.fifo"
 
@@ -354,13 +354,13 @@ static int prog_cb(void *p, double dltotal, double dlnow, double ult,
 
 
 /* Create a new easy handle, and add it to the global curl_multi */
-static void new_conn(const char *url, GlobalInfo *g)
+static void new_conn(char *url, GlobalInfo *g)
 {
   ConnInfo *conn;
   CURLMcode rc;
 
   conn = (ConnInfo*)calloc(1, sizeof(ConnInfo));
-  conn->error[0] = '\0';
+  conn->error[0]='\0';
 
   conn->easy = curl_easy_init();
   if(!conn->easy) {
@@ -418,22 +418,22 @@ static int init_fifo(GlobalInfo *g)
   struct epoll_event epev;
 
   fprintf(MSG_OUT, "Creating named pipe \"%s\"\n", fifo);
-  if(lstat(fifo, &st) == 0) {
+  if(lstat (fifo, &st) == 0) {
     if((st.st_mode & S_IFMT) == S_IFREG) {
       errno = EEXIST;
       perror("lstat");
-      return 1;
+      exit(1);
     }
   }
   unlink(fifo);
-  if(mkfifo(fifo, 0600) == -1) {
+  if(mkfifo (fifo, 0600) == -1) {
     perror("mkfifo");
-    return 1;
+    exit(1);
   }
   sockfd = open(fifo, O_RDWR | O_NONBLOCK, 0);
   if(sockfd == -1) {
     perror("open");
-    return 1;
+    exit(1);
   }
 
   g->fifofd = sockfd;
@@ -449,9 +449,9 @@ static int init_fifo(GlobalInfo *g)
 
 static void clean_fifo(GlobalInfo *g)
 {
-  epoll_ctl(g->epfd, EPOLL_CTL_DEL, g->fifofd, NULL);
-  fclose(g->input);
-  unlink(fifo);
+    epoll_ctl(g->epfd, EPOLL_CTL_DEL, g->fifofd, NULL);
+    fclose(g->input);
+    unlink(fifo);
 }
 
 
@@ -478,13 +478,13 @@ int main(int argc, char **argv)
   g.epfd = epoll_create1(EPOLL_CLOEXEC);
   if(g.epfd == -1) {
     perror("epoll_create1 failed");
-    return 1;
+    exit(1);
   }
 
   g.tfd = timerfd_create(CLOCK_MONOTONIC, TFD_NONBLOCK | TFD_CLOEXEC);
   if(g.tfd == -1) {
     perror("timerfd_create failed");
-    return 1;
+    exit(1);
   }
 
   memset(&its, 0, sizeof(struct itimerspec));
@@ -496,8 +496,7 @@ int main(int argc, char **argv)
   ev.data.fd = g.tfd;
   epoll_ctl(g.epfd, EPOLL_CTL_ADD, g.tfd, &ev);
 
-  if(init_fifo(&g))
-    return 1;
+  init_fifo(&g);
   g.multi = curl_multi_init();
 
   /* setup the generic multi interface options we want */
@@ -522,7 +521,7 @@ int main(int argc, char **argv)
       }
       else {
         perror("epoll_wait");
-        return 1;
+        exit(1);
       }
     }
 

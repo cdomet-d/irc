@@ -11,7 +11,6 @@ See-also:
   - RFC 7540
 Protocol:
   - HTTP
-Added-in: 7.44.0
 ---
 
 # NAME
@@ -77,7 +76,7 @@ introduced in later libcurl versions.
 ## CURL_PUSH_OK (0)
 
 The application has accepted the stream and it can now start receiving data,
-the ownership of the curl handle has been taken over by the application.
+the ownership of the CURL handle has been taken over by the application.
 
 ## CURL_PUSH_DENY (1)
 
@@ -96,8 +95,6 @@ All other return codes are reserved for future use.
 # DEFAULT
 
 NULL, no callback
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -140,11 +137,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.44.0
 
 # RETURN VALUE
 
-curl_multi_setopt(3) returns a CURLMcode indicating success or error.
-
-CURLM_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLM_OK if the option is supported, and CURLM_UNKNOWN_OPTION if not.

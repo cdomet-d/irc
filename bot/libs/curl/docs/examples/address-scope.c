@@ -28,14 +28,14 @@
 #include <stdio.h>
 #include <curl/curl.h>
 
-#if !defined(_WIN32) && !defined(MSDOS) && !defined(__AMIGA__)
+#ifndef _WIN32
 #include <net/if.h>
 #endif
 
 int main(void)
 {
-#if !defined(_WIN32) && !defined(MSDOS) && !defined(__AMIGA__)
-  /* Windows/MS-DOS users need to find how to use if_nametoindex() */
+#ifndef _WIN32
+  /* Windows users need to find how to use if_nametoindex() */
   CURL *curl;
   CURLcode res;
 
@@ -44,7 +44,7 @@ int main(void)
     long my_scope_id;
     curl_easy_setopt(curl, CURLOPT_URL, "https://example.com");
 
-    my_scope_id = (long)if_nametoindex("eth0");
+    my_scope_id = if_nametoindex("eth0");
     curl_easy_setopt(curl, CURLOPT_ADDRESS_SCOPE, my_scope_id);
 
     /* Perform the request, res gets the return code */

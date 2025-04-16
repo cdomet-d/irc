@@ -9,7 +9,6 @@ See-also:
   - unix (7)
 Protocol:
   - All
-Added-in: 7.53.0
 ---
 
 # NAME
@@ -43,9 +42,7 @@ share the same storage and therefore only one of them can be set per handle.
 
 # DEFAULT
 
-NULL
-
-# %PROTOCOLS%
+Default is NULL.
 
 # EXAMPLE
 
@@ -63,11 +60,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.53.0.
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

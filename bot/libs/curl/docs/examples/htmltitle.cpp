@@ -43,7 +43,7 @@
 //  Case-insensitive string comparison
 //
 
-#ifdef _WIN32
+#ifdef _MSC_VER
 #define COMPARE(a, b) (!_stricmp((a), (b)))
 #else
 #define COMPARE(a, b) (!strcasecmp((a), (b)))
@@ -71,8 +71,8 @@ static std::string buffer;
 //  libcurl write callback function
 //
 
-static size_t writer(char *data, size_t size, size_t nmemb,
-                     std::string *writerData)
+static int writer(char *data, size_t size, size_t nmemb,
+                  std::string *writerData)
 {
   if(writerData == NULL)
     return 0;
@@ -86,7 +86,7 @@ static size_t writer(char *data, size_t size, size_t nmemb,
 //  libcurl connection initialization
 //
 
-static bool init(CURL *&conn, const char *url)
+static bool init(CURL *&conn, char *url)
 {
   CURLcode code;
 
@@ -94,7 +94,7 @@ static bool init(CURL *&conn, const char *url)
 
   if(conn == NULL) {
     fprintf(stderr, "Failed to create CURL connection\n");
-    return false;
+    exit(EXIT_FAILURE);
   }
 
   code = curl_easy_setopt(conn, CURLOPT_ERRORBUFFER, errorBuffer);
@@ -140,7 +140,7 @@ static void StartElement(void *voidContext,
 {
   Context *context = static_cast<Context *>(voidContext);
 
-  if(COMPARE(reinterpret_cast<const char *>(name), "TITLE")) {
+  if(COMPARE(reinterpret_cast<char *>(name), "TITLE")) {
     context->title = "";
     context->addTitle = true;
   }
@@ -156,7 +156,7 @@ static void EndElement(void *voidContext,
 {
   Context *context = static_cast<Context *>(voidContext);
 
-  if(COMPARE(reinterpret_cast<const char *>(name), "TITLE"))
+  if(COMPARE(reinterpret_cast<char *>(name), "TITLE"))
     context->addTitle = false;
 }
 
@@ -169,8 +169,7 @@ static void handleCharacters(Context *context,
                              int length)
 {
   if(context->addTitle)
-    context->title.append(reinterpret_cast<const char *>(chars),
-                          (unsigned long)length);
+    context->title.append(reinterpret_cast<char *>(chars), length);
 }
 
 //
@@ -231,11 +230,6 @@ static htmlSAXHandler saxHandler =
   NULL,
   NULL,
   cdata,
-  NULL,
-  0,
-  0,
-  0,
-  0,
   NULL
 };
 
@@ -252,7 +246,7 @@ static void parseHtml(const std::string &html,
   ctxt = htmlCreatePushParserCtxt(&saxHandler, &context, "", 0, "",
                                   XML_CHAR_ENCODING_NONE);
 
-  htmlParseChunk(ctxt, html.c_str(), (int)html.size(), 0);
+  htmlParseChunk(ctxt, html.c_str(), html.size(), 0);
   htmlParseChunk(ctxt, "", 0, 1);
 
   htmlFreeParserCtxt(ctxt);
@@ -270,7 +264,7 @@ int main(int argc, char *argv[])
 
   if(argc != 2) {
     fprintf(stderr, "Usage: %s <url>\n", argv[0]);
-    return EXIT_FAILURE;
+    exit(EXIT_FAILURE);
   }
 
   curl_global_init(CURL_GLOBAL_DEFAULT);
@@ -279,7 +273,7 @@ int main(int argc, char *argv[])
 
   if(!init(conn, argv[1])) {
     fprintf(stderr, "Connection initialization failed\n");
-    return EXIT_FAILURE;
+    exit(EXIT_FAILURE);
   }
 
   // Retrieve content for the URL
@@ -289,7 +283,7 @@ int main(int argc, char *argv[])
 
   if(code != CURLE_OK) {
     fprintf(stderr, "Failed to get '%s' [%s]\n", argv[1], errorBuffer);
-    return EXIT_FAILURE;
+    exit(EXIT_FAILURE);
   }
 
   // Parse the (assumed) HTML code

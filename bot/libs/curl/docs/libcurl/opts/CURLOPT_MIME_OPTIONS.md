@@ -11,7 +11,6 @@ Protocol:
   - HTTP
   - IMAP
   - SMTP
-Added-in: 7.81.0
 ---
 
 # NAME
@@ -28,8 +27,8 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_MIME_OPTIONS, long options);
 
 # DESCRIPTION
 
-Pass a long that holds a bitmask of options. Each bit is a boolean flag used
-while encoding a MIME tree or multipart form data.
+Pass a long that holds a bitmask of CURLMIMEOPT_* defines. Each bit is a
+Boolean flag used while encoding a MIME tree or multipart form data.
 
 Available bits are:
 
@@ -56,8 +55,6 @@ containing multipart form is sent, this is normally transmitted as
 # DEFAULT
 
 0, meaning disabled.
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -91,11 +88,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Option added in 7.81.0.
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK

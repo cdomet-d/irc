@@ -11,7 +11,6 @@ See-also:
   - curl_easy_setopt (3)
 Protocol:
   - HTTP
-Added-in: 7.10.8
 ---
 
 # NAME
@@ -30,9 +29,8 @@ CURLcode curl_easy_getinfo(CURL *handle, CURLINFO_HTTPAUTH_AVAIL, long *authp);
 
 Pass a pointer to a long to receive a bitmask indicating the authentication
 method(s) available according to the previous response. The meaning of the
-bits is explained in the CURLOPT_HTTPAUTH(3) option for curl_easy_setopt(3).
-
-# %PROTOCOLS%
+bits is explained in the CURLOPT_HTTPAUTH(3) option for
+curl_easy_setopt(3).
 
 # EXAMPLE
 
@@ -67,11 +65,11 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added RFC 2617 in 7.10.8
+Added RFC 7616 in 7.57.0
 
 # RETURN VALUE
 
-curl_easy_getinfo(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

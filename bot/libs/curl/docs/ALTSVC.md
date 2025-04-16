@@ -1,9 +1,3 @@
-<!--
-Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
-
-SPDX-License-Identifier: curl
--->
-
 # Alt-Svc
 
 curl features support for the Alt-Svc: HTTP header.
@@ -41,3 +35,10 @@ space separated fields.
 
 If the hostname is an IPv6 numerical address, it is stored with brackets such
 as `[::1]`.
+
+# TODO
+
+- handle multiple response headers, when one of them says `clear` (should
+  override them all)
+- using `Age:` value for caching age as per spec
+- `CURLALTSVC_IMMEDIATELY` support

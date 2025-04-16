@@ -17,7 +17,7 @@ unittest
 DoH
 </features>
 <name>
-DoH parsing
+DOH
 </name>
 </client>
 </testcase>

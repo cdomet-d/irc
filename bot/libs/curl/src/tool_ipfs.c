@@ -23,7 +23,8 @@
  ***************************************************************************/
 #include "tool_setup.h"
 
-#ifndef CURL_DISABLE_IPFS
+#define ENABLE_CURLX_PRINTF
+/* use our own printf() functions */
 #include "curlx.h"
 #include "dynbuf.h"
 
@@ -43,11 +44,11 @@ static CURLcode ensure_trailing_slash(char **input)
       curlx_dyn_init(&dyn, len + 2);
 
       if(curlx_dyn_addn(&dyn, *input, len)) {
-        curlx_safefree(*input);
+        Curl_safefree(*input);
         return CURLE_OUT_OF_MEMORY;
       }
 
-      curlx_safefree(*input);
+      Curl_safefree(*input);
 
       if(curlx_dyn_addn(&dyn, "/", 1))
         return CURLE_OUT_OF_MEMORY;
@@ -64,7 +65,7 @@ static char *ipfs_gateway(void)
   char *ipfs_path = NULL;
   char *gateway_composed_file_path = NULL;
   FILE *gateway_file = NULL;
-  char *gateway = curl_getenv("IPFS_GATEWAY");
+  char *gateway = curlx_getenv("IPFS_GATEWAY");
 
   /* Gateway is found from environment variable. */
   if(gateway) {
@@ -74,13 +75,15 @@ static char *ipfs_gateway(void)
   }
 
   /* Try to find the gateway in the IPFS data folder. */
-  ipfs_path = curl_getenv("IPFS_PATH");
+  ipfs_path = curlx_getenv("IPFS_PATH");
 
   if(!ipfs_path) {
-    char *home = getenv("HOME");
+    char *home = curlx_getenv("HOME");
     if(home && *home)
       ipfs_path = aprintf("%s/.ipfs/", home);
-    /* fallback to "~/.ipfs", as that is the default location. */
+    /* fallback to "~/.ipfs", as that's the default location. */
+
+    Curl_safefree(home);
   }
 
   if(!ipfs_path || ensure_trailing_slash(&ipfs_path))
@@ -92,7 +95,7 @@ static char *ipfs_gateway(void)
     goto fail;
 
   gateway_file = fopen(gateway_composed_file_path, FOPEN_READTEXT);
-  curlx_safefree(gateway_composed_file_path);
+  Curl_safefree(gateway_composed_file_path);
 
   if(gateway_file) {
     int c;
@@ -118,20 +121,20 @@ static char *ipfs_gateway(void)
     if(!gateway)
       goto fail;
 
-    curlx_safefree(ipfs_path);
+    Curl_safefree(ipfs_path);
 
     return gateway;
   }
 fail:
   if(gateway_file)
     fclose(gateway_file);
-  curlx_safefree(gateway);
-  curlx_safefree(ipfs_path);
+  Curl_safefree(gateway);
+  Curl_safefree(ipfs_path);
   return NULL;
 }
 
 /*
- * Rewrite ipfs://<cid> and ipns://<cid> to an HTTP(S)
+ * Rewrite ipfs://<cid> and ipns://<cid> to a HTTP(S)
  * URL that can be handled by an IPFS gateway.
  */
 CURLcode ipfs_url_rewrite(CURLU *uh, const char *protocol, char **url,
@@ -161,7 +164,7 @@ CURLcode ipfs_url_rewrite(CURLU *uh, const char *protocol, char **url,
     goto clean;
 
   /* We might have a --ipfs-gateway argument. Check it first and use it. Error
-   * if we do have something but if it is an invalid url.
+   * if we do have something but if it's an invalid url.
    */
   if(config->ipfs_gateway) {
     /* ensure the gateway ends in a trailing / */
@@ -247,7 +250,7 @@ CURLcode ipfs_url_rewrite(CURLU *uh, const char *protocol, char **url,
   }
 
   /* Free whatever it has now, rewriting is next */
-  curlx_safefree(*url);
+  Curl_safefree(*url);
 
   if(curl_url_get(uh, CURLUPART_URL, &cloneurl, CURLU_URLENCODE)) {
     goto clean;
@@ -288,4 +291,3 @@ clean:
   }
   return result;
 }
-#endif /* !CURL_DISABLE_IPFS */

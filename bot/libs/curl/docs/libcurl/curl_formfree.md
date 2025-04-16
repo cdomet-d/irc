@@ -10,7 +10,6 @@ See-also:
   - curl_mime_init (3)
 Protocol:
   - HTTP
-Added-in: 7.1
 ---
 
 # NAME
@@ -27,7 +26,7 @@ void curl_formfree(struct curl_httppost *form);
 
 # DESCRIPTION
 
-This function is deprecated. Do not use. See curl_mime_init(3) instead.
+This function is deprecated. Do not use. See curl_mime_init(3) instead!
 
 curl_formfree() is used to clean up data previously built/appended with
 curl_formadd(3). This must be called when the data has been used, which
@@ -42,8 +41,6 @@ curl_formadd(3) and may be NULL.
 
 Passing in a NULL pointer in *form* makes this function return immediately
 with no action.
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -72,11 +69,9 @@ int main(void)
 }
 ~~~
 
-# DEPRECATED
+# AVAILABILITY
 
 Deprecated in 7.56.0.
-
-# %AVAILABILITY%
 
 # RETURN VALUE
 

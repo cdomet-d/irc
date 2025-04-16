@@ -25,10 +25,15 @@
  * HTTP/2 Upgrade test
  * </DESC>
  */
-#include <curl/curl.h>
-
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <inttypes.h>
+/* #include <error.h> */
+#include <errno.h>
+#include <curl/curl.h>
+#include <curl/mprintf.h>
+
 
 static void log_line_start(FILE *log, const char *idsbuf, curl_infotype type)
 {
@@ -67,8 +72,8 @@ static int debug_cb(CURL *handle, curl_infotype type,
   if(!curl_easy_getinfo(handle, CURLINFO_XFER_ID, &xfer_id) && xfer_id >= 0) {
     if(!curl_easy_getinfo(handle, CURLINFO_CONN_ID, &conn_id) &&
         conn_id >= 0) {
-      curl_msnprintf(idsbuf, sizeof(idsbuf), TRC_IDS_FORMAT_IDS_2, xfer_id,
-                     conn_id);
+      curl_msnprintf(idsbuf, sizeof(idsbuf), TRC_IDS_FORMAT_IDS_2,
+                     xfer_id, conn_id);
     }
     else {
       curl_msnprintf(idsbuf, sizeof(idsbuf), TRC_IDS_FORMAT_IDS_1, xfer_id);
@@ -138,25 +143,24 @@ static size_t write_cb(char *ptr, size_t size, size_t nmemb, void *opaque)
 int main(int argc, char *argv[])
 {
   const char *url;
-  CURLM *multi = NULL;
+  CURLM *multi;
   CURL *easy;
   CURLMcode mc;
   int running_handles = 0, start_count, numfds;
   CURLMsg *msg;
   int msgs_in_queue;
   char range[128];
-  int exitcode = 1;
 
   if(argc != 2) {
     fprintf(stderr, "%s URL\n", argv[0]);
-    return 2;
+    exit(2);
   }
 
   url = argv[1];
   multi = curl_multi_init();
   if(!multi) {
     fprintf(stderr, "curl_multi_init failed\n");
-    goto cleanup;
+    exit(1);
   }
 
   start_count = 200;
@@ -165,7 +169,7 @@ int main(int argc, char *argv[])
       easy = curl_easy_init();
       if(!easy) {
         fprintf(stderr, "curl_easy_init failed\n");
-        goto cleanup;
+        exit(1);
       }
       curl_easy_setopt(easy, CURLOPT_VERBOSE, 1L);
       curl_easy_setopt(easy, CURLOPT_DEBUGFUNCTION, debug_cb);
@@ -177,19 +181,15 @@ int main(int argc, char *argv[])
       curl_easy_setopt(easy, CURLOPT_WRITEFUNCTION, write_cb);
       curl_easy_setopt(easy, CURLOPT_WRITEDATA, NULL);
       curl_easy_setopt(easy, CURLOPT_HTTPGET, 1L);
-      curl_msnprintf(range, sizeof(range),
-                     "%" CURL_FORMAT_CURL_OFF_TU "-"
-                     "%" CURL_FORMAT_CURL_OFF_TU,
-                     (curl_off_t)0,
-                     (curl_off_t)16384);
+      curl_msnprintf(range, sizeof(range), "%" PRIu64 "-%" PRIu64,
+                     UINT64_C(0), UINT64_C(16384));
       curl_easy_setopt(easy, CURLOPT_RANGE, range);
 
       mc = curl_multi_add_handle(multi, easy);
       if(mc != CURLM_OK) {
         fprintf(stderr, "curl_multi_add_handle: %s\n",
-                curl_multi_strerror(mc));
-        curl_easy_cleanup(easy);
-        goto cleanup;
+               curl_multi_strerror(mc));
+        exit(1);
       }
       --start_count;
     }
@@ -197,22 +197,21 @@ int main(int argc, char *argv[])
     mc = curl_multi_perform(multi, &running_handles);
     if(mc != CURLM_OK) {
       fprintf(stderr, "curl_multi_perform: %s\n",
-              curl_multi_strerror(mc));
-      goto cleanup;
+             curl_multi_strerror(mc));
+      exit(1);
     }
 
     if(running_handles) {
       mc = curl_multi_poll(multi, NULL, 0, 1000000, &numfds);
       if(mc != CURLM_OK) {
         fprintf(stderr, "curl_multi_poll: %s\n",
-                curl_multi_strerror(mc));
-        goto cleanup;
+               curl_multi_strerror(mc));
+        exit(1);
       }
     }
 
     /* Check for finished handles and remove. */
-    /* !checksrc! disable EQUALSNULL 1 */
-    while((msg = curl_multi_info_read(multi, &msgs_in_queue)) != NULL) {
+    while((msg = curl_multi_info_read(multi, &msgs_in_queue))) {
       if(msg->msg == CURLMSG_DONE) {
         long status = 0;
         curl_off_t xfer_id;
@@ -226,12 +225,12 @@ int main(int argc, char *argv[])
         else if(msg->data.result) {
           fprintf(stderr, "transfer #%" CURL_FORMAT_CURL_OFF_T
                   ": failed with %d\n", xfer_id, msg->data.result);
-          goto cleanup;
+          exit(1);
         }
         else if(status != 206) {
           fprintf(stderr, "transfer #%" CURL_FORMAT_CURL_OFF_T
                   ": wrong http status %ld (expected 206)\n", xfer_id, status);
-          goto cleanup;
+          exit(1);
         }
         curl_multi_remove_handle(multi, msg->easy_handle);
         curl_easy_cleanup(msg->easy_handle);
@@ -246,22 +245,5 @@ int main(int argc, char *argv[])
   } while(running_handles > 0 || start_count);
 
   fprintf(stderr, "exiting\n");
-  exitcode = EXIT_SUCCESS;
-
-cleanup:
-
-  if(multi) {
-    CURL **list = curl_multi_get_handles(multi);
-    if(list) {
-      int i;
-      for(i = 0; list[i]; i++) {
-        curl_multi_remove_handle(multi, list[i]);
-        curl_easy_cleanup(list[i]);
-      }
-      curl_free(list);
-    }
-    curl_multi_cleanup(multi);
-  }
-
-  return exitcode;
+  exit(EXIT_SUCCESS);
 }

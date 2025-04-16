@@ -29,7 +29,7 @@ SPDX-License-Identifier: curl
   When you run tests via make, the flags `-a` and `-s` are passed, meaning
   to continue running tests even after one fails, and to emit short output.
 
-  If you would like to not use those flags, you can run 'runtests.pl' directly.
+  If you'd like to not use those flags, you can run 'runtests.pl' directly.
   You must `chdir` into the tests directory, then you can run it like so:
 
     ./runtests.pl 303 410
@@ -45,63 +45,47 @@ SPDX-License-Identifier: curl
 
 ## Requires to run
 
-  - `perl` (and a Unix-style shell)
-  - `python` (and a Unix-style shell, for SMB and TELNET tests)
-  - `python-impacket` (for SMB tests)
-  - `diff` (when a test fails, a diff is shown)
-  - `stunnel` (for HTTPS and FTPS tests)
-  - `openssl` (the command line tool, for generating test server certificates)
-  - `openssh` or `SunSSH` (for SCP and SFTP tests)
-  - `nghttpx` (for HTTP/2 and HTTP/3 tests)
+  - perl (and a unix-style shell)
+  - python (and a unix-style shell, for SMB and TELNET tests)
+  - python-impacket (for SMB tests)
+  - diff (when a test fails, a diff is shown)
+  - stunnel (for HTTPS and FTPS tests)
+  - OpenSSH or SunSSH (for SCP and SFTP tests)
+  - nghttpx (for HTTP/2 and HTTP/3 tests)
   - An available `en_US.UTF-8` locale
 
-### Installation of impacket
+### Installation of python-impacket
 
-  The Python-based test servers support Python 3.
+  The Python-based test servers support both recent Python 2 and 3.
+  You can figure out your default Python interpreter with python -V
 
   Please install python-impacket in the correct Python environment.
   You can use pip or your OS' package manager to install 'impacket'.
 
-  On Debian/Ubuntu the package name is 'python3-impacket'
+  On Debian/Ubuntu the package names are:
 
-  On FreeBSD the package name is 'py311-impacket'
+  -  Python 2: 'python-impacket'
+  -  Python 3: 'python3-impacket'
 
-  On any system where pip is available: 'python3 -m pip install impacket'
+  On FreeBSD the package names are:
+
+  -  Python 2: 'py27-impacket'
+  -  Python 3: 'py37-impacket'
+
+  On any system where pip is available:
+
+  -  Python 2: 'pip2 install impacket'
+  -  Python 3: 'pip3 install impacket'
 
   You may also need to manually install the Python package 'six'
-  as that may be a missing requirement for impacket.
-
-## Event-based
-
-  If curl is built with `Debug` enabled (see below), then the `runtests.pl`
-  script offers a `-e` option (or `--test-event`) that makes it perform
-  *event-based*. Such tests invokes the curl tool with `--test-event`, a
-  debug-only option made for this purpose.
-
-  Performing event-based means that the curl tool uses the
-  `curl_multi_socket_action()` API call to drive the transfer(s), instead of
-  the otherwise "normal" functions it would use. This allows us to test drive
-  the socket_action API. Transfers done this way should work exactly the same
-  as with the non-event based API.
-
-  To be able to use `--test-event` together with `--parallel`, curl requires
-  *libuv* to be present and enabled in the build: `configure --enable-libuv`
-
-## Duplicated handles
-
-  If curl is built with `Debug` enabled (see below), then the `runtests.pl`
-  script offers a `--test-duphandle` option. When enabled, curl always
-  duplicates the easy handle and does its transfers using the new one instead
-  of the original. This is done entirely for testing purpose to verify that
-  everything works exactly the same when this is done; confirming that the
-  `curl_easy_duphandle()` function duplicates everything that it should.
+  as that may be a missing requirement for impacket on Python 3.
 
 ### Port numbers used by test servers
 
-  All test servers run on "random" port numbers. All tests must be written to
-  use the suitable variables instead of fixed port numbers so that test cases
-  continue to work independently of what port numbers the test servers
-  actually use.
+  All test servers run on "random" port numbers. All tests should be written
+  to use suitable variables instead of fixed port numbers so that test cases
+  continue to work independent on what port numbers the test servers actually
+  use.
 
   See [`FILEFORMAT`](FILEFORMAT.md) for the port number variables.
 
@@ -141,13 +125,13 @@ SPDX-License-Identifier: curl
 
 ### Memory test
 
-  The test script checks that all allocated memory is freed properly IF curl
-  has been built with the `CURLDEBUG` define set. The script automatically
-  detects if that is the case, and it uses the `memanalyze.pl` script to
-  analyze the memory debugging output.
+  The test script will check that all allocated memory is freed properly IF
+  curl has been built with the `CURLDEBUG` define set. The script will
+  automatically detect if that is the case, and it will use the
+  `memanalyze.pl` script to analyze the memory debugging output.
 
-  Also, if you run tests on a machine where valgrind is found, the script uses
-  valgrind to run the test with (unless you use `-n`) to further verify
+  Also, if you run tests on a machine where valgrind is found, the script will
+  use valgrind to run the test with (unless you use `-n`) to further verify
   correctness.
 
   The `runtests.pl` `-t` option enables torture testing mode. It runs each
@@ -183,7 +167,7 @@ SPDX-License-Identifier: curl
 
     CURL_DEBUG=ssl curl -v https://curl.se
 
-  makes the `ssl` connection filter log more details. One may do that for
+  will make the `ssl` connection filter log more details. One may do that for
   every filter type and also use a combination of names, separated by `,` or
   space.
 
@@ -221,7 +205,7 @@ SPDX-License-Identifier: curl
 
     ggcov -r lib src
 
-  The text mode tool `gcov` may also be used, but it does not handle object
+  The text mode tool `gcov` may also be used, but it doesn't handle object
   files in more than one directory correctly.
 
 ### Remote testing
@@ -238,7 +222,7 @@ SPDX-License-Identifier: curl
   up. Subsets of tests can now be selected by passing keywords to the
   runtests.pl script via the make `TFLAGS` variable.
 
-  New tests are added by finding a free number in `tests/data/Makefile.am`.
+  New tests are added by finding a free number in `tests/data/Makefile.inc`.
 
 ## Write tests
 
@@ -272,20 +256,8 @@ SPDX-License-Identifier: curl
 
 ### unit tests
 
-  Unit tests are placed in `tests/unit`. There is a tests/unit/README
+  Unit tests are placed in `tests/unit`. There's a tests/unit/README
   describing the specific set of checks and macros that may be used when
   writing tests that verify behaviors of specific individual functions.
 
   The unit tests depend on curl being built with debug enabled.
-
-### test bundles
-
-  The `--enable-test-bundles` (autotools) and `-DCURL_TEST_BUNDLES=ON` (cmake)
-  build options allow to build tests bundled into single executables, one for
-  libtests, one for unit tests and one for servers.
-  The executables' first argument is the name of libtest, unit test or server
-  respectively.
-  In these executables, the build process automatically renames the entry point
-  to a unique symbol. `test` becomes `test_<tool>`, e.g. `test_lib1598` or
-  `test_unit1305`. For servers `main` becomes `main_sws` for the `sws` server,
-  and so on. Other common symbols may also be suffixed the same way.

@@ -21,12 +21,15 @@
  * SPDX-License-Identifier: curl
  *
  ***************************************************************************/
+#ifndef CURL_DISABLE_DEPRECATION
+#define CURL_DISABLE_DEPRECATION  /* Using and testing the form api */
+#endif
 #include "test.h"
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
   CURL *eh = NULL;
-  CURLcode res = CURLE_OK;
+  int res = 0;
   struct curl_httppost *lastptr = NULL;
   struct curl_httppost *m_formpost = NULL;
 
@@ -35,20 +38,17 @@ CURLcode test(char *URL)
   easy_init(eh);
 
   easy_setopt(eh, CURLOPT_URL, URL);
-  CURL_IGNORE_DEPRECATION(
-    curl_formadd(&m_formpost, &lastptr, CURLFORM_COPYNAME, "file",
-                 CURLFORM_FILE, "missing-file", CURLFORM_END);
-    curl_easy_setopt(eh, CURLOPT_HTTPPOST, m_formpost);
-  )
+  curl_formadd(&m_formpost, &lastptr, CURLFORM_COPYNAME, "file",
+               CURLFORM_FILE, "missing-file", CURLFORM_END);
+  curl_easy_setopt(eh, CURLOPT_HTTPPOST, m_formpost);
 
   (void)curl_easy_perform(eh);
   (void)curl_easy_perform(eh);
 
 test_cleanup:
 
-  CURL_IGNORE_DEPRECATION(
-    curl_formfree(m_formpost);
-  )
+  curl_formfree(m_formpost);
+
   curl_easy_cleanup(eh);
   curl_global_cleanup();
 

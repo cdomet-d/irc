@@ -26,13 +26,21 @@
 #include "warnless.h"
 #include "memdebug.h"
 
-CURLcode test(char *URL)
+/* For Windows, mainly (may be moved in a config file?) */
+#ifndef STDIN_FILENO
+  #define STDIN_FILENO 0
+#endif
+#ifndef STDOUT_FILENO
+  #define STDOUT_FILENO 1
+#endif
+#ifndef STDERR_FILENO
+  #define STDERR_FILENO 2
+#endif
+
+int test(char *URL)
 {
   CURLcode res;
   CURL *curl;
-#ifdef LIB696
-  int transfers = 0;
-#endif
 
   if(curl_global_init(CURL_GLOBAL_ALL) != CURLE_OK) {
     fprintf(stderr, "curl_global_init() failed\n");
@@ -50,10 +58,6 @@ CURLcode test(char *URL)
   test_setopt(curl, CURLOPT_CONNECT_ONLY, 1L);
   test_setopt(curl, CURLOPT_VERBOSE, 1L);
 
-#ifdef LIB696
-again:
-#endif
-
   res = curl_easy_perform(curl);
 
   if(!res) {
@@ -61,57 +65,35 @@ again:
     const char *request =
       "GET /556 HTTP/1.1\r\n"
       "Host: ninja\r\n\r\n";
-    const char *sbuf = request;
-    size_t sblen = strlen(request);
-    size_t nwritten = 0, nread = 0;
+    size_t iolen = 0;
 
-    do {
-      char buf[1024];
+    res = curl_easy_send(curl, request, strlen(request), &iolen);
 
-      if(sblen) {
-        res = curl_easy_send(curl, sbuf, sblen, &nwritten);
-        if(res && res != CURLE_AGAIN)
-          break;
-        if(nwritten > 0) {
-          sbuf += nwritten;
-          sblen -= nwritten;
+    if(!res) {
+      /* we assume that sending always work */
+
+      do {
+        char buf[1024];
+        /* busy-read like crazy */
+        res = curl_easy_recv(curl, buf, sizeof(buf), &iolen);
+
+        if(iolen) {
+          /* send received stuff to stdout */
+          if(!write(STDOUT_FILENO, buf, iolen))
+            break;
         }
-      }
 
-      /* busy-read like crazy */
-      res = curl_easy_recv(curl, buf, sizeof(buf), &nread);
+      } while((res == CURLE_OK && iolen) || (res == CURLE_AGAIN));
+    }
 
-      if(nread) {
-        /* send received stuff to stdout */
-#ifdef UNDER_CE
-        if((size_t)fwrite(buf, sizeof(buf[0]), nread, stdout) != nread) {
-#else
-        if((size_t)write(STDOUT_FILENO, buf, nread) != nread) {
-#endif
-          fprintf(stderr, "write() failed: errno %d (%s)\n",
-                  errno, strerror(errno));
-          res = TEST_ERR_FAILURE;
-          break;
-        }
-      }
-
-    } while((res == CURLE_OK && nread) || (res == CURLE_AGAIN));
-
-    if(res && res != CURLE_AGAIN)
-      res = TEST_ERR_FAILURE;
+    if(iolen)
+      res = (CURLcode)TEST_ERR_FAILURE;
   }
-
-#ifdef LIB696
-  ++transfers;
-  /* perform the transfer a second time */
-  if(!res && transfers == 1)
-    goto again;
-#endif
 
 test_cleanup:
 
   curl_easy_cleanup(curl);
   curl_global_cleanup();
 
-  return res;
+  return (int)res;
 }

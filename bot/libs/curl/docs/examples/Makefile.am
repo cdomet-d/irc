@@ -24,7 +24,7 @@
 
 AUTOMAKE_OPTIONS = foreign nostdinc
 
-EXTRA_DIST = README.md Makefile.example CMakeLists.txt \
+EXTRA_DIST = README.md Makefile.example Makefile.inc Makefile.mk \
   $(COMPLICATED_EXAMPLES) .checksrc
 
 # Specify our include paths here, and do it relative to $(top_srcdir) and
@@ -34,7 +34,8 @@ EXTRA_DIST = README.md Makefile.example CMakeLists.txt \
 #
 # $(top_srcdir)/include is for libcurl's external include files
 
-AM_CPPFLAGS = -I$(top_srcdir)/include
+AM_CPPFLAGS = -I$(top_srcdir)/include   \
+              -DCURL_DISABLE_DEPRECATION
 
 LIBDIR = $(top_builddir)/lib
 
@@ -44,15 +45,16 @@ AM_CPPFLAGS += -DCURL_NO_OLDIES
 if USE_CPPFLAG_CURL_STATICLIB
 AM_CPPFLAGS += -DCURL_STATICLIB
 endif
-if DOING_NATIVE_WINDOWS
-AM_CPPFLAGS += -DWIN32_LEAN_AND_MEAN
-endif
 
 # Prevent LIBS from being used for all link targets
 LIBS = $(BLANK_AT_MAKETIME)
 
 # Dependencies
-LDADD = $(LIBDIR)/libcurl.la @LIBCURL_PC_LIBS_PRIVATE@
+if USE_EXPLICIT_LIB_DEPS
+LDADD = $(LIBDIR)/libcurl.la @LIBCURL_LIBS@
+else
+LDADD = $(LIBDIR)/libcurl.la
+endif
 
 # This might hold -Werror
 CFLAGS += @CURL_CFLAG_EXTRAS@

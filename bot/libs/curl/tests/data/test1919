@@ -1,7 +1,7 @@
 <testcase>
 <info>
 <keywords>
-connection reuse
+conn-reuse
 </keywords>
 </info>
 

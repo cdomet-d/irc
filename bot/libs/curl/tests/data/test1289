@@ -18,7 +18,7 @@ globbing
 http
 </server>
 <name>
-globbing with overflow and bad syntax
+globbing with overflow and bad syntxx
 </name>
 <command>
 http://ur%20[0-60000000000000000000

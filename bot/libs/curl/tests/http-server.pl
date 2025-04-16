@@ -36,7 +36,10 @@ use File::Basename;
 use serverhelp qw(
     server_pidfilename
     server_logfilename
-    server_exe
+    );
+
+use pathhelp qw(
+    exe_ext
     );
 
 my $verbose = 0;     # set to 1 for debugging
@@ -184,8 +187,8 @@ if($ipvnum eq 'unix') {
 $flags .= "--srcdir \"$srcdir\"";
 
 if($verbose) {
-    print STDERR "RUN: ".server_exe('sws')." $flags\n";
+    print STDERR "RUN: server/sws".exe_ext('SRV')." $flags\n";
 }
 
 $| = 1;
-exec("exec ".server_exe('sws')." $flags");
+exec("exec server/sws".exe_ext('SRV')." $flags");

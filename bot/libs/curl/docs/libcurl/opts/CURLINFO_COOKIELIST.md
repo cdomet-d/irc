@@ -10,7 +10,6 @@ See-also:
   - curl_easy_setopt (3)
 Protocol:
   - HTTP
-Added-in: 7.14.1
 ---
 
 # NAME
@@ -36,8 +35,6 @@ received) the 'struct curl_slist *' is made a NULL pointer.
 
 Since 7.43.0 cookies that were imported in the Set-Cookie format without a
 domain name are not exported by this option.
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -74,11 +71,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.14.1
 
 # RETURN VALUE
 
-curl_easy_getinfo(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

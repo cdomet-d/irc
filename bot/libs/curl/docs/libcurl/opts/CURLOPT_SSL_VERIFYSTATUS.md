@@ -13,7 +13,6 @@ Protocol:
 TLS-backend:
   - OpenSSL
   - GnuTLS
-Added-in: 7.41.0
 ---
 
 # NAME
@@ -42,8 +41,6 @@ extension, the verification fails.
 
 0
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -53,7 +50,7 @@ int main(void)
   if(curl) {
     CURLcode res;
     curl_easy_setopt(curl, CURLOPT_URL, "https://example.com/");
-    /* ask for OCSP stapling */
+    /* ask for OCSP stapling! */
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYSTATUS, 1L);
     res = curl_easy_perform(curl);
     curl_easy_cleanup(curl);
@@ -61,11 +58,12 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.41.0. This option is currently only supported by the OpenSSL and
+GnuTLS TLS backends.
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if OCSP stapling is supported by the SSL backend, otherwise
+returns CURLE_NOT_BUILT_IN.

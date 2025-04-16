@@ -10,7 +10,6 @@ See-also:
   - CURLOPT_RESUME_FROM (3)
 Protocol:
   - All
-Added-in: 7.11.0
 ---
 
 # NAME
@@ -42,8 +41,6 @@ file to the remote target file.
 
 0, not used
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -51,8 +48,8 @@ int main(void)
 {
   CURL *curl = curl_easy_init();
   if(curl) {
-    curl_off_t resume_position = 1234; /* get it somehow */
-    curl_off_t file_size = 9876; /* get it somehow as well */
+    curl_off_t resume_position; /* get it somehow */
+    curl_off_t file_size; /* get it somehow as well */
 
     curl_easy_setopt(curl, CURLOPT_URL, "ftp://example.com");
 
@@ -71,11 +68,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.11.0
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

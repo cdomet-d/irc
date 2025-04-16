@@ -9,7 +9,6 @@ See-also:
   - CURLOPT_MAX_RECV_SPEED_LARGE (3)
 Protocol:
   - All
-Added-in: 7.15.5
 ---
 
 # NAME
@@ -45,8 +44,6 @@ This option does not affect transfer speeds done with FILE:// URLs.
 
 0, disabled
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -58,17 +55,16 @@ int main(void)
     curl_easy_setopt(curl, CURLOPT_URL, "https://example.com/");
     /* cap the upload speed to 1000 bytes/sec */
     curl_easy_setopt(curl, CURLOPT_MAX_SEND_SPEED_LARGE, (curl_off_t)1000);
-    /* (set some upload options as well) */
+    /* (set some upload options as well!) */
     ret = curl_easy_perform(curl);
   }
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.15.5
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

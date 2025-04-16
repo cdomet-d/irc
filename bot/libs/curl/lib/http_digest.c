@@ -30,7 +30,6 @@
 #include "strcase.h"
 #include "vauth/vauth.h"
 #include "http_digest.h"
-#include "strparse.h"
 
 /* The last 3 #include files should be in this order */
 #include "curl_printf.h"
@@ -63,7 +62,8 @@ CURLcode Curl_input_digest(struct Curl_easy *data,
     return CURLE_BAD_CONTENT_ENCODING;
 
   header += strlen("Digest");
-  Curl_str_passblanks(&header);
+  while(*header && ISBLANK(*header))
+    header++;
 
   return Curl_auth_decode_digest_http_message(header, digest);
 }
@@ -121,9 +121,9 @@ CURLcode Curl_output_digest(struct Curl_easy *data,
     passwdp = "";
 
 #if defined(USE_WINDOWS_SSPI)
-  have_chlg = !!digest->input_token;
+  have_chlg = digest->input_token ? TRUE : FALSE;
 #else
-  have_chlg = !!digest->nonce;
+  have_chlg = digest->nonce ? TRUE : FALSE;
 #endif
 
   if(!have_chlg) {
@@ -145,15 +145,15 @@ CURLcode Curl_output_digest(struct Curl_easy *data,
   */
 
   if(authp->iestyle) {
-    tmp = strchr((const char *)uripath, '?');
+    tmp = strchr((char *)uripath, '?');
     if(tmp) {
-      size_t urilen = tmp - (const char *)uripath;
+      size_t urilen = tmp - (char *)uripath;
       /* typecast is fine here since the value is always less than 32 bits */
       path = (unsigned char *) aprintf("%.*s", (int)urilen, uripath);
     }
   }
   if(!tmp)
-    path = (unsigned char *) strdup((const char *) uripath);
+    path = (unsigned char *) strdup((char *) uripath);
 
   if(!path)
     return CURLE_OUT_OF_MEMORY;

@@ -29,12 +29,12 @@
 #ifndef CURL_DISABLE_GETOPTIONS
 
 /* Lookups easy options at runtime */
-static const struct curl_easyoption *lookup(const char *name, CURLoption id)
+static struct curl_easyoption *lookup(const char *name, CURLoption id)
 {
   DEBUGASSERT(name || id);
   DEBUGASSERT(!Curl_easyopts_check());
   if(name || id) {
-    const struct curl_easyoption *o = &Curl_easyopts[0];
+    struct curl_easyoption *o = &Curl_easyopts[0];
     do {
       if(name) {
         if(strcasecompare(o->name, name))
@@ -42,7 +42,7 @@ static const struct curl_easyoption *lookup(const char *name, CURLoption id)
       }
       else {
         if((o->id == id) && !(o->flags & CURLOT_FLAG_ALIAS))
-          /* do not match alias options */
+          /* don't match alias options */
           return o;
       }
       o++;

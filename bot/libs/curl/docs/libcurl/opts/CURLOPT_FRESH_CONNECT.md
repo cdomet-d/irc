@@ -10,7 +10,6 @@ See-also:
   - CURLOPT_FORBID_REUSE (3)
   - CURLOPT_MAXAGE_CONN (3)
   - CURLOPT_MAXLIFETIME_CONN (3)
-Added-in: 7.7
 ---
 
 # NAME
@@ -42,8 +41,6 @@ Set *fresh* to 0 to have libcurl attempt reusing an existing connection
 
 0
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -60,11 +57,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Always
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK

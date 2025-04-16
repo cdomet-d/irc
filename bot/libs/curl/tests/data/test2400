@@ -27,8 +27,8 @@ Funny-head: yesyes
 # Client-side
 <client>
 <features>
-Debug
-http/2
+debug
+h2c
 SSL
 </features>
 <server>
@@ -36,12 +36,12 @@ http
 http/2
 </server>
 <name>
-HTTP/2 GET over HTTPS
+HTTP/2 GET
 </name>
 <setenv>
 </setenv>
 <command>
---insecure --http2 "https://%HOSTIP:%HTTP2TLSPORT/%TESTNUMBER"
+-k --http2 "https://%HOSTIP:%HTTP2TLSPORT/%TESTNUMBER"
 </command>
 
 </client>

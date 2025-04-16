@@ -9,7 +9,6 @@ Protocol:
 See-also:
   - CURLOPT_HTTPAUTH (3)
   - CURLOPT_PROXYAUTH (3)
-Added-in: 7.22.0
 ---
 
 # NAME
@@ -38,8 +37,6 @@ available at compile-time.
 
 CURLGSSAPI_DELEGATION_NONE
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -57,11 +54,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.22.0
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

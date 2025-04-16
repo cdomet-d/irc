@@ -7,7 +7,7 @@ Arg: <file>
 Help: Transfer local FILE to destination
 Category: important upload
 Added: 4.0
-Multi: per-URL
+Multi: append
 See-also:
   - get
   - head
@@ -17,7 +17,6 @@ Example:
   - -T file $URL
   - -T "img[1-1000].png" ftp://ftp.example.com/
   - --upload-file "{file1,file2}" $URL
-  - -T file -T file2 $URL $URL
 ---
 
 # `--upload-file`
@@ -31,7 +30,7 @@ filename or curl thinks that your last directory name is the remote filename
 to use.
 
 When putting the local filename at the end of the URL, curl ignores what is on
-the left side of any slash (/) or backslash (\\) used in the filename and only
+the left side of any slash (/) or backslash (\) used in the filename and only
 appends what is on the right side of the rightmost such character.
 
 Use the filename `-` (a single dash) to use stdin instead of a given file.

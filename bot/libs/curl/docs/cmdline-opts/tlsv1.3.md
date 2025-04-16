@@ -16,7 +16,7 @@ Example:
 
 # `--tlsv1.3`
 
-Force curl to use TLS version 1.3 or later when connecting to a remote TLS
+Forces curl to use TLS version 1.3 or later when connecting to a remote TLS
 server.
 
 If the connection is done without TLS, this option has no effect. This

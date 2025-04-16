@@ -15,7 +15,6 @@ Protocol:
   - SMTP
   - SFTP
   - SCP
-Added-in: 7.20.0
 ---
 
 # NAME
@@ -47,8 +46,6 @@ This option was formerly known as CURLOPT_FTP_RESPONSE_TIMEOUT.
 
 None
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -67,11 +64,15 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.10.8. Used under this name since 7.20.0
+
+Support for SSH is predicated on a new enough (1.11.0) version of libssh2
+being available when compiling libcurl.
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if supported, and CURLE_UNKNOWN_OPTION if not. Returns
+CURLE_BAD_FUNCTION_ARGUMENT if set to a negative value or a value that when
+converted to milliseconds is too large.

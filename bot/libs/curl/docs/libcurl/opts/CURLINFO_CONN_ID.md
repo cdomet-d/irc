@@ -10,7 +10,6 @@ See-also:
   - curl_easy_setopt (3)
 Protocol:
   - All
-Added-in: 8.2.0
 ---
 
 # NAME
@@ -34,8 +33,6 @@ used by the handle. Stores -1 if there was no connection used.
 The connection id is unique among all connections using the same
 connection cache. This is implicitly the case for all connections in the
 same multi handle.
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -62,11 +59,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 8.2.0
 
 # RETURN VALUE
 
-curl_easy_getinfo(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

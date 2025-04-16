@@ -26,17 +26,20 @@ MooMoo
 <features>
 SSL
 !Schannel
-local-http
 </features>
 <server>
-https test-localhost-san-first.pem
+https Server-localhost-firstSAN-sv.pem
 </server>
 <name>
 HTTPS GET to localhost, first subject alt name matches, CN does not match
 </name>
 <command>
--4 --cacert %CERTDIR/certs/test-ca.crt https://localhost:%HTTPSPORT/%TESTNUMBER
+--cacert %SRCDIR/certs/EdelCurlRoot-ca.crt https://localhost:%HTTPSPORT/%TESTNUMBER
 </command>
+# Ensure that we're running on localhost because we're checking the host name
+<precheck>
+perl -e "print 'Test requires default test server host' if ( '%HOSTIP' ne '127.0.0.1' );"
+</precheck>
 </client>
 
 #

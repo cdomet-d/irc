@@ -36,7 +36,6 @@ http
 ftp
 file
 cookies
---libcurl
 </features>
 <setenv>
 SSL_CERT_FILE=

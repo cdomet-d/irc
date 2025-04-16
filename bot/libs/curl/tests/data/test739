@@ -13,9 +13,6 @@ IPFS
 #
 # Client-side
 <client>
-<features>
-ipfs
-</features>
 <server>
 http
 </server>

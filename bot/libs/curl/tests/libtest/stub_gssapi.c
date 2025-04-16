@@ -30,18 +30,20 @@
 
 #include "stub_gssapi.h"
 
+/* !checksrc! disable SNPRINTF all */
+
 #define MAX_CREDS_LENGTH 250
 #define APPROX_TOKEN_LEN 250
 
 enum min_err_code {
-  GSS_OK = 0,
-  GSS_NO_MEMORY,
-  GSS_INVALID_ARGS,
-  GSS_INVALID_CREDS,
-  GSS_INVALID_CTX,
-  GSS_SERVER_ERR,
-  GSS_NO_MECH,
-  GSS_LAST
+    GSS_OK = 0,
+    GSS_NO_MEMORY,
+    GSS_INVALID_ARGS,
+    GSS_INVALID_CREDS,
+    GSS_INVALID_CTX,
+    GSS_SERVER_ERR,
+    GSS_NO_MECH,
+    GSS_LAST
 };
 
 static const char *min_err_table[] = {
@@ -218,7 +220,7 @@ OM_uint32 gss_init_sec_context(OM_uint32 *min,
   /* Note: this is using the *real* snprintf() and not the curl provided
      one */
   used = (size_t) snprintf(token, length, "%s:%s:%d:", creds,
-                           (const char *)target_name, ctx->sent);
+                           (char *) target_name, ctx->sent);
 
   if(used >= length) {
     free(token);

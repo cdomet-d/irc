@@ -48,11 +48,11 @@ CC = cl.exe
 !IF "$(VC)"=="6"
 CC_NODEBUG  = $(CC) /O2 /DNDEBUG
 CC_DEBUG    = $(CC) /Od /Gm /Zi /D_DEBUG /GZ
-CFLAGS      = /I. /I../lib /I../include /nologo /W4 /GX /YX /FD /c /DBUILDING_LIBCURL
+CFLAGS      = /I. /I../lib /I../include /nologo /W4 /GX /DWIN32 /YX /FD /c /DBUILDING_LIBCURL
 !ELSE
 CC_NODEBUG  = $(CC) /O2 /DNDEBUG
 CC_DEBUG    = $(CC) /Od /D_DEBUG /RTC1 /Z7 /LDd
-CFLAGS      = /I. /I ../lib /I../include /nologo /W4 /EHsc /FD /c /DBUILDING_LIBCURL
+CFLAGS      = /I. /I ../lib /I../include /nologo /W4 /EHsc /DWIN32 /FD /c /DBUILDING_LIBCURL
 !ENDIF
 
 LFLAGS     = /nologo /machine:$(MACHINE)
@@ -90,7 +90,7 @@ PDB_NAME_DLL_DEBUG     = $(BASE_NAME_DEBUG).pdb
 
 # CURL Command section
 PROGRAM_NAME  = curl.exe
-CURL_CFLAGS   = /I../lib /I../include /nologo /W4 /EHsc /FD /c
+CURL_CFLAGS   = /I../lib /I../include /nologo /W4 /EHsc /DWIN32 /FD /c
 CURL_LFLAGS   = /out:$(DIRDIST)\bin\$(PROGRAM_NAME) /subsystem:console $(LFLAGS)
 CURL_RESFLAGS = /i../include
 
@@ -98,11 +98,6 @@ CURL_RESFLAGS = /i../include
 ## Nothing more to do below this line!
 LIBCURL_SRC_DIR = ..\lib
 CURL_SRC_DIR = ..\src
-
-!IF EXISTS($(CURL_SRC_DIR)\tool_hugehelp.c)
-USE_MANUAL   = true
-CFLAGS       = $(CFLAGS) /DUSE_MANUAL
-!ENDIF
 
 !IFNDEF WITH_DEVEL
 WITH_DEVEL   = ../../deps
@@ -146,9 +141,6 @@ SSL_CFLAGS   = $(SSL_CFLAGS) /DCURL_DISABLE_OPENSSL_AUTO_LOAD_CONFIG
 !ENDIF
 !ENDIF
 
-!IF "$(DISABLE_WEBSOCKETS)"=="true"
-CFLAGS  = $(CFLAGS) /DCURL_DISABLE_WEBSOCKETS=1
-!ENDIF
 
 !IFDEF NGHTTP2_PATH
 NGHTTP2_INC_DIR  = $(NGHTTP2_PATH)\include
@@ -206,22 +198,6 @@ USE_MBEDTLS    = true
 MBEDTLS        = $(WITH_MBEDTLS)
 MBEDTLS_CFLAGS = /DUSE_MBEDTLS /I"$(MBEDTLS_INC_DIR)"
 MBEDTLS_LIBS   = mbedtls.lib mbedcrypto.lib mbedx509.lib
-!ENDIF
-
-!IFDEF WOLFSSL_PATH
-WOLFSSL_INC_DIR  = $(WOLFSSL_PATH)\include
-WOLFSSL_LIB_DIR  = $(WOLFSSL_PATH)\lib
-WOLFSSL_LFLAGS   = $(WOLFSSL_LFLAGS) "/LIBPATH:$(WOLFSSL_LIB_DIR)"
-!ELSE
-WOLFSSL_INC_DIR  = $(DEVEL_INCLUDE)
-WOLFSSL_LIB_DIR  = $(DEVEL_LIB)
-!ENDIF
-
-!IF "$(WITH_WOLFSSL)"=="dll" || "$(WITH_WOLFSSL)"=="static"
-USE_WOLFSSL    = true
-WOLFSSL        = $(WITH_WOLFSSL)
-WOLFSSL_CFLAGS = /DUSE_WOLFSSL /I"$(WOLFSSL_INC_DIR)"
-WOLFSSL_LIBS   = wolfssl.lib
 !ENDIF
 
 
@@ -415,6 +391,8 @@ GEN_PDB = true
 
 !IFDEF EMBED_MANIFEST
 MANIFESTTOOL = $(MT) -manifest $(DIRDIST)\bin\$(PROGRAM_NAME).manifest -outputresource:$(DIRDIST)\bin\$(PROGRAM_NAME);1
+!ELSE
+CURL_RC_FLAGS = $(CURL_RC_FLAGS) /dCURL_EMBED_MANIFEST
 !ENDIF
 
 # Runtime library configuration
@@ -447,13 +425,13 @@ CFGSET = true
 # CURL_XX macros are for the curl.exe command
 
 !IF "$(DEBUG)"=="yes"
-RC_FLAGS = /d_DEBUG /Fo $@ $(LIBCURL_SRC_DIR)\libcurl.rc
+RC_FLAGS = /dDEBUGBUILD=1 /Fo $@ $(LIBCURL_SRC_DIR)\libcurl.rc
 CURL_CC       = $(CC_DEBUG) $(RTLIB_DEBUG)
-CURL_RC_FLAGS = $(CURL_RC_FLAGS) /i../include /d_DEBUG /Fo $@ $(CURL_SRC_DIR)\curl.rc
+CURL_RC_FLAGS = $(CURL_RC_FLAGS) /i../include /dDEBUGBUILD=1 /Fo $@ $(CURL_SRC_DIR)\curl.rc
 !ELSE
-RC_FLAGS = /Fo $@ $(LIBCURL_SRC_DIR)\libcurl.rc
+RC_FLAGS = /dDEBUGBUILD=0 /Fo $@ $(LIBCURL_SRC_DIR)\libcurl.rc
 CURL_CC       = $(CC_NODEBUG) $(RTLIB)
-CURL_RC_FLAGS = $(CURL_RC_FLAGS) /i../include /Fo $@ $(CURL_SRC_DIR)\curl.rc
+CURL_RC_FLAGS = $(CURL_RC_FLAGS) /i../include /dDEBUGBUILD=0 /Fo $@ $(CURL_SRC_DIR)\curl.rc
 !ENDIF
 
 !IF "$(AS_DLL)" == "true"
@@ -496,11 +474,6 @@ LFLAGS = $(LFLAGS) $(SSL_LFLAGS) $(SSL_LIBS)
 !IF "$(USE_MBEDTLS)"=="true"
 CFLAGS = $(CFLAGS) $(MBEDTLS_CFLAGS)
 LFLAGS = $(LFLAGS) $(MBEDTLS_LFLAGS) $(MBEDTLS_LIBS)
-!ENDIF
-
-!IF "$(USE_WOLFSSL)"=="true"
-CFLAGS = $(CFLAGS) $(WOLFSSL_CFLAGS)
-LFLAGS = $(LFLAGS) $(WOLFSSL_LFLAGS) $(WOLFSSL_LIBS)
 !ENDIF
 
 !IF "$(USE_CARES)"=="true"
@@ -552,10 +525,7 @@ LFLAGS = $(LFLAGS) $(LFLAGS_PDB)
 
 !IF ( "$(USE_SSL)"=="true" && "$(USE_SCHANNEL)"=="true" ) \
  || ( "$(USE_SSL)"=="true" && "$(USE_MBEDTLS)"=="true" ) \
- || ( "$(USE_SSL)"=="true" && "$(USE_WOLFSSL)"=="true" ) \
- || ( "$(USE_MBEDTLS)"=="true" && "$(USE_WOLFSSL)"=="true" ) \
- || ( "$(USE_MBEDTLS)"=="true" && "$(USE_SCHANNEL)"=="true" ) \
- || ( "$(USE_WOLFSSL)"=="true" && "$(USE_SCHANNEL)"=="true" )
+ || ( "$(USE_MBEDTLS)"=="true" && "$(USE_SCHANNEL)"=="true" )
 CFLAGS = $(CFLAGS) /DCURL_WITH_MULTI_SSL
 !ENDIF
 
@@ -687,21 +657,14 @@ CURL_LIBCURL_LIBNAME=$(LIB_NAME_IMP)
 !ENDIF
 !ENDIF
 
-CURL_FROM_LIBCURL=\
+CURL_FROM_LIBCURL=$(CURL_DIROBJ)\tool_hugehelp.obj \
  $(CURL_DIROBJ)\nonblock.obj \
- $(CURL_DIROBJ)\strparse.obj \
- $(CURL_DIROBJ)\strcase.obj \
- $(CURL_DIROBJ)\timeval.obj \
+ $(CURL_DIROBJ)\strtoofft.obj \
  $(CURL_DIROBJ)\warnless.obj \
- $(CURL_DIROBJ)\curl_get_line.obj \
  $(CURL_DIROBJ)\curl_multibyte.obj \
  $(CURL_DIROBJ)\version_win32.obj \
  $(CURL_DIROBJ)\dynbuf.obj \
  $(CURL_DIROBJ)\base64.obj
-
-!IFDEF USE_MANUAL
-CURL_FROM_LIBCURL = $(CURL_FROM_LIBCURL) $(CURL_DIROBJ)\tool_hugehelp.obj
-!ENDIF
 
 $(PROGRAM_NAME): $(CURL_DIROBJ) $(CURL_FROM_LIBCURL) $(EXE_OBJS)
 	$(CURL_LINK) $(CURL_LFLAGS) $(CURL_LIBCURL_LIBNAME) $(WIN_LIBS) $(CURL_FROM_LIBCURL) $(EXE_OBJS)
@@ -710,22 +673,14 @@ $(PROGRAM_NAME): $(CURL_DIROBJ) $(CURL_FROM_LIBCURL) $(EXE_OBJS)
 {$(CURL_SRC_DIR)\}.c{$(CURL_DIROBJ)\}.obj::
 	$(CURL_CC) $(CURL_CFLAGS) /Fo"$(CURL_DIROBJ)\\"  $<
 
-!IFDEF USE_MANUAL
 $(CURL_DIROBJ)\tool_hugehelp.obj: $(CURL_SRC_DIR)\tool_hugehelp.c
 	$(CURL_CC) $(CURL_CFLAGS) /Zm200 /Fo"$@" $(CURL_SRC_DIR)\tool_hugehelp.c
-!ENDIF
 $(CURL_DIROBJ)\nonblock.obj: ../lib/nonblock.c
 	$(CURL_CC) $(CURL_CFLAGS) /Fo"$@" ../lib/nonblock.c
-$(CURL_DIROBJ)\strparse.obj: ../lib/strparse.c
-	$(CURL_CC) $(CURL_CFLAGS) /Fo"$@" ../lib/strparse.c
-$(CURL_DIROBJ)\strcase.obj: ../lib/strcase.c
-	$(CURL_CC) $(CURL_CFLAGS) /Fo"$@" ../lib/strcase.c
-$(CURL_DIROBJ)\timeval.obj: ../lib/timeval.c
-	$(CURL_CC) $(CURL_CFLAGS) /Fo"$@" ../lib/timeval.c
+$(CURL_DIROBJ)\strtoofft.obj: ../lib/strtoofft.c
+	$(CURL_CC) $(CURL_CFLAGS) /Fo"$@" ../lib/strtoofft.c
 $(CURL_DIROBJ)\warnless.obj: ../lib/warnless.c
 	$(CURL_CC) $(CURL_CFLAGS) /Fo"$@" ../lib/warnless.c
-$(CURL_DIROBJ)\curl_get_line.obj: ../lib/curl_get_line.c
-	$(CURL_CC) $(CURL_CFLAGS) /Fo"$@" ../lib/curl_get_line.c
 $(CURL_DIROBJ)\curl_multibyte.obj: ../lib/curl_multibyte.c
 	$(CURL_CC) $(CURL_CFLAGS) /Fo"$@" ../lib/curl_multibyte.c
 $(CURL_DIROBJ)\version_win32.obj: ../lib/version_win32.c
@@ -735,7 +690,7 @@ $(CURL_DIROBJ)\dynbuf.obj: ../lib/dynbuf.c
 $(CURL_DIROBJ)\base64.obj: ../lib/base64.c
 	$(CURL_CC) $(CURL_CFLAGS) /Fo"$@" ../lib/base64.c
 $(CURL_DIROBJ)\curl.res: $(CURL_SRC_DIR)\curl.rc
-	$(RC) $(CURL_RC_FLAGS)
+	rc $(CURL_RC_FLAGS)
 
 !ENDIF  # End of case where a config was provided.
 

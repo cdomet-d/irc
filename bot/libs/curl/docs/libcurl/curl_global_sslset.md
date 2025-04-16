@@ -9,12 +9,11 @@ See-also:
   - libcurl (3)
 Protocol:
   - All
-Added-in: 7.56.0
 ---
 
 # NAME
 
-curl_global_sslset - select SSL backend to use
+curl_global_sslset - Select SSL backend to use with libcurl
 
 # SYNOPSIS
 
@@ -64,17 +63,16 @@ If this is not thread-safe, you must not call this function when any other
 thread in the program (i.e. a thread sharing the same memory) is running.
 This does not just mean no other thread that is using libcurl.
 
-# Names
-
-SSL backend names (case-insensitive): BearSSL, GnuTLS, mbedTLS, OpenSSL,
-Rustls, Schannel, Secure-Transport, wolfSSL
+# OpenSSL
 
 The name "OpenSSL" is used for all versions of OpenSSL and its associated
-forks/flavors in this function. OpenSSL, BoringSSL, LibreSSL, quictls and
+forks/flavors in this function. OpenSSL, BoringSSL, libressl, quictls and
 AmiSSL are all supported by libcurl, but in the eyes of
 curl_global_sslset(3) they are all just "OpenSSL". They all mostly
-provide the same API. curl_version_info(3) can return more specific info about
-the exact OpenSSL flavor and version number in use.
+provide the same API.
+
+curl_version_info(3) can return more specific info about the exact
+OpenSSL flavor and version number is use.
 
 # struct
 
@@ -102,8 +100,6 @@ typedef enum {
 } curl_sslbackend;
 ~~~
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -123,7 +119,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+This function was added in libcurl 7.56.0. Before this version, there was no
+support for choosing SSL backends at runtime.
 
 # RETURN VALUE
 

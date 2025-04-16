@@ -8,7 +8,6 @@ See-also:
   - CURLOPT_PROXY (3)
 Protocol:
   - All
-Added-in: 7.60.0
 ---
 
 # NAME
@@ -39,8 +38,6 @@ Most applications do not need this option.
 
 0, do not send any HAProxy PROXY protocol header
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -56,11 +53,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Along with HTTP. Added in 7.60.0.
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if HTTP is enabled, and CURLE_UNKNOWN_OPTION if not.

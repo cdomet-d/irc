@@ -25,7 +25,7 @@ ftps
 FTPS PORT upload with CWD
 </name>
 <command>
---insecure --ftp-ssl-control ftps://%HOSTIP:%FTPSPORT/CWD/STOR/RETR/%TESTNUMBER -T %LOGDIR/upload%TESTNUMBER -P -
+-k --ftp-ssl-control ftps://%HOSTIP:%FTPSPORT/CWD/STOR/RETR/%TESTNUMBER -T %LOGDIR/upload%TESTNUMBER -P -
 </command>
 <file name="%LOGDIR/upload%TESTNUMBER">
 Moooooooooooo

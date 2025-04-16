@@ -28,9 +28,7 @@
   !defined(CURL_DISABLE_HSTS) || !defined(CURL_DISABLE_NETRC)
 
 #include "curl_get_line.h"
-#ifdef BUILDING_LIBCURL
 #include "curl_memory.h"
-#endif
 /* The last #include file should be: */
 #include "memdebug.h"
 
@@ -70,8 +68,6 @@ int Curl_get_line(struct dynbuf *buf, FILE *input)
         return 1; /* all good */
       }
     }
-    else if(Curl_dyn_len(buf))
-      return 1; /* all good */
     else
       break;
   }

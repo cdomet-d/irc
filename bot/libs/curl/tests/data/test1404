@@ -25,7 +25,6 @@ Connection: close
 <client>
 <features>
 Mime
---libcurl
 </features>
 <server>
 http

@@ -4,7 +4,7 @@ SPDX-License-Identifier: curl
 Long: ftp-skip-pasv-ip
 Help: Skip the IP address for PASV
 Protocols: FTP
-Added: 7.15.0
+Added: 7.14.2
 Category: ftp
 Multi: boolean
 See-also:

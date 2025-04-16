@@ -41,9 +41,9 @@ static char *suburl(const char *base, int i)
 /*
  * Test GET_PARAMETER: PUT, HEARTBEAT, and POST
  */
-CURLcode test(char *URL)
+int test(char *URL)
 {
-  CURLcode res;
+  int res;
   CURL *curl;
   int params;
   FILE *paramsf = NULL;
@@ -98,17 +98,12 @@ CURLcode test(char *URL)
 
   /* PUT style GET_PARAMETERS */
   params = open(libtest_arg2, O_RDONLY);
-  if(params == -1) {
-    fprintf(stderr, "can't open %s\n", libtest_arg2);
-    res = TEST_ERR_MAJOR_BAD;
-    goto test_cleanup;
-  }
   fstat(params, &file_info);
   close(params);
 
   paramsf = fopen(libtest_arg2, "rb");
   if(!paramsf) {
-    fprintf(stderr, "can't fopen %s\n", libtest_arg2);
+    fprintf(stderr, "can't open %s\n", libtest_arg2);
     res = TEST_ERR_MAJOR_BAD;
     goto test_cleanup;
   }

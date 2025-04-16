@@ -24,38 +24,26 @@
 #include "test.h"
 #include "memdebug.h"
 
-static const char *ldata_names[] = {
-  "NONE",
-  "SHARE",
-  "COOKIE",
-  "DNS",
-  "SESSION",
-  "CONNECT",
-  "PSL",
-  "HSTS",
-  "NULL",
-};
-
-static void test_lock(CURL *handle, curl_lock_data data,
-                      curl_lock_access laccess, void *useptr)
+static void my_lock(CURL *handle, curl_lock_data data,
+                    curl_lock_access laccess, void *useptr)
 {
   (void)handle;
   (void)data;
   (void)laccess;
   (void)useptr;
-  printf("-> Mutex lock %s\n", ldata_names[data]);
+  printf("-> Mutex lock\n");
 }
 
-static void test_unlock(CURL *handle, curl_lock_data data, void *useptr)
+static void my_unlock(CURL *handle, curl_lock_data data, void *useptr)
 {
   (void)handle;
   (void)data;
   (void)useptr;
-  printf("<- Mutex unlock %s\n", ldata_names[data]);
+  printf("<- Mutex unlock\n");
 }
 
 /* test function */
-CURLcode test(char *URL)
+int test(char *URL)
 {
   CURLcode res = CURLE_OK;
   CURLSH *share = NULL;
@@ -70,8 +58,8 @@ CURLcode test(char *URL)
   }
 
   curl_share_setopt(share, CURLSHOPT_SHARE, CURL_LOCK_DATA_CONNECT);
-  curl_share_setopt(share, CURLSHOPT_LOCKFUNC, test_lock);
-  curl_share_setopt(share, CURLSHOPT_UNLOCKFUNC, test_unlock);
+  curl_share_setopt(share, CURLSHOPT_LOCKFUNC, my_lock);
+  curl_share_setopt(share, CURLSHOPT_UNLOCKFUNC, my_unlock);
 
   /* Loop the transfer and cleanup the handle properly every lap. This will
      still reuse connections since the pool is in the shared object! */
@@ -103,5 +91,5 @@ test_cleanup:
   curl_share_cleanup(share);
   curl_global_cleanup();
 
-  return res;
+  return (int)res;
 }

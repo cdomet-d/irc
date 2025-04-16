@@ -6,10 +6,9 @@ Section: 3
 Source: libcurl
 See-also:
   - CURLOPT_PROXY (3)
-  - CURLOPT_PROXY_SERVICE_NAME (3)
+  - CURLOPT_SOCKS5_GSSAPI_SERVICE (3)
 Protocol:
   - All
-Added-in: 7.19.4
 ---
 
 # NAME
@@ -36,8 +35,6 @@ negotiation.
 
 ?
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -55,11 +52,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.19.4
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

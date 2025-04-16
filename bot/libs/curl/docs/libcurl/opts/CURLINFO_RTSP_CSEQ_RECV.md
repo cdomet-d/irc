@@ -10,7 +10,6 @@ See-also:
   - curl_easy_setopt (3)
 Protocol:
   - RTSP
-Added-in: 7.20.0
 ---
 
 # NAME
@@ -32,8 +31,6 @@ server. If your application encounters a *CURLE_RTSP_CSEQ_ERROR* then you
 may wish to troubleshoot and/or fix the CSeq mismatch by peeking at this
 value.
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -53,11 +50,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.20.0
 
 # RETURN VALUE
 
-curl_easy_getinfo(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

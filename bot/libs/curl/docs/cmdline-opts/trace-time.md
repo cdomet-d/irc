@@ -4,7 +4,7 @@ SPDX-License-Identifier: curl
 Long: trace-time
 Help: Add time stamps to trace/verbose output
 Added: 7.14.0
-Category: verbose global
+Category: verbose
 Multi: boolean
 Scope: global
 See-also:
@@ -16,4 +16,4 @@ Example:
 
 # `--trace-time`
 
-Prepend a time stamp to each trace or verbose line that curl displays.
+Prepends a time stamp to each trace or verbose line that curl displays.

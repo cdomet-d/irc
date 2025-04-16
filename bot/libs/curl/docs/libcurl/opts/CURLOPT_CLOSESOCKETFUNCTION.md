@@ -9,7 +9,6 @@ See-also:
   - CURLOPT_OPENSOCKETFUNCTION (3)
 Protocol:
   - All
-Added-in: 7.21.7
 ---
 
 # NAME
@@ -44,9 +43,7 @@ closed.
 
 # DEFAULT
 
-Use the standard socket close function.
-
-# %PROTOCOLS%
+By default libcurl uses the standard socket close function.
 
 # EXAMPLE
 
@@ -78,11 +75,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.21.7
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

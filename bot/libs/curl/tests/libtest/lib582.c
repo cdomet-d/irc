@@ -31,13 +31,15 @@
 
 #define TEST_HANG_TIMEOUT 60 * 1000
 
-struct Sockets {
+struct Sockets
+{
   curl_socket_t *sockets;
   int count;      /* number of sockets actually stored in array */
   int max_count;  /* max number of sockets that fit in allocated array */
 };
 
-struct ReadWriteSockets {
+struct ReadWriteSockets
+{
   struct Sockets read, write;
 };
 
@@ -186,14 +188,7 @@ static void updateFdSet(struct Sockets *sockets, fd_set* fdset,
 {
   int i;
   for(i = 0; i < sockets->count; ++i) {
-#if defined(__DJGPP__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warith-conversion"
-#endif
     FD_SET(sockets->sockets[i], fdset);
-#if defined(__DJGPP__)
-#pragma GCC diagnostic pop
-#endif
     if(*maxFd < sockets->sockets[i] + 1) {
       *maxFd = sockets->sockets[i] + 1;
     }
@@ -206,7 +201,7 @@ static void notifyCurl(CURLM *curl, curl_socket_t s, int evBitmask,
   int numhandles = 0;
   CURLMcode result = curl_multi_socket_action(curl, s, evBitmask, &numhandles);
   if(result != CURLM_OK) {
-    fprintf(stderr, "Curl error on %s (%i) %s\n",
+    fprintf(stderr, "Curl error on %s: %i (%s)\n",
             info, result, curl_multi_strerror(result));
   }
 }
@@ -225,18 +220,17 @@ static void checkFdSet(CURLM *curl, struct Sockets *sockets, fd_set *fdset,
   }
 }
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
-  CURLcode res = CURLE_OK;
+  int res = 0;
   CURL *curl = NULL;
   FILE *hd_src = NULL;
   int hd;
   struct_stat file_info;
   CURLM *m = NULL;
   struct ReadWriteSockets sockets = {{NULL, 0, 0}, {NULL, 0, 0}};
+  struct timeval timeout = {-1, 0};
   int success = 0;
-  struct timeval timeout = {0};
-  timeout.tv_sec = (time_t)-1;
 
   assert(test_argc >= 5);
 
@@ -249,23 +243,19 @@ CURLcode test(char *URL)
 
   hd_src = fopen(libtest_arg2, "rb");
   if(!hd_src) {
-    fprintf(stderr, "fopen() failed with error (%d) %s\n",
+    fprintf(stderr, "fopen() failed with error: %d (%s)\n",
             errno, strerror(errno));
-    fprintf(stderr, "Error opening file '%s'\n", libtest_arg2);
+    fprintf(stderr, "Error opening file: (%s)\n", libtest_arg2);
     return TEST_ERR_FOPEN;
   }
 
   /* get the file size of the local file */
-#ifdef UNDER_CE
-  hd = stat(libtest_arg2, &file_info);
-#else
   hd = fstat(fileno(hd_src), &file_info);
-#endif
   if(hd == -1) {
     /* can't open file, bail out */
-    fprintf(stderr, "fstat() failed with error (%d) %s\n",
+    fprintf(stderr, "fstat() failed with error: %d (%s)\n",
             errno, strerror(errno));
-    fprintf(stderr, "Error opening file '%s'\n", libtest_arg2);
+    fprintf(stderr, "ERROR: cannot open file (%s)\n", libtest_arg2);
     fclose(hd_src);
     return TEST_ERR_FSTAT;
   }
@@ -311,15 +301,14 @@ CURLcode test(char *URL)
   while(!checkForCompletion(m, &success)) {
     fd_set readSet, writeSet;
     curl_socket_t maxFd = 0;
-    struct timeval tv = {0};
-    tv.tv_sec = 10;
+    struct timeval tv = {10, 0};
 
     FD_ZERO(&readSet);
     FD_ZERO(&writeSet);
     updateFdSet(&sockets.read, &readSet, &maxFd);
     updateFdSet(&sockets.write, &writeSet, &maxFd);
 
-    if(timeout.tv_sec != (time_t)-1) {
+    if(timeout.tv_sec != -1) {
       int usTimeout = getMicroSecondTimeout(&timeout);
       tv.tv_sec = usTimeout / 1000000;
       tv.tv_usec = usTimeout % 1000000;
@@ -335,7 +324,7 @@ CURLcode test(char *URL)
     checkFdSet(m, &sockets.read, &readSet, CURL_CSELECT_IN, "read");
     checkFdSet(m, &sockets.write, &writeSet, CURL_CSELECT_OUT, "write");
 
-    if(timeout.tv_sec != (time_t)-1 && getMicroSecondTimeout(&timeout) == 0) {
+    if(timeout.tv_sec != -1 && getMicroSecondTimeout(&timeout) == 0) {
       /* Curl's timer has elapsed. */
       notifyCurl(m, CURL_SOCKET_TIMEOUT, 0, "timeout");
     }

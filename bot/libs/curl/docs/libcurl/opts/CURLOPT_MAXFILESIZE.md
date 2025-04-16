@@ -9,7 +9,6 @@ See-also:
   - CURLOPT_MAX_RECV_SPEED_LARGE (3)
 Protocol:
   - All
-Added-in: 7.10.8
 ---
 
 # NAME
@@ -29,8 +28,6 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_MAXFILESIZE, long size);
 Pass a long as parameter. This specifies the maximum accepted *size* (in
 bytes) of a file to download. If the file requested is found larger than this
 value, the transfer is aborted and *CURLE_FILESIZE_EXCEEDED* is returned.
-Passing a zero *size* disables this, and passing a negative *size* yields a
-*CURLE_BAD_FUNCTION_ARGUMENT*.
 
 The file size is not always known prior to the download start, and for such
 transfers this option has no effect - even if the file transfer eventually
@@ -43,9 +40,7 @@ threshold.
 
 # DEFAULT
 
-0, meaning disabled.
-
-# %PROTOCOLS%
+None
 
 # EXAMPLE
 
@@ -56,18 +51,17 @@ int main(void)
   if(curl) {
     CURLcode ret;
     curl_easy_setopt(curl, CURLOPT_URL, "https://example.com/");
-    /* refuse to download if larger than 1000 bytes */
+    /* refuse to download if larger than 1000 bytes! */
     curl_easy_setopt(curl, CURLOPT_MAXFILESIZE, 1000L);
     ret = curl_easy_perform(curl);
   }
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Always
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK

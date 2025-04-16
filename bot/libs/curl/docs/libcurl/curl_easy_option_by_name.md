@@ -10,7 +10,6 @@ See-also:
   - curl_easy_setopt (3)
 Protocol:
   - All
-Added-in: 7.73.0
 ---
 
 # NAME
@@ -27,14 +26,13 @@ const struct curl_easyoption *curl_easy_option_by_name(const char *name);
 
 # DESCRIPTION
 
-Given a **name**, this function returns a pointer to the *curl_easyoption*
-struct, holding information about the curl_easy_setopt(3) option using that
-name. The name should be specified without the `CURLOPT_` prefix and the name
-comparison is made case insensitive.
+Given a **name**, this function returns a pointer to the
+*curl_easyoption* struct, holding information about the
+curl_easy_setopt(3) option using that name. The name should be specified
+without the "CURLOPT_" prefix and the name comparison is made case
+insensitive.
 
 If libcurl has no option with the given name, this function returns NULL.
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -48,7 +46,9 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+This function was added in libcurl 7.73.0
 
 # RETURN VALUE
 

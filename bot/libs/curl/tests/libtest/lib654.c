@@ -25,7 +25,7 @@
 
 #include "memdebug.h"
 
-static char testdata[]=
+static char data[]=
   "dummy\n";
 
 struct WriteThis {
@@ -44,7 +44,7 @@ static void free_callback(void *userp)
 static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userp)
 {
   struct WriteThis *pooh = (struct WriteThis *)userp;
-  int eof;
+  int eof = !*pooh->readptr;
 
   if(size*nmemb < 1)
     return 0;
@@ -62,14 +62,15 @@ static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userp)
   return 0;                         /* no more data left to deliver */
 }
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
   CURL *easy = NULL;
   CURL *easy2 = NULL;
   curl_mime *mime = NULL;
   curl_mimepart *part;
   struct curl_slist *hdrs = NULL;
-  CURLcode res = TEST_ERR_FAILURE;
+  CURLcode result;
+  int res = TEST_ERR_FAILURE;
   struct WriteThis pooh;
 
   /*
@@ -94,8 +95,8 @@ CURLcode test(char *URL)
   test_setopt(easy, CURLOPT_HEADER, 1L);
 
   /* Prepare the callback structure. */
-  pooh.readptr = testdata;
-  pooh.sizeleft = (curl_off_t) strlen(testdata);
+  pooh.readptr = data;
+  pooh.sizeleft = (curl_off_t) strlen(data);
   pooh.freecount = 0;
 
   /* Build the mime tree. */
@@ -130,17 +131,19 @@ CURLcode test(char *URL)
   mime = NULL;  /* Already cleaned up. */
 
   /* Perform on the first handle: should not send any data. */
-  res = curl_easy_perform(easy);
-  if(res != CURLE_OK) {
+  result = curl_easy_perform(easy);
+  if(result) {
     fprintf(stderr, "curl_easy_perform(original) failed\n");
+    res = (int) result;
     goto test_cleanup;
   }
 
   /* Perform on the second handle: if the bound mime structure has not been
      duplicated properly, it should cause a valgrind error. */
-  res = curl_easy_perform(easy2);
-  if(res != CURLE_OK) {
+  result = curl_easy_perform(easy2);
+  if(result) {
     fprintf(stderr, "curl_easy_perform(duplicated) failed\n");
+    res = (int) result;
     goto test_cleanup;
   }
 

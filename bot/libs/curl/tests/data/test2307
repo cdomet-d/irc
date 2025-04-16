@@ -29,8 +29,9 @@ upgrade
 <client>
 # require debug for the forced CURL_ENTROPY
 <features>
-Debug
+debug
 ws
+!hyper
 </features>
 <server>
 http

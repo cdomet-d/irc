@@ -14,7 +14,6 @@ See-also:
   - curl_url_strerror (3)
 Protocol:
   - All
-Added-in: 7.63.0
 ---
 
 # NAME
@@ -45,9 +44,7 @@ updated contents is used.
 
 # DEFAULT
 
-NULL
-
-# %PROTOCOLS%
+The default value of this parameter is NULL.
 
 # EXAMPLE
 
@@ -71,11 +68,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.63.0.
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

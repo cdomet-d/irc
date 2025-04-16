@@ -10,7 +10,6 @@ Added: 7.5
 Multi: single
 See-also:
   - capath
-  - dump-ca-embed
   - insecure
 Example:
   - --cacert CA-file.txt $URL
@@ -27,12 +26,9 @@ curl recognizes the environment variable named 'CURL_CA_BUNDLE' if it is set
 and the TLS backend is not Schannel, and uses the given path as a path to a CA
 cert bundle. This option overrides that variable.
 
-(Windows) curl automatically looks for a CA certs file named
+The windows version of curl automatically looks for a CA certs file named
 'curl-ca-bundle.crt', either in the same directory as curl.exe, or in the
 Current Working Directory, or in any folder along your PATH.
-
-curl 8.11.0 added a build-time option to disable this search behavior, and
-another option to restrict search to the application's directory.
 
 (iOS and macOS only) If curl is built against Secure Transport, then this
 option is supported for backward compatibility with other SSL engines, but it

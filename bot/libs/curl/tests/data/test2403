@@ -29,20 +29,21 @@ Funny-head: yesyes
 # Client-side
 <client>
 <features>
-http/2
+h2c
 SSL
 headers-api
 </features>
 <server>
+http
 http/2
 </server>
 <name>
-HTTP/2 GET using %{header_json}
+HTTP/2 GET
 </name>
 <setenv>
 </setenv>
 <command>
---insecure --http2 -w '%{header_json}\n' "https://%HOSTIP:%HTTP2TLSPORT/%TESTNUMBER"
+-k --http2 -w '%{header_json}\n' "https://%HOSTIP:%HTTP2TLSPORT/%TESTNUMBER"
 </command>
 
 </client>

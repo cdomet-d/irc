@@ -26,7 +26,7 @@
 
 #include "curl_setup.h"
 
-#ifdef _WIN32
+#if defined(_WIN32)
 
 /* Version condition */
 typedef enum {
@@ -44,7 +44,7 @@ typedef enum {
   PLATFORM_WINNT
 } PlatformIdentifier;
 
-/* This is used to verify if we are running on a specific Windows version */
+/* This is used to verify if we are running on a specific windows version */
 bool curlx_verify_windows_version(const unsigned int majorVersion,
                                   const unsigned int minorVersion,
                                   const unsigned int buildVersion,

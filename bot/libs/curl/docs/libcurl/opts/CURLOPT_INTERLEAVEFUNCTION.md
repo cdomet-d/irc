@@ -9,7 +9,6 @@ See-also:
   - CURLOPT_RTSP_REQUEST (3)
 Protocol:
   - RTSP
-Added-in: 7.20.0
 ---
 
 # NAME
@@ -35,7 +34,7 @@ shown above.
 
 This callback function gets called by libcurl as soon as it has received
 interleaved RTP data. This function gets called for each $ block and therefore
-contains exactly one upper-layer protocol unit (e.g. one RTP packet). curl
+contains exactly one upper-layer protocol unit (e.g. one RTP packet). Curl
 writes the interleaved header as well as the included data for each call. The
 first byte is always an ASCII dollar sign. The dollar sign is followed by a
 one byte channel identifier and then a 2 byte integer length in network byte
@@ -66,8 +65,6 @@ You can also abort the transfer by returning CURL_WRITEFUNC_ERROR. (7.87.0)
 NULL, the interleave data is then passed to the regular write function:
 CURLOPT_WRITEFUNCTION(3).
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -94,11 +91,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.20.0
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

@@ -9,7 +9,6 @@ See-also:
   - CURLOPT_RESOLVER_START_DATA (3)
 Protocol:
   - All
-Added-in: 7.59.0
 ---
 
 # NAME
@@ -53,8 +52,6 @@ resolve to fail.
 
 NULL (No callback)
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -80,11 +77,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 7.59.0
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK

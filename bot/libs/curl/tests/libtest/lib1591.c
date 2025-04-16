@@ -31,24 +31,24 @@
 #include <stdio.h>
 #include "memdebug.h"
 
-static char testdata[] = "Hello Cloud!\r\n";
+static char data [] = "Hello Cloud!\r\n";
 static size_t consumed = 0;
 
 static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *stream)
 {
   size_t  amount = nmemb * size; /* Total bytes curl wants */
 
-  if(consumed == strlen(testdata)) {
+  if(consumed == strlen(data)) {
     return 0;
   }
 
-  if(amount > strlen(testdata)-consumed) {
-    amount = strlen(testdata);
+  if(amount > strlen(data)-consumed) {
+    amount = strlen(data);
   }
 
   consumed += amount;
   (void)stream;
-  memcpy(ptr, testdata, amount);
+  memcpy(ptr, data, amount);
   return amount;
 }
 
@@ -73,7 +73,7 @@ static int trailers_callback(struct curl_slist **list, void *userdata)
   }
 }
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
   CURL *curl = NULL;
   CURLcode res = CURLE_FAILED_INIT;
@@ -116,5 +116,5 @@ test_cleanup:
 
   curl_global_cleanup();
 
-  return res;
+  return (int)res;
 }

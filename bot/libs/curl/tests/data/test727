@@ -27,9 +27,6 @@ Hello curl from IPNS
 #
 # Client-side
 <client>
-<features>
-ipfs
-</features>
 <server>
 http
 </server>

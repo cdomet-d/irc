@@ -51,7 +51,7 @@ static int prereq_callback(void *clientp,
   return prereq_cb->prereq_retcode;
 }
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
   PRCS prereq_cb;
   CURLcode ret = CURLE_OK;
@@ -80,7 +80,7 @@ CURLcode test(char *URL)
 
     if(strstr(URL, "#redir")) {
       /* Enable follow-location */
-      curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+      curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
     }
 
     ret = curl_easy_perform(curl);

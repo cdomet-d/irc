@@ -25,14 +25,13 @@
  *
  ***************************************************************************/
 
-#include "../curl_setup.h"
+#include "curl_setup.h"
 
 #if defined(USE_GNUTLS) || defined(USE_WOLFSSL) || \
-  defined(USE_SCHANNEL) || defined(USE_SECTRANSP) || \
-  defined(USE_MBEDTLS) || defined(USE_RUSTLS)
+  defined(USE_SCHANNEL) || defined(USE_SECTRANSP)
 
-#include "../cfilters.h"
-#include "../urldata.h"
+#include "cfilters.h"
+#include "urldata.h"
 
 /*
  * Types.
@@ -77,20 +76,5 @@ CURLcode Curl_extract_certinfo(struct Curl_easy *data, int certnum,
                                const char *beg, const char *end);
 CURLcode Curl_verifyhost(struct Curl_cfilter *cf, struct Curl_easy *data,
                          const char *beg, const char *end);
-
-#ifdef UNITTESTS
-#if defined(USE_GNUTLS) || defined(USE_SCHANNEL) || defined(USE_SECTRANSP) || \
-  defined(USE_MBEDTLS) || defined(USE_RUSTLS)
-
-/* used by unit1656.c */
-CURLcode Curl_x509_GTime2str(struct dynbuf *store,
-                             const char *beg, const char *end);
-/* used by unit1657.c */
-CURLcode Curl_x509_getASN1Element(struct Curl_asn1Element *elem,
-                                  const char *beg, const char *end);
-#endif
-#endif
-
-#endif /* USE_GNUTLS or USE_WOLFSSL or USE_SCHANNEL or USE_SECTRANSP
-          or USE_MBEDTLS or USE_RUSTLS */
+#endif /* USE_GNUTLS or USE_WOLFSSL or USE_SCHANNEL or USE_SECTRANSP */
 #endif /* HEADER_CURL_X509ASN1_H */

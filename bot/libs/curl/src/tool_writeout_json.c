@@ -23,6 +23,9 @@
  ***************************************************************************/
 #include "tool_setup.h"
 
+#define ENABLE_CURLX_PRINTF
+
+/* use our own printf() functions */
 #include "curlx.h"
 #include "tool_cfgable.h"
 #include "tool_writeout_json.h"
@@ -38,7 +41,7 @@
 int jsonquoted(const char *in, size_t len,
                struct curlx_dynbuf *out, bool lowercase)
 {
-  const unsigned char *i = (const unsigned char *)in;
+  const unsigned char *i = (unsigned char *)in;
   const unsigned char *in_end = &i[len];
   CURLcode result = CURLE_OK;
 
@@ -69,9 +72,9 @@ int jsonquoted(const char *in, size_t len,
       if(*i < 32)
         result = curlx_dyn_addf(out, "\\u%04x", *i);
       else {
-        char o = (char)*i;
+        char o = *i;
         if(lowercase && (o >= 'A' && o <= 'Z'))
-          /* do not use tolower() since that is locale specific */
+          /* do not use tolower() since that's locale specific */
           o |= ('a' - 'A');
         result = curlx_dyn_addn(out, &o, 1);
       }
@@ -98,14 +101,13 @@ void jsonWriteString(FILE *stream, const char *in, bool lowercase)
 }
 
 void ourWriteOutJSON(FILE *stream, const struct writeoutvar mappings[],
-                     size_t nentries,
                      struct per_transfer *per, CURLcode per_result)
 {
-  size_t i;
+  int i;
 
   fputs("{", stream);
 
-  for(i = 0; i < nentries; i++) {
+  for(i = 0; mappings[i].name != NULL; i++) {
     if(mappings[i].writefunc &&
        mappings[i].writefunc(stream, &mappings[i], per, per_result, true))
       fputs(",", stream);
@@ -118,6 +120,11 @@ void ourWriteOutJSON(FILE *stream, const struct writeoutvar mappings[],
   fprintf(stream, "}");
 }
 
+#ifdef _MSC_VER
+/* warning C4706: assignment within conditional expression */
+#pragma warning(disable:4706)
+#endif
+
 void headerJSON(FILE *stream, struct per_transfer *per)
 {
   struct curl_header *header;
@@ -125,7 +132,7 @@ void headerJSON(FILE *stream, struct per_transfer *per)
 
   fputc('{', stream);
   while((header = curl_easy_nextheader(per->curl, CURLH_HEADER, -1,
-                                       prev)) != NULL) {
+                                       prev))) {
     if(header->amount > 1) {
       if(!header->index) {
         /* act on the 0-index entry and pull the others in, then output in a

@@ -25,18 +25,9 @@
 #
 #       Command line interface tool compilation script for the OS/400.
 
-SCRIPTDIR=$(dirname "${0}")
+SCRIPTDIR=`dirname "${0}"`
 . "${SCRIPTDIR}/initscript.sh"
-cd "${TOPDIR}/src" || exit 1
-
-
-#       Check if built-in manual can be generated.
-
-USE_MANUAL=
-if [ -f "${IFSDIR}/docs/curl.txt" ] && [ -n "${PASEPERL}" ]
-then    "${PASEPERL}" ./mkhelp.pl < "${IFSDIR}/docs/curl.txt" > tool_hugehelp.c
-        USE_MANUAL="'USE_MANUAL'"
-fi
+cd "${TOPDIR}/src"
 
 
 #       Get source lists.
@@ -47,37 +38,27 @@ fi
 get_make_vars Makefile.inc
 
 
-#       Add hugehelp, as it is not included in Makefile.inc.
-if [ "${USE_MANUAL}" = "'USE_MANUAL'" ]
-then
-        CURL_CFILES="${CURL_CFILES} tool_hugehelp.c"
-        CURL_HFILES="${CURL_HFILES} tool_hugehelp.h"
-fi
-
 #       Compile the sources into modules.
 
-# shellcheck disable=SC2034
 LINK=
 MODULES=
-# shellcheck disable=SC2034
 INCLUDES="'${TOPDIR}/lib'"
 
-# shellcheck disable=SC2153
 for SRC in ${CURLX_CFILES}
-do      MODULE=$(db2_name "${SRC}")
-        MODULE=$(db2_name "X${MODULE}")
-        make_module "${MODULE}" "${SRC}" "${USE_MANUAL}"
+do      MODULE=`db2_name "${SRC}"`
+        MODULE=`db2_name "X${MODULE}"`
+        make_module "${MODULE}" "${SRC}"
 done
 
 for SRC in ${CURL_CFILES}
-do      MODULE=$(db2_name "${SRC}")
-        make_module "${MODULE}" "${SRC}" "${USE_MANUAL}"
+do      MODULE=`db2_name "${SRC}"`
+        make_module "${MODULE}" "${SRC}"
 done
 
 
 #       Link modules into program.
 
-MODULES="$(echo "${MODULES}" | sed "s/[^ ][^ ]*/${TARGETLIB}\/&/g")"
+MODULES="`echo \"${MODULES}\" | sed \"s/[^ ][^ ]*/${TARGETLIB}\/&/g\"`"
 CMD="CRTPGM PGM(${TARGETLIB}/${CURLPGM})"
 CMD="${CMD} ENTMOD(${TARGETLIB}/CURLMAIN)"
 CMD="${CMD} MODULE(${MODULES})"

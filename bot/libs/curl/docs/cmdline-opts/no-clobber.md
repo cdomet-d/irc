@@ -3,7 +3,7 @@ c: Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
 SPDX-License-Identifier: curl
 Long: no-clobber
 Help: Do not overwrite files that already exist
-Category: output
+Category: curl output
 Added: 7.83.0
 Multi: boolean
 See-also:
@@ -24,5 +24,3 @@ create any file.
 Note that this is the negated option name documented. You can thus use
 --clobber to enforce the clobbering, even if --remote-header-name is
 specified.
-
-The --continue-at option cannot be used together with --no-clobber.

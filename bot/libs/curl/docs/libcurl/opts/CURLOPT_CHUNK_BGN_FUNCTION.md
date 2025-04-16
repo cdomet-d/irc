@@ -9,7 +9,6 @@ See-also:
   - CURLOPT_WILDCARDMATCH (3)
 Protocol:
   - FTP
-Added-in: 7.21.0
 ---
 
 # NAME
@@ -24,7 +23,7 @@ CURLOPT_CHUNK_BGN_FUNCTION - callback before a transfer with FTP wildcard match
 struct curl_fileinfo {
   char *filename;
   curlfiletype filetype;
-  time_t time;   /* always zero */
+  time_t time;   /* always zero! */
   unsigned int perm;
   int uid;
   int gid;
@@ -84,8 +83,6 @@ Return *CURL_CHUNK_BGN_FUNC_OK* if everything is fine,
 
 NULL
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -144,11 +141,10 @@ int main()
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+This was added in 7.21.0
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if the option is supported, and CURLE_UNKNOWN_OPTION if not.

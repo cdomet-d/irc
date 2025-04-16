@@ -8,7 +8,6 @@ See-also:
   - CURLOPT_CRLF (3)
 Protocol:
   - All
-Added-in: 7.1.1
 ---
 
 # NAME
@@ -26,7 +25,7 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_TRANSFERTEXT, long text);
 # DESCRIPTION
 
 A parameter set to 1 tells the library to use ASCII mode for FTP transfers,
-instead of the default binary transfer. For Win32 systems it does not set the
+instead of the default binary transfer. For win32 systems it does not set the
 stdout to binary mode. This option can be usable when transferring text data
 between systems with different views on certain characters, such as newlines
 or similar.
@@ -38,8 +37,6 @@ simply sets the mode to ASCII and performs a standard transfer.
 # DEFAULT
 
 0, disabled
-
-# %PROTOCOLS%
 
 # EXAMPLE
 
@@ -57,11 +54,10 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Along with FTP
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if FTP is supported, and CURLE_UNKNOWN_OPTION if not.

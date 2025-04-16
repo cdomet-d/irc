@@ -55,7 +55,7 @@ static CURLcode run(CURL *hnd, long limit, long time)
   return curl_easy_perform(hnd);
 }
 
-CURLcode test(char *URL)
+int test(char *URL)
 {
   CURLcode ret;
   CURL *hnd;
@@ -70,16 +70,16 @@ CURLcode test(char *URL)
 
   ret = run(hnd, 1, 2);
   if(ret)
-    fprintf(stderr, "error (%d) %s\n", ret, buffer);
+    fprintf(stderr, "error %d: %s\n", ret, buffer);
 
   ret = run(hnd, 12000, 1);
   if(ret != CURLE_OPERATION_TIMEDOUT)
-    fprintf(stderr, "error (%d) %s\n", ret, buffer);
+    fprintf(stderr, "error %d: %s\n", ret, buffer);
   else
     ret = CURLE_OK;
 
   curl_easy_cleanup(hnd);
   curl_global_cleanup();
 
-  return ret;
+  return (int)ret;
 }

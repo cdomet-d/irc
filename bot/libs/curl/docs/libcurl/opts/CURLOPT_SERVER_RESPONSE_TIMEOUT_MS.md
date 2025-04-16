@@ -15,7 +15,6 @@ Protocol:
   - SMTP
   - SFTP
   - SCP
-Added-in: 8.6.0
 ---
 
 # NAME
@@ -49,8 +48,6 @@ This is the millisecond version of CURLOPT_SERVER_RESPONSE_TIMEOUT(3).
 
 None
 
-# %PROTOCOLS%
-
 # EXAMPLE
 
 ~~~c
@@ -69,11 +66,12 @@ int main(void)
 }
 ~~~
 
-# %AVAILABILITY%
+# AVAILABILITY
+
+Added in 8.6.0.
 
 # RETURN VALUE
 
-curl_easy_setopt(3) returns a CURLcode indicating success or error.
-
-CURLE_OK (0) means everything was OK, non-zero means an error occurred, see
-libcurl-errors(3).
+Returns CURLE_OK if supported, and CURLE_UNKNOWN_OPTION if not. Returns
+CURLE_BAD_FUNCTION_ARGUMENT if set to a negative value or a value that when
+converted to milliseconds is too large.
