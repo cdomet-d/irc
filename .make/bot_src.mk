@@ -1,11 +1,9 @@
 # ----------------------------- BOT SOURCES DIRECTORIES ---------------------- #
 BOT_SRC_DIR:= bot/src/
 BOT_HEA_DIR:= bot/headers/
-CURL_DIR:= libs/curl
 
 BOT_INC:= -I $(BOT_HEA_DIR) \
 
-CURL:= 
 # ----------------------------- BOT SOURCES FILES ---------------------------- #
 
 SRC_ROOT:=			main.cpp \
