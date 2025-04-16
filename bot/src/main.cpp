@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:08:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/14 15:35:57 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/16 18:33:00 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "Bot.hpp"
 #include "Api.hpp"
 
-int main(int ac, char *av[]) {
+int main(int ac, char *av[], char *envp[]) {
 	(void)ac;
 	(void)av;
 	// if (ac != 3)
@@ -27,6 +27,12 @@ int main(int ac, char *av[]) {
 	// Bot &bot = Bot::getInstance(std::atoi(av[1]), av[2]);
 	Api api;
 
-	api.apiRequest("csweetin");
+	if (!api.findSecret()) {
+		std::cerr << "error: secret not found\n";
+        return (false);
+	}
+	api.generateToken();
+	api.request("csweetin");
+	
 	// std::cout << &bot << std::endl;
 }
