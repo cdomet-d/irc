@@ -13,15 +13,20 @@
 #include <iostream>
 #include <stdlib.h>
 #include "Bot.hpp"
+#include "Api.hpp"
 
 int main(int ac, char *av[]) {
-	if (ac != 3)
-		return std::cerr << "Usage: ./ircbot <server port> <server password>"
-						 << std::endl,
-			   1;
-	std::cout << ac << " | " << av[1] << " | " << av[2] << std::endl;
+	(void)ac;
+	(void)av;
+	// if (ac != 3)
+	// 	return std::cerr << "Usage: ./ircbot <server port> <server password>"
+	// 					 << std::endl,
+	// 		   1;
+	// std::cout << ac << " | " << av[1] << " | " << av[2] << std::endl;
 	
-	Bot &bot = Bot::getInstance(std::atoi(av[1]), av[2]);
-	
-	std::cout << &bot << std::endl;
+	// Bot &bot = Bot::getInstance(std::atoi(av[1]), av[2]);
+	Api api;
+
+	api.apiRequest("csweetin");
+	// std::cout << &bot << std::endl;
 }
