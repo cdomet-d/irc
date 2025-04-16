@@ -25,7 +25,7 @@ int main(int ac, char *av[], char *envp[]) {
 	// std::cout << ac << " | " << av[1] << " | " << av[2] << std::endl;
 	
 	// Bot &bot = Bot::getInstance(std::atoi(av[1]), av[2]);
-	Api api;
+	Api api(envp);
 
 	if (!api.findSecret()) {
 		std::cerr << "error: secret not found\n";
