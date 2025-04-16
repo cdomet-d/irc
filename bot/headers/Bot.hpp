@@ -15,13 +15,19 @@ class Bot {
 	/*                               METHODS                                  */
 	static Bot &getInstance(int port, const std::string &pw,
 							const std::string &servIp);
+	bool createChan();
+	bool registration();
+	bool registrationSequence();
 	bool requestConnection();
-	
+	bool rplIs(const std::string &expected) const;
+	ssize_t receive();
+
 	/*                               GETTERS                                  */
 	int getFd() const;
+	bool getSignal() const;
 	
 	/*                               SETTERS                                  */
-
+	void setSignal(const bool signum);
 	/*                               MEMBERS                                  */
 	std::ofstream log_;
 
@@ -29,8 +35,11 @@ class Bot {
 	/*                               MEMBERS                                  */
 	int port_;
 	int sockFd;
+	bool gSign;
 	std::string pw_;
 	struct sockaddr_in serv_;
+
+	char rcvbuf[1024];
 
 	/*                               ORTHODOX CLASS                           */
 	Bot(void);

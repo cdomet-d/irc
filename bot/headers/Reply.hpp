@@ -7,3 +7,9 @@ namespace RPL {
 	void send_(int fd, std::string reply);
 
 } // namespace RPL
+
+#define ERR_NICKINUSE "433"
+#define RPL_ENDOFMOTD "376"
+#define ERR_CHANOPRIVSNEEDED "482"
+
+#define MYCHAN "#where-friends"

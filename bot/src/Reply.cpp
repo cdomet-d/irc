@@ -1,7 +1,8 @@
 #include "Reply.hpp"
 #include "Bot.hpp"
-#include <ctime>
 #include <cstring>
+#include <ctime>
+#include <iostream>
 #include <sys/socket.h>
 
 /* get timestamp*/
@@ -32,6 +33,7 @@ void RPL::log(e_level level, std::string message) {
 			break;
 		case ERROR:
 			bot.log_ << "[" << ts() << "] ERROR " << message << std::flush;
+			std::cerr << "[" << ts() << "] ERROR " << message << std::flush;
 			break;
 		case DEBUG:
 			bot.log_ << "[" << ts() << "] DEBUG " << message << std::flush;
