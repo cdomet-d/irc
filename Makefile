@@ -63,7 +63,7 @@ BDEPS:=$(BOBJ:%.o=%.d)
 $(BOT_NAME): $(BOBJ)
 	@echo
 	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- Making $(BOT_NAME)... ----------------"
-	$(CC) $(BOBJ) -o $(BOT_NAME)
+	$(CC) $(BOBJ) -o $(BOT_NAME) -lcurl
 	@echo
 	@printf '$(CYBOLD)%.30s\n\n$(R)' "-- $(BOT_NAME) done ! -----------------------"
 
