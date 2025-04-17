@@ -4,9 +4,17 @@
 #define API_HPP
 
 #include <iostream>
-#include <unistd.h>
+#include <sstream>
 #include <cstring>
+# include <unistd.h>
 # include <fcntl.h>
+# include <stdlib.h>
+# include <string.h>
+# include <sys/wait.h>
+# include <errno.h>
+# include <stdio.h>
+# include <vector>
+# include <fstream>
 
 
 class Api {
@@ -23,17 +31,21 @@ class Api {
 	bool findSecret();
 	bool generateToken();
 	bool executeCmd();
+	bool findCurlPath();
 	/*                               GETTERS                                  */
-	// void getToken(void);
+	std::string getEnvVar(const std::string &varName);
+
 	/*                               SETTERS                                  */
-    private:
+    
+	private:
 	/*                               MEMBERS                                  */
 	std::string token_;
 	std::string secret_;
-	char *curlPath_;
+	std::string clientIUD_;
+	std::string curlPath_;
 	char **cmd_;
 	char **envp_;
-	int resFd;
+	int resFd_;
 };
 
 #endif

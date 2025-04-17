@@ -32,7 +32,7 @@ int main(int ac, char *av[], char *envp[]) {
         return (false);
 	}
 	api.generateToken();
-	api.request("csweetin");
+	// api.request("csweetin");
 	
 	// std::cout << &bot << std::endl;
 }
