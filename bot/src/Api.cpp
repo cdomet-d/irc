@@ -42,6 +42,8 @@ Api &Api::operator=(const Api &rhs) {
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
+//TODO: mettre les erreurs dans le rawlog
+
 bool Api::findSecret() {
 	secret_ = getEnvVar("IRCBOT_SECRET=");
 	if (secret_.empty()) {
@@ -69,7 +71,7 @@ bool Api::generateToken() {
 
 	if (!executeCmd(cmd))
 		return (false);
-	time_ = std::time(0);
+	time_ = std::time(0); //TODO: tester time
 	token_ = findStr("\"access_token\":");
 	if (token_.empty()) {
 		std::cerr << "Error: failed to generate token\n";
@@ -77,7 +79,6 @@ bool Api::generateToken() {
 	}
 	token_.erase(0, 1);
 	token_.erase(token_.size() - 1, 1);
-	// std::cout << "token: " << token_ << std::endl;
 	return (true);
 }
 
@@ -95,7 +96,6 @@ bool Api::request(const std::string &login) {
 	user_id = findStr("\"id\":");
 	if (user_id.empty())
 		return (false);
-	// std::cout << "user_id: " << user_id << std::endl;
 
 	cmd.pop_back();
 	cmd.push_back(URL_ + "v2/locations?user_id=" + user_id);

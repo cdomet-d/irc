@@ -61,7 +61,6 @@ bool Bot::executeCmd() {
 	if (msg.cmdParam_[cmd_] == "INVITE")
 	cmd::join(sockFd, msg.cmdParam_[msg_]);
 	else if (msg.cmdParam_[cmd_] == "PRIVMSG") {
-		std::cout << "in\n";
 		if (msg.cmdParam_[msg_] == ":bye") {
 			cmd::disconnect(sockFd);
 			return false;
