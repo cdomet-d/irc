@@ -18,11 +18,12 @@
 
 Api::Api(void) : cmd_(NULL), envp_(NULL), resFd_(-1) {}
 
-Api::Api(char **envp) : cmd_(NULL), envp_(envp), resFd_(-1) {
-	clientIUD_ =
-		"u-s4t2ud-"
-		"ad20c0580b5b2d1e67736549dd536f87146a2340a5cbd41aba0c1da8655e0293";
-}
+Api::Api(char **envp)
+	: cmd_(NULL), envp_(envp), resFd_(-1),
+	  clientIUD_(
+		  "u-s4t2ud-"
+		  "ad20c0580b5b2d1e67736549dd536f87146a2340a5cbd41aba0c1da8655e0293"),
+	  URL_("https://api.intra.42.fr/") {}
 
 Api::Api(const Api &rhs) {
 	*this = rhs;
@@ -46,38 +47,12 @@ bool Api::findSecret() {
 	return (true);
 }
 
-bool Api::request(const std::string &login) {
-	std::vector< std::string > cmd;
-	cmd.push_back("curl");
-	cmd.push_back("-s");
-	cmd.push_back("-H");
-	cmd.push_back("Authorization: Bearer " + token_);
-
-	cmd.push_back("https://api.intra.42.fr/v2/users/" + login);
-	if (!executeCmd(cmd))
-		return (false);
-	std::string user_id;
-	user_id = findStr("\"id\":");
-	if (user_id.empty())
-		return (false);
-
-	cmd.pop_back();
-	cmd.push_back("https://api.intra.42.fr/v2/locations?user_id=" +
-				  user_id); //TODO:need only active posts
-	if (!executeCmd(cmd))
-		return (false);
-	mess_ = findStr("\"host\":");
-	if (mess_.empty())
-		return (false);
-	mess_.erase(0, 1);
-	mess_.erase(mess_.size() - 1, 1);
-	return (true);
-}
-//curl -H "Authorization: Bearer 7e507486b4010cca392f6396ed53f36bc888084a6955ad962a56dbab88e8993f" https://api.intra.42.fr/v2/cursus/42/users | jq
-
 bool Api::generateToken() {
-	//TODO: a token lasts 2 hours
-
+	if (!token_.empty()) {
+		std::time_t temp = std::time(0);
+		if (temp - time_ < 7200)
+			return (true);
+	}
 	std::vector< std::string > cmd;
 	cmd.push_back("curl");
 	cmd.push_back("-s");
@@ -86,15 +61,47 @@ bool Api::generateToken() {
 	cmd.push_back("--data");
 	cmd.push_back("grant_type=client_credentials&client_id=" + clientIUD_ +
 				  "&client_secret=" + secret_);
-	cmd.push_back("https://api.intra.42.fr/oauth/token");
+	cmd.push_back(URL_ + "oauth/token");
 
 	if (!executeCmd(cmd))
 		return (false);
+	time_ = std::time(0);
 	token_ = findStr("\"access_token\":");
 	if (token_.empty())
 		return (false);
 	token_.erase(0, 1);
 	token_.erase(token_.size() - 1, 1);
+	// std::cout << "token: " << token_ << std::endl;
+	return (true);
+}
+
+bool Api::request(const std::string &login) {
+	std::vector< std::string > cmd;
+	cmd.push_back("curl");
+	cmd.push_back("-s");
+	cmd.push_back("-H");
+	cmd.push_back("Authorization: Bearer " + token_);
+	cmd.push_back(URL_ + "v2/users/" + login);
+
+	if (!executeCmd(cmd))
+		return (false);
+	std::string user_id;
+	user_id = findStr("\"id\":");
+	if (user_id.empty())
+		return (false);
+	// std::cout << "user_id: " << user_id << std::endl;
+
+	cmd.pop_back();
+	cmd.push_back(URL_ + "v2/locations?user_id=" + user_id);
+	if (!executeCmd(cmd))
+		return (false);
+	mess_ = findStr("\"location\":");
+	if (mess_.empty() || mess_ == "null") {
+		std::cerr << "location not found\n";
+		return (false);
+	}
+	mess_.erase(0, 1);
+	mess_.erase(mess_.size() - 1, 1);
 	return (true);
 }
 
@@ -161,8 +168,7 @@ bool Api::executeCmd(std::vector< std::string > &cmd) {
 	}
 	int status;
 	waitpid(child, &status, 0);
-	//TODO: look at signal to return false ?
-	return (true);
+	return (curlStatus(status));
 }
 
 bool Api::openFile() {
@@ -203,6 +209,23 @@ void Api::fillCmd(std::vector< std::string > &cmd) {
 		cmd_[i] = strdup(cmd[i].c_str());
 	}
 	cmd_[cmd.size()] = NULL;
+}
+
+bool Api::curlStatus(int status) {
+	if (WIFEXITED(status)) {
+		int exitCode = WEXITSTATUS(status);
+		if (exitCode != 0) {
+			std::cerr << "Curl command failed with exit code: " << exitCode
+					  << std::endl;
+			return (false);
+		}
+	} else if (WIFSIGNALED(status)) {
+		int signal = WTERMSIG(status);
+		std::cerr << "Curl process terminated by signal: " << signal
+				  << std::endl;
+		return (false);
+	}
+	return (true);
 }
 
 /* ************************************************************************** */
