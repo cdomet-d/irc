@@ -1,10 +1,21 @@
 #include "Bot.hpp"
+#include "Cmd.hpp"
 #include "Reply.hpp"
-#include <sstream>
 #include <algorithm>
 #include <iostream>
-#include <string.h>
-#include <unistd.h>
+
+void cmdParam(const stringVec &obj, std::string where) {
+	if (obj.empty())
+		return std::cout << where + ": [ ... ]" << std::endl, (void)false;
+	std::cout << "[" << std::endl;
+	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it) {
+		if ((*it).empty())
+			std::cout << "\t" + where + ":\t" << "[...]" << std::endl;
+		else
+			std::cout << "\t" + where + ":\t" << *it << std::endl;
+	}
+	std::cout << "]" << std::endl;
+}
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
@@ -44,6 +55,25 @@ Bot &Bot::getInstance(int port, const std::string &pw,
 	return instance;
 }
 
+bool Bot::executeCmd() {
+	msg.processBuf();
+	cmdParam(msg.cmdParam_, "After process");
+	if (msg.cmdParam_[cmd_] == "INVITE")
+		cmd::join(sockFd, msg.cmdParam_[msg_]);
+	else if (msg.cmdParam_[cmd_] == "PRIVMSG") {
+		if (msg.cmdParam_[msg_] == ":bye") {
+			cmd::disconnect(sockFd);
+			return false;
+		}
+		if (!cmd::parseLogin(msg.cmdParam_[msg_]))
+			return RPL::send_(sockFd,
+					   "PRIVMSG " + msg.cmdParam_[target_] +
+						   ": login format is incorrect; should be !<[a - "
+						   "z]>; max len 9, is " +
+						   msg.cmdParam_[msg_] + "\r\n"), false;
+	}
+	return true;
+}
 bool Bot::registrationSequence() {
 	while (!requestConnection()) {
 		if (gSign == true)
@@ -65,25 +95,6 @@ bool Bot::requestConnection() {
 	return true;
 }
 
-ssize_t Bot::receive() {
-	memset(rcvbuf, 0, sizeof(rcvbuf));
-	rcv.clear();
-	ssize_t bytes = recv(sockFd, rcvbuf, sizeof(rcvbuf) - 1, 0);
-	std::cerr << "Received " << bytes << " bytes; errno is " << errno
-			  << std::endl;
-	if (bytes == -1)
-		return -1;
-	if (bytes == 0)
-		return 0;
-	rcv = rcvbuf;
-	RPL::log(RPL::GOT, rcv);
-	return 1;
-}
-
-bool Bot::rplIs(const std::string &expected) const {
-	return rcv.find(expected) != std::string::npos;
-}
-
 bool Bot::createChan() {
 	RPL::send_(sockFd, "JOIN #where-friends\r\n");
 	if (!receive())
@@ -92,7 +103,7 @@ bool Bot::createChan() {
 					   "I'll tell you where they're sitting !\r\n");
 	if (!receive())
 		return false;
-	if (rplIs(ERR_CHANOPRIVSNEEDED))
+	if (msg.rplIs(ERR_CHANOPRIVSNEEDED))
 		return RPL::log(RPL::ERROR, "Someone stole my channel ! I can't work "
 									"in these conditions >:(\r\n"),
 			   false;
@@ -103,13 +114,29 @@ bool Bot::registration() {
 	std::cout << "Sending registration message" << std::endl;
 	RPL::send_(sockFd,
 			   "PASS 0\r\nNICK ft-friend\r\nUSER ftfriend 0 * :ftircbot\r\n");
-	while (!rplIs(RPL_ENDOFMOTD)) {
+	while (!msg.rplIs(RPL_ENDOFMOTD)) {
 		if (!receive())
 			return false;
-		if (rplIs(ERR_NICKINUSE))
+		if (msg.rplIs(ERR_NICKINUSE))
 			return RPL::log(RPL::ERROR, "My nickname is already in use :(\r\n"),
 				   false;
 	}
+	return true;
+}
+
+ssize_t Bot::receive() {
+	msg.clear();
+	ssize_t bytes = msg._recv(sockFd);
+	if (bytes == -1)
+		return -1;
+	if (bytes == 0)
+		return 0;
+	msg.setRcv();
+	RPL::log(RPL::GOT, msg.getRcv());
+	return bytes;
+}
+
+bool Bot::run() {
 	return true;
 }
 

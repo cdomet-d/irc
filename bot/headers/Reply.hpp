@@ -1,3 +1,6 @@
+#ifndef REPLY_HPP
+#define REPLY_HPP
+
 #include <string>
 
 namespace RPL {
@@ -13,3 +16,4 @@ namespace RPL {
 #define ERR_CHANOPRIVSNEEDED "482"
 
 #define MYCHAN "#where-friends"
+#endif

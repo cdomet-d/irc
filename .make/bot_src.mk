@@ -6,9 +6,11 @@ BOT_INC:= -I $(BOT_HEA_DIR) \
 
 # ----------------------------- BOT SOURCES FILES ---------------------------- #
 
-SRC_ROOT:=			main.cpp \
-					Reply.cpp \
-					Bot.cpp \
+SRC_ROOT:=	Bot.cpp \
+			main.cpp \
+			Reply.cpp \
+			Message.cpp \
+			Cmd.cpp \
 
 # ----------------------------- BOT FILE BUILDING PATH ----------------------- #
 
