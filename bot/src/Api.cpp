@@ -18,6 +18,8 @@
 
 Api::Api(void) : cmd_(NULL), envp_(NULL), resFd_(-1) {}
 
+//TODO : faire un setEnvp plutot que d'utiliser ce constructeur ?
+//ou voir si dans bot.hpp je peux directement appeler ce constructeu
 Api::Api(char **envp)
 	: cmd_(NULL), envp_(envp), resFd_(-1),
 	  clientIUD_(
