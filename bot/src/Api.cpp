@@ -16,21 +16,19 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 
-Api::Api(void) : cmd_(NULL), envp_(NULL) {}
+Api::Api(void) : cmd_(NULL), envp_(NULL), resFd_(-1) {}
 
-Api::Api(char **envp) : cmd_(NULL), envp_(envp) {
-
+Api::Api(char **envp) : cmd_(NULL), envp_(envp), resFd_(-1) {
+	clientIUD_ =
+		"u-s4t2ud-"
+		"ad20c0580b5b2d1e67736549dd536f87146a2340a5cbd41aba0c1da8655e0293";
 }
 
 Api::Api(const Api &rhs) {
 	*this = rhs;
 }
 
-Api::~Api(void) {
-	// for (size_t i = 0; cmd_[i]; i++)
-	// 	free(cmd_[i]);
-	// free(cmd_);
-}
+Api::~Api(void) {}
 
 Api &Api::operator=(const Api &rhs) {
 	// rhs instructions
@@ -41,7 +39,6 @@ Api &Api::operator=(const Api &rhs) {
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-
 bool Api::findSecret() {
 	secret_ = getEnvVar("IRCBOT_SECRET=");
 	if (secret_.empty())
@@ -50,99 +47,130 @@ bool Api::findSecret() {
 }
 
 bool Api::request(const std::string &login) {
-	(void)login;
+	std::vector< std::string > cmd;
+	cmd.push_back("curl");
+	cmd.push_back("-s");
+	cmd.push_back("-H");
+	cmd.push_back("Authorization: Bearer " + token_);
 
+	cmd.push_back("https://api.intra.42.fr/v2/users/" + login);
+	if (!executeCmd(cmd))
+		return (false);
+	std::string user_id;
+	user_id = findStr("\"id\":");
+	if (user_id.empty())
+		return (false);
+
+	cmd.pop_back();
+	cmd.push_back("https://api.intra.42.fr/v2/locations?user_id=" +
+				  user_id); //TODO:need only active posts
+	if (!executeCmd(cmd))
+		return (false);
+	mess_ = findStr("\"host\":");
+	if (mess_.empty())
+		return (false);
+	mess_.erase(0, 1);
+	mess_.erase(mess_.size() - 1, 1);
 	return (true);
 }
 //curl -H "Authorization: Bearer 7e507486b4010cca392f6396ed53f36bc888084a6955ad962a56dbab88e8993f" https://api.intra.42.fr/v2/cursus/42/users | jq
 
 bool Api::generateToken() {
 	//TODO: a token lasts 2 hours
-	clientIUD_ = "u-s4t2ud-ad20c0580b5b2d1e67736549dd536f87146a2340a5cbd41aba0c1da8655e0293";
-	std::vector<std::string> cmd;
+
+	std::vector< std::string > cmd;
 	cmd.push_back("curl");
 	cmd.push_back("-s");
 	cmd.push_back("-X");
 	cmd.push_back("POST");
 	cmd.push_back("--data");
 	cmd.push_back("grant_type=client_credentials&client_id=" + clientIUD_ +
-				"&client_secret=" + secret_);
+				  "&client_secret=" + secret_);
 	cmd.push_back("https://api.intra.42.fr/oauth/token");
 
-	cmd_ = new char*[cmd.size() + 1];
-	for (size_t i = 0; i < cmd.size(); ++i) {
-		cmd_[i] = strdup(cmd[i].c_str());
-	}
-	cmd_[cmd.size()] = NULL;
-	
-	executeCmd();
-	std::ifstream	infile;
-	std::string		str;
-	infile.open("res.txt");
-	if (!infile.is_open())
-	{
-		std::cout << "Error: could not open file 'data.csv'" << std::endl;
+	if (!executeCmd(cmd))
 		return (false);
-	}
-	getline(infile, str, '\0');
-	if (infile.fail() || infile.bad())
-	{
-		std::cerr << "Error reading" << std::endl;
+	token_ = findStr("\"access_token\":");
+	if (token_.empty())
 		return (false);
-	}
-
-	std::string key = "\"access_token\":\"";
-	size_t start = str.find(key);
-	if (start == std::string::npos){
-		std::cerr << "Error: no token\n";
-		return (false);
-	}
-	start += key.length();
-
-	size_t end = str.find("\"", start);
-	if (end == std::string::npos) {
-		std::cerr << "Error: no token\n";
-		return (false);
-	}
-	
-	token_ = str.substr(start, end - start);
-	std::cout << "token: " << token_ << std::endl;
-
+	token_.erase(0, 1);
+	token_.erase(token_.size() - 1, 1);
 	return (true);
 }
 
-bool Api::executeCmd() {
+std::string Api::findStr(const std::string &strToFind) {
+	std::string str;
+	std::ifstream infile_;
+
+	infile_.open("res.txt");
+	if (!infile_.is_open()) {
+		std::cout << "Error: could not open file 'res.txt'" << std::endl;
+		return ("");
+	}
+	getline(infile_, str, '\0');
+	if (infile_.fail() || infile_.bad()) {
+		std::cerr << "Error reading" << std::endl;
+		return ("");
+	}
+
+	size_t start = str.find(strToFind);
+	if (start == std::string::npos) {
+		std::cerr << "Error: could not find data\n";
+		return ("");
+	}
+	start += strToFind.length();
+
+	size_t end = str.find(",", start);
+	if (end == std::string::npos) {
+		std::cerr << "Error: could not find data\n";
+		return ("");
+	}
+
+	return (str.substr(start, end - start));
+}
+
+bool Api::executeCmd(std::vector< std::string > &cmd) {
 	int child;
 
-	resFd_ = open("res.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (resFd_ == -1) {
-		std::cerr << "Error: could not open res.txt\n";
-		return (false);
-	}
-	if (!findCurlPath()) {
-		std::cerr << "Error: could not find path\n";
-		return (false);
-	}
 	child = fork();
 	if (child == -1) {
 		std::cerr << "Error: failed to created child process\n";
 		return (false);
 	}
 	if (child == 0) {
+		if (!openFile())
+			exit(errno);
+		if (!findCurlPath()) {
+			std::cerr << "Error: could not find path\n";
+			exit(errno);
+		}
+		fillCmd(cmd); //TODO: protect
 		if (dup2(resFd_, 1) == -1) {
 			std::cerr << "Error: redirection failed\n";
-			exit(EXIT_FAILURE);
+			exit(errno);
 		}
 		if (execve(curlPath_.c_str(), cmd_, envp_) == -1)
 			std::cerr << "Error: execve failed\n";
 		close(0);
 		close(1);
 		close(resFd_);
+		for (size_t i = 0; cmd_[i]; i++)
+			free(cmd_[i]);
+		free(cmd_);
 		exit(errno);
 	}
-	close(resFd_);
 	int status;
 	waitpid(child, &status, 0);
+	//TODO: look at signal to return false ?
+	return (true);
+}
+
+bool Api::openFile() {
+	resFd_ = open("res.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (resFd_ == -1) {
+		std::cerr << "Error: could not open res.txt\n";
+		return (false);
+	}
 	return (true);
 }
 
@@ -169,6 +197,14 @@ bool Api::findCurlPath() {
 	return (false);
 }
 
+void Api::fillCmd(std::vector< std::string > &cmd) {
+	cmd_ = new char *[cmd.size() + 1];
+	for (size_t i = 0; i < cmd.size(); ++i) {
+		cmd_[i] = strdup(cmd[i].c_str());
+	}
+	cmd_[cmd.size()] = NULL;
+}
+
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
@@ -179,6 +215,10 @@ std::string Api::getEnvVar(const std::string &varName) {
 		}
 	}
 	return ("");
+}
+
+const std::string &Api::getMess(void) const {
+	return (mess_);
 }
 
 /* ************************************************************************** */

@@ -31,8 +31,12 @@ int main(int ac, char *av[], char *envp[]) {
 		std::cerr << "error: secret not found\n";
         return (false);
 	}
-	api.generateToken();
-	// api.request("csweetin");
-	
+	if (!api.generateToken())
+		return (1);	
+	if (!api.request(av[1])) {
+		return (1);
+	}
+	std::cout << "post of "<< av[1] <<  ": " << api.getMess() << std::endl;
+	return (0);
 	// std::cout << &bot << std::endl;
 }
