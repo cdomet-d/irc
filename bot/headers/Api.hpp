@@ -20,6 +20,7 @@
 class Api {
   public:
 	/*                               ORTHODOX CLASS                           */
+	Api(void);
 	Api(char **envp);
 	Api(const Api &rhs);
 	Api &operator=(const Api &rhs);
@@ -54,8 +55,6 @@ class Api {
 	std::string token_;
 	std::time_t time_;
 	std::string URL_;
-
-	Api(void);
 };
 
 #endif

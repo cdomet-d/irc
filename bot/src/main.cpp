@@ -10,20 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
 #include <stdlib.h>
 #include <csignal>
 #include "Bot.hpp"
-#include "Api.hpp"
 #include "Reply.hpp"
 
 void sigHandler(int signum) {
 	(void)signum;
-	Bot &bot = Bot::getInstance(0, "", "");
+	Bot &bot = Bot::getInstance(0, "", "", NULL);
 	bot.setSignal(true);
 }
 
-int main(int ac, char *av[]) {
+int main(int ac, char *av[], char *envp[]) {
 	if (ac != 4)
 		return std::cerr << "Usage: ./ircbot <server IP> <server port> <server "
 							"password>"
@@ -39,7 +37,7 @@ int main(int ac, char *av[]) {
 	sigaction(SIGQUIT, &sa, NULL);
 
 	try {
-		Bot &bot = Bot::getInstance(std::atoi(av[2]), av[3], av[1]);
+		Bot &bot = Bot::getInstance(std::atoi(av[2]), av[3], av[1], envp);
 		if (!bot.registrationSequence())
 			return 1;
 		while (bot.getSignal() == false) {
@@ -55,17 +53,4 @@ int main(int ac, char *av[]) {
 	} catch (std::runtime_error &e) { std::cerr << e.what() << std::endl; }
 	RPL::log(RPL::INFO, "Bye!");
 	return 0;
-	/*Api api(envp);
-
-	if (!api.findSecret()) {
-		std::cerr << "error: secret not found\n";
-        return (false);
-	}
-	if (!api.generateToken())
-		return (1);	
-	if (!api.request(av[1])) {
-		return (1);
-	}
-	std::cout << "post of "<< av[1] <<  ": " << api.getMess() << std::endl;
-	return (0);*/
 }

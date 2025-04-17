@@ -20,8 +20,8 @@ void cmdParam(const stringVec &obj, std::string where) {
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-Bot::Bot(int port, std::string pw, std::string servIp)
-	: log_("bot.log", std::ios::out), port_(port), gSign(false), pw_(pw) {
+Bot::Bot(int port, std::string pw, std::string servIp, char *envp[])
+	: log_("bot.log", std::ios::out), api(Api (envp)), port_(port), gSign(false), pw_(pw) {
 	sockFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockFd == -1)
 		throw std::runtime_error("Socket init failed");
@@ -50,8 +50,8 @@ Bot::~Bot(void) {
 /* ************************************************************************** */
 
 Bot &Bot::getInstance(int port, const std::string &pw,
-					  const std::string &servIp) {
-	static Bot instance(port, pw, servIp);
+					  const std::string &servIp, char *envp[]) {
+	static Bot instance(port, pw, servIp, envp);
 	return instance;
 }
 
@@ -59,21 +59,33 @@ bool Bot::executeCmd() {
 	msg.processBuf();
 	cmdParam(msg.cmdParam_, "After process");
 	if (msg.cmdParam_[cmd_] == "INVITE")
-		cmd::join(sockFd, msg.cmdParam_[msg_]);
+	cmd::join(sockFd, msg.cmdParam_[msg_]);
 	else if (msg.cmdParam_[cmd_] == "PRIVMSG") {
+		std::cout << "in\n";
 		if (msg.cmdParam_[msg_] == ":bye") {
 			cmd::disconnect(sockFd);
 			return false;
 		}
-		if (!cmd::parseLogin(msg.cmdParam_[msg_]))
+		if (!cmd::parseLogin(msg.cmdParam_[msg_])) {
+			std::cerr << "wrong login: " << msg.cmdParam_[msg_] << std::endl;
 			return RPL::send_(sockFd,
 					   "PRIVMSG " + msg.cmdParam_[target_] +
 						   ": login format is incorrect; should be !<[a - "
 						   "z]>; max len 9, is " +
 						   msg.cmdParam_[msg_] + "\r\n"), false;
+		}
+		if (!api.findSecret())
+			return (false);
+		if (!api.generateToken())
+			return (false);	
+		if (!api.request(msg.cmdParam_[msg_]))
+			return (false);
+		std::cout << "position:" << api.getMess() << std::endl;
+		RPL::send_(sockFd, api.getMess());
 	}
 	return true;
 }
+
 bool Bot::registrationSequence() {
 	while (!requestConnection()) {
 		if (gSign == true)

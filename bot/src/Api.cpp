@@ -32,8 +32,10 @@ Api::Api(const Api &rhs) {
 Api::~Api(void) {}
 
 Api &Api::operator=(const Api &rhs) {
-	// rhs instructions
-	(void)rhs;
+	if (this != &rhs) {
+		clientIUD_ = rhs.clientIUD_;
+		URL_ = rhs.URL_;
+	}
 	return *this;
 }
 
@@ -42,8 +44,10 @@ Api &Api::operator=(const Api &rhs) {
 /* ************************************************************************** */
 bool Api::findSecret() {
 	secret_ = getEnvVar("IRCBOT_SECRET=");
-	if (secret_.empty())
+	if (secret_.empty()) {
+		std::cerr << "Error: secret not found\n";
 		return (false);
+	}
 	return (true);
 }
 
@@ -67,8 +71,10 @@ bool Api::generateToken() {
 		return (false);
 	time_ = std::time(0);
 	token_ = findStr("\"access_token\":");
-	if (token_.empty())
+	if (token_.empty()) {
+		std::cerr << "Error: failed to generate token\n";
 		return (false);
+	}
 	token_.erase(0, 1);
 	token_.erase(token_.size() - 1, 1);
 	// std::cout << "token: " << token_ << std::endl;
@@ -97,7 +103,7 @@ bool Api::request(const std::string &login) {
 		return (false);
 	mess_ = findStr("\"location\":");
 	if (mess_.empty() || mess_ == "null") {
-		std::cerr << "location not found\n";
+		std::cerr << "Error: location not found\n";
 		return (false);
 	}
 	mess_.erase(0, 1);
