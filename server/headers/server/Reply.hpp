@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/15 14:29:15 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/16 13:27:16 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@
 #define RPL_CHANOPENOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " : You're no longer operator of " + channel + "\r\n")
 #define RPL_BYEYBE(nickname) (":irc.bitchat.net " + nickname + " :You quitted the server, see you next time !\r\n")
 #define RPL_ERROR(host, reason) ("ERROR :Closing Link: " + host + " (" + reason + ")\r\n")
+
 //command_replies (uses prefix)
 #define ERR_BADKEYLEN(channel) (":irc.bitchat.net NOTICE " + channel + " :Bad key (+k) - key len must be at least 8 and no more than 26\r\n")
 #define ERR_BADINPUT(cmd, expected, received) (":irc.bitchat.net NOTICE " + cmd + " :format should be [" + expected + "], is [" + received + "]\r\n")

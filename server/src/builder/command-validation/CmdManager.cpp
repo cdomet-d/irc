@@ -20,7 +20,7 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 CmdManager::CmdManager() {
-	std::cout << "Cmd Manager instace created" << std::endl;
+	std::cout << "Cmd Manager instance created" << std::endl;
 }
 
 CmdManager::~CmdManager() {
