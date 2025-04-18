@@ -16,6 +16,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <vector>
+#include "Reply.hpp"
 
 class Api {
   public:
@@ -27,19 +28,19 @@ class Api {
 	~Api(void);
 
 	/*                               METHODS                                  */
-	bool request(const std::string &login);
-	bool findSecret();
-	bool generateToken();
+	bool curlStatus(int status);
 	bool executeCmd(std::vector< std::string > &cmd);
 	bool findCurlPath();
+	bool findSecret();
 	bool openFile();
+	bool requestLocation(const std::string &login);
+	bool requestToken();
 	std::string findStr(const std::string &strToFind);
 	void fillCmd(std::vector< std::string > &cmd);
-	bool curlStatus(int status);
 
 	/*                               GETTERS                                  */
 	std::string getEnvVar(const std::string &varName);
-	const std::string &getMess(void) const;
+	const std::string &getPos(void) const;
 
 	/*                               SETTERS                                  */
 
@@ -50,7 +51,7 @@ class Api {
 	int resFd_;
 	std::string clientIUD_;
 	std::string curlPath_;
-	std::string mess_;
+	std::string pos_;
 	std::string secret_;
 	std::string token_;
 	std::time_t time_;
