@@ -1,4 +1,5 @@
 #include "Bot.hpp"
+#include "Cmd.hpp"
 #include "Reply.hpp"
 #include <csignal>
 #include <iostream>
@@ -7,6 +8,7 @@
 void sigHandler(int signum) {
 	(void)signum;
 	Bot &bot = Bot::getInstance(0, "", "");
+	cmd::disconnect(bot);
 	bot.setSignal(true);
 }
 
@@ -37,9 +39,9 @@ int main(int ac, char *av[]) {
 				if (!bot.registrationSequence())
 					return 1;
 			}
-			bot.executeCmd();
+			else
+				bot.executeCmd();
 		}
 	} catch (std::runtime_error &e) { std::cerr << e.what() << std::endl; }
-	RPL::log(RPL::INFO, "Bye!");
 	return 0;
 }

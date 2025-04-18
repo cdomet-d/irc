@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/04/16 11:57:17 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/04/18 11:25:55 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ DEBUG_NAME:= d-ircserv
 BOT_NAME:= ircbot
 
 CC:=c++
-CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow
+CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow -g3
 DFLAGS:= -std=c++98 -Wextra -Wall -Wshadow -g3
 MAKEFLAGS:=--no-print-directory
 VFLAGS:= --leak-check=full --log-file="val.log" --show-leak-kinds=all --track-fds=yes

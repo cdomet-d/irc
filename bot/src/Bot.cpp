@@ -1,4 +1,3 @@
-#include "Bot.hpp"
 #include "Cmd.hpp"
 #include "Reply.hpp"
 #include <algorithm>
@@ -57,27 +56,33 @@ Bot &Bot::getInstance(int port, const std::string &pw,
 
 bool Bot::executeCmd() {
 	msg.processBuf();
-	cmdParam(msg.cmdParam_, "After process");
 	if (msg.cmdParam_[cmd_] == "INVITE")
-		cmd::join(sockFd, msg.cmdParam_[msg_]);
+		cmd::acceptInvite(sockFd, msg.cmdParam_[msg_]);
+	if (msg.cmdParam_[cmd_] == "JOIN")
+		addClient(msg.cmdParam_[prefix_]);
 	else if (msg.cmdParam_[cmd_] == "PRIVMSG") {
-		if (msg.cmdParam_[msg_] == ":bye") {
-			cmd::disconnect(sockFd);
-			return false;
-		}
+		if (msg.cmdParam_[msg_] == ":bye")
+			return cmd::disconnect(*this), false;
+		std::string target =
+			(msg.cmdParam_[target_] == "ft-friend" ? msg.cmdParam_[prefix_]
+												   : msg.cmdParam_[target_]);
 		if (!cmd::parseLogin(msg.cmdParam_[msg_]))
 			return RPL::send_(sockFd,
-					   "PRIVMSG " + msg.cmdParam_[target_] +
-						   ": login format is incorrect; should be !<[a - "
-						   "z]>; max len 9, is " +
-						   msg.cmdParam_[msg_] + "\r\n"), false;
+							  ERR_INVALIDSYNTAX(target, msg.cmdParam_[msg_])),
+				   false;
+		RPL::send_(sockFd, RPL_SUCCESS(target, msg.cmdParam_[msg_]));
 	}
 	return true;
 }
+
 bool Bot::registrationSequence() {
 	while (!requestConnection()) {
-		if (gSign == true)
+		if (gSign)
 			return false;
+		close(sockFd);
+		sockFd = socket(AF_INET, SOCK_STREAM, 0);
+		if (sockFd == -1)
+			throw std::runtime_error("Socket init failed");	
 		sleep(5);
 	}
 	if (!registration())
@@ -96,30 +101,22 @@ bool Bot::requestConnection() {
 }
 
 bool Bot::createChan() {
-	RPL::send_(sockFd, "JOIN #where-friends\r\n");
-	if (!receive())
-		return false;
-	RPL::send_(sockFd, "TOPIC #where-friends :send me your friends logins and "
-					   "I'll tell you where they're sitting !\r\n");
+	RPL::send_(sockFd, JOIN);
+	RPL::send_(sockFd, TOPIC);
 	if (!receive())
 		return false;
 	if (msg.rplIs(ERR_CHANOPRIVSNEEDED))
-		return RPL::log(RPL::ERROR, "Someone stole my channel ! I can't work "
-									"in these conditions >:(\r\n"),
-			   false;
+		return RPL::log(RPL::ERROR, ERR_CANNOTCREATECHAN), false;
 	return true;
 }
 
 bool Bot::registration() {
-	std::cout << "Sending registration message" << std::endl;
-	RPL::send_(sockFd,
-			   "PASS 0\r\nNICK ft-friend\r\nUSER ftfriend 0 * :ftircbot\r\n");
+	RPL::send_(sockFd, REGISTER);
 	while (!msg.rplIs(RPL_ENDOFMOTD)) {
 		if (!receive())
 			return false;
 		if (msg.rplIs(ERR_NICKINUSE))
-			return RPL::log(RPL::ERROR, "My nickname is already in use :(\r\n"),
-				   false;
+			return RPL::log(RPL::ERROR, ERR_CANNOTREGISTER), false;
 	}
 	return true;
 }
@@ -136,8 +133,8 @@ ssize_t Bot::receive() {
 	return bytes;
 }
 
-bool Bot::run() {
-	return true;
+void Bot::addClient(const std::string &nick) {
+	chanMembers.push_back(nick);
 }
 
 /* ************************************************************************** */
@@ -150,6 +147,10 @@ int Bot::getFd() const {
 
 bool Bot::getSignal() const {
 	return gSign;
+}
+
+const stringVec &Bot::getMembers() const {
+	return chanMembers;
 }
 
 /* ************************************************************************** */

@@ -15,5 +15,20 @@ namespace RPL {
 #define RPL_ENDOFMOTD "376"
 #define ERR_CHANOPRIVSNEEDED "482"
 
-#define MYCHAN "#where-friends"
+#define ERR_INVALIDSYNTAX(target, login)                                       \
+	"PRIVMSG " + target + " :invalid syntax: should be !<[a - z]>, is " +      \
+		login + "\r\n"
+#define ERR_TOOLONG(target) "PRIVSMG " + target + " :len should be < 9\r\n"
+#define ERR_CANNOTCREATECHAN                                                   \
+	"Someone stole my channel ! I can't work in these conditions >:(\r\n"
+#define ERR_CANNOTREGISTER "My nickname is already in use :(\r\n"
+
+#define RPL_SUCCESS(target, login)                                             \
+	"PRIVMSG " + target + " :" + login + " is a valid login, fetching...\r\n"
+
+#define KICK(nick) "KICK #where-friends " + nick + "\r\n"
+#define TOPIC "TOPIC #where-friends : do !commands to see how to invoke me!\r\n"
+#define JOIN "JOIN #where-friends\r\n"
+#define REGISTER "PASS 0\r\nNICK ft-friend\r\nUSER ftfriend 0 * :ftircbot\r\n"
+
 #endif
