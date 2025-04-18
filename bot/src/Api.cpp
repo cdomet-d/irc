@@ -44,8 +44,6 @@ Api &Api::operator=(const Api &rhs) {
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-//TODO: mettre les erreurs dans le rawlog
-
 bool Api::findSecret() {
 	secret_ = getEnvVar("IRCBOT_SECRET=");
 	if (secret_.empty()) {
@@ -151,15 +149,22 @@ bool Api::executeCmd(std::vector< std::string > &cmd) {
 		return (false);
 	}
 	if (child == 0) {
-		if (!openFile())
-			exit(errno);
 		if (!findCurlPath())
+			exit(errno);
+		// cmd.clear();
+		// curlPath_.clear();
+		// exit(errno);
+		if (!openFile())
 			exit(errno);
 		if (dup2(resFd_, 1) == -1) {
 			RPL::log(RPL::ERROR, "redirection failed");
+			close(resFd_);
 			exit(errno);
 		}
-		fillCmd(cmd); //TODO: protect
+		if (!fillCmd(cmd)) {
+			close (resFd_);
+			exit(errno);
+		}
 		if (execve(curlPath_.c_str(), cmd_, envp_) == -1)
 			RPL::log(RPL::ERROR, "execve failed");
 		close(0);
@@ -190,30 +195,37 @@ bool Api::findCurlPath() {
 		return (false);
 
 	size_t pos = 0;
-	std::string path;
 	for (size_t i = 0; i < pathVar.size(); i++) {
 		pos = pathVar.find(":");
 		if (pos == std::string::npos)
 			pos = pathVar.size();
-		path.assign(pathVar, 0, pos);
-		path += "/curl";
-		if (access(path.c_str(), X_OK) == 0) {
-			curlPath_ = path.c_str();
+		curlPath_.assign(pathVar, 0, pos);
+		curlPath_ += "/curl";
+		if (access(curlPath_.c_str(), X_OK) == 0)
 			return (true);
-		}
 		pathVar.erase(0, i + 1);
-		path.clear();
+		curlPath_.clear();
 	}
 	RPL::log(RPL::ERROR, "could not find path");
 	return (false);
 }
 
-void Api::fillCmd(std::vector< std::string > &cmd) {
-	cmd_ = new char *[cmd.size() + 1];
+bool Api::fillCmd(std::vector< std::string > &cmd) {
+	cmd_ = (char **)malloc(sizeof(char *) * (cmd.size() + 1));
+	if (cmd_ == NULL)
+		return (false);
 	for (size_t i = 0; i < cmd.size(); ++i) {
 		cmd_[i] = strdup(cmd[i].c_str());
+		if (cmd_[i] == NULL) {
+			while ((int)i >= 0)
+				free(cmd_[i--]);
+			free(cmd_);
+			RPL::log(RPL::ERROR, "strdup failed");
+			return (false);
+		}
 	}
 	cmd_[cmd.size()] = NULL;
+	return (true);
 }
 
 bool Api::curlStatus(int status) {
@@ -250,44 +262,3 @@ const std::string &Api::getPos(void) const {
 /* ************************************************************************** */
 /*                               SETTERS                                      */
 /* ************************************************************************** */
-
-/*
-size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* output) {
-    size_t totalSize = size * nmemb;
-    ((std::string*)output)->append((char*)contents, totalSize);
-    return totalSize;
-}
-*/
-
-/*
-	CURL *curl = curl_easy_init();
-	if (!curl) {
-		std::cerr << "init failed\n";
-		return;
-	}
-
-    curl_easy_setopt(curl, CURLOPT_URL, "https://api.intra.42.fr/oauth/token");
-    curl_easy_setopt(curl, CURLOPT_POST, 1L);
-
-	const std::string &client_id = "";
-	const std::string &client_secret =
-		"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";
-    const std::string &grant_type = "client_credentials";
-	std::string post_fields = "grant_type=" + grant_type + "&client_id=" + client_id + "&client_secret=" + client_secret;
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_fields.c_str());
-
-    std::string response_data;
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_data);
-
-    // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-
-	CURLcode res = curl_easy_perform(curl);
-    if (res != CURLE_OK) {
-        std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
-        return;
-    }
-
-    std::cout << "response: " << response_data << std::endl;
-	curl_easy_cleanup(curl);
-	*/
