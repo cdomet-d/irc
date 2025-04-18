@@ -39,7 +39,7 @@ class Bot {
   private:
 	/*                               MEMBERS                                  */
 
-	param e_param;
+	// param e_param;
 	Msg msg;
 	stringVec chanMembers;
 	Api api;
