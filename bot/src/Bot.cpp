@@ -73,16 +73,24 @@ bool Bot::executeCmd() {
 						   "z]>; max len 9, is " +
 						   msg.cmdParam_[msg_] + "\r\n"), false;
 		}
-		if (!api.findSecret())
+		if (!findLoginPos(msg.cmdParam_[msg_])) {
+			RPL::send_(sockFd, "location not found for " + msg.cmdParam_[msg_]);
 			return (false);
-		if (!api.generateToken())
-			return (false);	
-		if (!api.request(msg.cmdParam_[msg_]))
-			return (false);
-		std::cout << "position:" << api.getMess() << std::endl;
-		RPL::send_(sockFd, api.getMess());
+		}
+		RPL::send_(sockFd, api.getPos());
+		// std::cout << "position:" << api.getPos() << std::endl;
 	}
 	return true;
+}
+
+bool Bot::findLoginPos(const std::string &login) {
+	if (!api.findSecret())
+		return (false);
+	if (!api.requestToken())
+		return (false);	
+	if (!api.requestLocation(login))
+		return (false);
+	return (true);
 }
 
 bool Bot::registrationSequence() {

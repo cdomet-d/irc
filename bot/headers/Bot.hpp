@@ -18,6 +18,7 @@ class Bot {
 							const std::string &servIp, char *envp[]);
 	bool createChan();
 	bool executeCmd();
+	bool findLoginPos(const std::string &login);
 	bool registration();
 	bool registrationSequence();
 	bool requestConnection();
