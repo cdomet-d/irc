@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/15 11:53:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/17 14:09:58 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void Message::clearCmdParam() {
 	}
 	cmdParam_.clear();
 }
+
 void Message::clearMess() {
 	message_.clear();
 	trailing_.clear();
@@ -191,6 +192,7 @@ void Message::removeNewlines() {
 	message_.erase(message_.begin() + newline, message_.end());
 	return;
 }
+
 static bool isConsecutiveSpace(char left, char right) {
 	return (left == ' ' && right == ' ');
 }
