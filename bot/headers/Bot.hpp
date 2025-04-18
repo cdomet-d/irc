@@ -22,28 +22,26 @@ class Bot {
 	bool registration();
 	bool registrationSequence();
 	bool requestConnection();
-	bool run();
 	ssize_t receive();
 
 	/*                               GETTERS                                  */
 	int getFd() const;
 	bool getSignal() const;
+	const stringVec &getMembers() const;
 
 	/*                               SETTERS                                  */
 	void setSignal(const bool signum);
+	void addClient(const std::string &nick);
 
 	/*                               MEMBERS                                  */
 	std::ofstream log_;
 
   private:
-	enum param {
-		prefix_,
-		cmd_,
-		target_,
-		msg_
-	} e_param;
 	/*                               MEMBERS                                  */
+
+	param e_param;
 	Msg msg;
+	stringVec chanMembers;
 	Api api;
 
 	int port_;

@@ -7,6 +7,8 @@
 
 typedef std::vector< std::string > stringVec;
 
+enum param { prefix_, cmd_, target_, msg_ };
+
 class Msg {
   public:
 	/*                               ORTHODOX CLASS                           */
@@ -33,6 +35,9 @@ class Msg {
 	stringVec cmdParam_;
 
   private:
+	param e_param;
+	void trimUsername();
+
 	Msg(const Msg &rhs);
 	Msg &operator=(const Msg &rhs);
 	std::string rcv_;

@@ -1,5 +1,4 @@
 #include "Message.hpp"
-#include "Reply.hpp"
 #include <algorithm>
 #include <iostream>
 #include <sstream>
@@ -40,6 +39,7 @@ bool Msg::processBuf() {
 	removeNl();
 	trimConsecutiveSpaces();
 	cmdParam_ = vectorSplit(' ');
+	trimUsername();
 	return true;
 }
 
@@ -92,12 +92,17 @@ void Msg::clear() {
 	rcv_.clear();
 }
 
-
 void Msg::clearCmdParam() {
 	for (stringVec::iterator i = cmdParam_.begin(); i != cmdParam_.end();) {
 		cmdParam_.erase(i);
 	}
 	cmdParam_.clear();
+}
+
+void Msg::trimUsername() {
+	cmdParam_[prefix_].erase(cmdParam_[prefix_].begin());
+	if (cmdParam_[prefix_].find('!') != std::string::npos)
+		cmdParam_[prefix_].erase(cmdParam_[prefix_].find('!'));
 }
 
 /* ************************************************************************** */

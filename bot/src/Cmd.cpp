@@ -1,20 +1,28 @@
 #include "Cmd.hpp"
 #include "Reply.hpp"
 
-void cmd::join(const int fd, const std::string &target) {
+void cmd::acceptInvite(const int fd, const std::string &target) {
 	RPL::send_(fd, "JOIN " + target + "\r\n");
 }
 
 // void cmd::answer(const int fd, const std::string &target) {}
 
-void cmd::disconnect(const int fd) {
-	RPL::send_(fd, "ft-friend disconnecting! Bye!\r\nQUIT\r\n");
+void cmd::disconnect(Bot &bot) {
+	for (stringVec::const_iterator it = bot.getMembers().begin();
+		 it != bot.getMembers().end(); ++it) {
+		if (*it != "ft-friend")
+			RPL::send_(bot.getFd(), KICK(*it));
+	}
+	RPL::send_(bot.getFd(), "QUIT\r\n");
 }
 
 static bool isLowercase(const std::string &login) {
-	for (std::string::const_iterator it = login.begin(); it != login.end(); ++it) {
-		if (!islower(*it))
-			return false;
+	for (std::string::const_iterator it = login.begin(); it != login.end();
+		 ++it) {
+		if (!islower(*it)) {
+			if (*it != '-')
+				return false;
+		}
 	}
 	return true;
 }
