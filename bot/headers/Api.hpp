@@ -1,4 +1,14 @@
-//HEADER
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Api.hpp                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/18 16:51:31 by csweetin          #+#    #+#             */
+/*   Updated: 2025/04/18 16:59:32 by csweetin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef API_HPP
 #define API_HPP
@@ -17,6 +27,7 @@
 #include <unistd.h>
 #include <vector>
 #include "Reply.hpp"
+# include <cstdlib>
 
 class Api {
   public:
@@ -30,6 +41,7 @@ class Api {
 	/*                               METHODS                                  */
 	bool curlStatus(int status);
 	bool executeCmd(std::vector< std::string > &cmd);
+	bool execute(const char *cmd);
 	bool fillCmd(std::vector< std::string > &cmd);
 	bool findCurlPath();
 	bool findSecret();
