@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 15:50:43 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/16 18:43:19 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/18 16:26:55 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,12 +232,12 @@ bool Api::curlStatus(int status) {
 	if (WIFEXITED(status)) {
 		int exitCode = WEXITSTATUS(status);
 		if (exitCode != 0) {
-			RPL::log(RPL::ERROR, "Curl command failed with exit code: " + exitCode);
+			// RPL::log(RPL::ERROR, "Curl command failed with exit code: " + exitCode);
 			return (false);
 		}
 	} else if (WIFSIGNALED(status)) {
-		int signal = WTERMSIG(status);
-		RPL::log(RPL::ERROR, "Curl process terminated by signal: " + signal);
+		// int signal = WTERMSIG(status);
+		// RPL::log(RPL::ERROR, "Curl process terminated by signal: " + signal);
 		return (false);
 	}
 	return (true);

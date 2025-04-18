@@ -4,10 +4,10 @@
 #include <string>
 
 namespace RPL {
-	enum e_level { INFO, ERROR, DEBUG, REPLY, GOT };
-	void log(e_level level, std::string message, std::string verbose);
-	void log(e_level level, std::string message);
-	void send_(int fd, std::string reply);
+enum e_level { INFO, ERROR, DEBUG, REPLY, GOT };
+void log(e_level level, std::string message, std::string verbose);
+void log(e_level level, std::string message);
+void send_(int fd, std::string reply);
 
 } // namespace RPL
 
@@ -25,10 +25,12 @@ namespace RPL {
 
 #define RPL_SUCCESS(target, login)                                             \
 	"PRIVMSG " + target + " :" + login + " is a valid login, fetching...\r\n"
+#define ERR_NOLOCATION(target, login)                                          \
+	"PRIVMSG " + target + " :Location not found for " + login + "\r\n"
+#define RPL_LOCATION(target, location) "PRIVMSG " + target + " :" + location + "\r\n"
 
 #define KICK(nick) "KICK #where-friends " + nick + "\r\n"
 #define TOPIC "TOPIC #where-friends : do !commands to see how to invoke me!\r\n"
 #define JOIN "JOIN #where-friends\r\n"
 #define REGISTER "PASS 0\r\nNICK ft-friend\r\nUSER ftfriend 0 * :ftircbot\r\n"
-
 #endif

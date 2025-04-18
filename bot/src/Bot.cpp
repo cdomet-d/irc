@@ -70,13 +70,12 @@ bool Bot::executeCmd() {
 			return RPL::send_(sockFd,
 							  ERR_INVALIDSYNTAX(target, msg.cmdParam_[msg_])),
 				   false;
+		RPL::send_(sockFd, RPL_SUCCESS(target, msg.cmdParam_[msg_]));
 		if (!findLoginPos(msg.cmdParam_[msg_])) {
-			RPL::send_(sockFd, "location not found for " + msg.cmdParam_[msg_]);
+			RPL::send_(sockFd, ERR_NOLOCATION(target, msg.cmdParam_[msg_]));
 			return (false);
 		}
-		RPL::send_(sockFd, RPL_SUCCESS(target, msg.cmdParam_[msg_]));
-		RPL::send_(sockFd, api.getPos());
-		// std::cout << "position:" << api.getPos() << std::endl;
+		RPL::send_(sockFd, RPL_LOCATION(target, api.getPos()));
 	}
 	return true;
 }
