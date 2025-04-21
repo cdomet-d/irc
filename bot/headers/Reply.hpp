@@ -28,6 +28,10 @@ namespace RPL {
 
 #define RPL_SUCCESS(target, login)                                            \
 	"PRIVMSG " + target + " :" + login + " is a valid login, fetching...\r\n"
+#define ERR_NOLOCATION(target, login)                                         \
+	"PRIVMSG " + target + " :Location not found for " + login + "\r\n"
+#define RPL_LOCATION(target, location)                                        \
+	"PRIVMSG " + target + " :" + location + "\r\n"
 
 #define KICK(nick)                                                            \
 	"KICK #where-friends " + nick                                             \

@@ -24,11 +24,11 @@ void RPL::send_(int fd, std::string reply) {
 	size_t bytes = send(fd, reply.c_str(), strlen(reply.c_str()),
 						MSG_EOR | MSG_DONTWAIT | MSG_NOSIGNAL);
 	if (bytes != strlen(reply.c_str()))
-		RPL::log(ERROR, "Not send in full: \t", reply);
+		RPL::log(ERROR, "Not sent in full: \t", reply);
 }
 
 void RPL::log(e_level level, std::string message) {
-	Bot &bot = Bot::getInstance(0, "", "");
+	Bot &bot = Bot::getInstance(0, "", "", NULL);
 	if (doNotLog(message))
 		return;
 	if (bot.log_.is_open()) {
@@ -54,7 +54,7 @@ void RPL::log(e_level level, std::string message) {
 }
 
 void RPL::log(e_level level, std::string message, std::string verbose) {
-	Bot &bot = Bot::getInstance(0, "", "");
+	Bot &bot = Bot::getInstance(0, "", "", NULL);
 	if (bot.log_.is_open()) {
 		switch (level) {
 		case (INFO):
