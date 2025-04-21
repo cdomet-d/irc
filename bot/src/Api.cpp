@@ -18,8 +18,6 @@
 
 Api::Api(void) : cmd_(NULL), envp_(NULL), resFd_(-1) {}
 
-//TODO : faire un setEnvp plutot que d'utiliser ce constructeur ?
-//ou voir si dans bot.hpp je peux directement appeler ce constructeu
 Api::Api(char **envp)
 	: cmd_(NULL), envp_(envp), resFd_(-1),
 	  clientIUD_(
@@ -59,20 +57,20 @@ bool Api::requestToken() {
 		if (temp - time_ < 7200)
 			return (true);
 	}
-	// std::vector< std::string > cmd;
-	// cmd.push_back("curl");
-	// cmd.push_back("-s");
-	// cmd.push_back("-X");
-	// cmd.push_back("POST");
-	// cmd.push_back("--data");
-	// cmd.push_back("grant_type=client_credentials&client_id=" + clientIUD_ +
-	// 			  "&client_secret=" + secret_);
-	// cmd.push_back(URL_ + "oauth/token");
+	std::vector< std::string > cmd;
+	cmd.push_back("curl");
+	cmd.push_back("-s");
+	cmd.push_back("-X");
+	cmd.push_back("POST");
+	cmd.push_back("--data");
+	cmd.push_back("grant_type=client_credentials&client_id=" + clientIUD_ +
+				  "&client_secret=" + secret_);
+	cmd.push_back(URL_ + "oauth/token");
 	
-	std::string cmd;
-	cmd = "curl -s -X POST --data \"grant_type=client_credentials&client_id=" +
-		  clientIUD_ + "&client_secret=" + secret_ + "\" " + URL_ + "oauth/token > res.txt";
-	if (!execute(cmd.c_str()))
+	// std::string cmd;
+	// cmd = "curl -s -X POST --data \"grant_type=client_credentials&client_id=" +
+	// 	  clientIUD_ + "&client_secret=" + secret_ + "\" " + URL_ + "oauth/token > res.txt";
+	if (!executeCmd(cmd))
 		return (false);
 	time_ = std::time(0); //TODO: tester time
 	token_ = findStr("\"access_token\":");
@@ -86,27 +84,27 @@ bool Api::requestToken() {
 }
 
 bool Api::requestLocation(const std::string &login) {
-	// std::vector< std::string > cmd;
-	// cmd.push_back("curl");
-	// cmd.push_back("-s");
-	// cmd.push_back("-H");
-	// cmd.push_back("Authorization: Bearer " + token_);
-	// cmd.push_back(URL_ + "v2/users/" + login);
+	std::vector< std::string > cmd;
+	cmd.push_back("curl");
+	cmd.push_back("-s");
+	cmd.push_back("-H");
+	cmd.push_back("Authorization: Bearer " + token_);
+	cmd.push_back(URL_ + "v2/users/" + login);
 
-	std::string cmd;
-	cmd = "curl -s -H \"Authorization: Bearer " + token_ + "\" \"" + URL_ + "v2/users/" + login + "\" > res.txt";
-	if (!execute(cmd.c_str()))
+	// std::string cmd;
+	// cmd = "curl -s -H \"Authorization: Bearer " + token_ + "\" \"" + URL_ + "v2/users/" + login + "\" > res.txt";
+	if (!executeCmd(cmd))
 		return (false);
 	std::string user_id;
 	user_id = findStr("\"id\":");
 	if (user_id.empty())
 		return (false);
 
-	// cmd.pop_back();
-	// cmd.push_back(URL_ + "v2/locations?user_id=" + user_id);
-	cmd.clear();
-	cmd = "curl -s -H \"Authorization: Bearer " + token_ + "\" \"" + URL_ + "v2/locations?user_id=" + user_id + "\" > res.txt";
-	if (!execute(cmd.c_str()))
+	cmd.pop_back();
+	cmd.push_back(URL_ + "v2/locations?user_id=" + user_id);
+	// cmd.clear();
+	// cmd = "curl -s -H \"Authorization: Bearer " + token_ + "\" \"" + URL_ + "v2/locations?user_id=" + user_id + "\" > res.txt";
+	if (!executeCmd(cmd))
 		return (false);
 	pos_ = findStr("\"location\":");
 	if (pos_.empty() || pos_ == "null")
@@ -147,9 +145,9 @@ std::string Api::findStr(const std::string &strToFind) {
 	return (str.substr(start, end - start));
 }
 
-bool Api::execute(const char *cmd) {
-	return (std::system(cmd));
-}
+// bool Api::execute(const char *cmd) {
+// 	return (std::system(cmd));
+// }
 
 bool Api::executeCmd(std::vector< std::string > &cmd) {
 	int child;

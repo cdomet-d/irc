@@ -41,7 +41,7 @@ class Api {
 	/*                               METHODS                                  */
 	bool curlStatus(int status);
 	bool executeCmd(std::vector< std::string > &cmd);
-	bool execute(const char *cmd);
+	// bool execute(const char *cmd);
 	bool fillCmd(std::vector< std::string > &cmd);
 	bool findCurlPath();
 	bool findSecret();
