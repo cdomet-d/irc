@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:54:09 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/21 18:31:59 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void partAllChans(CmdSpec &cmd, const std::string &message) {
 			partMess(sender, curChan, message);
 		partOneChan(sender, curChan);
 		if (cmd.getName() == "QUIT")
-			sendMessageChannel(curChan.getCliInChan(),
+			RPL::sendMessageChannel(curChan.getCliInChan(),
 							   RPL_QUIT(sender->cliInfo.getPrefix(), message));
 		curChan.checkOnlyOperator(*sender);
 	}

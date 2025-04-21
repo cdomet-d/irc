@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:37:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:53:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/21 18:35:26 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@ void RPL::send_(int fd, std::string reply) {
 						MSG_EOR | MSG_DONTWAIT | MSG_NOSIGNAL);
 	if (bytes != strlen(reply.c_str()))
 		RPL::log(ERROR, "Not send in full: \t", reply);
+}
+
+void RPL::sendMessageChannel(clientMap allCliChannel, const std::string &message) {
+	for (clientMapIt it = allCliChannel.begin(); it != allCliChannel.end(); ++it)
+		RPL::send_(it->second->getFd(), message);
 }
 
 void RPL::log(e_level level, std::string message) {
