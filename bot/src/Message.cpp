@@ -46,6 +46,7 @@ bool Msg::processBuf() {
 /* ************************************************************************** */
 /*                               UTILS                                        */
 /* ************************************************************************** */
+
 static bool isConsecutiveSpace(char left, char right) {
 	return (left == ' ' && right == ' ');
 }
@@ -93,9 +94,8 @@ void Msg::clear() {
 }
 
 void Msg::clearCmdParam() {
-	for (stringVec::iterator i = cmdParam_.begin(); i != cmdParam_.end();) {
+	for (stringVec::iterator i = cmdParam_.begin(); i != cmdParam_.end();)
 		cmdParam_.erase(i);
-	}
 	cmdParam_.clear();
 }
 

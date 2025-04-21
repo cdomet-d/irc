@@ -5,6 +5,12 @@
 #include <iostream>
 #include <sys/socket.h>
 
+static bool doNotLog(const std::string &message) {
+	return (message.find("PING") != std::string::npos ||
+			message.find("PONG") != std::string::npos ||
+			message.find("WHO") != std::string::npos);
+}
+
 /* get timestamp*/
 static std::string ts() {
 	char time_buf[80];
@@ -23,8 +29,7 @@ void RPL::send_(int fd, std::string reply) {
 
 void RPL::log(e_level level, std::string message) {
 	Bot &bot = Bot::getInstance(0, "", "");
-	if (message.find("PING") != std::string::npos ||
-		message.find("PONG") != std::string::npos)
+	if (doNotLog(message))
 		return;
 	if (bot.log_.is_open()) {
 		switch (level) {

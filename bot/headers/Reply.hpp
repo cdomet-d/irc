@@ -11,6 +11,9 @@ namespace RPL {
 
 } // namespace RPL
 
+#define BOT "ft-friend"
+#define BOTCHAN "where-friends"
+
 #define ERR_NICKINUSE "433"
 #define RPL_ENDOFMOTD "376"
 #define ERR_CHANOPRIVSNEEDED "482"
@@ -26,9 +29,16 @@ namespace RPL {
 #define RPL_SUCCESS(target, login)                                             \
 	"PRIVMSG " + target + " :" + login + " is a valid login, fetching...\r\n"
 
-#define KICK(nick) "KICK #where-friends " + nick + "\r\n"
-#define TOPIC "TOPIC #where-friends : do !commands to see how to invoke me!\r\n"
-#define JOIN "JOIN #where-friends\r\n"
+#define KICK(nick) "KICK #where-friends " + nick + " :Bot is leaving; closing the channel.\r\n"
+#define TOPIC "TOPIC #where-friends : do !man to see how to invoke me!\r\n"
+#define JOIN(target) "JOIN " + target + "\r\n"
 #define REGISTER "PASS 0\r\nNICK ft-friend\r\nUSER ftfriend 0 * :ftircbot\r\n"
+#define QUIT "QUIT\r\n"
+#define MAN(target)                                                            \
+	"PRIVMSG " + target +                                                      \
+		" :Invoke me with <!login> to see where your friends are "             \
+		"seated. You can also /invite me to your channel, and /kick me from "  \
+		"it. If you want me to leave the server, just /msg me with <bye>. I "  \
+		"will close my channel and disconnect from the server.\r\n"
 
 #endif
