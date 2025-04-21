@@ -40,15 +40,15 @@ class Api {
 
 	/*                               METHODS                                  */
 	bool curlStatus(int status);
-	bool executeCmd(std::vector< std::string > &cmd);
-	// bool execute(const char *cmd);
-	bool fillCmd(std::vector< std::string > &cmd);
+	bool executeCmd(void);
+	bool fillCmd(void);
 	bool findCurlPath();
 	bool findSecret();
 	bool openFile();
 	bool requestLocation(const std::string &login);
 	bool requestToken();
 	std::string findStr(const std::string &strToFind);
+	void cleanChild(int exitCode);
 
 	/*                               GETTERS                                  */
 	std::string getEnvVar(const std::string &varName);
@@ -66,8 +66,9 @@ class Api {
 	std::string pos_;
 	std::string secret_;
 	std::string token_;
-	std::time_t time_;
 	std::string URL_;
+	std::time_t time_;
+	std::vector< std::string > curlCmd_;
 };
 
 #endif
