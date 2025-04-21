@@ -20,8 +20,8 @@ void cmdParam(const stringVec &obj, std::string where) {
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-Bot::Bot(int port, std::string pw, std::string servIp)
-	: log_("bot.log", std::ios::out), myChan_("#where-friends"), port_(port),
+Bot::Bot(int port, std::string pw, std::string servIp, char *envp[])
+	: log_("bot.log", std::ios::out), myChan_("#where-friends"), api(Api (envp)), port_(port),
 	  gSign(false), pw_(pw) {
 	sockFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockFd == -1)
@@ -47,8 +47,8 @@ void Bot::clearMembers() {
 }
 
 Bot &Bot::getInstance(int port, const std::string &pw,
-					  const std::string &servIp) {
-	static Bot instance(port, pw, servIp);
+					  const std::string &servIp, char *envp[]) {
+	static Bot instance(port, pw, servIp, envp);
 	return instance;
 }
 
@@ -72,8 +72,23 @@ bool Bot::executeCmd() {
 										  target, msg_.cmdParam_[content_])),
 				   false;
 		RPL::send_(sockFd, RPL_SUCCESS(target, msg_.cmdParam_[content_]));
+		if (!findLoginPos(msg_.cmdParam_[content_])) {
+			RPL::send_(sockFd, ERR_NOLOCATION(target, msg_.cmdParam_[content_]));
+			return (false);
+		}
+		RPL::send_(sockFd, RPL_LOCATION(target, api.getPos()));
 	}
 	return true;
+}
+
+bool Bot::findLoginPos(const std::string &login) {
+	if (!api.findSecret())
+		return (false);
+	if (!api.requestToken())
+		return (false);	
+	if (!api.requestLocation(login))
+		return (false);
+	return (true);
 }
 
 bool Bot::registrationSequence() {
