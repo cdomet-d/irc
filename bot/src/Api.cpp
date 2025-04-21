@@ -117,7 +117,7 @@ std::string Api::findStr(const std::string &strToFind) {
 	}
 	getline(infile_, str, '\0');
 	if (infile_.fail() || infile_.bad()) {
-		RPL::log(RPL::ERROR, "Error reading\r\n");
+		RPL::log(RPL::ERROR, "Error reading res.txt\r\n");
 		return ("");
 	}
 
