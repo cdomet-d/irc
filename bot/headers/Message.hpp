@@ -35,7 +35,7 @@ class Msg {
 	stringVec cmdParam_;
 
   private:
-	param e_param;
+	// param e_param;
 	void trimUsername();
 
 	Msg(const Msg &rhs);

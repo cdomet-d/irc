@@ -19,8 +19,8 @@ void cmdParam(const stringVec &obj, std::string where) {
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-Bot::Bot(int port, std::string pw, std::string servIp)
-	: log_("bot.log", std::ios::out), port_(port), gSign(false), pw_(pw) {
+Bot::Bot(int port, std::string pw, std::string servIp, char *envp[])
+	: log_("bot.log", std::ios::out), api(Api (envp)), port_(port), gSign(false), pw_(pw) {
 	sockFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockFd == -1)
 		throw std::runtime_error("Socket init failed");
@@ -49,8 +49,8 @@ Bot::~Bot(void) {
 /* ************************************************************************** */
 
 Bot &Bot::getInstance(int port, const std::string &pw,
-					  const std::string &servIp) {
-	static Bot instance(port, pw, servIp);
+					  const std::string &servIp, char *envp[]) {
+	static Bot instance(port, pw, servIp, envp);
 	return instance;
 }
 
@@ -71,8 +71,23 @@ bool Bot::executeCmd() {
 							  ERR_INVALIDSYNTAX(target, msg.cmdParam_[msg_])),
 				   false;
 		RPL::send_(sockFd, RPL_SUCCESS(target, msg.cmdParam_[msg_]));
+		if (!findLoginPos(msg.cmdParam_[msg_])) {
+			RPL::send_(sockFd, ERR_NOLOCATION(target, msg.cmdParam_[msg_]));
+			return (false);
+		}
+		RPL::send_(sockFd, RPL_LOCATION(target, api.getPos()));
 	}
 	return true;
+}
+
+bool Bot::findLoginPos(const std::string &login) {
+	if (!api.findSecret())
+		return (false);
+	if (!api.requestToken())
+		return (false);	
+	if (!api.requestLocation(login))
+		return (false);
+	return (true);
 }
 
 bool Bot::registrationSequence() {

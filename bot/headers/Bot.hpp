@@ -6,6 +6,7 @@
 #include <fstream>
 #include <netinet/in.h>
 #include <string>
+#include "Api.hpp"
 
 class Bot {
   public:
@@ -14,9 +15,10 @@ class Bot {
 
 	/*                               METHODS                                  */
 	static Bot &getInstance(int port, const std::string &pw,
-							const std::string &servIp);
+							const std::string &servIp, char *envp[]);
 	bool createChan();
 	bool executeCmd();
+	bool findLoginPos(const std::string &login);
 	bool registration();
 	bool registrationSequence();
 	bool requestConnection();
@@ -37,9 +39,10 @@ class Bot {
   private:
 	/*                               MEMBERS                                  */
 
-	param e_param;
+	// param e_param;
 	Msg msg;
 	stringVec chanMembers;
+	Api api;
 
 	int port_;
 	int sockFd;
@@ -49,7 +52,7 @@ class Bot {
 
 	/*                               ORTHODOX CLASS                           */
 	Bot(void);
-	Bot(int port, std::string pw, std::string servIp);
+	Bot(int port, std::string pw, std::string servIp, char *envp[]);
 	Bot(const Bot &rhs);
 	Bot &operator=(const Bot &rhs);
 };
