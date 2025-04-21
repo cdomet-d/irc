@@ -6,12 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/17 14:09:58 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/21 17:53:37 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Message.hpp"
 #include "Server.hpp"
+#include "printers.hpp"
 #include <algorithm>
 
 /* ************************************************************************** */
@@ -31,12 +32,12 @@ std::string &Message::operator[](unsigned int i) {
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-/* the string vector associated with the command being processed */
+/* returns the string vector associated with the command being processed */
 const stringVec &Message::getCmdParam() {
 	return cmdParam_;
 }
 
-/* the command being processed */
+/* returns the command being processed */
 const std::string Message::getCmd() const {
 	return cmdParam_.at(0);
 }
@@ -52,6 +53,7 @@ const std::string Message::getLeft() const {
 	return leftover_;
 }
 
+/* returns the size of the string vector holding the command and its parameters */
 size_t Message::getSize() const {
 	return cmdParam_.size();
 }
@@ -60,12 +62,14 @@ size_t Message::getSize() const {
 /*                               SETTERS                                      */
 /* ************************************************************************** */
 
+/* sets the string vector holding the command and its parameters */
 void Message::setCmdParam(const stringVec &splitBuffer) {
 	cmdParam_ = splitBuffer;
 	if (!trailing_.empty())
 		cmdParam_.push_back(trailing_.substr(1, trailing_.size()));
 }
 
+/* sets the buffer containing the raw message */
 void Message::setMess(std::string buffer) {
 	message_ = buffer;
 }
@@ -73,6 +77,71 @@ void Message::setMess(std::string buffer) {
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
+
+/* makes mode parameters usable by builder pattern */
+void Message::formatMode() {
+	if (cmdParam_.size() < 2)
+		return;
+
+	stringVec modeformat;
+	std::string flagformat, paramformat;
+
+	modeformat.push_back(cmdParam_.at(0));
+	modeformat.push_back(cmdParam_.at(1));
+
+	if (cmdParam_.size() > 2 && !cmdParam_.at(2).empty())
+		formatModeFlags(flagformat);
+	if (cmdParam_.size() > 3 && !cmdParam_.at(3).empty())
+		formatModeParam(paramformat);
+	assignFormattedMode(flagformat, paramformat, modeformat);
+}
+
+/* loops on cmdParam_[2], which is where the flags are supposed to be */
+void Message::formatModeFlags(std::string &flagformat) {
+	std::string flags = cmdParam_.at(2);
+	const char firstChar = flags[0];
+	for (size_t i = 0; i < flags.size(); i++) {
+		if (firstChar == '+' || firstChar == '-') {
+			i++;
+			while (i < flags.size()) {
+				flagformat += firstChar;
+				flagformat += flags[i];
+				if (i + 1 != flags.size())
+					flagformat += ',';
+				++i;
+			}
+		} else
+			flagformat += flags[i];
+	}
+}
+
+/* loops on cmdParam_, starting .at(3) , where the remaining strings are considered mode parameters */
+void Message::formatModeParam(std::string &paramformat) {
+	for (stringVec::iterator it = cmdParam_.begin() + 3; it != cmdParam_.end();
+		 ++it) {
+		if (!it->empty()) {
+			paramformat += *it;
+			if ((it + 1) != cmdParam_.end())
+				paramformat += ',';
+		}
+	}
+}
+
+/* updates cmdParam_ with newly formatted strings */
+void Message::assignFormattedMode(const std::string &flagformat,
+								  const std::string &paramformat,
+								  stringVec &modeformat) {
+	if (!flagformat.empty())
+		modeformat.push_back(flagformat);
+	else if (cmdParam_.size() > 2)
+		modeformat.push_back("");
+	if (!paramformat.empty())
+		modeformat.push_back(paramformat);
+	clearCmdParam();
+	cmdParam_ = modeformat;
+}
+
+/* Clears the stringVec CmdParam_ */
 void Message::clearCmdParam() {
 	for (stringVec::iterator i = cmdParam_.begin(); i != cmdParam_.end();) {
 		cmdParam_.erase(i);
@@ -80,61 +149,16 @@ void Message::clearCmdParam() {
 	cmdParam_.clear();
 }
 
+/* clears the raw received message and the trailing */
 void Message::clearMess() {
 	message_.clear();
 	trailing_.clear();
 }
 
+/* clears every buffer contained in Mess */
 void Message::clear() {
 	clearMess();
 	clearCmdParam();
-}
-
-void Message::formatMode() {
-	if (cmdParam_.size() < 2)
-		return;
-
-	stringVec modeFormat;
-	std::string flagformat, paramformat;
-
-	modeFormat.push_back(cmdParam_.at(0));
-	modeFormat.push_back(cmdParam_.at(1));
-
-	if (cmdParam_.size() > 2 && !cmdParam_.at(2).empty()) {
-		for (size_t i = 0; i < cmdParam_[2].size(); i++) {
-			const char firstChar = cmdParam_[2][i];
-			if (firstChar == '+' || firstChar == '-') {
-				i++;
-				while (i < cmdParam_[2].size()) {
-					flagformat += firstChar;
-					flagformat += cmdParam_[2][i];
-					flagformat += ',';
-					if ((i + 1) < cmdParam_[2].size()
-						&& (cmdParam_[2][i + 1] == '+'
-							|| cmdParam_[2][i + 1] == '-'))
-						break;
-					++i;
-				}
-			} else
-				flagformat += cmdParam_[2][i];
-		}
-
-		for (stringVec::iterator it = cmdParam_.begin() + 3;
-			 it != cmdParam_.end(); ++it) {
-			if (!it->empty()) {
-				paramformat += *it;
-				paramformat += ',';
-			}
-		}
-	}
-	if (!flagformat.empty())
-		modeFormat.push_back(flagformat);
-	else if (cmdParam_.size() > 2)
-		modeFormat.push_back("");
-	if (!paramformat.empty())
-		modeFormat.push_back(paramformat);
-	clearCmdParam();
-	cmdParam_ = modeFormat;
 }
 
 bool Message::hasPrefix(const std::string &cliPrefix) {
@@ -151,6 +175,8 @@ bool Message::hasPrefix(const std::string &cliPrefix) {
 	return true;
 }
 
+/* Assess whether received message has a trailing parameter, in which case it 
+is removed and stored in mess.trailing to preserve it from vectorSplit*/
 bool Message::hasTrailing() {
 	std::string::size_type trail = message_.find(" :");
 
@@ -162,7 +188,7 @@ bool Message::hasTrailing() {
 	return false;
 }
 
-bool Message::lenIsValid(const Client &sender) {
+bool Message::hasValidLen(const Client &sender) {
 	if (message_.empty())
 		return false;
 	if (message_.size() > 512) {
@@ -172,14 +198,18 @@ bool Message::lenIsValid(const Client &sender) {
 	return true;
 }
 
+/* Determine whether the received messages has \r\n, \n or \r as a termination;
+returns the size of the found termination to accurately trim it from the raw message */
 std::string::size_type Message::evaluateTermination() const {
 	if (message_.find("\r\n") != std::string::npos)
 		return 2;
-	if (message_.find("\n") != std::string::npos)
+	if (message_.find("\n") != std::string::npos
+		|| message_.find("\r") != std::string::npos)
 		return 1;
 	return std::string::npos;
 }
 
+/* Trims termination from message */
 void Message::removeNewlines() {
 	std::string::size_type termSize = evaluateTermination();
 	if (termSize == std::string::npos) {
@@ -196,6 +226,8 @@ void Message::removeNewlines() {
 static bool isConsecutiveSpace(char left, char right) {
 	return (left == ' ' && right == ' ');
 }
+
+/* Removes consecutive spaces */
 void Message::trimSpaces() {
 	std::string::iterator newEnd
 		= std::unique(message_.begin(), message_.end(), isConsecutiveSpace);
@@ -203,14 +235,25 @@ void Message::trimSpaces() {
 		message_.erase(newEnd, message_.end());
 }
 
-bool Message::emptyBuff() {
+/* Makes lowercases commands exploitable */
+void Message::cmdToUpper() {
+	std::string &cmd = cmdParam_.at(0);
+	std::transform(cmd.begin(), cmd.end(), cmd.begin(),
+				   (int (*)(int))std::toupper);
+}
+
+/* Assesses whether buff is empty */
+bool Message::buffIsEmpty() {
 	return message_.begin() == message_.end();
 }
 
+/* Assesses whether received command is CAP */
 bool Message::isCap() {
 	return message_.find("CAP") != std::string::npos;
 }
 
+/* In the event that the server received several messages in a single buffer, 
+updates the message to move on to the next command */
 void Message::updateMess() {
 	message_ = leftover_;
 	leftover_.clear();

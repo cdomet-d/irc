@@ -64,6 +64,10 @@ bool CmdSpec::checkRegistrationStage() {
 	return (true);
 }
 
+/* Assesses the current command state:
+	- can it be run ? 
+	- does it have enough parameters ? 
+	- runs the appropriate checkers on the parameter list */
 CmdSpec &CmdSpec::process(Client &sender) {
 
 	setSender(sender);
@@ -87,6 +91,24 @@ void CmdSpec::cleanAll() {
 		(*params_[i].second).clean();
 	}
 	valid_ = true;
+}
+
+
+void CmdSpec::displayParams(const std::string &where) {
+	std::cout << "Params in:" + where + "\n";
+	for (paramMap::iterator i = params_.begin(); i != params_.end(); i++) {
+		try {
+			for (size_t index = 0; index < (*i->second).size(); index++) {
+				std::cout << "param[" << enumToString(i->first) << "]"
+						  << "[" << index << "] : " << (*i->second)[index]
+						  << std::endl;
+			}
+		} catch (const std::out_of_range &e) {
+			std::cerr << e.what() << std::endl;
+		}
+		std::cout << "\n";
+	}
+	std::cout << "\n";
 }
 
 static std::string enumToString(e_param color) {
@@ -120,23 +142,6 @@ static std::string enumToString(e_param color) {
 	default:
 		return "Unknown";
 	}
-}
-
-void CmdSpec::displayParams(const std::string &where) {
-	std::cout << "Params in:" + where + "\n";
-	for (paramMap::iterator i = params_.begin(); i != params_.end(); i++) {
-		try {
-			for (size_t index = 0; index < (*i->second).size(); index++) {
-				std::cout << "param[" << enumToString(i->first) << "]"
-						  << "[" << index << "] : " << (*i->second)[index]
-						  << std::endl;
-			}
-		} catch (const std::out_of_range &e) {
-			std::cerr << e.what() << std::endl;
-		}
-		std::cout << "\n";
-	}
-	std::cout << "\n";
 }
 
 /* ************************************************************************** */
