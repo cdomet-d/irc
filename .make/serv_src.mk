@@ -5,7 +5,7 @@ SERV_HEA_DIR:= server/headers/
 BOT_SRC_DIR:= bot/src/
 BOT_HEA_DIR:= bot/headers/
 
-SERV_INC:=  -I $(SERV_HEA_DIR) \
+SERVER_INCLUDES:=  -I $(SERV_HEA_DIR) \
 	-I $(SERV_HEA_DIR)server/ \
 	-I $(SERV_HEA_DIR)builder/command-execution/ \
 	-I $(SERV_HEA_DIR)builder/command-validation/ \
@@ -70,11 +70,11 @@ SRC_ROOT:=			main.cpp \
 
 # ----------------------------- SERVER FILE BUILDING PATH -------------------- #
 
-S_SRC:= $(addprefix $(SERV_SRC_DIR), $(SRC_ROOT))
-S_SRC+= $(addprefix $(BUILD_EXE_DIR), $(BUILD_EXE_SRC))
-S_SRC+= $(addprefix $(BUILD_MAN_DIR), $(BUILD_MAN_SRC))
-S_SRC+= $(addprefix $(BUILD_VAL_DIR), $(BUILD_VAL_SRC))
-S_SRC+= $(addprefix $(BUILD_CHECK_DIR), $(BUILD_CHECK_SRC))
-S_SRC+= $(addprefix $(CLI_DIR), $(CLI_SRC))
-S_SRC+= $(addprefix $(DEBUG_DIR), $(DEBUG_SRC))
-S_SRC+= $(addprefix $(SERV_DIR), $(SERV_SRC))
+SERVER_SRC:= $(addprefix $(SERV_SRC_DIR), $(SRC_ROOT))
+SERVER_SRC+= $(addprefix $(BUILD_EXE_DIR), $(BUILD_EXE_SRC))
+SERVER_SRC+= $(addprefix $(BUILD_MAN_DIR), $(BUILD_MAN_SRC))
+SERVER_SRC+= $(addprefix $(BUILD_VAL_DIR), $(BUILD_VAL_SRC))
+SERVER_SRC+= $(addprefix $(BUILD_CHECK_DIR), $(BUILD_CHECK_SRC))
+SERVER_SRC+= $(addprefix $(CLI_DIR), $(CLI_SRC))
+SERVER_SRC+= $(addprefix $(DEBUG_DIR), $(DEBUG_SRC))
+SERVER_SRC+= $(addprefix $(SERV_DIR), $(SERV_SRC))
