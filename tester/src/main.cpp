@@ -17,9 +17,9 @@ int main(int argc, char **argv) {
 		std::cout << "wrong arg" << std::endl;
 		return (1);
 	}
-	std::string cmd[14] = {"reg",  "pass",	"nick", "user", "invite",
-						   "join", "kick",	"mode", "part", "quit",
-						   "msg",  "topic", "who",	"trail"};
+	std::string cmd[14]
+		= { "reg",	"pass", "nick", "user", "invite", "join", "kick",
+			"mode", "part", "quit", "msg",	"topic",  "who",  "trail" };
 	size_t i = 0;
 	while (i < 14 && argv[1] != cmd[i])
 		i++;
@@ -98,8 +98,8 @@ int main(int argc, char **argv) {
 		break;
 	// WHO
 	case 12:
-		if (test("tester-scripts/test-who.sh", "expected-outputs/who_output.tx",
-				 "WHO:"))
+		if (test("tester-scripts/test-who.sh",
+				 "expected-outputs/who_output.tx", "WHO:"))
 			return (1);
 		break;
 	// TRAILING

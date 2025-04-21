@@ -20,7 +20,8 @@ void cmd::acceptInvite(const int fd, const std::string &target) {
 }
 
 void cmd::disconnect(Bot &bot) {
-	RPL::send_(bot.getFd(), "PRIVMSG #where-friends :Bye! I'm closing the channel!\r\n");
+	RPL::send_(bot.getFd(),
+			   "PRIVMSG #where-friends :Bye! I'm closing the channel!\r\n");
 	for (stringVec::const_iterator it = bot.getMembers().begin();
 		 it != bot.getMembers().end(); ++it) {
 		if (*it != BOT)

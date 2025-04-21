@@ -9,7 +9,8 @@ void cmdParam(const stringVec &obj, std::string where) {
 	std::cout << "[" << std::endl;
 	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it) {
 		if ((*it).empty())
-			std::cout << "\t" + where + ":\t" << "[...]" << std::endl;
+			std::cout << "\t" + where + ":\t"
+					  << "[...]" << std::endl;
 		else
 			std::cout << "\t" + where + ":\t" << *it << std::endl;
 	}
@@ -20,7 +21,8 @@ void cmdParam(const stringVec &obj, std::string where) {
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 Bot::Bot(int port, std::string pw, std::string servIp)
-	: log_("bot.log", std::ios::out), myChan_("#where-friends"), port_(port), gSign(false), pw_(pw) {
+	: log_("bot.log", std::ios::out), myChan_("#where-friends"), port_(port),
+	  gSign(false), pw_(pw) {
 	sockFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockFd == -1)
 		throw std::runtime_error("Socket init failed");
@@ -55,7 +57,7 @@ bool Bot::executeCmd() {
 	if (msg_.cmdParam_.size() < content_)
 		RPL::send_(sockFd, "Message is malformed");
 	const std::string target = getTarget();
-	
+
 	if (msg_.cmdParam_[cmd_] == "INVITE")
 		cmd::acceptInvite(sockFd, msg_.cmdParam_[content_]);
 	if (msg_.cmdParam_[cmd_] == "JOIN")
@@ -66,8 +68,8 @@ bool Bot::executeCmd() {
 		if (msg_.cmdParam_[content_] == ":!man")
 			return cmd::man(*this, target), false;
 		if (!cmd::parseLogin(msg_.cmdParam_[content_]))
-			return RPL::send_(sockFd,
-							  ERR_INVALIDSYNTAX(target, msg_.cmdParam_[content_])),
+			return RPL::send_(sockFd, ERR_INVALIDSYNTAX(
+										  target, msg_.cmdParam_[content_])),
 				   false;
 		RPL::send_(sockFd, RPL_SUCCESS(target, msg_.cmdParam_[content_]));
 	}
@@ -154,7 +156,7 @@ const stringVec &Bot::getMembers() const {
 
 const std::string Bot::getTarget() const {
 	return (msg_.cmdParam_[target_] == BOT ? msg_.cmdParam_[prefix_]
-										  : msg_.cmdParam_[target_]);
+										   : msg_.cmdParam_[target_]);
 }
 
 /* ************************************************************************** */

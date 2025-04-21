@@ -16,9 +16,9 @@
 #include <sys/socket.h>
 
 static bool doNotLog(const std::string &message) {
-	return (message.find("PING") != std::string::npos ||
-			message.find("PONG") != std::string::npos ||
-			message.find("WHO") != std::string::npos);
+	return (message.find("PING") != std::string::npos
+			|| message.find("PONG") != std::string::npos
+			|| message.find("WHO") != std::string::npos);
 }
 
 static std::string timeStamp() {
