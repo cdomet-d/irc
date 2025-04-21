@@ -10,11 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <csignal>
 #include "Bot.hpp"
 #include "Cmd.hpp"
 #include "Reply.hpp"
+#include <csignal>
+#include <stdlib.h>
 
 void sigHandler(int signum) {
 	(void)signum;
@@ -25,9 +25,10 @@ void sigHandler(int signum) {
 
 int main(int ac, char *av[], char *envp[]) {
 	if (ac != 4)
-		return std::cerr << "Usage: ./ircbot <server IP> <server port> <server "
-							"password>"
-						 << std::endl,
+		return std::cerr
+				   << "Usage: ./ircbot <server IP> <server port> <server "
+					  "password>"
+				   << std::endl,
 			   1;
 
 	struct sigaction sa;
@@ -49,8 +50,7 @@ int main(int ac, char *av[], char *envp[]) {
 			if (bytes == 0) {
 				if (!bot.registrationSequence())
 					return 1;
-			}
-			else
+			} else
 				bot.executeCmd();
 		}
 	} catch (std::runtime_error &e) { std::cerr << e.what() << std::endl; }

@@ -9,7 +9,8 @@ void cmdParam(const stringVec &obj, std::string where) {
 	std::cout << "[" << std::endl;
 	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it) {
 		if ((*it).empty())
-			std::cout << "\t" + where + ":\t" << "[...]" << std::endl;
+			std::cout << "\t" + where + ":\t"
+					  << "[...]" << std::endl;
 		else
 			std::cout << "\t" + where + ":\t" << *it << std::endl;
 	}
@@ -20,7 +21,8 @@ void cmdParam(const stringVec &obj, std::string where) {
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 Bot::Bot(int port, std::string pw, std::string servIp, char *envp[])
-	: log_("bot.log", std::ios::out), api(Api (envp)), port_(port), gSign(false), pw_(pw) {
+	: log_("bot.log", std::ios::out), api(Api(envp)), port_(port),
+	  gSign(false), pw_(pw) {
 	sockFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockFd == -1)
 		throw std::runtime_error("Socket init failed");
@@ -63,9 +65,9 @@ bool Bot::executeCmd() {
 	else if (msg.cmdParam_[cmd_] == "PRIVMSG") {
 		if (msg.cmdParam_[msg_] == ":bye")
 			return cmd::disconnect(*this), false;
-		std::string target =
-			(msg.cmdParam_[target_] == "ft-friend" ? msg.cmdParam_[prefix_]
-												   : msg.cmdParam_[target_]);
+		std::string target
+			= (msg.cmdParam_[target_] == "ft-friend" ? msg.cmdParam_[prefix_]
+													 : msg.cmdParam_[target_]);
 		if (!cmd::parseLogin(msg.cmdParam_[msg_]))
 			return RPL::send_(sockFd,
 							  ERR_INVALIDSYNTAX(target, msg.cmdParam_[msg_])),
@@ -84,7 +86,7 @@ bool Bot::findLoginPos(const std::string &login) {
 	if (!api.findSecret())
 		return (false);
 	if (!api.requestToken())
-		return (false);	
+		return (false);
 	if (!api.requestLocation(login))
 		return (false);
 	return (true);
@@ -97,7 +99,7 @@ bool Bot::registrationSequence() {
 		close(sockFd);
 		sockFd = socket(AF_INET, SOCK_STREAM, 0);
 		if (sockFd == -1)
-			throw std::runtime_error("Socket init failed");	
+			throw std::runtime_error("Socket init failed");
 		sleep(5);
 	}
 	if (!registration())

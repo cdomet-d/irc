@@ -40,9 +40,9 @@ void kick(CmdSpec &cmd) {
 						 target->cliInfo.getNick(), ":" + cmd[message_][0]));
 		else
 			RPL::sendMessageChannel(curChan.getCliInChan(),
-							   RPL_KICK(sender->cliInfo.getPrefix(),
-										curChan.getName(),
-										target->cliInfo.getNick(), ""));
+									RPL_KICK(sender->cliInfo.getPrefix(),
+											 curChan.getName(),
+											 target->cliInfo.getNick(), ""));
 		kickFromAllMap(target, curChan);
 	}
 }

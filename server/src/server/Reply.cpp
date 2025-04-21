@@ -30,8 +30,10 @@ void RPL::send_(int fd, std::string reply) {
 		RPL::log(ERROR, "Not send in full: \t", reply);
 }
 
-void RPL::sendMessageChannel(clientMap allCliChannel, const std::string &message) {
-	for (clientMapIt it = allCliChannel.begin(); it != allCliChannel.end(); ++it)
+void RPL::sendMessageChannel(clientMap allCliChannel,
+							 const std::string &message) {
+	for (clientMapIt it = allCliChannel.begin(); it != allCliChannel.end();
+		 ++it)
 		RPL::send_(it->second->getFd(), message);
 }
 

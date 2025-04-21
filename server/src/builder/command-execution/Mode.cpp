@@ -143,19 +143,19 @@ void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 	}
 	if (negMode.size() == 1) {
 		RPL::sendMessageChannel(curChan.getCliInChan(),
-						   RPL_MODE(sender->cliInfo.getPrefix(),
-									curChan.getName(), posMode,
-									newPassMaxCli));
+								RPL_MODE(sender->cliInfo.getPrefix(),
+										 curChan.getName(), posMode,
+										 newPassMaxCli));
 	} else if (posMode.size() == 1) {
 		RPL::sendMessageChannel(curChan.getCliInChan(),
-						   RPL_MODE(sender->cliInfo.getPrefix(),
-									curChan.getName(), negMode,
-									newPassMaxCli));
+								RPL_MODE(sender->cliInfo.getPrefix(),
+										 curChan.getName(), negMode,
+										 newPassMaxCli));
 	} else
 		RPL::sendMessageChannel(curChan.getCliInChan(),
-						   RPL_MODE(sender->cliInfo.getPrefix(),
-									curChan.getName(), posMode + negMode,
-									newPassMaxCli));
+								RPL_MODE(sender->cliInfo.getPrefix(),
+										 curChan.getName(), posMode + negMode,
+										 newPassMaxCli));
 }
 
 void mode(CmdSpec &cmd) {

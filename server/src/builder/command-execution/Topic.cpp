@@ -29,9 +29,9 @@ void checkTopic(Channel &curChan, Client *curCli) {
 void changeTopic(Channel &curChan, Client *curCli, std::string topic) {
 	curChan.setTopic(topic);
 	RPL::sendMessageChannel(curChan.getCliInChan(),
-					   RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(),
-										curChan.getName(),
-										curChan.getTopic()));
+							RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(),
+											 curChan.getName(),
+											 curChan.getTopic()));
 }
 
 void topic(CmdSpec &cmd) {

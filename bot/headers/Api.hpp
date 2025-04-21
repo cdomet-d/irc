@@ -13,6 +13,8 @@
 #ifndef API_HPP
 #define API_HPP
 
+#include "Reply.hpp"
+#include <cstdlib>
 #include <cstring>
 #include <ctime>
 #include <errno.h>
@@ -26,8 +28,6 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <vector>
-#include "Reply.hpp"
-# include <cstdlib>
 
 class Api {
   public:

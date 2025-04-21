@@ -26,8 +26,9 @@ void partAllChans(CmdSpec &cmd, const std::string &message) {
 			partMess(sender, curChan, message);
 		partOneChan(sender, curChan);
 		if (cmd.getName() == "QUIT")
-			RPL::sendMessageChannel(curChan.getCliInChan(),
-							   RPL_QUIT(sender->cliInfo.getPrefix(), message));
+			RPL::sendMessageChannel(
+				curChan.getCliInChan(),
+				RPL_QUIT(sender->cliInfo.getPrefix(), message));
 		curChan.checkOnlyOperator(*sender);
 	}
 }

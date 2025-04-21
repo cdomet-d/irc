@@ -1,12 +1,12 @@
 #ifndef BOT_HPP
 #define BOT_HPP
 
+#include "Api.hpp"
 #include "Message.hpp"
 #include <arpa/inet.h>
 #include <fstream>
 #include <netinet/in.h>
 #include <string>
-#include "Api.hpp"
 
 class Bot {
   public:

@@ -63,10 +63,10 @@ bool Api::requestToken() {
 	cmd.push_back("-X");
 	cmd.push_back("POST");
 	cmd.push_back("--data");
-	cmd.push_back("grant_type=client_credentials&client_id=" + clientIUD_ +
-				  "&client_secret=" + secret_);
+	cmd.push_back("grant_type=client_credentials&client_id=" + clientIUD_
+				  + "&client_secret=" + secret_);
 	cmd.push_back(URL_ + "oauth/token");
-	
+
 	// std::string cmd;
 	// cmd = "curl -s -X POST --data \"grant_type=client_credentials&client_id=" +
 	// 	  clientIUD_ + "&client_secret=" + secret_ + "\" " + URL_ + "oauth/token > res.txt";
