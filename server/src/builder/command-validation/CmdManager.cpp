@@ -193,14 +193,10 @@ void CmdManager::log(CmdSpec *cm) {
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
+
+/* Find the command if it's supported; throws an exception otherwise */
 CmdSpec &CmdManager::findCmd(std::string cmName) {
 	cmdMap::iterator it;
-
-	if (cmName.find_first_not_of("abcdefghijklmnopqrstuvwxyz")
-		== std::string::npos)
-		for (size_t i = 0; i < cmName.size(); i++)
-			cmName[i] = std::toupper(cmName[i]);
-
 	it = commandList_.find(cmName);
 	if (it == commandList_.end()) {
 		throw CmdNotFoundException();
@@ -208,6 +204,7 @@ CmdSpec &CmdManager::findCmd(std::string cmName) {
 	return (*it->second);
 }
 
+/* Returns the singleton instance of the command manager */
 CmdManager &CmdManager::getManagerInstance() {
 	static CmdManager instance;
 	return (instance);

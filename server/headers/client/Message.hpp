@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/15 11:53:50 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/21 17:49:44 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,36 @@ class Message {
 	void setCmdParam(const stringVec &splitBuffer);
 
 	/*                               METHODS                                  */
-	bool emptyBuff();
+	// checkers
+
+	bool buffIsEmpty();
 	bool hasPrefix(const std::string &cliPrefix);
 	bool hasTrailing();
+	bool hasValidLen(const Client &sender);
 	bool isCap();
-	bool lenIsValid(const Client &sender);
-	std::string::size_type evaluateTermination() const;
+
+	// clearing and updating
+
+	void clear();
 	void clearCmdParam();
 	void clearMess();
-	void clear();
-	void formatMode();
+	void updateMess();
+
+	// sanitizing input
+
+	std::string::size_type evaluateTermination() const;
+	void cmdToUpper();
 	void removeNewlines();
 	void trimSpaces();
-	void updateMess();
+
+	// mode formatting
+
+	void formatMode();
+	void formatModeFlags(std::string &flagformat);
+	void formatModeParam(std::string &paramformat);
+	void assignFormattedMode(const std::string &flagformat,
+							 const std::string &paramformat,
+							 stringVec &modeformat);
 
   private:
 	Message(const Message &rhs);

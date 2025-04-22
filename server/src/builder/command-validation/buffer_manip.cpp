@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/16 17:41:07 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/21 18:05:29 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,21 @@
 
 bool buffer_manip::prepareCommand(Client &sender) {
 	sender.mess.trimSpaces();
-	while (!sender.mess.emptyBuff()) {
+	while (!sender.mess.buffIsEmpty()) {
 		sender.mess.removeNewlines();
 		if (sender.mess.isCap()) {
 			sender.mess.updateMess();
 			continue;
 		}
-		if (!sender.mess.lenIsValid(sender))
+		if (!sender.mess.hasValidLen(sender))
 			return false;
 		if (sender.mess.hasPrefix(sender.cliInfo.getPrefix()) == false)
 			return false;
 		sender.mess.hasTrailing();
 		std::string buffer = sender.mess.getMess();
 		sender.mess.setCmdParam(vectorSplit(buffer, ' '));
-		if (sender.mess.getCmd() == "MODE" || sender.mess.getCmd() == "mode")
+		sender.mess.cmdToUpper();
+		if (sender.mess.getCmd() == "MODE")
 			sender.mess.formatMode();
 		CmdManager &manager = CmdManager::getManagerInstance();
 		try {
@@ -43,7 +44,6 @@ bool buffer_manip::prepareCommand(Client &sender) {
 					   ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
 										  sender.mess.getCmd()));
 		}
-		//TODO: bit worried that trailing will remain hanging around if the command is not found
 		sender.mess.clear();
 		sender.mess.updateMess();
 	}
