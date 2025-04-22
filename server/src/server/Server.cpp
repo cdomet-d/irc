@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/16 12:05:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:29:59 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,10 @@ bool Server::servRun() {
 		for (int i = 0; i < nbFds; i++) {
 			if (events_[i].data.fd == servFd_)
 				acceptClient();
-			else if (handleData(events_[i].data.fd) == false)
+			else {
+				handleData(events_[i].data.fd);
 				return (true);
+			}
 		}
 	}
 	return (true);
@@ -153,7 +155,7 @@ void Server::acceptClient() {
 	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
 }
 
-bool Server::handleData(int fd) {
+void Server::handleData(int fd) {
 	char tmpBuf[1024];
 	memset(tmpBuf, 0, sizeof(tmpBuf));
 	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, MSG_DONTWAIT);
@@ -162,9 +164,9 @@ bool Server::handleData(int fd) {
 	if (bytes == 0) {
 		curCli->mess.setMess("QUIT\n");
 		buffer_manip::prepareCommand(*curCli);
-		return (true);
+		return ;
 	} else if (bytes == -1)
-		return (true);
+		return ;
 	else {
 		std::string inputCli = curCli->mess.getMess();
 		inputCli.append(tmpBuf);
@@ -174,7 +176,6 @@ bool Server::handleData(int fd) {
 			buffer_manip::prepareCommand(*curCli);
 		}
 	}
-	return (true);
 }
 
 void Server::addChan(Channel *curChan) {
