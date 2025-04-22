@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:48:49 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:54:09 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:05:40 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 #include "CmdSpec.hpp"
 #include "Reply.hpp"
 #include "Server.hpp"
+#include <ctime>
 
 static std::string timeStamp() {
 	char time_buf[80];
 	time_t now = time(0);
-	strftime(time_buf, sizeof(time_buf), "%d-%m-%Y %H:%M:%S", localtime(&now));
+	std::strftime(time_buf, sizeof(time_buf), "%d-%m-%Y %H:%M:%S", std::localtime(&now));
 	return (time_buf);
 }
 

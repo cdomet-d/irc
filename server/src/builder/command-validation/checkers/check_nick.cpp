@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/15 11:54:22 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:47:40 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ bool check::nick_::syntaxIsValid(const std::string &nick,
 			": illegal char: expected [AZ - az], [0 - 9] or [-[]\\`^{}], is ");
 
 	std::string::const_iterator start = nick.begin();
-	if (!isalpha(*start)) {
+	if (!std::isalpha(*start)) {
 		RPL::send_(sender.getFd(),
 				   ERR_ERRONEUSNICKNAME(sender.cliInfo.getNick(),
 										nick + badFirst + *start));
@@ -54,7 +54,7 @@ bool check::nick_::syntaxIsValid(const std::string &nick,
 }
 
 bool check::nick_::isAllowed(const char &c) {
-	return isalpha(c) || isdigit(c) || check::nick_::isSpecial(c);
+	return std::isalpha(c) || isdigit(c) || check::nick_::isSpecial(c);
 }
 
 bool check::nick_::isSpecial(const char &c) {

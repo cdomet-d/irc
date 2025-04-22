@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/21 18:31:55 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:08:02 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void executeL(std::string flag, std::string param, Channel &curChan) {
 	if (flag == "+l") {
 		char *endptr;
 		errno = 0;
-		double result = strtod(param.c_str(), &endptr);
+		double result = std::strtod(param.c_str(), &endptr);
 
 		// if err of strtod, the maxCli of the channel will be set to the maxCi of
 		// the server so 50
