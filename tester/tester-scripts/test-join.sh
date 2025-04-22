@@ -120,11 +120,4 @@ exec {client2_out_fd}>&-
 
 rm -f outputs/client*
 
-
-#While a client is joined to a channel, 
-#they receive all relevant information about that channel 
-#including the JOIN, PART, KICK, and MODE messages affecting the channel.
-#They receive all PRIVMSG and NOTICE messages sent to the channel, 
-#and they also receive QUIT messages from other clients joined to the same channel
-
 #TODO: mettre un client dans 50 channel pour avoir erreur ERR_TOOMANYCHANNELS
