@@ -4,6 +4,7 @@
 #include <string>
 #include <unistd.h>
 #include <vector>
+#include "Utils.hpp"
 
 typedef std::vector< std::string > stringVec;
 
@@ -18,7 +19,6 @@ class Msg {
 	/*                               METHODS                                  */
 	bool processBuf();
 	std::string::size_type evalTerm() const;
-	stringVec vectorSplit(char del);
 	void clear();
 	void removeNl();
 	bool rplIs(const std::string &expected) const;

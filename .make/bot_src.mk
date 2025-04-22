@@ -12,6 +12,7 @@ SRC_ROOT:=	Bot.cpp \
 			Message.cpp \
 			Cmd.cpp \
 			Api.cpp \
+			Utils.cpp \
 
 # ----------------------------- BOT FILE BUILDING PATH ----------------------- #
 

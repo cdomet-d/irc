@@ -24,7 +24,7 @@ void RPL::send_(int fd, std::string reply) {
 	size_t bytes = send(fd, reply.c_str(), strlen(reply.c_str()),
 						MSG_EOR | MSG_DONTWAIT | MSG_NOSIGNAL);
 	if (bytes != strlen(reply.c_str()))
-		RPL::log(ERROR, "Not send in full: \t", reply);
+		RPL::log(ERROR, "Not sent in full: \t", reply);
 }
 
 void RPL::log(e_level level, std::string message) {

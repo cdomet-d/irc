@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/04/21 15:11:13 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/04/22 14:31:55 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -134,6 +134,7 @@ cleanbot:
 	@printf '$(CYBOLD)%.50s\n$(R)' "-- Cleaning bot & debug bot... ------------------------"
 	$(RM) $(BOT_BDIR)
 	$(RM) $(DEBUG_BOT_BDIR)
+	$(RM) *txt
 	@echo
 
 fcleanbot: cleanbot
@@ -150,6 +151,9 @@ rebot: fcleanbot bot
 clean:
 	@printf '$(CYBOLD)%.50s\n$(R)' "-- Cleaning everything... ------------------------"
 	$(RM) $(BUILD)
+	@printf '$(CYBOLD)%.50s\n$(R)' "-- Removing logs... ------------------------"
+	$(RM) *.txt
+	$(RM) *.log
 	@echo
 
 fclean: clean
@@ -159,8 +163,6 @@ fclean: clean
 	$(RM) $(NAME)
 	$(RM) $(DEBUG_NAME)
 	@echo
-	@printf '$(CYBOLD)%.50s\n$(R)' "-- Removing logs... -------------------"
-	$(RM) *.log
 	@echo
 
 re: fclean all bot
@@ -183,7 +185,7 @@ dbrun: debugbot
 	@if echo $(MAKECMDGOALS) | grep -q "6667"; then \
 		valgrind $(VFLAGS) ./$(BOT_DEBUG_NAME) 0.0.0.0 6667 0; \
 	else \
-		valgrind $(VFLAGS) ./$(BOT_DEBUG_NAME) 0.0.0.0 4444 0; \
+		valgrind $(VFLAGS) --trace-children=yes ./$(BOT_DEBUG_NAME) 0.0.0.0 4444 0; \
 	fi
 
 brun: bot

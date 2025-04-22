@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:54:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:21:23 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,16 @@ void kick(CmdSpec &cmd) {
 		target = cmd.serv_.findCli(fdTarget);
 
 		if (cmd[message_].size())
-			sendMessageChannel(
+			RPL::sendMessageChannel(
 				curChan.getCliInChan(),
 				RPL_KICK(sender->cliInfo.getPrefix(), curChan.getName(),
 						 target->cliInfo.getNick(), ":" + cmd[message_][0]));
 		else
-			sendMessageChannel(curChan.getCliInChan(),
-							   RPL_KICK(sender->cliInfo.getPrefix(),
-										curChan.getName(),
-										target->cliInfo.getNick(), ""));
+			RPL::sendMessageChannel(curChan.getCliInChan(),
+									RPL_KICK(sender->cliInfo.getPrefix(),
+											 curChan.getName(),
+											 target->cliInfo.getNick(), ""));
 		kickFromAllMap(target, curChan);
 	}
+	curChan.checkOnlyOperator(*sender);
 }

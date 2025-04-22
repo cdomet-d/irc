@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:54:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/21 18:31:55 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,20 +142,20 @@ void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 			negMode += cmd[flag_][nbFlag][1];
 	}
 	if (negMode.size() == 1) {
-		sendMessageChannel(curChan.getCliInChan(),
-						   RPL_MODE(sender->cliInfo.getPrefix(),
-									curChan.getName(), posMode,
-									newPassMaxCli));
+		RPL::sendMessageChannel(curChan.getCliInChan(),
+								RPL_MODE(sender->cliInfo.getPrefix(),
+										 curChan.getName(), posMode,
+										 newPassMaxCli));
 	} else if (posMode.size() == 1) {
-		sendMessageChannel(curChan.getCliInChan(),
-						   RPL_MODE(sender->cliInfo.getPrefix(),
-									curChan.getName(), negMode,
-									newPassMaxCli));
+		RPL::sendMessageChannel(curChan.getCliInChan(),
+								RPL_MODE(sender->cliInfo.getPrefix(),
+										 curChan.getName(), negMode,
+										 newPassMaxCli));
 	} else
-		sendMessageChannel(curChan.getCliInChan(),
-						   RPL_MODE(sender->cliInfo.getPrefix(),
-									curChan.getName(), posMode + negMode,
-									newPassMaxCli));
+		RPL::sendMessageChannel(curChan.getCliInChan(),
+								RPL_MODE(sender->cliInfo.getPrefix(),
+										 curChan.getName(), posMode + negMode,
+										 newPassMaxCli));
 }
 
 void mode(CmdSpec &cmd) {

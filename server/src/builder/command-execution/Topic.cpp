@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 14:29:45 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/21 18:32:01 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ void checkTopic(Channel &curChan, Client *curCli) {
 
 void changeTopic(Channel &curChan, Client *curCli, std::string topic) {
 	curChan.setTopic(topic);
-	sendMessageChannel(curChan.getCliInChan(),
-					   RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(),
-										curChan.getName(),
-										curChan.getTopic()));
+	RPL::sendMessageChannel(curChan.getCliInChan(),
+							RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(),
+											 curChan.getName(),
+											 curChan.getTopic()));
 }
 
 void topic(CmdSpec &cmd) {

@@ -3,26 +3,12 @@
 #include <algorithm>
 #include <iostream>
 
-void cmdParam(const stringVec &obj, std::string where) {
-	if (obj.empty())
-		return std::cout << where + ": [ ... ]" << std::endl, (void)false;
-	std::cout << "[" << std::endl;
-	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it) {
-		if ((*it).empty())
-			std::cout << "\t" + where + ":\t"
-					  << "[...]" << std::endl;
-		else
-			std::cout << "\t" + where + ":\t" << *it << std::endl;
-	}
-	std::cout << "]" << std::endl;
-}
-
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 Bot::Bot(int port, std::string pw, std::string servIp, char *envp[])
-	: log_("bot.log", std::ios::out), myChan_("#where-friends"), api(Api (envp)), port_(port),
-	  gSign(false), pw_(pw) {
+	: log_("bot.log", std::ios::out), myChan_("#where-friends"),
+	  api(Api(envp)), port_(port), gSign(false), pw_(pw) {
 	sockFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockFd == -1)
 		throw std::runtime_error("Socket init failed");
@@ -73,7 +59,8 @@ bool Bot::executeCmd() {
 				   false;
 		RPL::send_(sockFd, RPL_SUCCESS(target, msg_.cmdParam_[content_]));
 		if (!findLoginPos(msg_.cmdParam_[content_])) {
-			RPL::send_(sockFd, ERR_NOLOCATION(target, msg_.cmdParam_[content_]));
+			RPL::send_(sockFd,
+					   ERR_NOLOCATION(target, msg_.cmdParam_[content_]));
 			return (false);
 		}
 		RPL::send_(sockFd, RPL_LOCATION(target, api.getPos()));
@@ -85,7 +72,7 @@ bool Bot::findLoginPos(const std::string &login) {
 	if (!api.findSecret())
 		return (false);
 	if (!api.requestToken())
-		return (false);	
+		return (false);
 	if (!api.requestLocation(login))
 		return (false);
 	return (true);

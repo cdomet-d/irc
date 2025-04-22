@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:37:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/21 12:53:43 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:21:30 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,13 @@ void RPL::send_(int fd, std::string reply) {
 						MSG_EOR | MSG_DONTWAIT | MSG_NOSIGNAL);
 	if (bytes != strlen(reply.c_str()))
 		RPL::log(ERROR, "Not send in full: \t", reply);
+}
+
+void RPL::sendMessageChannel(clientMap allCliChannel,
+							 const std::string &message) {
+	for (clientMapIt it = allCliChannel.begin(); it != allCliChannel.end();
+		 ++it)
+		RPL::send_(it->second->getFd(), message);
 }
 
 void RPL::log(e_level level, std::string message) {

@@ -38,7 +38,7 @@ ssize_t Msg::_recv(const int fd) {
 bool Msg::processBuf() {
 	removeNl();
 	trimConsecutiveSpaces();
-	cmdParam_ = vectorSplit(' ');
+	cmdParam_ = vectorSplit(rcv_, ' ');
 	trimUsername();
 	return true;
 }
@@ -76,16 +76,6 @@ void Msg::trimConsecutiveSpaces() {
 		= std::unique(rcv_.begin(), rcv_.end(), isConsecutiveSpace);
 	if (newEnd != rcv_.end())
 		rcv_.erase(newEnd, rcv_.end());
-}
-
-stringVec Msg::vectorSplit(char del) {
-	stringVec result;
-	std::string token;
-
-	std::istringstream stream(rcv_);
-	while (std::getline(stream, token, del))
-		result.push_back(token);
-	return (result);
 }
 
 void Msg::clear() {

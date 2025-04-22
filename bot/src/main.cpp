@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:08:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/18 16:21:53 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:22:37 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <csignal>
 #include "Bot.hpp"
 #include "Cmd.hpp"
 #include "Reply.hpp"
+#include <csignal>
+#include <iostream>
 
 void sigHandler(int signum) {
 	(void)signum;
