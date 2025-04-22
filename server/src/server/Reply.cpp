@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:37:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:53:54 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:21:30 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 #include "Server.hpp"
 #include <ctime>
 #include <sys/socket.h>
+
+static bool doNotLog(const std::string &message) {
+	return (message.find("PING") != std::string::npos
+			|| message.find("PONG") != std::string::npos
+			|| message.find("WHO") != std::string::npos);
+}
 
 static std::string timeStamp() {
 	char time_buf[80];
@@ -30,10 +36,16 @@ void RPL::send_(int fd, std::string reply) {
 		RPL::log(ERROR, "Not send in full: \t", reply);
 }
 
+void RPL::sendMessageChannel(clientMap allCliChannel,
+							 const std::string &message) {
+	for (clientMapIt it = allCliChannel.begin(); it != allCliChannel.end();
+		 ++it)
+		RPL::send_(it->second->getFd(), message);
+}
+
 void RPL::log(e_level level, std::string message) {
 	Server &serv = Server::GetServerInstance(0, "");
-	if (message.find("PING") != std::string::npos
-		|| message.find("PONG") != std::string::npos)
+	if (doNotLog(message))
 		return;
 	if (serv.logfile.is_open()) {
 		switch (level) {

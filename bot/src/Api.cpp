@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Api.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 15:50:43 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/18 17:39:44 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:20:24 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ bool Api::requestToken() {
 	curlCmd_.push_back("POST");
 	curlCmd_.push_back("--data");
 	curlCmd_.push_back("grant_type=client_credentials&client_id=" + clientIUD_ +
-				  "&client_secret=" + secret_);
+					   "&client_secret=" + secret_);
 	curlCmd_.push_back(URL_ + "oauth/token");
 
 	if (!executeCmd())
@@ -89,15 +89,6 @@ bool Api::requestLocation(const std::string &login) {
 
 	if (!executeCmd())
 		return (false);
-	std::string user_id;
-	user_id = findStr("\"id\":");
-	if (user_id.empty())
-		return (false);
-
-	curlCmd_.pop_back();
-	curlCmd_.push_back(URL_ + "v2/locations?user_id=" + user_id);
-	if (!executeCmd())
-		return (false);
 	pos_ = findStr("\"location\":");
 	if (pos_.empty() || pos_ == "null")
 		return (false);
@@ -117,7 +108,7 @@ std::string Api::findStr(const std::string &strToFind) {
 	}
 	getline(infile_, str, '\0');
 	if (infile_.fail() || infile_.bad()) {
-		RPL::log(RPL::ERROR, "Error reading res.txt\r\n");
+		RPL::log(RPL::ERROR, "could not read res.txt\r\n");
 		return ("");
 	}
 
@@ -173,8 +164,8 @@ void Api::cleanChild(int exitCode) {
 		close(resFd_);
 	if (cmd_ != NULL) {
 		for (size_t i = 0; cmd_[i]; i++)
-			free(cmd_[i]);
-		free(cmd_);
+			std::free(cmd_[i]);
+		std::free(cmd_);
 	}
 	close(0);
 	close(1);
@@ -210,7 +201,7 @@ bool Api::findCurlPath() {
 }
 
 bool Api::fillCmd(void) {
-	cmd_ = (char **)malloc(sizeof(char *) * (curlCmd_.size() + 1));
+	cmd_ = (char **)std::malloc(sizeof(char *) * (curlCmd_.size() + 1));
 	if (cmd_ == NULL)
 		return (false);
 	for (size_t i = 0; i < curlCmd_.size(); ++i) {
@@ -232,7 +223,8 @@ bool Api::curlStatus(int status) {
 		int exitCode = WEXITSTATUS(status);
 		if (exitCode != 0) {
 			std::string errorMess = strerror(exitCode);
-			RPL::log(RPL::ERROR, "Curl command failed because: " + errorMess);
+			RPL::log(RPL::ERROR,
+					 "Curl command failed: " + errorMess + "\r\n");
 			return (false);
 		}
 	} else if (WIFSIGNALED(status)) {

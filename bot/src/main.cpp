@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:08:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/18 16:21:53 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:22:37 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <csignal>
 #include "Bot.hpp"
 #include "Cmd.hpp"
 #include "Reply.hpp"
+#include <csignal>
+#include <iostream>
 
 void sigHandler(int signum) {
 	(void)signum;
@@ -25,9 +25,10 @@ void sigHandler(int signum) {
 
 int main(int ac, char *av[], char *envp[]) {
 	if (ac != 4)
-		return std::cerr << "Usage: ./ircbot <server IP> <server port> <server "
-							"password>"
-						 << std::endl,
+		return std::cerr
+				   << "Usage: ./ircbot <server IP> <server port> <server "
+					  "password>"
+				   << std::endl,
 			   1;
 
 	struct sigaction sa;
@@ -49,8 +50,7 @@ int main(int ac, char *av[], char *envp[]) {
 			if (bytes == 0) {
 				if (!bot.registrationSequence())
 					return 1;
-			}
-			else
+			} else
 				bot.executeCmd();
 		}
 	} catch (std::runtime_error &e) { std::cerr << e.what() << std::endl; }

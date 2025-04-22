@@ -1,6 +1,6 @@
 # ----------------------------- FORMATTING ----------------------------------- #
 
-PIBOLD= $(BO)$(M)
+MABOLD= $(BO)$(M)
 BLBOLD= $(BO)$(B)
 CYBOLD= $(BO)$(C)
 PIBOLD= $(BO)$(P)
@@ -31,7 +31,7 @@ C=\033[0;36m
 # white
 W=\033[0;37m
 # pink
-P=\033[38;5;206m.
+P=\033[38;5;206m
 
 # Background
 BG_RED=\033[41m
