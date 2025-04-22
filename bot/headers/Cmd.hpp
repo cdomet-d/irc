@@ -8,6 +8,7 @@ namespace cmd {
 	void acceptInvite(const int fd, const std::string &target);
 	void disconnect(Bot &bot);
 	bool parseLogin(std::string &login);
+	void man(Bot &bot, const std::string &target);
 } // namespace cmd
 
 #endif

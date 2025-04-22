@@ -14,7 +14,7 @@
 #include "validator.hpp"
 
 bool check::len(CmdSpec &cmd, size_t idx) {
-	std::string cmdName[5] = {"JOIN", "NICK", "USER", "TOPIC", "KICK"};
+	std::string cmdName[5] = { "JOIN", "NICK", "USER", "TOPIC", "KICK" };
 	size_t i = 0;
 	while (i < 5 && cmdName[i] != cmd.getName())
 		i++;
@@ -43,9 +43,9 @@ bool check::user(CmdSpec &cmd, size_t idx) {
 	if (!check::nick_::syntaxIsValid(cmd[username_][idx], cmd.getSender()))
 		return false;
 	if (cmd[hostname_][idx] != "0" || cmd[servername_][idx] != "*") {
-		std::string reply = cmd[username_][idx] + " " + cmd[hostname_][idx] +
-							" " + cmd[servername_][idx] + " " +
-							cmd[realname_][idx];
+		std::string reply = cmd[username_][idx] + " " + cmd[hostname_][idx]
+							+ " " + cmd[servername_][idx] + " "
+							+ cmd[realname_][idx];
 		RPL::send_(cmd.getSdFd(),
 				   ERR_BADINPUT(cmd.getName(), USERFORMAT, reply));
 		return false;
@@ -81,8 +81,8 @@ bool check::invite(CmdSpec &cmd, size_t idx) {
 bool check::enoughParams(CmdSpec &cmd, size_t idx) {
 	while (idx < cmd.getParams().size()) {
 		CmdParam &innerParam = *cmd.getParams()[idx].second;
-		if (!innerParam.isOpt() &&
-			(innerParam.empty() || innerParam[0].empty())) {
+		if (!innerParam.isOpt()
+			&& (innerParam.empty() || innerParam[0].empty())) {
 			RPL::send_(cmd.getSdFd(),
 					   ERR_NEEDMOREPARAMS(cmd.getSdNick(), cmd.getName()));
 			return (false);

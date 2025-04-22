@@ -22,8 +22,7 @@
 /* ************************************************************************** */
 
 Server::Server(int port, std::string password)
-	: logfile("serv_.log", std::ios::out), port_(port),
-	  pass_(password) {
+	: logfile("serv_.log", std::ios::out), port_(port), pass_(password) {
 	std::cout << "Server instance created" << std::endl;
 }
 
@@ -194,12 +193,13 @@ void Server::removeCli(Client *curCli) {
 void Server::checkChanInviteList(Client *sender) {
 	for (channelMapIt chan = channels_.begin(); chan != channels_.end();
 		 ++chan) {
-		if (chan->second->getInvitCli().find(sender->getFd()) !=
-			chan->second->getInvitCli().end())
+		if (chan->second->getInvitCli().find(sender->getFd())
+			!= chan->second->getInvitCli().end())
 			RPL::send_(sender->getFd(),
 					   RPL_INVITELIST(sender->cliInfo.getNick(), chan->first));
 	}
-	RPL::send_(sender->getFd(), RPL_ENDOFINVITELIST(sender->cliInfo.getNick()));
+	RPL::send_(sender->getFd(),
+			   RPL_ENDOFINVITELIST(sender->cliInfo.getNick()));
 }
 
 Client *Server::findCli(int fd) {
