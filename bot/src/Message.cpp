@@ -38,7 +38,7 @@ ssize_t Msg::_recv(const int fd) {
 bool Msg::processBuf() {
 	removeNl();
 	trimConsecutiveSpaces();
-	cmdParam_ = vectorSplit(' ');
+	cmdParam_ = vectorSplit(rcv_, ' ');
 	trimUsername();
 	return true;
 }
@@ -46,6 +46,7 @@ bool Msg::processBuf() {
 /* ************************************************************************** */
 /*                               UTILS                                        */
 /* ************************************************************************** */
+
 static bool isConsecutiveSpace(char left, char right) {
 	return (left == ' ' && right == ' ');
 }
@@ -77,25 +78,14 @@ void Msg::trimConsecutiveSpaces() {
 		rcv_.erase(newEnd, rcv_.end());
 }
 
-stringVec Msg::vectorSplit(char del) {
-	stringVec result;
-	std::string token;
-
-	std::istringstream stream(rcv_);
-	while (std::getline(stream, token, del))
-		result.push_back(token);
-	return (result);
-}
-
 void Msg::clear() {
 	memset(rcvbuf, 0, sizeof(rcvbuf));
 	rcv_.clear();
 }
 
 void Msg::clearCmdParam() {
-	for (stringVec::iterator i = cmdParam_.begin(); i != cmdParam_.end();) {
+	for (stringVec::iterator i = cmdParam_.begin(); i != cmdParam_.end();)
 		cmdParam_.erase(i);
-	}
 	cmdParam_.clear();
 }
 

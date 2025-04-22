@@ -22,12 +22,14 @@ class Bot {
 	bool registration();
 	bool registrationSequence();
 	bool requestConnection();
+	void clearMembers();
 	ssize_t receive();
 
 	/*                               GETTERS                                  */
 	int getFd() const;
 	bool getSignal() const;
 	const stringVec &getMembers() const;
+	const std::string getTarget() const;
 
 	/*                               SETTERS                                  */
 	void setSignal(const bool signum);
@@ -39,9 +41,10 @@ class Bot {
   private:
 	/*                               MEMBERS                                  */
 
-	// param e_param;
-	Msg msg;
-	stringVec chanMembers;
+	// param e_param_;
+	Msg msg_;
+	stringVec members_;
+	const std::string myChan_;
 	Api api;
 
 	int port_;

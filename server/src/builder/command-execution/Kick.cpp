@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/21 18:31:53 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:21:23 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,5 @@ void kick(CmdSpec &cmd) {
 											 target->cliInfo.getNick(), ""));
 		kickFromAllMap(target, curChan);
 	}
+	curChan.checkOnlyOperator(*sender);
 }
