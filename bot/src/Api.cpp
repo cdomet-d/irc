@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 15:50:43 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/22 11:38:16 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:09:40 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ bool Api::requestToken() {
 	curlCmd_.push_back("POST");
 	curlCmd_.push_back("--data");
 	curlCmd_.push_back("grant_type=client_credentials&client_id=" + clientIUD_ +
-				  "&client_secret=" + secret_);
+					   "&client_secret=" + secret_);
 	curlCmd_.push_back(URL_ + "oauth/token");
 
 	if (!executeCmd())
@@ -208,7 +208,7 @@ bool Api::findCurlPath() {
 		curlPath_ += "/curl";
 		if (access(curlPath_.c_str(), X_OK) == 0)
 			return (true);
-		pathVar.erase(0, i + 1);
+		pathVar.erase(0, pos + 1);
 		curlPath_.clear();
 	}
 	RPL::log(RPL::ERROR, "could not find path\r\n");
@@ -238,7 +238,8 @@ bool Api::curlStatus(int status) {
 		int exitCode = WEXITSTATUS(status);
 		if (exitCode != 0) {
 			std::string errorMess = strerror(exitCode);
-			RPL::log(RPL::ERROR, "Curl command failed because: " + errorMess);
+			RPL::log(RPL::ERROR,
+					 "Curl command failed because: " + errorMess + "\r\n");
 			return (false);
 		}
 	} else if (WIFSIGNALED(status)) {
