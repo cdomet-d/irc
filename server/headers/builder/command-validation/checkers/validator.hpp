@@ -57,7 +57,7 @@ namespace check {
 		bool hasInvite(Channel &chan, Client &sender);
 		bool validKey(Channel &chan, CmdParam &keys, size_t i, Client &sender);
 		bool chanHasRoom(Channel &chan, Client &sender);
-		bool cliHasMaxChans(Channel &chan, Client &sender);
+		bool cliHasMaxChans(CmdSpec &cmd, size_t idx);
 		bool syntaxIsValid(CmdSpec &cmd, size_t idx);
 	} // namespace join_
 
