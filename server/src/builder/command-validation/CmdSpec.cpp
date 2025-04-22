@@ -64,6 +64,10 @@ bool CmdSpec::checkRegistrationStage() {
 	return (true);
 }
 
+/* Assesses the current command state:
+	- can it be run ? 
+	- does it have enough parameters ? 
+	- runs the appropriate checkers on the parameter list */
 CmdSpec &CmdSpec::process(Client &sender) {
 
 	setSender(sender);
@@ -89,55 +93,56 @@ void CmdSpec::cleanAll() {
 	valid_ = true;
 }
 
-static std::string enumToString(e_param color) {
-	switch (color) {
-	case 0:
-		return "channel";
-	case 1:
-		return "hostname";
-	case 2:
-		return "key";
-	case 3:
-		return "message";
-	case 4:
-		return "flag";
-	case 5:
-		return "flagArg";
-	case 6:
-		return "nickname";
-	case 7:
-		return "password";
-	case 8:
-		return "realname";
-	case 9:
-		return "servername";
-	case 10:
-		return "target";
-	case 11:
-		return "topic";
-	case 12:
-		return "username";
-	default:
-		return "Unknown";
-	}
-}
 
-void CmdSpec::displayParams(const std::string &where) {
-	std::cout << "Params in:" + where + "\n";
-	for (paramMap::iterator i = params_.begin(); i != params_.end(); i++) {
-		try {
-			for (size_t index = 0; index < (*i->second).size(); index++) {
-				std::cout << "param[" << enumToString(i->first) << "]"
-						  << "[" << index << "] : " << (*i->second)[index]
-						  << std::endl;
-			}
-		} catch (const std::out_of_range &e) {
-			std::cerr << e.what() << std::endl;
-		}
-		std::cout << "\n";
-	}
-	std::cout << "\n";
-}
+// void CmdSpec::displayParams(const std::string &where) {
+// 	std::cout << "Params in:" + where + "\n";
+// 	for (paramMap::iterator i = params_.begin(); i != params_.end(); i++) {
+// 		try {
+// 			for (size_t index = 0; index < (*i->second).size(); index++) {
+// 				std::cout << "param[" << enumToString(i->first) << "]"
+// 						  << "[" << index << "] : " << (*i->second)[index]
+// 						  << std::endl;
+// 			}
+// 		} catch (const std::out_of_range &e) {
+// 			std::cerr << e.what() << std::endl;
+// 		}
+// 		std::cout << "\n";
+// 	}
+// 	std::cout << "\n";
+// }
+
+// static std::string enumToString(e_param color) {
+// 	switch (color) {
+// 	case 0:
+// 		return "channel";
+// 	case 1:
+// 		return "hostname";
+// 	case 2:
+// 		return "key";
+// 	case 3:
+// 		return "message";
+// 	case 4:
+// 		return "flag";
+// 	case 5:
+// 		return "flagArg";
+// 	case 6:
+// 		return "nickname";
+// 	case 7:
+// 		return "password";
+// 	case 8:
+// 		return "realname";
+// 	case 9:
+// 		return "servername";
+// 	case 10:
+// 		return "target";
+// 	case 11:
+// 		return "topic";
+// 	case 12:
+// 		return "username";
+// 	default:
+// 		return "Unknown";
+// 	}
+// }
 
 /* ************************************************************************** */
 /*                               GETTERS                                      */
