@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:08:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/22 16:21:07 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:22:37 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "Reply.hpp"
 #include <csignal>
 #include <iostream>
-#include <stdlib.h>
 
 void sigHandler(int signum) {
 	(void)signum;
