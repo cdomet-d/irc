@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/04/15 14:29:20 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/04/18 11:25:55 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ DEBUG_NAME:= d-ircserv
 BOT_NAME:= ircbot
 
 CC:=c++
-CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow
+CFLAGS:= -std=c++98 -Werror -Wextra -Wall -Wshadow -g3
 DFLAGS:= -std=c++98 -Wextra -Wall -Wshadow -g3
 MAKEFLAGS:=--no-print-directory
 VFLAGS:= --leak-check=full --log-file="val.log" --show-leak-kinds=all --track-fds=yes
@@ -130,9 +130,11 @@ fclean: clean
 	@echo
 
 	@printf '$(CYBOLD)%.30s\n$(R)' "-- Removing logs... -----------------------"
-	$(RM) raw.log
-	$(RM) val.log
+	$(RM) *.log
 	@echo
+
+clearlog: 
+	$(RM) *.log
 
 re: fclean all
 
@@ -153,7 +155,6 @@ track:
 	bash .scripts/track-remote-branches.sh
 
 run: all
-	$(RM) raw.log
 	@if echo $(MAKECMDGOALS) | grep -q "6667"; then \
 		./$(NAME) 6667 0; \
 	else \
@@ -161,9 +162,11 @@ run: all
 	fi
 
 drun: debug
-	$(RM) raw.log
 	valgrind $(VFLAGS) ./$(DEBUG_NAME) 4444 0
 
+brun: bot
+	valgrind $(VFLAGS) ./$(BOT_NAME) 0.0.0.0 4444 0
+	
 format:
 	@printf '$(CYBOLD)%.30s\n$(R)' "-- Formatting... --------------------------"
 	bash .scripts/format-all.sh 
