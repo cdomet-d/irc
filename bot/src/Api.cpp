@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Api.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 15:50:43 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/22 16:20:24 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:07:58 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,14 +222,15 @@ bool Api::curlStatus(int status) {
 	if (WIFEXITED(status)) {
 		int exitCode = WEXITSTATUS(status);
 		if (exitCode != 0) {
-			std::string errorMess = strerror(exitCode);
+			std::string errorMess = std::strerror(exitCode);
 			RPL::log(RPL::ERROR,
 					 "Curl command failed: " + errorMess + "\r\n");
 			return (false);
 		}
+		//TODO fix variable signal in log
 	} else if (WIFSIGNALED(status)) {
-		int signal = WTERMSIG(status);
-		RPL::log(RPL::ERROR, "Curl process terminated by signal: " + signal);
+	//	int signal = WTERMSIG(status);
+		RPL::log(RPL::ERROR, "Curl process terminated by signal: "); //here
 		return (false);
 	}
 	return (true);

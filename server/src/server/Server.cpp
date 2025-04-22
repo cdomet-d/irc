@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/16 12:05:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:47:58 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,7 @@ bool Server::servRun() {
 	int nbFds;
 
 	std::cout << "Server listening on port " << port_
-			  << " | IP adress: " << inet_ntoa(servAddr_.sin_addr)
-			  << std::endl;
+			  << " | IP adress: " << inet_ntoa(servAddr_.sin_addr) << std::endl;
 	while (gSign == false) {
 		nbFds = epoll_wait(epollFd_, events_, MAX_EVENTS, -1);
 		if (nbFds == -1 && gSign == false)
@@ -91,8 +90,8 @@ bool Server::servRun() {
 		for (int i = 0; i < nbFds; i++) {
 			if (events_[i].data.fd == servFd_)
 				acceptClient();
-			else if (handleData(events_[i].data.fd) == false)
-				return (true);
+			else
+				handleData(events_[i].data.fd);
 		}
 	}
 	return (true);
@@ -110,61 +109,53 @@ void Server::acceptClient() {
 
 		if (newCli->getFd() == -1)
 			throw Server::InitFailed(
-				const_cast< const char * >(strerror(errno)));
+				const_cast< const char * >(std::strerror(errno)));
 
-		char client_ip[INET_ADDRSTRLEN];
-		inet_ntop(AF_INET, &(newCli->cliAddr_.sin_addr), client_ip,
-				  INET_ADDRSTRLEN);
+		char *client_ip = inet_ntoa(newCli->cliAddr_.sin_addr);
+		if (!client_ip) {
+			close(newCli->getFd());
+			throw Server::InitFailed("IP conversion failed");
+		}
 		newCli->cliInfo.setIP(client_ip);
-
-		char hostname[NI_MAXHOST];
-		int result = getnameinfo((struct sockaddr *)&newCli->cliAddr_, cliLen,
-								 hostname, NI_MAXHOST, NULL, 0, 0);
-		if (result == 0)
-			newCli->cliInfo.setHostname(hostname);
-		else
-			newCli->cliInfo.setHostname(client_ip); // Use IP as fallback
-
+		newCli->cliInfo.setHostname("localhost");
 		// TODO: not throw an exeption when a client cannot connect: it can't kill
 		// the server.
 		if (fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK) == -1) {
 			close(newCli->getFd());
 			throw Server::InitFailed(
-				const_cast< const char * >(strerror(errno)));
+				const_cast< const char * >(std::strerror(errno)));
 		}
 		cliEpollTemp.events = EPOLLIN | EPOLLOUT;
 		cliEpollTemp.data.fd = newCli->getFd();
 		newCli->setCliEpoll(cliEpollTemp);
 
 		if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, newCli->getFd(),
-					  newCli->getCliEpoll())
-			== -1) {
+					  newCli->getCliEpoll()) == -1) {
 			close(newCli->getFd());
 			throw Server::InitFailed(
-				const_cast< const char * >(strerror(errno)));
+				const_cast< const char * >(std::strerror(errno)));
 		}
 
 		clients_.insert(clientPair(newCli->getFd(), newCli));
-		usedNicks_.insert(
-			nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
+		usedNicks_.insert(nickPair(newCli->cliInfo.getNick(), newCli->getFd()));
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected\n";
 		RPL::log(RPL::INFO, ss.str());
 	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
 }
 
-bool Server::handleData(int fd) {
+void Server::handleData(int fd) {
 	char tmpBuf[1024];
-	memset(tmpBuf, 0, sizeof(tmpBuf));
+	std::memset(tmpBuf, 0, sizeof(tmpBuf));
 	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, MSG_DONTWAIT);
 
 	Client *curCli = clients_.find(fd)->second;
 	if (bytes == 0) {
 		curCli->mess.setMess("QUIT\n");
 		buffer_manip::prepareCommand(*curCli);
-		return (true);
+		return;
 	} else if (bytes == -1)
-		return (true);
+		return;
 	else {
 		std::string inputCli = curCli->mess.getMess();
 		inputCli.append(tmpBuf);
@@ -174,7 +165,6 @@ bool Server::handleData(int fd) {
 			buffer_manip::prepareCommand(*curCli);
 		}
 	}
-	return (true);
 }
 
 void Server::addChan(Channel *curChan) {
@@ -193,13 +183,12 @@ void Server::removeCli(Client *curCli) {
 void Server::checkChanInviteList(Client *sender) {
 	for (channelMapIt chan = channels_.begin(); chan != channels_.end();
 		 ++chan) {
-		if (chan->second->getInvitCli().find(sender->getFd())
-			!= chan->second->getInvitCli().end())
+		if (chan->second->getInvitCli().find(sender->getFd()) !=
+			chan->second->getInvitCli().end())
 			RPL::send_(sender->getFd(),
 					   RPL_INVITELIST(sender->cliInfo.getNick(), chan->first));
 	}
-	RPL::send_(sender->getFd(),
-			   RPL_ENDOFINVITELIST(sender->cliInfo.getNick()));
+	RPL::send_(sender->getFd(), RPL_ENDOFINVITELIST(sender->cliInfo.getNick()));
 }
 
 Client *Server::findCli(int fd) {

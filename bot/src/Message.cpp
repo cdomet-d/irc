@@ -1,5 +1,6 @@
 #include "Message.hpp"
 #include <algorithm>
+#include <cstring>
 #include <iostream>
 #include <sstream>
 #include <string.h>
@@ -79,7 +80,7 @@ void Msg::trimConsecutiveSpaces() {
 }
 
 void Msg::clear() {
-	memset(rcvbuf, 0, sizeof(rcvbuf));
+	std::memset(rcvbuf, 0, sizeof(rcvbuf));
 	rcv_.clear();
 }
 

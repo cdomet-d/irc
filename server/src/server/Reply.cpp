@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:37:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/22 16:21:30 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:08:07 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,15 @@ static bool doNotLog(const std::string &message) {
 static std::string timeStamp() {
 	char time_buf[80];
 	time_t now = time(0);
-	strftime(time_buf, sizeof(time_buf), "%d-%m-%Y %H:%M:%S", localtime(&now));
+	std::strftime(time_buf, sizeof(time_buf), "%d-%m-%Y %H:%M:%S", std::localtime(&now));
 	return (time_buf);
 }
 
 void RPL::send_(int fd, std::string reply) {
 	RPL::log(RPL::REPLY, reply);
-	size_t bytes = send(fd, reply.c_str(), strlen(reply.c_str()),
+	size_t bytes = send(fd, reply.c_str(), reply.size(),
 						MSG_EOR | MSG_DONTWAIT | MSG_NOSIGNAL);
-	if (bytes != strlen(reply.c_str()))
+	if (bytes != reply.size())
 		RPL::log(ERROR, "Not send in full: \t", reply);
 }
 

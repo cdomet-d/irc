@@ -15,15 +15,15 @@ static bool doNotLog(const std::string &message) {
 static std::string ts() {
 	char time_buf[80];
 	time_t now = time(0);
-	strftime(time_buf, sizeof(time_buf), "%d-%m-%Y %H:%M:%S", localtime(&now));
+	std::strftime(time_buf, sizeof(time_buf), "%d-%m-%Y %H:%M:%S", std::localtime(&now));
 	return (time_buf);
 }
 
 void RPL::send_(int fd, std::string reply) {
 	RPL::log(RPL::REPLY, reply);
-	size_t bytes = send(fd, reply.c_str(), strlen(reply.c_str()),
+	size_t bytes = send(fd, reply.c_str(), reply.size(),
 						MSG_EOR | MSG_DONTWAIT | MSG_NOSIGNAL);
-	if (bytes != strlen(reply.c_str()))
+	if (bytes != reply.size())
 		RPL::log(ERROR, "Not sent in full: \t", reply);
 }
 
