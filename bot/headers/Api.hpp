@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Api.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 16:51:31 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/18 16:59:32 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/22 15:38:58 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <vector>
+#include "Reply.hpp"
+#include <cstdlib>
+#include "Utils.hpp"
 
 class Api {
   public:

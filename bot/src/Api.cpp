@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 15:50:43 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/22 15:16:11 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 15:39:27 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,17 +189,11 @@ bool Api::findCurlPath() {
 		RPL::log(RPL::ERROR, "could not find path\r\n");
 		return (false);
 	}
-
-	size_t pos = 0;
-	for (size_t i = 0; i < pathVar.size(); i++) {
-		pos = pathVar.find(":");
-		if (pos == std::string::npos)
-			pos = pathVar.size();
-		curlPath_.assign(pathVar, 0, pos);
-		curlPath_ += "/curl";
+	stringVec paths = vectorSplit(pathVar, ':');
+	for (size_t i = 0; i < paths.size(); i++) {
+		curlPath_ = paths[i] + "/curl";
 		if (access(curlPath_.c_str(), X_OK) == 0)
 			return (true);
-		pathVar.erase(0, pos + 1);
 		curlPath_.clear();
 	}
 	RPL::log(RPL::ERROR, "could not find path\r\n");
