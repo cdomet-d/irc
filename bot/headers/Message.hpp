@@ -8,7 +8,7 @@
 
 typedef std::vector< std::string > stringVec;
 
-enum param { prefix_, cmd_, target_, msg_ };
+enum param { prefix_, cmd_, target_, content_ };
 
 class Msg {
   public:
