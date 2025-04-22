@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:54:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/22 09:28:13 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,6 @@ void kick(CmdSpec &cmd) {
 										curChan.getName(),
 										target->cliInfo.getNick(), ""));
 		kickFromAllMap(target, curChan);
+		curChan.checkOnlyOperator(*sender);
 	}
 }
