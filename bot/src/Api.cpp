@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 15:50:43 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/22 13:09:40 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 15:16:11 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,15 +89,6 @@ bool Api::requestLocation(const std::string &login) {
 
 	if (!executeCmd())
 		return (false);
-	std::string user_id;
-	user_id = findStr("\"id\":");
-	if (user_id.empty())
-		return (false);
-
-	curlCmd_.pop_back();
-	curlCmd_.push_back(URL_ + "v2/locations?user_id=" + user_id);
-	if (!executeCmd())
-		return (false);
 	pos_ = findStr("\"location\":");
 	if (pos_.empty() || pos_ == "null")
 		return (false);
@@ -117,7 +108,7 @@ std::string Api::findStr(const std::string &strToFind) {
 	}
 	getline(infile_, str, '\0');
 	if (infile_.fail() || infile_.bad()) {
-		RPL::log(RPL::ERROR, "Error reading res.txt\r\n");
+		RPL::log(RPL::ERROR, "could not read res.txt\r\n");
 		return ("");
 	}
 
@@ -239,12 +230,12 @@ bool Api::curlStatus(int status) {
 		if (exitCode != 0) {
 			std::string errorMess = strerror(exitCode);
 			RPL::log(RPL::ERROR,
-					 "Curl command failed because: " + errorMess + "\r\n");
+					 "Curl command failed: " + errorMess + "\r\n");
 			return (false);
 		}
 	} else if (WIFSIGNALED(status)) {
 		int signal = WTERMSIG(status);
-		RPL::log(RPL::ERROR, "Curl process terminated by signal: " + signal);
+		RPL::log(RPL::ERROR, "Curl process terminated by signal: ");
 		return (false);
 	}
 	return (true);

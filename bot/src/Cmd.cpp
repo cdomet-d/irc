@@ -1,16 +1,6 @@
 #include "Cmd.hpp"
 #include "Reply.hpp"
 
-// static bool isLowercase(const std::string &login) {
-// 	for (std::string::const_iterator it = login.begin(); it != login.end();
-// 		 ++it) {
-// 		// '-' replaces spaces in composite last names at 42 and so must be allowed
-// 		if (!islower(*it) && *it != '-')
-// 			return false;
-// 	}
-// 	return true;
-// }
-
 void cmd::man(Bot &bot, const std::string &target) {
 	RPL::send_(bot.getFd(), MAN(target));
 }
@@ -32,8 +22,7 @@ void cmd::disconnect(Bot &bot) {
 	RPL::send_(bot.getFd(), QUIT);
 }
 
-/* ensures that the leading ! is present and that the login is composed of 
-lowercase characters or '-' ; removes leading :! */
+/* ensures that the leading ! is present; removes leading :! */
 bool cmd::parseLogin(std::string &login) {
 	if (login.empty() || login.size() > 10 || login.size() < 2)
 		return false;
@@ -42,7 +31,5 @@ bool cmd::parseLogin(std::string &login) {
 	if (login.at(0) != '!')
 		return false;
 	login.erase(login.begin());
-	if (!isLowercase(login))
-		return false;
 	return true;
 }
