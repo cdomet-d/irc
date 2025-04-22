@@ -27,7 +27,8 @@
 #include <unistd.h>
 #include <vector>
 #include "Reply.hpp"
-# include <cstdlib>
+#include <cstdlib>
+#include "Utils.hpp"
 
 class Api {
   public:
