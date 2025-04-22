@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:53:44 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:46:35 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int main(int ac, char *av[]) {
 
 	signal(SIGINT, SignalHandler);
 	signal(SIGQUIT, SignalHandler);
-	int port = atoi(av[1]); // TODO: protect atoi from overflow
+	int port = std::atoi(av[1]); // TODO: protect std::atoi from overflow
 	std::string password = av[2];
 
 	Server &server = Server::GetServerInstance(port, password);

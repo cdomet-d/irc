@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/22 16:42:20 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:47:58 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void Server::acceptClient() {
 
 		if (newCli->getFd() == -1)
 			throw Server::InitFailed(
-				const_cast< const char * >(strerror(errno)));
+				const_cast< const char * >(std::strerror(errno)));
 
 		char *client_ip = inet_ntoa(newCli->cliAddr_.sin_addr);
 		if (!client_ip) {
@@ -123,7 +123,7 @@ void Server::acceptClient() {
 		if (fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK) == -1) {
 			close(newCli->getFd());
 			throw Server::InitFailed(
-				const_cast< const char * >(strerror(errno)));
+				const_cast< const char * >(std::strerror(errno)));
 		}
 		cliEpollTemp.events = EPOLLIN | EPOLLOUT;
 		cliEpollTemp.data.fd = newCli->getFd();
@@ -133,7 +133,7 @@ void Server::acceptClient() {
 					  newCli->getCliEpoll()) == -1) {
 			close(newCli->getFd());
 			throw Server::InitFailed(
-				const_cast< const char * >(strerror(errno)));
+				const_cast< const char * >(std::strerror(errno)));
 		}
 
 		clients_.insert(clientPair(newCli->getFd(), newCli));
@@ -146,7 +146,7 @@ void Server::acceptClient() {
 
 void Server::handleData(int fd) {
 	char tmpBuf[1024];
-	memset(tmpBuf, 0, sizeof(tmpBuf));
+	std::memset(tmpBuf, 0, sizeof(tmpBuf));
 	ssize_t bytes = recv(fd, tmpBuf, sizeof(tmpBuf) - 1, MSG_DONTWAIT);
 
 	Client *curCli = clients_.find(fd)->second;
