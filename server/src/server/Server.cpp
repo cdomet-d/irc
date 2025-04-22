@@ -102,7 +102,7 @@ bool Server::servRun() {
 void Server::acceptClient() {
 	try {
 		Client *newCli = new Client();
-		newCli->cliInfo.setRegistration(0);
+		// newCli->cliInfo.setRegistration(0);
 
 		struct epoll_event cliEpollTemp;
 		socklen_t cliLen = sizeof(newCli->cliAddr_);
