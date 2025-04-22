@@ -208,7 +208,7 @@ bool Api::findCurlPath() {
 		curlPath_ += "/curl";
 		if (access(curlPath_.c_str(), X_OK) == 0)
 			return (true);
-		pathVar.erase(0, i + 1);
+		pathVar.erase(0, pos + 1);
 		curlPath_.clear();
 	}
 	RPL::log(RPL::ERROR, "could not find path\r\n");
