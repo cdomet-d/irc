@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 13:37:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/22 17:04:45 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:08:07 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,13 @@ void RPL::send_(int fd, std::string reply) {
 						MSG_EOR | MSG_DONTWAIT | MSG_NOSIGNAL);
 	if (bytes != reply.size())
 		RPL::log(ERROR, "Not send in full: \t", reply);
+}
+
+void RPL::sendMessageChannel(clientMap allCliChannel,
+							 const std::string &message) {
+	for (clientMapIt it = allCliChannel.begin(); it != allCliChannel.end();
+		 ++it)
+		RPL::send_(it->second->getFd(), message);
 }
 
 void RPL::log(e_level level, std::string message) {

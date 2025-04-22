@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:54:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/21 18:31:58 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,10 @@ void partOneChan(Client *sender, Channel &curChan) {
 }
 
 void partMess(Client *sender, Channel &curChan, const std::string &message) {
-	if (!message.size())
-		sendMessageChannel(
-			curChan.getCliInChan(),
-			RPL_PARTNOREASON(sender->cliInfo.getPrefix(), curChan.getName()));
-	else {
-		sendMessageChannel(curChan.getCliInChan(),
-						   RPL_PARTREASON(sender->cliInfo.getPrefix(),
-										  curChan.getName(), ":" + message));
-	}
+	std::string reason = (message.empty() ? "Bye!" : message);
+	RPL::sendMessageChannel(curChan.getCliInChan(),
+							RPL_PARTREASON(sender->cliInfo.getPrefix(),
+										   curChan.getName(), ":" + message));
 }
 
 void part(CmdSpec &cmd) {

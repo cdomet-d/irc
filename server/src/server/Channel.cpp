@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 14:30:06 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/21 18:30:37 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,6 @@ Channel::~Channel() {
 /* ************************************************************************** */
 /*                               METHODS                                      */
 /* ************************************************************************** */
-
-void sendMessageChannel(clientMap allCliChannel, std::string message) {
-	for (clientMapIt it = allCliChannel.begin(); it != allCliChannel.end();
-		 ++it) {
-		RPL::send_(it->second->getFd(), message);
-	}
-}
 
 bool Channel::addClientToChan(Channel *curChan, Client *sender) {
 	curChan->addCli(ALLCLI, sender);

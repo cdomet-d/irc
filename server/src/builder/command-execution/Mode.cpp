@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/22 16:55:43 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:08:02 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,20 +142,20 @@ void buildNewModeString(CmdSpec &cmd, Channel &curChan, Client *sender) {
 			negMode += cmd[flag_][nbFlag][1];
 	}
 	if (negMode.size() == 1) {
-		sendMessageChannel(curChan.getCliInChan(),
-						   RPL_MODE(sender->cliInfo.getPrefix(),
-									curChan.getName(), posMode,
-									newPassMaxCli));
+		RPL::sendMessageChannel(curChan.getCliInChan(),
+								RPL_MODE(sender->cliInfo.getPrefix(),
+										 curChan.getName(), posMode,
+										 newPassMaxCli));
 	} else if (posMode.size() == 1) {
-		sendMessageChannel(curChan.getCliInChan(),
-						   RPL_MODE(sender->cliInfo.getPrefix(),
-									curChan.getName(), negMode,
-									newPassMaxCli));
+		RPL::sendMessageChannel(curChan.getCliInChan(),
+								RPL_MODE(sender->cliInfo.getPrefix(),
+										 curChan.getName(), negMode,
+										 newPassMaxCli));
 	} else
-		sendMessageChannel(curChan.getCliInChan(),
-						   RPL_MODE(sender->cliInfo.getPrefix(),
-									curChan.getName(), posMode + negMode,
-									newPassMaxCli));
+		RPL::sendMessageChannel(curChan.getCliInChan(),
+								RPL_MODE(sender->cliInfo.getPrefix(),
+										 curChan.getName(), posMode + negMode,
+										 newPassMaxCli));
 }
 
 void mode(CmdSpec &cmd) {

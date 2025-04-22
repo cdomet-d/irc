@@ -22,16 +22,19 @@ typedef std::map< std::string, CmdSpec * > cmdMap;
 class CmdManager {
   public:
 	/*                               CONSTRUCTORS                             */
+
 	static CmdManager &getManagerInstance();
 	~CmdManager();
 
 	/*                               METHODS                                  */
+
 	CmdSpec &findCmd(std::string cmName);
 	bool executeCm(CmdSpec &cm);
 	void generateCmds();
 	void log(CmdSpec *cm);
 
 	/*                               NESTED CLASS                             */
+
 	class CmdNotFoundException : std::exception {
 	  public:
 		const char *what() const throw() {
@@ -41,6 +44,7 @@ class CmdManager {
 
   private:
 	/*                               MEMBERS                                  */
+
 	cmdMap commandList_;
 
 	// private constructor

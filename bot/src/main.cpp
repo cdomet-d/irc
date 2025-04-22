@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:08:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/22 16:51:21 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:07:50 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "Reply.hpp"
 #include <csignal>
 #include <iostream>
-#include <stdlib.h>
 
 void sigHandler(int signum) {
 	(void)signum;

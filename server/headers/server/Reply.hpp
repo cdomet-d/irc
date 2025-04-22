@@ -6,14 +6,16 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/16 13:27:16 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:49:12 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REPLY_H
 #define REPLY_H
+
 #include <cstring>
 #include <string>
+#include "typedef.hpp"
 
 // STANDARD_REPLIES
 
@@ -226,6 +228,6 @@ namespace RPL {
 	void log(e_level level, std::string message, std::string verbose);
 	void log(e_level level, std::string message);
 	void send_(int fd, std::string reply);
-
+	void sendMessageChannel(clientMap allCliChannel, const std::string &message);
 } // namespace RPL
 #endif // REPLY_HPP
