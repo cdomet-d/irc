@@ -45,7 +45,7 @@ Api &Api::operator=(const Api &rhs) {
 bool Api::findSecret() {
 	secret_ = getEnvVar("IRCBOT_SECRET=");
 	if (secret_.empty()) {
-		RPL::log(RPL::ERROR, "secret not found");
+		RPL::log(RPL::ERROR, "secret not found\r\n");
 		return (false);
 	}
 	return (true);
@@ -57,25 +57,21 @@ bool Api::requestToken() {
 		if (temp - time_ < 7200)
 			return (true);
 	}
-	std::vector< std::string > cmd;
-	cmd.push_back("curl");
-	cmd.push_back("-s");
-	cmd.push_back("-X");
-	cmd.push_back("POST");
-	cmd.push_back("--data");
-	cmd.push_back("grant_type=client_credentials&client_id=" + clientIUD_ +
+	curlCmd_.push_back("curl");
+	curlCmd_.push_back("-s");
+	curlCmd_.push_back("-X");
+	curlCmd_.push_back("POST");
+	curlCmd_.push_back("--data");
+	curlCmd_.push_back("grant_type=client_credentials&client_id=" + clientIUD_ +
 				  "&client_secret=" + secret_);
-	cmd.push_back(URL_ + "oauth/token");
-	
-	// std::string cmd;
-	// cmd = "curl -s -X POST --data \"grant_type=client_credentials&client_id=" +
-	// 	  clientIUD_ + "&client_secret=" + secret_ + "\" " + URL_ + "oauth/token > res.txt";
-	if (!executeCmd(cmd))
+	curlCmd_.push_back(URL_ + "oauth/token");
+
+	if (!executeCmd())
 		return (false);
 	time_ = std::time(0); //TODO: tester time
 	token_ = findStr("\"access_token\":");
 	if (token_.empty()) {
-		RPL::log(RPL::ERROR, "failed to generate token");
+		RPL::log(RPL::ERROR, "failed to generate token\r\n");
 		return (false);
 	}
 	token_.erase(0, 1);
@@ -84,27 +80,23 @@ bool Api::requestToken() {
 }
 
 bool Api::requestLocation(const std::string &login) {
-	std::vector< std::string > cmd;
-	cmd.push_back("curl");
-	cmd.push_back("-s");
-	cmd.push_back("-H");
-	cmd.push_back("Authorization: Bearer " + token_);
-	cmd.push_back(URL_ + "v2/users/" + login);
+	curlCmd_.clear();
+	curlCmd_.push_back("curl");
+	curlCmd_.push_back("-s");
+	curlCmd_.push_back("-H");
+	curlCmd_.push_back("Authorization: Bearer " + token_);
+	curlCmd_.push_back(URL_ + "v2/users/" + login);
 
-	// std::string cmd;
-	// cmd = "curl -s -H \"Authorization: Bearer " + token_ + "\" \"" + URL_ + "v2/users/" + login + "\" > res.txt";
-	if (!executeCmd(cmd))
+	if (!executeCmd())
 		return (false);
 	std::string user_id;
 	user_id = findStr("\"id\":");
 	if (user_id.empty())
 		return (false);
 
-	cmd.pop_back();
-	cmd.push_back(URL_ + "v2/locations?user_id=" + user_id);
-	// cmd.clear();
-	// cmd = "curl -s -H \"Authorization: Bearer " + token_ + "\" \"" + URL_ + "v2/locations?user_id=" + user_id + "\" > res.txt";
-	if (!executeCmd(cmd))
+	curlCmd_.pop_back();
+	curlCmd_.push_back(URL_ + "v2/locations?user_id=" + user_id);
+	if (!executeCmd())
 		return (false);
 	pos_ = findStr("\"location\":");
 	if (pos_.empty() || pos_ == "null")
@@ -120,79 +112,81 @@ std::string Api::findStr(const std::string &strToFind) {
 
 	infile_.open("res.txt");
 	if (!infile_.is_open()) {
-		RPL::log(RPL::ERROR, "could not open file 'res.txt'");
+		RPL::log(RPL::ERROR, "could not open res.txt\r\n");
 		return ("");
 	}
 	getline(infile_, str, '\0');
 	if (infile_.fail() || infile_.bad()) {
-		RPL::log(RPL::ERROR, "Error reading");
+		RPL::log(RPL::ERROR, "Error reading res.txt\r\n");
 		return ("");
 	}
 
 	size_t start = str.find(strToFind);
 	if (start == std::string::npos) {
-		RPL::log(RPL::ERROR, "could not find " + strToFind);
+		RPL::log(RPL::ERROR, "could not find " + strToFind + "\r\n");
 		return ("");
 	}
 	start += strToFind.length();
 
 	size_t end = str.find(",", start);
 	if (end == std::string::npos) {
-		RPL::log(RPL::ERROR, "could not find " + strToFind);
+		RPL::log(RPL::ERROR, "could not find " + strToFind + "\r\n");
 		return ("");
 	}
 
 	return (str.substr(start, end - start));
 }
 
-// bool Api::execute(const char *cmd) {
-// 	return (std::system(cmd));
-// }
-
-bool Api::executeCmd(std::vector< std::string > &cmd) {
+bool Api::executeCmd(void) {
 	int child;
 
 	child = fork();
 	if (child == -1) {
-		RPL::log(RPL::ERROR, "failed to created child process");
+		RPL::log(RPL::ERROR, "failed to create child process\r\n");
 		return (false);
 	}
 	if (child == 0) {
 		if (!findCurlPath())
-			exit(errno);
-		// cmd.clear();
-		// curlPath_.clear();
-		// exit(errno);
+			cleanChild(EXIT_FAILURE);
 		if (!openFile())
-			exit(errno);
+			cleanChild(EXIT_FAILURE);
 		if (dup2(resFd_, 1) == -1) {
-			RPL::log(RPL::ERROR, "redirection failed");
-			close(resFd_);
-			exit(errno);
+			RPL::log(RPL::ERROR, "redirection failed\r\n");
+			cleanChild(EXIT_FAILURE);
 		}
-		if (!fillCmd(cmd)) {
-			close(resFd_);
-			exit(errno);
-		}
-		if (execve(curlPath_.c_str(), cmd_, envp_) == -1)
-			RPL::log(RPL::ERROR, "execve failed");
-		close(0);
-		close(1);
+		if (!fillCmd())
+			cleanChild(EXIT_FAILURE);
+		execve(curlPath_.c_str(), cmd_, envp_);
+		RPL::log(RPL::ERROR, "execve failed\r\n");
+		cleanChild(errno);
+	}
+	int status = 0;
+	if (waitpid(child, &status, 0) == -1) {
+		RPL::log(RPL::ERROR, "waitpid failed\r\n");
+		return (false);
+	}
+	return (curlStatus(status));
+}
+
+void Api::cleanChild(int exitCode) {
+	if (resFd_ != -1)
 		close(resFd_);
+	if (cmd_ != NULL) {
 		for (size_t i = 0; cmd_[i]; i++)
 			free(cmd_[i]);
 		free(cmd_);
-		exit(errno);
 	}
-	int status;
-	waitpid(child, &status, 0);
-	return (curlStatus(status));
+	close(0);
+	close(1);
+	curlCmd_.clear();
+	curlPath_.clear();
+	std::exit(exitCode);
 }
 
 bool Api::openFile() {
 	resFd_ = open("res.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (resFd_ == -1) {
-		RPL::log(RPL::ERROR, "could not open res.txt");
+		RPL::log(RPL::ERROR, "could not create/open res.txt\r\n");
 		return (false);
 	}
 	return (true);
@@ -200,8 +194,10 @@ bool Api::openFile() {
 
 bool Api::findCurlPath() {
 	std::string pathVar = getEnvVar("PATH=");
-	if (pathVar.empty())
+	if (pathVar.empty()) {
+		RPL::log(RPL::ERROR, "could not find path\r\n");
 		return (false);
+	}
 
 	size_t pos = 0;
 	for (size_t i = 0; i < pathVar.size(); i++) {
@@ -215,25 +211,25 @@ bool Api::findCurlPath() {
 		pathVar.erase(0, i + 1);
 		curlPath_.clear();
 	}
-	RPL::log(RPL::ERROR, "could not find path");
+	RPL::log(RPL::ERROR, "could not find path\r\n");
 	return (false);
 }
 
-bool Api::fillCmd(std::vector< std::string > &cmd) {
-	cmd_ = (char **)malloc(sizeof(char *) * (cmd.size() + 1));
+bool Api::fillCmd(void) {
+	cmd_ = (char **)malloc(sizeof(char *) * (curlCmd_.size() + 1));
 	if (cmd_ == NULL)
 		return (false);
-	for (size_t i = 0; i < cmd.size(); ++i) {
-		cmd_[i] = strdup(cmd[i].c_str());
+	for (size_t i = 0; i < curlCmd_.size(); ++i) {
+		cmd_[i] = strdup(curlCmd_[i].c_str());
 		if (cmd_[i] == NULL) {
 			while ((int)i >= 0)
 				free(cmd_[i--]);
 			free(cmd_);
-			RPL::log(RPL::ERROR, "strdup failed");
+			RPL::log(RPL::ERROR, "strdup failed\r\n");
 			return (false);
 		}
 	}
-	cmd_[cmd.size()] = NULL;
+	cmd_[curlCmd_.size()] = NULL;
 	return (true);
 }
 
@@ -241,12 +237,13 @@ bool Api::curlStatus(int status) {
 	if (WIFEXITED(status)) {
 		int exitCode = WEXITSTATUS(status);
 		if (exitCode != 0) {
-			// RPL::log(RPL::ERROR, "Curl command failed with exit code: " + exitCode);
+			std::string errorMess = strerror(exitCode);
+			RPL::log(RPL::ERROR, "Curl command failed because: " + errorMess);
 			return (false);
 		}
 	} else if (WIFSIGNALED(status)) {
-		// int signal = WTERMSIG(status);
-		// RPL::log(RPL::ERROR, "Curl process terminated by signal: " + signal);
+		int signal = WTERMSIG(status);
+		RPL::log(RPL::ERROR, "Curl process terminated by signal: " + signal);
 		return (false);
 	}
 	return (true);
