@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 16:51:31 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/22 15:38:58 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 15:44:59 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,13 @@
 #define API_HPP
 
 #include "Reply.hpp"
+#include "Utils.hpp"
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include <errno.h>
 #include <fcntl.h>
 #include <fstream>
-#include <iostream>
-#include <sstream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <sys/wait.h>
-#include <unistd.h>
-#include <vector>
-#include "Reply.hpp"
-#include <cstdlib>
-#include "Utils.hpp"
 
 class Api {
   public:

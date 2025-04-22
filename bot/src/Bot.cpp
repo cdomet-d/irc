@@ -3,20 +3,6 @@
 #include <algorithm>
 #include <iostream>
 
-void cmdParam(const stringVec &obj, std::string where) {
-	if (obj.empty())
-		return std::cout << where + ": [ ... ]" << std::endl, (void)false;
-	std::cout << "[" << std::endl;
-	for (stringVec::const_iterator it = obj.begin(); it != obj.end(); ++it) {
-		if ((*it).empty())
-			std::cout << "\t" + where + ":\t"
-					  << "[...]" << std::endl;
-		else
-			std::cout << "\t" + where + ":\t" << *it << std::endl;
-	}
-	std::cout << "]" << std::endl;
-}
-
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */

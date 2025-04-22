@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 15:50:43 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/22 15:39:27 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 15:46:10 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,8 +164,8 @@ void Api::cleanChild(int exitCode) {
 		close(resFd_);
 	if (cmd_ != NULL) {
 		for (size_t i = 0; cmd_[i]; i++)
-			free(cmd_[i]);
-		free(cmd_);
+			std::free(cmd_[i]);
+		std::free(cmd_);
 	}
 	close(0);
 	close(1);
@@ -201,7 +201,7 @@ bool Api::findCurlPath() {
 }
 
 bool Api::fillCmd(void) {
-	cmd_ = (char **)malloc(sizeof(char *) * (curlCmd_.size() + 1));
+	cmd_ = (char **)std::malloc(sizeof(char *) * (curlCmd_.size() + 1));
 	if (cmd_ == NULL)
 		return (false);
 	for (size_t i = 0; i < curlCmd_.size(); ++i) {
@@ -229,7 +229,7 @@ bool Api::curlStatus(int status) {
 		}
 	} else if (WIFSIGNALED(status)) {
 		int signal = WTERMSIG(status);
-		RPL::log(RPL::ERROR, "Curl process terminated by signal: ");
+		RPL::log(RPL::ERROR, "Curl process terminated by signal: " + signal);
 		return (false);
 	}
 	return (true);
