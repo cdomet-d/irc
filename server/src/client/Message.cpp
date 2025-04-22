@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/21 17:53:37 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 11:01:29 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ void Message::formatMode() {
 /* loops on cmdParam_[2], which is where the flags are supposed to be */
 void Message::formatModeFlags(std::string &flagformat) {
 	std::string flags = cmdParam_.at(2);
-	const char firstChar = flags[0];
 	for (size_t i = 0; i < flags.size(); i++) {
+		const char firstChar = flags[i];
 		if (firstChar == '+' || firstChar == '-') {
 			i++;
 			while (i < flags.size()) {
@@ -108,10 +108,12 @@ void Message::formatModeFlags(std::string &flagformat) {
 				flagformat += flags[i];
 				if (i + 1 != flags.size())
 					flagformat += ',';
+				if ((i + 1) < flags.size() &&
+					(flags[i + 1] == '+' || flags[i + 1] == '-'))
+					break;
 				++i;
 			}
-		} else
-			flagformat += flags[i];
+		}
 	}
 }
 
@@ -203,8 +205,8 @@ returns the size of the found termination to accurately trim it from the raw mes
 std::string::size_type Message::evaluateTermination() const {
 	if (message_.find("\r\n") != std::string::npos)
 		return 2;
-	if (message_.find("\n") != std::string::npos
-		|| message_.find("\r") != std::string::npos)
+	if (message_.find("\n") != std::string::npos ||
+		message_.find("\r") != std::string::npos)
 		return 1;
 	return std::string::npos;
 }
@@ -216,8 +218,8 @@ void Message::removeNewlines() {
 		message_.clear();
 		return;
 	}
-	std::string::size_type newline
-		= (termSize == 2 ? message_.find("\r\n") : message_.find("\n"));
+	std::string::size_type newline =
+		(termSize == 2 ? message_.find("\r\n") : message_.find("\n"));
 	leftover_ = message_.substr(newline + termSize);
 	message_.erase(message_.begin() + newline, message_.end());
 	return;
@@ -229,8 +231,8 @@ static bool isConsecutiveSpace(char left, char right) {
 
 /* Removes consecutive spaces */
 void Message::trimSpaces() {
-	std::string::iterator newEnd
-		= std::unique(message_.begin(), message_.end(), isConsecutiveSpace);
+	std::string::iterator newEnd =
+		std::unique(message_.begin(), message_.end(), isConsecutiveSpace);
 	if (newEnd != message_.end())
 		message_.erase(newEnd, message_.end());
 }
