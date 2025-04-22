@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:20:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:54:07 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/21 18:31:57 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void nick(CmdSpec &cmd) {
 											   cmd[nickname_][0]));
 		for (size_t i = 0; i < sdChans.size(); i++) {
 			Channel &curChan = *cmd.serv_.findChan(sdChans[i]);
-			sendMessageChannel(
+			RPL::sendMessageChannel(
 				curChan.getCliInChan(),
 				RPL_NICK(sender.cliInfo.getPrefix(), cmd[nickname_][0]));
 		}
