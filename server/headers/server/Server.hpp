@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:53:52 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/15 15:00:59 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include "Channel.hpp"
 #include "buffer_manip.hpp"
+#include "Channel.hpp"
 #include "typedef.hpp"
 #include <arpa/inet.h>
 #include <fstream>

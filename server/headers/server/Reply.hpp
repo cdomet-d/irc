@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/15 14:29:15 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/16 13:27:16 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,15 @@
 #define RPL_WELCOME(nickname, prefix) (":irc.bitchat.net 001 " + nickname + " :Welcome to the Bitchat Internet Relay Chat Network " + prefix + "\r\n")
 #define RPL_YOURHOST(nickname) (":irc.bitchat.net 002 " + nickname + " :Your host is Bitchat, running version 1.0\r\n")
 #define RPL_CREATED(nickname, date) (":irc.bitchat.net 003 " + nickname + " :This server was created " + date + "\r\n")
-#define RPL_MYINFO(nickname) (":irc.bitchat.net 004 " + nickname + " Bitchat 1.0 | k,o,l,i,t | k,o,l\r\n")
-#define RPL_ISUPPORT(nickname) ":irc.bitchat.net 005 " + nickname + " CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server\r\n"
+#define RPL_MYINFO(nickname) (":irc.bitchat.net 004 " + nickname + " Bitchat 1.0 kolit kol\r\n")
+#define RPL_ISUPPORT(nickname) ":irc.bitchat.net 005 " + nickname + " CHANLIMIT=#:50 CHANMODES=,ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server\r\n"
 #define RPL_MOTDSTART(nickname) (":irc.bitchat.net 375 " + nickname + " :- Bitchat Message of the day - \r\n")
 #define RPL_ENDOFMOTD(nickname) (":irc.bitchat.net 376 " + nickname + " :End of /MOTD command\r\n")
 #define RPL_MOTD(nickname) (":irc.bitchat.net 372 " + nickname + " :Registration completed, you can join channels and start chatting !\r\n")
 
 //channel_replies
 #define RPL_CHANNELMODEIS(nickname, channel, modes, modeArgs) (":irc.bitchat.net 324 " + nickname + " " + channel + " " + modes + " " + modeArgs + "\r\n")
-#define RPL_INVITING(nickname, channel, target) (":irc.bitchat.net 341 " + nickname + " " + target + " " + channel + "\r\n")
+#define RPL_INVITING(nickname, channel, target) (":irc.bitchat.net 341 " + nickname + " " + channel + " " + target + "\r\n")
 #define RPL_NOTOPIC(nickname, channel) (":irc.bitchat.net 331 " + nickname + " " + channel + " :No topic is set" + "\r\n")
 #define RPL_TOPIC(nickname, channel, topic) (":irc.bitchat.net 332 " + nickname + " " + channel + " :" + topic + "\r\n")
 
@@ -73,7 +73,7 @@
 #define RPL_ENDOFNAMES(nickname, channel) (":irc.bitchat.net 366 " + nickname + " " + channel + " :End of /NAMES list\r\n")
 #define RPL_UMODEIS(nickname, modes) (":irc.bitchat.net 221 " + nickname + " " + modes + "\r\n") //TODO : not used
 #define RPL_AWAY(nickname, message) (":irc.bitchat.net 301 " + nickname + " :" + message + "\r\n") //TODO : not used
-#define RPL_INVITELIST(nickname, channel) (":irc.bitchat.net 336 " + nickname + " " + channel + " :You have been invited\r\n")
+#define RPL_INVITELIST(nickname, channel) (":irc.bitchat.net 336 " + nickname + " " + channel + "\r\n")
 #define RPL_ENDOFINVITELIST(nickname) (":irc.bitchat.net 337 " + nickname + " :End of /INVITE list\r\n")
 #define RPL_WHOREPLY(nickname, channel, username, host, flag, realname) (":irc.bitchat.net 352 " + nickname + " " + channel + " " + username + " " + host + " irc.bitchat.net " + nickname + " " + flag + " :0 " + realname + "\r\n")
 #define RPL_ENDOFWHO(nickname, channel) (":irc.bitchat.net 315 " + nickname + " " + channel + " :End of /WHO list\r\n")
@@ -88,6 +88,7 @@
 #define RPL_CHANOPENOPE(nickname, channel) (":irc.bitchat.net NOTICE " + nickname + " : You're no longer operator of " + channel + "\r\n")
 #define RPL_BYEYBE(nickname) (":irc.bitchat.net " + nickname + " :You quitted the server, see you next time !\r\n")
 #define RPL_ERROR(host, reason) ("ERROR :Closing Link: " + host + " (" + reason + ")\r\n")
+
 //command_replies (uses prefix)
 #define ERR_BADKEYLEN(channel) (":irc.bitchat.net NOTICE " + channel + " :Bad key (+k) - key len must be at least 8 and no more than 26\r\n")
 #define ERR_BADINPUT(cmd, expected, received) (":irc.bitchat.net NOTICE " + cmd + " :format should be [" + expected + "], is [" + received + "]\r\n")

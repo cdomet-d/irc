@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserInfo.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/15 11:53:50 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/16 17:19:31 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define USERINFO_HPP
 
 #include <string>
+
 class UserInfo {
   public:
 	/*                               ORTHODOX CLASS                           */

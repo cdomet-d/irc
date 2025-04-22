@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   buffer_manip.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/15 11:54:17 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/16 17:41:07 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 
 bool buffer_manip::prepareCommand(Client &sender) {
 	sender.mess.trimSpaces();
-
 	while (!sender.mess.emptyBuff()) {
 		sender.mess.removeNewlines();
 		if (sender.mess.isCap()) {
