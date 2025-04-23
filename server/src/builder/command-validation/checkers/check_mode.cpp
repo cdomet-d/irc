@@ -127,7 +127,7 @@ bool check::mode(CmdSpec &cmd, size_t idx) {
 			if (cmd[flagArg_][idx].size() < 8
 				|| cmd[flagArg_][idx].size() > 26) {
 				return RPL::send_(cmd.getSdFd(),
-								  ERR_BADKEYLEN(cmd[channel_][0])),
+								  ERR_BADKEYLEN(cmd.getSdNick())),
 					   false;
 			}
 		}
@@ -135,7 +135,7 @@ bool check::mode(CmdSpec &cmd, size_t idx) {
 			for (size_t i = 0; cmd[flagArg_][idx][i]; ++i) {
 				if (!std::isdigit(cmd[flagArg_][idx][i]))
 					return RPL::send_(cmd.getSdFd(),
-									  ERR_BADINPUT(cmd[channel_][0], "0 - 9",
+									  ERR_BADINPUT(cmd.getSdNick(), "0 - 9",
 												   cmd[flagArg_][idx])),
 						   false;
 			}

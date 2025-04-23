@@ -9,7 +9,7 @@ PASS 0
 USER c 0 * c
 USER c 0 * c
 PASS 0
-NICK alex
+NICK cha
 EOF
 
 timeout 2s nc 0.0.0.0 4444 < test_input.txt > outputs/output.txt
