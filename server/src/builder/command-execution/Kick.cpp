@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 12:58:20 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:12:30 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "Reply.hpp"
 #include "Server.hpp"
 
-void kickFromAllMap(Client &target, Channel &curChan) {
+static void kickFromAllMap(Client &target, Channel &curChan) {
 	int fdTarget = target.getFd();
 
 	curChan.removeCli(ALLCLI, fdTarget);

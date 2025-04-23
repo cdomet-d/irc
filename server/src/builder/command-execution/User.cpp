@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:48:49 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/22 17:05:40 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:13:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static std::string timeStamp() {
 	return (time_buf);
 }
 
-void registrationCompleted(Client &sender) {
+void registrationComplete(Client &sender) {
 	sender.cliInfo.setRegistration(3);
 	RPL::send_(sender.getFd(), RPL_WELCOME(sender.cliInfo.getNick(),
 										   sender.cliInfo.getPrefix()));
@@ -47,5 +47,5 @@ void user(CmdSpec &cmd) {
 		RPL::send_(cmd.getSdFd(), RPL_USER(sender.cliInfo.getNick(),
 										   sender.cliInfo.getUsername()));
 	} else if (sender.cliInfo.getRegistration() == 2)
-		registrationCompleted(sender);
+		registrationComplete(sender);
 }

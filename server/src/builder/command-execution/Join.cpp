@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 17:04:24 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:12:09 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ Channel &createChan(const std::string &chanName) {
 	}
 }
 
-void sendNickList(clientMap curMap, Channel &curChan, const Client &sender) {
+static void sendNickList(const clientMap &curMap, const Channel &curChan, const Client &sender) {
 	std::string list;
 	for (clientMapIt it = curMap.begin(); it != curMap.end(); ++it) {
 		std::string prefix = "";
@@ -48,7 +48,7 @@ void sendNickList(clientMap curMap, Channel &curChan, const Client &sender) {
 			   RPL_ENDOFNAMES(sender.cliInfo.getNick(), curChan.getName()));
 }
 
-void joinMess(Channel &curChan, Client &sender) {
+static void joinMess(Channel &curChan, Client &sender) {
 	for (clientMapIt itCli = curChan.getCliInChan().begin();
 		 itCli != curChan.getCliInChan().end(); ++itCli) {
 		RPL::send_(itCli->second->getFd(),

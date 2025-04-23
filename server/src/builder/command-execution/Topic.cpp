@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 14:05:16 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:23:15 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,28 @@
 #include "CmdSpec.hpp"
 #include "Server.hpp"
 
-void checkTopic(Channel &curChan, Client *curCli) {
+static void checkTopic(Channel &curChan, Client &curCli) {
 	if (curChan.getTopic().empty() == true) {
-		RPL::send_(curCli->getFd(),
-				   RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan.getName()));
+		RPL::send_(curCli.getFd(),
+				   RPL_NOTOPIC(curCli.cliInfo.getNick(), curChan.getName()));
 		return;
 	}
-	RPL::send_(curCli->getFd(),
-			   RPL_TOPIC(curCli->cliInfo.getNick(), curChan.getName(),
+	RPL::send_(curCli.getFd(),
+			   RPL_TOPIC(curCli.cliInfo.getNick(), curChan.getName(),
 						 curChan.getTopic()));
 	return;
 }
 
-void changeTopic(Channel &curChan, Client *curCli, std::string topic) {
+static void changeTopic(Channel &curChan, Client &curCli, std::string topic) {
 	curChan.setTopic(topic);
 	RPL::sendMessageChannel(curChan.getCliInChan(),
-							RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(),
+							RPL_TOPICCHANGED(curCli.cliInfo.getPrefix(),
 											 curChan.getName(),
 											 curChan.getTopic()));
 }
 
 void topic(CmdSpec &cmd) {
-	Client *sender = &cmd.getSender();
+	Client &sender = cmd.getSender();
 
 	try {
 		Channel &curChan = cmd.serv_.findChan(cmd[channel_][0]);

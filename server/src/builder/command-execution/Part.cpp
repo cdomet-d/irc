@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 14:07:44 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:18:23 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,23 @@
 #include "Reply.hpp"
 #include "Server.hpp"
 
-void partOneChan(Client *sender, Channel &curChan) {
-	int targetFd = sender->getFd();
+void partOneChan(Client &sender, Channel &curChan) {
+	int targetFd = sender.getFd();
 	curChan.removeCli(ALLCLI, targetFd);
-	sender->removeOneChan(curChan.getName());
+	sender.removeOneChan(curChan.getName());
 	curChan.removeCli(OPCLI, targetFd);
 	curChan.removeCli(INVITECLI, targetFd);
 }
 
-void partMess(Client *sender, Channel &curChan, const std::string &message) {
+void partMess(Client &sender, Channel &curChan, const std::string &message) {
 	std::string reason = (message.empty() ? "" : ":" + message);
 	RPL::sendMessageChannel(curChan.getCliInChan(),
-							RPL_PARTREASON(sender->cliInfo.getPrefix(),
+							RPL_PARTREASON(sender.cliInfo.getPrefix(),
 										   curChan.getName(), reason));
 }
 
 void part(CmdSpec &cmd) {
-	Client *sender = &cmd.getSender();
+	Client &sender = cmd.getSender();
 	std::string message;
 	if (!cmd[message_].empty())
 		message = cmd[message_][0];
@@ -41,7 +41,7 @@ void part(CmdSpec &cmd) {
 			Channel &curChan = cmd.serv_.findChan(cmd[channel_][nbChan]);
 			partMess(sender, curChan, message);
 			partOneChan(sender, curChan);
-			curChan.checkOnlyOperator(*sender);
+			curChan.checkOnlyOperator(sender);
 		} catch (std::exception &e) { RPL::log(RPL::ERROR, e.what()); }
 	}
 }

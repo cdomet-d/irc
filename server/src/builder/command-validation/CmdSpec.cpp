@@ -16,8 +16,7 @@
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
-CmdSpec::CmdSpec(const std::string name, int registrationStage,
-				 paramMap params,
+CmdSpec::CmdSpec(const std::string name, int registrationStage, paramMap params,
 				 std::vector< bool (*)(CmdSpec &, size_t) > checkers,
 				 void (*cmExecutor)(CmdSpec &cmd))
 	: serv_(Server::GetServerInstance(0, "")), valid_(true), sender_(NULL),
@@ -52,8 +51,8 @@ const CmdParam &CmdSpec::operator[](e_param type) const {
 bool CmdSpec::checkRegistrationStage() {
 	if (registrationStage_ > sender_->cliInfo.getRegistration()) {
 		valid_ = false;
-		if (sender_->cliInfo.getRegistration() == 0
-			&& (name_ == "NICK" || name_ == "USER"))
+		if (sender_->cliInfo.getRegistration() == 0 &&
+			(name_ == "NICK" || name_ == "USER"))
 			RPL::send_(sender_->getFd(),
 					   ERR_NEEDPASS(sender_->cliInfo.getNick()));
 		else
@@ -91,56 +90,6 @@ void CmdSpec::cleanAll() {
 		(*params_[i].second).clean();
 	}
 	valid_ = true;
-}
-
-static std::string enumToString(e_param color) {
-	switch (color) {
-	case 0:
-		return "channel";
-	case 1:
-		return "hostname";
-	case 2:
-		return "key";
-	case 3:
-		return "message";
-	case 4:
-		return "flag";
-	case 5:
-		return "flagArg";
-	case 6:
-		return "nickname";
-	case 7:
-		return "password";
-	case 8:
-		return "realname";
-	case 9:
-		return "servername";
-	case 10:
-		return "target";
-	case 11:
-		return "topic";
-	case 12:
-		return "username";
-	default:
-		return "Unknown";
-	}
-}
-
-void CmdSpec::displayParams(const std::string &where) {
-	std::cout << "Params in:" + where + "\n";
-	for (paramMap::iterator i = params_.begin(); i != params_.end(); i++) {
-		try {
-			for (size_t index = 0; index < (*i->second).size(); index++) {
-				std::cout << "param[" << enumToString(i->first) << "]"
-						  << "[" << index << "] : " << (*i->second)[index]
-						  << std::endl;
-			}
-		} catch (const std::out_of_range &e) {
-			std::cerr << e.what() << std::endl;
-		}
-		std::cout << "\n";
-	}
-	std::cout << "\n";
 }
 
 /* ************************************************************************** */
@@ -190,8 +139,7 @@ void CmdSpec::setSender(Client &sender) {
 }
 
 void CmdSpec::setParam() {
-	for (size_t i = 0; i < params_.size() && i < sender_->mess.getSize();
-		 i++) {
+	for (size_t i = 0; i < params_.size() && i < sender_->mess.getSize(); i++) {
 		try {
 			(*params_[i].second).setOneParam(sender_->mess[i + 1]);
 		} catch (const std::out_of_range &e) {}
@@ -244,8 +192,7 @@ CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::addChecker(bool (*ft)(CmdSpec &cmd,
 	return (*this);
 }
 
-CmdSpec::CmdBuilder &
-CmdSpec::CmdBuilder::CmExecutor(void (*ft)(CmdSpec &cmd)) {
+CmdSpec::CmdBuilder &CmdSpec::CmdBuilder::CmExecutor(void (*ft)(CmdSpec &cmd)) {
 	cmExecutor_ = ft;
 	return (*this);
 }

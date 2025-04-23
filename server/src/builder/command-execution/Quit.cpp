@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 15:22:05 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:19:43 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 #include <sstream>
 
 void partAllChans(CmdSpec &cmd, const std::string &message) {
-	Client *sender = &cmd.getSender();
-	stringVec joinedChans = sender->getJoinedChans();
+	Client &sender = cmd.getSender();
+	stringVec joinedChans = sender.getJoinedChans();
 
 	for (size_t nbChan = 0; nbChan != joinedChans.size(); nbChan++) {
 		try {
@@ -29,8 +29,8 @@ void partAllChans(CmdSpec &cmd, const std::string &message) {
 			if (cmd.getName() == "QUIT")
 				RPL::sendMessageChannel(
 					curChan.getCliInChan(),
-					RPL_QUIT(sender->cliInfo.getPrefix(), message));
-			curChan.checkOnlyOperator(*sender);
+					RPL_QUIT(sender.cliInfo.getPrefix(), message));
+			curChan.checkOnlyOperator(sender);
 		} catch (std::exception &e) { RPL::log(RPL::ERROR, e.what()); }
 	}
 }

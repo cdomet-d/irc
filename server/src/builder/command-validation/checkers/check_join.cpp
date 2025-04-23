@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/23 17:08:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:11:20 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ bool check::join_::assessRequest(const Channel &chan, CmdSpec &cmd,
 	} else if (chan.getModes().find("k") != std::string::npos &&
 			   !check::join_::validKey(chan, cmd[key_], idx, cmd.getSender()))
 		return (false);
-	if (check::join_::cliHasMaxChans(chan, cmd.getSender()))
+	if (check::join_::cliHasMaxChans(cmd, idx))
 		return (false);
 	return (true);
 }
@@ -91,7 +91,7 @@ bool check::join_::cliHasMaxChans(const CmdSpec &cmd, size_t idx) {
 	return (true);
 }
 
-bool check::join_::chanSyntaxIsValid(CmdSpec &cmd, size_t idx) {
+bool check::join_::chanSyntaxIsValid(const CmdSpec &cmd, size_t idx) {
 	if (cmd[channel_][idx].size() == 1 && cmd[channel_][idx][0] == '0')
 		return (true);
 	if (cmd[channel_][idx][0] != '#' ||
