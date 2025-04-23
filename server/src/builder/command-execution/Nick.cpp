@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:20:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/21 18:31:57 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:19:59 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,21 @@
 void nick(CmdSpec &cmd) {
 	Client &sender = cmd.getSender();
 
-	cmd.serv_.removeNickFromUsedNicks(sender.cliInfo.getNick());
+	cmd.serv_.rmNickFromUsedNicks(sender.cliInfo.getNick());
 	sender.cliInfo.setNick(cmd[nickname_][0]);
 	cmd.serv_.addNickToUsedNicks(cmd[nickname_][0], sender.getFd());
 	if (sender.cliInfo.getRegistration() == 3) {
 		const stringVec &sdChans = sender.getJoinedChans();
 		if (sdChans.empty())
-			RPL::send_(cmd.getSdFd(), RPL_NICK(sender.cliInfo.getPrefix(),
-											   cmd[nickname_][0]));
+			RPL::send_(cmd.getSdFd(),
+					   RPL_NICK(sender.cliInfo.getPrefix(), cmd[nickname_][0]));
 		for (size_t i = 0; i < sdChans.size(); i++) {
-			Channel &curChan = *cmd.serv_.findChan(sdChans[i]);
-			RPL::sendMessageChannel(
-				curChan.getCliInChan(),
-				RPL_NICK(sender.cliInfo.getPrefix(), cmd[nickname_][0]));
+			try {
+				Channel &curChan = cmd.serv_.findChan(sdChans[i]);
+				RPL::sendMessageChannel(
+					curChan.getCliInChan(),
+					RPL_NICK(sender.cliInfo.getPrefix(), cmd[nickname_][0]));
+			} catch (std::exception &e) { RPL::log(RPL::ERROR, e.what()); }
 		}
 	}
 	sender.cliInfo.setPrefix();

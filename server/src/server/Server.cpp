@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 12:45:40 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:19:08 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ void Server::removeChan(Channel &curChan) {
 	channels_.erase(curChan.getName());
 }
 void Server::removeCli(Client &curCli) {
-	removeNickFromUsedNicks(curCli.cliInfo.getNick());
+	rmNickFromUsedNicks(curCli.cliInfo.getNick());
 	clients_.erase(curCli.getFd());
 }
 
@@ -209,7 +209,7 @@ void Server::addNickToUsedNicks(const std::string &newNick, int fd) {
 	usedNicks_.insert(nickPair(newNick, fd));
 }
 
-void Server::removeNickFromUsedNicks(const std::string &toRemove) {
+void Server::rmNickFromUsedNicks(const std::string &toRemove) {
 	nickMap::iterator nickToRm = usedNicks_.find(toRemove);
 	if (nickToRm == usedNicks_.end())
 		return;

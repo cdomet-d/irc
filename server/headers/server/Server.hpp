@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 11:25:20 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:19:08 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ class Server {
 	void acceptClient();
 	void addChan(Channel &curChan);
 	void addNickToUsedNicks(const std::string &newNick, int fd);
-	void removeNickFromUsedNicks(const std::string &toRemove);
+	void rmNickFromUsedNicks(const std::string &toRemove);
 	void removeChan(Channel &curChan);
 	void removeCli(Client &curCli);
 	void checkChanInviteList(const Client &sender);
