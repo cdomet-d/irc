@@ -17,7 +17,7 @@
 /* ************************************************************************** */
 
 UserInfo::UserInfo()
-	: registration_(0), name_(""), nick_("*"), pass_(""), realName_("") {}
+	: registration_(0), nick_("*"), pass_(""), realName_("") {}
 UserInfo::~UserInfo() {}
 
 UserInfo::UserInfo(const UserInfo &rhs) {
@@ -32,10 +32,6 @@ UserInfo &UserInfo::operator=(const UserInfo &rhs) {
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-
-std::string UserInfo::getName() const {
-	return name_;
-}
 
 std::string UserInfo::getNick() const {
 	return nick_;
