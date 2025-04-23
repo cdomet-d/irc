@@ -6,7 +6,7 @@
 /*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/22 18:34:13 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:33:10 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool check::join(CmdSpec &cmd, size_t idx) {
 			continue;
 		} else
 			check::len(cmd, idx);
-		if (check::join_::cliHasMaxChans(cmd, idx)){
+		if (check::join_::cliHasMaxChans(cmd, idx)) {
 			cmd[channel_].rmParam(idx);
 			continue;
 		}
@@ -84,7 +84,8 @@ bool check::join_::chanHasRoom(Channel &chan, Client &sender) {
 }
 
 bool check::join_::cliHasMaxChans(CmdSpec &cmd, size_t idx) {
-	if (cmd.getSender().getJoinedChans().size() + idx < MAX_CHAN_PER_CLI)
+	if (cmd[channel_][idx] == "0" ||
+		cmd.getSender().getJoinedChans().size() + idx < MAX_CHAN_PER_CLI)
 		return (false);
 	RPL::send_(cmd.getSdFd(),
 			   ERR_TOOMANYCHANNELS(cmd.getSdNick(), cmd[channel_][idx]));
@@ -92,7 +93,7 @@ bool check::join_::cliHasMaxChans(CmdSpec &cmd, size_t idx) {
 }
 
 bool check::join_::chanSyntaxIsValid(CmdSpec &cmd, size_t idx) {
-	if (cmd[channel_][idx].size() == 1 && cmd[channel_][idx][0] == '0')
+	if (cmd[channel_][idx] == "0")
 		return (true);
 	if (cmd[channel_][idx][0] != '#' ||
 		cmd[channel_][idx].find(" ") != std::string::npos) {
