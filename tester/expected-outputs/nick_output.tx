@@ -1,19 +1,19 @@
 :irc.bitchat.net NOTICE * :Valid password ! You may register
 :irc.bitchat.net 431 * :No nickname given
-:irc.bitchat.net 432 * charlotte sweet: illegal char: expected [AZ - az], [0 - 9] or [-[]\`^{}], is   :Erroneous nickname or username
-:irc.bitchat.net 432 * #cha: illegal first char: expected [AZ - az], is # :Erroneous nickname or username
-:irc.bitchat.net 432 * :cha: illegal first char: expected [AZ - az], is : :Erroneous nickname or username
-:irc.bitchat.net 432 * 4cha: illegal first char: expected [AZ - az], is 4 :Erroneous nickname or username
-:irc.bitchat.net 432 * -cha: illegal first char: expected [AZ - az], is - :Erroneous nickname or username
-:irc.bitchat.net 432 * [cha: illegal first char: expected [AZ - az], is [ :Erroneous nickname or username
-:irc.bitchat.net 432 * ]cha: illegal first char: expected [AZ - az], is ] :Erroneous nickname or username
-:irc.bitchat.net 432 * \cha: illegal first char: expected [AZ - az], is \ :Erroneous nickname or username
-:irc.bitchat.net 432 * `cha: illegal first char: expected [AZ - az], is ` :Erroneous nickname or username
-:irc.bitchat.net 432 * ^cha: illegal first char: expected [AZ - az], is ^ :Erroneous nickname or username
-:irc.bitchat.net 432 * {cha: illegal first char: expected [AZ - az], is { :Erroneous nickname or username
-:irc.bitchat.net 432 * }cha: illegal first char: expected [AZ - az], is } :Erroneous nickname or username
-:irc.bitchat.net 432 * +cha: illegal first char: expected [AZ - az], is + :Erroneous nickname or username
-:irc.bitchat.net 432 * cha$: illegal char: expected [AZ - az], [0 - 9] or [-[]\`^{}], is $ :Erroneous nickname or username
+:irc.bitchat.net 432 * charlotte sweet: illegal char: expected [AZ - az], [0 - 9] or [-[]\`^{}], is   :Erroneous nickname
+:irc.bitchat.net 432 * #cha: illegal first char: expected [AZ - az], is # :Erroneous nickname
+:irc.bitchat.net 432 * :cha: illegal first char: expected [AZ - az], is : :Erroneous nickname
+:irc.bitchat.net 432 * 4cha: illegal first char: expected [AZ - az], is 4 :Erroneous nickname
+:irc.bitchat.net 432 * -cha: illegal first char: expected [AZ - az], is - :Erroneous nickname
+:irc.bitchat.net 432 * [cha: illegal first char: expected [AZ - az], is [ :Erroneous nickname
+:irc.bitchat.net 432 * ]cha: illegal first char: expected [AZ - az], is ] :Erroneous nickname
+:irc.bitchat.net 432 * \cha: illegal first char: expected [AZ - az], is \ :Erroneous nickname
+:irc.bitchat.net 432 * `cha: illegal first char: expected [AZ - az], is ` :Erroneous nickname
+:irc.bitchat.net 432 * ^cha: illegal first char: expected [AZ - az], is ^ :Erroneous nickname
+:irc.bitchat.net 432 * {cha: illegal first char: expected [AZ - az], is { :Erroneous nickname
+:irc.bitchat.net 432 * }cha: illegal first char: expected [AZ - az], is } :Erroneous nickname
+:irc.bitchat.net 432 * +cha: illegal first char: expected [AZ - az], is + :Erroneous nickname
+:irc.bitchat.net 432 * cha$: illegal char: expected [AZ - az], [0 - 9] or [-[]\`^{}], is $ :Erroneous nickname
 :irc.bitchat.net NOTICE cha-[]\^4 :The nickname is valid and saved !
 :irc.bitchat.net 001 cha-[]\^4 :Welcome to the Bitchat Internet Relay Chat Network cha-[]\^4!c@localhost
 :irc.bitchat.net 002 cha-[]\^4 :Your host is Bitchat, running version 1.0
@@ -24,8 +24,8 @@
 :irc.bitchat.net 372 cha-[]\^4 :Registration completed, you can join channels and start chatting !
 :irc.bitchat.net 376 cha-[]\^4 :End of /MOTD command
 :cha-[]\^4!c@localhost NICK :chacham
-:irc.bitchat.net 432 chacham cha#: illegal char: expected [AZ - az], [0 - 9] or [-[]\`^{}], is # :Erroneous nickname or username
-:irc.bitchat.net 432 chacham cha:: illegal char: expected [AZ - az], [0 - 9] or [-[]\`^{}], is : :Erroneous nickname or username
+:irc.bitchat.net 432 chacham cha#: illegal char: expected [AZ - az], [0 - 9] or [-[]\`^{}], is # :Erroneous nickname
+:irc.bitchat.net 432 chacham cha:: illegal char: expected [AZ - az], [0 - 9] or [-[]\`^{}], is : :Erroneous nickname
 :irc.bitchat.net 431 chacham :No nickname given
 :chacham!c@localhost JOIN #chan
 :irc.bitchat.net MODE #chan +t 
