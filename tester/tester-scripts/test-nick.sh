@@ -40,7 +40,7 @@ NICK {cha
 NICK }cha
 NICK +cha
 NICK cha$
-NICK cha-[]\\^4\`{}
+NICK cha-[]\\^4
 USER c 0 * c
 NICK chacham sweet
 NICK cha#

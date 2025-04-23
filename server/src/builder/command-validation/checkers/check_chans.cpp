@@ -38,8 +38,7 @@ bool check::chans_::onChan(std::string arg, const stringVec &arr) {
 }
 
 bool check::chans_::isOp(CmdSpec &cmd, size_t idx) {
-	channelMap::const_iterator itChan;
-	Channel chan = *cmd.serv_.findChan(cmd[channel_][idx]);
+	Channel &chan = *cmd.serv_.findChan(cmd[channel_][idx]);
 
 	if ((cmd.getName() == "TOPIC"
 		 && (cmd[topic_].empty()

@@ -24,10 +24,10 @@ void partOneChan(Client *sender, Channel &curChan) {
 }
 
 void partMess(Client *sender, Channel &curChan, const std::string &message) {
-	std::string reason = (message.empty() ? "Bye!" : message);
+	std::string reason = (message.empty() ? "" : ":" + message);
 	RPL::sendMessageChannel(curChan.getCliInChan(),
 							RPL_PARTREASON(sender->cliInfo.getPrefix(),
-										   curChan.getName(), ":" + message));
+										   curChan.getName(), reason));
 }
 
 void part(CmdSpec &cmd) {

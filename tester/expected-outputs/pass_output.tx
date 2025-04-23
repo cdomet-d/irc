@@ -1,14 +1,14 @@
 :irc.bitchat.net 461 * PASS :Not enough parameters
 :irc.bitchat.net 464 * :Incorrect password
 :irc.bitchat.net NOTICE * :Valid password ! You may register
-:irc.bitchat.net NOTICE * :Please enter nickname or username
+:irc.bitchat.net NOTICE * :Please enter nickname
 :irc.bitchat.net NOTICE chacham :The nickname is valid and saved !
 :irc.bitchat.net NOTICE chacham :Please enter username
 :irc.bitchat.net 001 chacham :Welcome to the Bitchat Internet Relay Chat Network chacham!c@localhost
 :irc.bitchat.net 002 chacham :Your host is Bitchat, running version 1.0
 :irc.bitchat.net 003 chacham :This server was created 10-04-2025 15:47:26
-:irc.bitchat.net 004 chacham Bitchat 1.0 | k,o,l,i,t | k,o,l
-:irc.bitchat.net 005 chacham CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 004 chacham Bitchat 1.0 kolit kol
+:irc.bitchat.net 005 chacham CHANLIMIT=#:50 CHANMODES=,ko,l,it CHANTYPES=# CHANNELLEN=200 NICKLEN=9 USERLEN=18  TOPICLEN=307 KICKLEN=307 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ NETWORK=Bitchat :are supported by this server
 :irc.bitchat.net 375 chacham :- Bitchat Message of the day - 
 :irc.bitchat.net 372 chacham :Registration completed, you can join channels and start chatting !
 :irc.bitchat.net 376 chacham :End of /MOTD command
@@ -20,8 +20,8 @@
 :irc.bitchat.net 001 chacham :Welcome to the Bitchat Internet Relay Chat Network chacham!c@localhost
 :irc.bitchat.net 002 chacham :Your host is Bitchat, running version 1.0
 :irc.bitchat.net 003 chacham :This server was created 10-04-2025 15:47:28
-:irc.bitchat.net 004 chacham Bitchat 1.0 | k,o,l,i,t | k,o,l
-:irc.bitchat.net 005 chacham CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 004 chacham Bitchat 1.0 kolit kol
+:irc.bitchat.net 005 chacham CHANLIMIT=#:50 CHANMODES=,ko,l,it CHANTYPES=# CHANNELLEN=200 NICKLEN=9 USERLEN=18  TOPICLEN=307 KICKLEN=307 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ NETWORK=Bitchat :are supported by this server
 :irc.bitchat.net 375 chacham :- Bitchat Message of the day - 
 :irc.bitchat.net 372 chacham :Registration completed, you can join channels and start chatting !
 :irc.bitchat.net 376 chacham :End of /MOTD command

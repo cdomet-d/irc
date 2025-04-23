@@ -9,8 +9,8 @@
 :irc.bitchat.net 001 cha :Welcome to the Bitchat Internet Relay Chat Network cha!c@localhost
 :irc.bitchat.net 002 cha :Your host is Bitchat, running version 1.0
 :irc.bitchat.net 003 cha :This server was created 14-04-2025 18:30:27
-:irc.bitchat.net 004 cha Bitchat 1.0 | k,o,l,i,t | k,o,l
-:irc.bitchat.net 005 cha CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 004 cha Bitchat 1.0 kolit kol
+:irc.bitchat.net 005 cha CHANLIMIT=#:50 CHANMODES=,ko,l,it CHANTYPES=# CHANNELLEN=200 NICKLEN=9 USERLEN=18  TOPICLEN=307 KICKLEN=307 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ NETWORK=Bitchat :are supported by this server
 :irc.bitchat.net 375 cha :- Bitchat Message of the day - 
 :irc.bitchat.net 372 cha :Registration completed, you can join channels and start chatting !
 :irc.bitchat.net 376 cha :End of /MOTD command
@@ -20,7 +20,7 @@
 :irc.bitchat.net 353 cha = #chan :@cha
 :irc.bitchat.net 366 cha #chan :End of /NAMES list
 :irc.bitchat.net 461 cha PART :Not enough parameters
-:cha!c@localhost PART #chan
+:cha!c@localhost PART #chan 
 :cha!c@localhost JOIN #chan
 :irc.bitchat.net MODE #chan +t 
 :irc.bitchat.net 353 cha = #chan :@cha
@@ -49,8 +49,8 @@ ERROR :Closing Link: localhost (Client Quit)
 :irc.bitchat.net 001 bobby :Welcome to the Bitchat Internet Relay Chat Network bobby!b@localhost
 :irc.bitchat.net 002 bobby :Your host is Bitchat, running version 1.0
 :irc.bitchat.net 003 bobby :This server was created 14-04-2025 18:30:27
-:irc.bitchat.net 004 bobby Bitchat 1.0 | k,o,l,i,t | k,o,l
-:irc.bitchat.net 005 bobby CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 004 bobby Bitchat 1.0 kolit kol
+:irc.bitchat.net 005 bobby CHANLIMIT=#:50 CHANMODES=,ko,l,it CHANTYPES=# CHANNELLEN=200 NICKLEN=9 USERLEN=18  TOPICLEN=307 KICKLEN=307 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ NETWORK=Bitchat :are supported by this server
 :irc.bitchat.net 375 bobby :- Bitchat Message of the day - 
 :irc.bitchat.net 372 bobby :Registration completed, you can join channels and start chatting !
 :irc.bitchat.net 376 bobby :End of /MOTD command
