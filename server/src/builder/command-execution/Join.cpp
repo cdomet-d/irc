@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 11:09:17 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 13:27:31 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,19 @@
 #include "Server.hpp"
 #include <sstream>
 
-Channel *createChan(const std::string &chanName) {
+Channel &createChan(const std::string &chanName) {
 	static Server &server = Server::GetServerInstance(0, "");
 
-	Channel &curChan = server.findChan(chanName);
-	if (curChan != NULL)
+	try {
+		Channel &curChan = server.findChan(chanName);
 		return (curChan);
-
-	Channel *newChan = new Channel(chanName);
-	newChan->setName(chanName);
-	newChan->setModes();
-	server.addChan(newChan);
-	return (newChan);
+	} catch (std::exception &e) {
+		Channel *newChan = new Channel(chanName);
+		newChan->setName(chanName);
+		newChan->setModes();
+		server.addChan(*newChan);
+		return (*newChan);
+	}
 }
 
 void sendNickList(clientMap curMap, Channel &curChan, const Client &sender) {
@@ -47,35 +48,34 @@ void sendNickList(clientMap curMap, Channel &curChan, const Client &sender) {
 			   RPL_ENDOFNAMES(sender.cliInfo.getNick(), curChan.getName()));
 }
 
-void joinMess(Channel *curChan, Client *sender) {
-	for (clientMapIt itCli = curChan->getCliInChan().begin();
-		 itCli != curChan->getCliInChan().end(); ++itCli) {
+void joinMess(Channel &curChan, Client &sender) {
+	for (clientMapIt itCli = curChan.getCliInChan().begin();
+		 itCli != curChan.getCliInChan().end(); ++itCli) {
 		RPL::send_(itCli->second->getFd(),
-				   RPL_JOIN(sender->cliInfo.getPrefix(), curChan->getName()));
+				   RPL_JOIN(sender.cliInfo.getPrefix(), curChan.getName()));
 	}
-	if (curChan->getTopic().empty() == false)
-		RPL::send_(sender->getFd(),
-				   RPL_TOPIC(sender->cliInfo.getNick(), curChan->getName(),
-							 curChan->getTopic()));
-	if (curChan->getOpCli().find(sender->getFd())
-		!= curChan->getOpCli().end()) {
+	if (curChan.getTopic().empty() == false)
+		RPL::send_(sender.getFd(),
+				   RPL_TOPIC(sender.cliInfo.getNick(), curChan.getName(),
+							 curChan.getTopic()));
+	if (curChan.getOpCli().find(sender.getFd()) != curChan.getOpCli().end()) {
 		const std::string &servName = "irc.bitchat.net";
-		RPL::send_(sender->getFd(), RPL_MODE(servName, curChan->getName(),
-											 curChan->getModes(), ""));
+		RPL::send_(sender.getFd(), RPL_MODE(servName, curChan.getName(),
+											curChan.getModes(), ""));
 	}
-	sendNickList(curChan->getCliInChan(), *curChan, *sender);
+	sendNickList(curChan.getCliInChan(), curChan, sender);
 }
 
 void join(CmdSpec &cmd) {
-	Client *sender = &cmd.getSender();
+	Client &sender = cmd.getSender();
 	if (cmd[channel_][0] == "0") {
 		partAllChans(cmd, "");
 		return;
 	}
 
 	for (size_t nbChan = 0; nbChan < cmd[channel_].size(); nbChan++) {
-		Channel *curChan = createChan(cmd[channel_][nbChan]);
-		curChan->addClientToChan(curChan, sender);
+		Channel &curChan = createChan(cmd[channel_][nbChan]);
+		curChan.addClientToChan(curChan, sender);
 		joinMess(curChan, sender);
 	}
 	return;
