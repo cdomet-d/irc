@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/22 16:49:12 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 18:31:16 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,18 +65,21 @@
 	 " :Unknown command\r\n")
 #define ERR_NONICKNAMEGIVEN(nickname)                                          \
 	(":irc.bitchat.net 431 " + nickname + " :No nickname given\r\n")
-#define ERR_ERRONEUSNICKNAME(nickname, newNick)                                \
-	(":irc.bitchat.net 432 " + nickname + " " + newNick +                      \
-	 " :Erroneous nickname or username\r\n")
-#define ERR_NEEDMOREPARAMS(nickname, command)                                  \
-	(":irc.bitchat.net 461 " + nickname + " " + command +                      \
-	 " :Not enough parameters\r\n")
-#define ERR_UNKNOWNMODE(nickname, modechar)                                    \
-	(":irc.bitchat.net 472 " + nickname + " " + modechar +                     \
-	 " :is unknown mode char to me" + "\r\n")
-#define ERR_TOOMANYTARGETS(nickname, target)                                   \
-	(":irc.bitchat.net 407 " + nickname + " " + target +                       \
-	 " :Too many targets\r\n") // TODO : not used
+#define ERR_ERRONEUSNICKNAME(nickname, newNick)                               \
+	(":irc.bitchat.net 432 " + nickname + " " + newNick                       \
+	 + " :Erroneous nickname\r\n")
+#define ERR_ERRONEUSUSERNAME(nickname, username)                               \
+	(":irc.bitchat.net NOTICE " + nickname + " " + username                       \
+	 + " :Erroneous username\r\n")
+#define ERR_NEEDMOREPARAMS(nickname, command)                                 \
+	(":irc.bitchat.net 461 " + nickname + " " + command                       \
+	 + " :Not enough parameters\r\n")
+#define ERR_UNKNOWNMODE(nickname, modechar)                                   \
+	(":irc.bitchat.net 472 " + nickname + " " + modechar                      \
+	 + " :is unknown mode char to me" + "\r\n")
+#define ERR_TOOMANYTARGETS(nickname, target)                                  \
+	(":irc.bitchat.net 407 " + nickname + " " + target                        \
+	 + " :Too many targets\r\n") // TODO : not used
 
 // registration_err_replies
 #define ERR_ALREADYREGISTERED(nickname)                                        \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:15:18 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/15 14:29:57 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 18:53:05 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "validator.hpp"
 
 bool check::len(CmdSpec &cmd, size_t idx) {
-	std::string cmdName[5] = { "JOIN", "NICK", "USER", "TOPIC", "KICK" };
+	std::string cmdName[5] = {"JOIN", "NICK", "USER", "TOPIC", "KICK"};
 	size_t i = 0;
 	while (i < 5 && cmdName[i] != cmd.getName())
 		i++;
@@ -40,12 +40,18 @@ bool check::len(CmdSpec &cmd, size_t idx) {
 }
 
 bool check::user(CmdSpec &cmd, size_t idx) {
-	if (!check::nick_::syntaxIsValid(cmd[username_][idx], cmd.getSender()))
+	const std::string &username = cmd[username_][idx];
+	int rv = check::nick_::syntaxIsValid(username);
+	if (rv != 0) {
+		std::string errorMess = check::nick_::createErrorMess(username, rv);
+		RPL::send_(cmd.getSdFd(),
+				   ERR_ERRONEUSUSERNAME(cmd.getSdNick(), errorMess));
 		return false;
+	}
 	if (cmd[hostname_][idx] != "0" || cmd[servername_][idx] != "*") {
-		std::string reply = cmd[username_][idx] + " " + cmd[hostname_][idx]
-							+ " " + cmd[servername_][idx] + " "
-							+ cmd[realname_][idx];
+		std::string reply = cmd[username_][idx] + " " + cmd[hostname_][idx] +
+							" " + cmd[servername_][idx] + " " +
+							cmd[realname_][idx];
 		RPL::send_(cmd.getSdFd(),
 				   ERR_BADINPUT(cmd.getName(), USERFORMAT, reply));
 		return false;
@@ -67,8 +73,7 @@ bool check::target(CmdSpec &cmd, size_t idx) {
 bool check::invite(CmdSpec &cmd, size_t idx) {
 	if (!check::target(cmd, idx))
 		return false;
-	const stringVec &tChan
-		= check::getTargetChan(cmd[target_][idx], cmd.serv_);
+	const stringVec &tChan = check::getTargetChan(cmd[target_][idx], cmd.serv_);
 	if (check::chans_::onChan(cmd[channel_][idx], tChan)) {
 		RPL::send_(cmd.getSdFd(),
 				   ERR_USERONCHANNEL(cmd.getSdNick(), cmd[target_][idx],
@@ -81,8 +86,8 @@ bool check::invite(CmdSpec &cmd, size_t idx) {
 bool check::enoughParams(CmdSpec &cmd, size_t idx) {
 	while (idx < cmd.getParams().size()) {
 		CmdParam &innerParam = *cmd.getParams()[idx].second;
-		if (!innerParam.isOpt()
-			&& (innerParam.empty() || innerParam[0].empty())) {
+		if (!innerParam.isOpt() &&
+			(innerParam.empty() || innerParam[0].empty())) {
 			RPL::send_(cmd.getSdFd(),
 					   ERR_NEEDMOREPARAMS(cmd.getSdNick(), cmd.getName()));
 			return (false);
