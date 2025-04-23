@@ -11,7 +11,7 @@ nc 0.0.0.0 4444 0<&${client1_in_fd} 1>&${client1_out_fd} &
 PID1=$!
 
 sleep 0.2
-
+#TODO: faire test pour verif syntax
 cat <<EOF >&${client1_in_fd}
 PASS 0
 NICK chacham

@@ -27,7 +27,6 @@ class UserInfo {
 	int getRegistration() const;
 	std::string getHostname() const;
 	std::string getIP() const;
-	std::string getName() const;
 	std::string getNick() const;
 	std::string getPrefix() const;
 	std::string getRealName() const;
@@ -46,7 +45,6 @@ class UserInfo {
 	int registration_;
 	std::string hostname_;
 	std::string ip_;
-	std::string name_;
 	std::string nick_;
 	std::string pass_;
 	std::string prefix_;
