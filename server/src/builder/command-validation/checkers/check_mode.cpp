@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_mode.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/15 14:29:52 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:55:52 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,10 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 	size_t size;
 	for (size_t i = 0; i < cmd[flag_].size();) {
 		size = cmd[flag_].size();
-		if (!check::mode_::validFlag(set, type, cmd[flag_][i], cmd.getSender()))
-			return false;
+		if (!check::mode_::validFlag(set, type, cmd[flag_][i], cmd.getSender())) {
+			cmd[flag_].rmParam(i);
+			continue;
+		}
 
 		const bool needArg = ((type == B) || (type == C && set == SET));
 		const bool needEmpty = ((type == D) || (type == C && set == UNSET));
@@ -126,9 +128,10 @@ bool check::mode_::lArgIsDigit(const CmdSpec &cmd, size_t idx) {
 }
 
 bool check::mode(CmdSpec &cmd, size_t idx) {
+	if (cmd[flag_].empty())
+		return true;
 	if (!check::mode_::formatArgs(cmd))
 		return false;
-
 	while (idx < cmd[flag_].size()) {
 		if (cmd[flag_][idx] == "+o" || cmd[flag_][idx] == "-o") {
 			if (!check::mode_::oTargetIsOnChan(cmd, idx)) {
@@ -147,7 +150,7 @@ bool check::mode(CmdSpec &cmd, size_t idx) {
 			}
 		}
 		if (cmd[flag_][idx] == "+l") {
-			if (check::mode_::lArgIsDigit(cmd, idx)) {
+			if (!check::mode_::lArgIsDigit(cmd, idx)) {
 				cmd[flag_].rmParam(idx);
 				cmd[flagArg_].rmParam(idx);
 				continue;
