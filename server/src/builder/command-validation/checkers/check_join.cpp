@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/23 17:11:20 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 18:10:57 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,23 @@ bool check::join(CmdSpec &cmd, size_t idx) {
 			if (!check::join_::assessRequest(curChan, cmd, idx)) {
 				cmd[channel_].rmParam(idx);
 				continue;
-			} else if (!check::join_::chanSyntaxIsValid(cmd, idx)) {
-				cmd[channel_].rmParam(idx);
-				continue;
-			} else if (check::join_::cliHasMaxChans(cmd, idx)) {
+			}
+		} catch (std::exception &e) {
+			if (!check::join_::chanSyntaxIsValid(cmd, idx)) {
 				cmd[channel_].rmParam(idx);
 				continue;
 			} else
 				check::len(cmd, idx);
-			idx++;
-			if (!cmd[channel_].size())
-				return false;
-			return true;
-		} catch (std::exception &e) { RPL::log(RPL::ERROR, e.what()); }
+		}
+		if (check::join_::cliHasMaxChans(cmd, idx)) {
+			cmd[channel_].rmParam(idx);
+			continue;
+		}
+		idx++;
 	}
-	return false;
+	if (!cmd[channel_].size())
+		return false;
+	return true;
 }
 
 bool check::join_::assessRequest(const Channel &chan, CmdSpec &cmd,

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 17:08:33 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 18:34:13 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@
 #include "printers.hpp"
 #include <cerrno>
 #include <sstream>
+
+ObjectNotFound::ObjectNotFound(const char *err) : errMessage(err) {}
+const char *ObjectNotFound::what() const throw() {
+	return (errMessage);
+}
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
@@ -98,7 +103,6 @@ bool Server::servRun() {
 void Server::acceptClient() {
 	try {
 		Client *newCli = new Client();
-		// newCli->cliInfo.setRegistration(0);
 
 		struct epoll_event cliEpollTemp;
 		socklen_t cliLen = sizeof(newCli->cliAddr_);
@@ -195,14 +199,14 @@ void Server::checkChanInviteList(const Client &sender) {
 Client &Server::findCli(int fd) {
 	clientMapIt currCliIt = clients_.find(fd);
 	if (currCliIt == clients_.end())
-		throw ObjectNotFound("No such client");
+		throw ObjectNotFound("No such client\r\n");
 	return (*currCliIt->second);
 }
 
 Channel &Server::findChan(const std::string &chanName) {
 	channelMapIt currChanIt = channels_.find(chanName);
 	if (currChanIt == channels_.end())
-		throw Server::ObjectNotFound("No such channel");
+		throw ObjectNotFound("No such channel\r\n");
 	return (*currChanIt->second);
 }
 
@@ -224,11 +228,6 @@ Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
 
 const char *Server::InitFailed::what() const throw() {
 	std::cerr << "irc: ";
-	return (errMessage);
-}
-
-Server::ObjectNotFound::ObjectNotFound(const char *err) : errMessage(err) {}
-const char *Server::ObjectNotFound::what() const throw() {
 	return (errMessage);
 }
 

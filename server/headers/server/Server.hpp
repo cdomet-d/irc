@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 15:55:16 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:52:48 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,15 @@
 #include <netinet/in.h>
 #include <sys/epoll.h>
 #include <sys/socket.h>
+
+class ObjectNotFound : public std::exception {
+  public:
+	ObjectNotFound(const char *err);
+	const char *what() const throw();
+
+  private:
+	const char *errMessage;
+};
 
 extern int gSign;
 
@@ -39,15 +48,6 @@ class Server {
 	class InitFailed : public std::exception {
 	  public:
 		InitFailed(const char *err);
-		const char *what() const throw();
-
-	  private:
-		const char *errMessage;
-	};
-
-	class ObjectNotFound : public std::exception {
-	  public:
-		ObjectNotFound(const char *err);
 		const char *what() const throw();
 
 	  private:

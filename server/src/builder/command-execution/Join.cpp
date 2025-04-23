@@ -6,10 +6,12 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 17:12:09 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 18:34:00 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//TODO change all std::exceptions to ObjectNotFound
+//TODO find a safe spot to declare ObjectNotFound
 #include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
 #include "Server.hpp"
@@ -21,7 +23,7 @@ Channel &createChan(const std::string &chanName) {
 	try {
 		Channel &curChan = server.findChan(chanName);
 		return (curChan);
-	} catch (std::exception &e) {
+	} catch (ObjectNotFound &e) {
 		Channel *newChan = new Channel(chanName);
 		newChan->setName(chanName);
 		newChan->setModes();

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 14:02:12 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:40:13 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int main(int ac, char *av[]) {
 
 	signal(SIGINT, SignalHandler);
 	signal(SIGQUIT, SignalHandler);
+	signal(SIGTERM, SignalHandler);
 	
 	int port = getPort(av[1]);
 	std::string password = av[2];
