@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 09:44:09 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/23 14:02:59 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,6 @@ void Server::acceptClient() {
 		}
 		newCli->cliInfo.setIP(client_ip);
 		newCli->cliInfo.setHostname("localhost");
-		close(newCli->getFd());
 
 		if (fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK) == -1) {
 			close(newCli->getFd());
