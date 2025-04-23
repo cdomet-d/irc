@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:54:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/23 13:54:02 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ void joinMess(Channel *curChan, Client *sender) {
 		RPL::send_(sender->getFd(),
 				   RPL_TOPIC(sender->cliInfo.getNick(), curChan->getName(),
 							 curChan->getTopic()));
-	if (curChan->getOpCli().find(sender->getFd())
-		!= curChan->getOpCli().end()) {
+	if (curChan->getOpCli().find(sender->getFd()) !=
+		curChan->getOpCli().end()) {
 		const std::string &servName = "irc.bitchat.net";
 		RPL::send_(sender->getFd(), RPL_MODE(servName, curChan->getName(),
 											 curChan->getModes(), ""));
