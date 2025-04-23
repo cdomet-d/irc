@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:54:08 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:45:11 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "CmdSpec.hpp"
 #include "Server.hpp"
 
-// TODO boucler sur toutes les targets
 void privmsg(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
 

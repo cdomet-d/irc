@@ -55,7 +55,7 @@ class CmdSpec {
 	void cleanAll();
 	bool checkRegistrationStage();
 
-	void displayParams(const std::string &where); // to be removed
+	void displayParams(const std::string &where);
 
 	/*                               GETTERS                                  */
 	bool getValid() const;

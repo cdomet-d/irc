@@ -19,8 +19,8 @@
 :irc.bitchat.net 403 chacham #dontexist :No such channel
 :irc.bitchat.net 324 chacham #chan +t 
 :irc.bitchat.net 472 chacham k :is unknown mode char to me
-:irc.bitchat.net 472 chacham u :is unknown mode char to me
 :chacham!c@localhost MODE #chan -t 
+:irc.bitchat.net 472 chacham u :is unknown mode char to me
 :bobby!b@localhost JOIN #chan
 :chacham!c@localhost MODE #chan +ikol-t password bobby 2 
 :bobby!b@localhost MODE #chan +t 
