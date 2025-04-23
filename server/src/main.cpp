@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/22 16:46:35 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/23 14:02:12 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <csignal>
 #include <cstdlib>
 #include <sstream>
+#include <limits>
 
 int gSign = false;
 
@@ -23,13 +24,25 @@ void SignalHandler(int signum) {
 	gSign = true;
 }
 
+double getPort(char *sPort) {
+	char *endptr;
+	errno = 0;
+	double result = std::strtod(sPort, &endptr);
+
+	if (errno == ERANGE || *endptr != '\0' || result < 0
+		|| result > std::numeric_limits< int >::max())
+		return (-1);
+	return (result);			
+}
+
 int main(int ac, char *av[]) {
 	if (ac != 3)
 		return (std::cerr << "Expected <port> <password>" << std::endl, 1);
 
 	signal(SIGINT, SignalHandler);
 	signal(SIGQUIT, SignalHandler);
-	int port = std::atoi(av[1]); // TODO: protect std::atoi from overflow
+	
+	int port = getPort(av[1]);
 	std::string password = av[2];
 
 	Server &server = Server::GetServerInstance(port, password);
