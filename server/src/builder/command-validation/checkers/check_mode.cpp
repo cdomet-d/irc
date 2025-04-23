@@ -77,15 +77,14 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 	size_t size;
 	for (size_t i = 0; i < cmd[flag_].size();) {
 		size = cmd[flag_].size();
-		if (!check::mode_::validFlag(set, type, cmd[flag_][i],
-									 cmd.getSender()))
+		if (!check::mode_::validFlag(set, type, cmd[flag_][i], cmd.getSender()))
 			return false;
 
 		const bool needArg = ((type == B) || (type == C && set == SET));
 		const bool needEmpty = ((type == D) || (type == C && set == UNSET));
 
-		if (needArg
-			&& (i >= cmd[flagArg_].size() || cmd[flagArg_][i].empty())) {
+		if (needArg &&
+			(i >= cmd[flagArg_].size() || cmd[flagArg_][i].empty())) {
 			cmd[flag_].rmParam(i);
 			RPL::send_(cmd.getSdFd(),
 					   ERR_NEEDMOREPARAMS(cmd.getSdNick(), cmd.getName()));
@@ -107,10 +106,22 @@ bool check::mode_::oTargetIsOnChan(const CmdSpec &cmd, size_t idx) {
 			   false;
 	tChan = check::getTargetChan(cmd[flagArg_][idx], cmd.serv_);
 	if (!check::chans_::onChan(cmd[channel_][0], tChan))
-		return RPL::send_(cmd.getSdFd(), ERR_USERNOTINCHANNEL(
-											 cmd.getSdNick(), cmd[flag_][idx],
-											 cmd[channel_][0])),
+		return RPL::send_(cmd.getSdFd(),
+						  ERR_USERNOTINCHANNEL(cmd.getSdNick(), cmd[flag_][idx],
+											   cmd[channel_][0])),
 			   false;
+	return true;
+}
+
+bool check::mode_::lArgIsDigit(const CmdSpec &cmd, size_t idx) {
+	for (size_t i = 0; cmd[flagArg_][idx][i]; ++i) {
+		if (!std::isdigit(cmd[flagArg_][idx][i])) {
+			RPL::send_(cmd.getSdFd(),
+							  ERR_BADINPUT(cmd.getSdNick(), "0 - 9",
+										   cmd[flagArg_][idx]));
+			return false;
+		}
+	}
 	return true;
 }
 
@@ -118,28 +129,33 @@ bool check::mode(CmdSpec &cmd, size_t idx) {
 	if (!check::mode_::formatArgs(cmd))
 		return false;
 
-	for (; idx < cmd[flag_].size(); ++idx) {
+	while (idx < cmd[flag_].size()) {
 		if (cmd[flag_][idx] == "+o" || cmd[flag_][idx] == "-o") {
-			if (!check::mode_::oTargetIsOnChan(cmd, idx))
-				return false;
+			if (!check::mode_::oTargetIsOnChan(cmd, idx)) {
+				cmd[flag_].rmParam(idx);
+				cmd[flagArg_].rmParam(idx);
+				continue;
+			}
 		}
 		if (cmd[flag_][idx] == "+k") {
-			if (cmd[flagArg_][idx].size() < 8
-				|| cmd[flagArg_][idx].size() > 26) {
-				return RPL::send_(cmd.getSdFd(),
-								  ERR_BADKEYLEN(cmd.getSdNick())),
-					   false;
+			if (cmd[flagArg_][idx].size() < 8 ||
+				cmd[flagArg_][idx].size() > 26) {
+				RPL::send_(cmd.getSdFd(), ERR_BADKEYLEN(cmd.getSdNick()));
+				cmd[flag_].rmParam(idx);
+				cmd[flagArg_].rmParam(idx);
+				continue;
 			}
 		}
 		if (cmd[flag_][idx] == "+l") {
-			for (size_t i = 0; cmd[flagArg_][idx][i]; ++i) {
-				if (!std::isdigit(cmd[flagArg_][idx][i]))
-					return RPL::send_(cmd.getSdFd(),
-									  ERR_BADINPUT(cmd.getSdNick(), "0 - 9",
-												   cmd[flagArg_][idx])),
-						   false;
+			if (check::mode_::lArgIsDigit(cmd, idx)) {
+				cmd[flag_].rmParam(idx);
+				cmd[flagArg_].rmParam(idx);
+				continue;
 			}
 		}
+		idx++;
 	}
+	if (cmd[flag_].empty())
+		return false;
 	return true;
 }
