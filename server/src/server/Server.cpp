@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/22 16:47:58 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:44:09 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,21 +107,24 @@ void Server::acceptClient() {
 		newCli->setFd(
 			accept(servFd_, (struct sockaddr *)&newCli->cliAddr_, &cliLen));
 
-		if (newCli->getFd() == -1)
+		if (newCli->getFd() == -1) {
+			delete newCli;
 			throw Server::InitFailed(
 				const_cast< const char * >(std::strerror(errno)));
-
+		}
 		char *client_ip = inet_ntoa(newCli->cliAddr_.sin_addr);
 		if (!client_ip) {
 			close(newCli->getFd());
+			delete newCli;
 			throw Server::InitFailed("IP conversion failed");
 		}
 		newCli->cliInfo.setIP(client_ip);
 		newCli->cliInfo.setHostname("localhost");
-		// TODO: not throw an exeption when a client cannot connect: it can't kill
-		// the server.
+		close(newCli->getFd());
+
 		if (fcntl(newCli->getFd(), F_SETFL, O_NONBLOCK) == -1) {
 			close(newCli->getFd());
+			delete newCli;
 			throw Server::InitFailed(
 				const_cast< const char * >(std::strerror(errno)));
 		}
@@ -132,6 +135,7 @@ void Server::acceptClient() {
 		if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, newCli->getFd(),
 					  newCli->getCliEpoll()) == -1) {
 			close(newCli->getFd());
+			delete newCli;
 			throw Server::InitFailed(
 				const_cast< const char * >(std::strerror(errno)));
 		}
