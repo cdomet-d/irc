@@ -55,17 +55,15 @@ class CmdSpec {
 	void cleanAll();
 	bool checkRegistrationStage();
 
-	void displayParams(const std::string &where); // to be removed
-
 	/*                               GETTERS                                  */
 	bool getValid() const;
 	Client &getSender() const;
-	const std::string getSdNick() const;
-	const std::string getSdPre() const;
-	int getSdFd() const;
 	const paramMap &getParams() const;
 	const std::string &getName() const;
+	const std::string getSdNick() const;
+	const std::string getSdPre() const;
 	int getRegistrationStage() const;
+	int getSdFd() const;
 	void (*getExecutor() const)(CmdSpec &cmd);
 
 	/*                               SETTERS                                  */

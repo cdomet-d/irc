@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 14:34:26 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:56:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ class Channel {
 	const clientMap &getCliInChan() const;
 	const clientMap &getInvitCli() const;
 	const clientMap &getOpCli() const;
-	const std::string getModes() const;
-	const std::string getName() const;
-	const std::string getPassword() const;
-	const std::string getTopic() const;
+	const std::string &getModes() const;
+	const std::string &getName() const;
+	const std::string &getPassword() const;
+	const std::string &getTopic() const;
 	size_t getMaxCli() const;
 
 	/*                               SETTERS                                  */
@@ -69,6 +69,10 @@ class Channel {
 	std::string name_;
 	std::string pass_;
 	std::string topic_;
+
+	Channel();
+	Channel(const Channel &rhs);
+	Channel operator=(const Channel &rhs);
 };
 
 #endif

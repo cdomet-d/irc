@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 15:19:08 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:14:32 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ Server::~Server() {
 	std::cout << "Calling destructor" << std::endl;
 	logfile.close();
 	for (clientMapIt it = clients_.begin(); it != clients_.end(); ++it) {
-		it->second->cliInfo.getNick().clear();
-		it->second->cliInfo.getUsername().clear();
 		close(it->first);
 		delete it->second;
 	}
@@ -169,7 +167,7 @@ void Server::handleData(int fd) {
 
 void Server::addChan(Channel &curChan) {
 	channels_.insert(
-		std::pair< std::string, Channel * >(curChan.getName(), curChan));
+		std::pair< std::string, Channel * >(curChan.getName(), &curChan));
 }
 
 void Server::removeChan(Channel &curChan) {
@@ -226,12 +224,10 @@ const char *Server::InitFailed::what() const throw() {
 	return (errMessage);
 }
 
-
 Server::ObjectNotFound::ObjectNotFound(const char *err) : errMessage(err) {}
 const char *Server::ObjectNotFound::what() const throw() {
 	return (errMessage);
 }
-
 
 /* ************************************************************************** */
 /*                               GETTERS                                      */
@@ -255,6 +251,6 @@ int Server::getFdFromNick(const std::string &nick) const {
 	return (-1);
 }
 
-const std::string Server::getPass() const {
+const std::string &Server::getPass() const {
 	return (pass_);
 }

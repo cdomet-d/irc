@@ -53,11 +53,12 @@ namespace check {
 	} // namespace nick_
 
 	namespace join_ {
-		bool assessRequest(Channel chan, CmdSpec &cmd, size_t i);
-		bool hasInvite(Channel &chan, Client &sender);
-		bool validKey(Channel &chan, CmdParam &keys, size_t i, Client &sender);
-		bool chanHasRoom(Channel &chan, Client &sender);
-		bool cliHasMaxChans(Channel &chan, Client &sender);
+		bool assessRequest(const Channel &chan, CmdSpec &cmd, size_t i);
+		bool hasInvite(const Channel &chan, Client &sender);
+		bool validKey(const Channel &chan, CmdParam &keys, size_t i,
+					  Client &sender);
+		bool chanHasRoom(const Channel &chan, Client &sender);
+		bool cliHasMaxChans(const Channel &chan, Client &sender);
 		bool syntaxIsValid(CmdSpec &cmd, size_t idx);
 	} // namespace join_
 

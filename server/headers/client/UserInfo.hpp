@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/16 17:19:31 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:23:01 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,22 @@ class UserInfo {
 
 	/*                               GETTERS                                  */
 	int getRegistration() const;
-	std::string getHostname() const;
-	std::string getIP() const;
-	std::string getName() const;
-	std::string getNick() const;
-	std::string getPrefix() const;
-	std::string getRealName() const;
-	std::string getUsername() const;
+	const std::string &getHostname() const;
+	const std::string &getIP() const;
+	const std::string &getName() const;
+	const std::string &getNick() const;
+	const std::string &getPrefix() const;
+	const std::string &getRealName() const;
+	const std::string &getUsername() const;
 
 	/*                               SETTERS                                  */
 	void setHostname(std::string hostname);
 	void setIP(std::string ip);
 	void setNick(const std::string &newNick);
 	void setPrefix();
+	void setRealname(const std::string &realname);
 	void setRegistration(int stage);
 	void setUsername(const std::string &username);
-	void setRealname(const std::string &realname);
 
   private:
 	int registration_;

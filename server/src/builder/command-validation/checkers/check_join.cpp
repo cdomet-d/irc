@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/23 15:28:23 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:59:04 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ bool check::join(CmdSpec &cmd, size_t idx) {
 	return false;
 }
 
-bool check::join_::assessRequest(Channel chan, CmdSpec &cmd, size_t idx) {
+bool check::join_::assessRequest(const Channel &chan, CmdSpec &cmd, size_t idx) {
 	if (check::chans_::onChan(cmd[channel_][idx],
 							  cmd.getSender().getJoinedChans()))
 		return (false);
@@ -51,7 +51,7 @@ bool check::join_::assessRequest(Channel chan, CmdSpec &cmd, size_t idx) {
 	return (true);
 }
 
-bool check::join_::hasInvite(Channel &chan, Client &sender) {
+bool check::join_::hasInvite(const Channel &chan, Client &sender) {
 	clientMap::const_iterator itCli;
 
 	itCli = chan.getInvitCli().find(sender.getFd());
@@ -62,7 +62,7 @@ bool check::join_::hasInvite(Channel &chan, Client &sender) {
 	return (false);
 }
 
-bool check::join_::validKey(Channel &chan, CmdParam &keys, size_t idx,
+bool check::join_::validKey(const Channel &chan, CmdParam &keys, size_t idx,
 							Client &sender) {
 	if (idx < keys.size() && chan.getPassword() == keys[idx])
 		return (true);
@@ -71,7 +71,7 @@ bool check::join_::validKey(Channel &chan, CmdParam &keys, size_t idx,
 	return (false);
 }
 
-bool check::join_::chanHasRoom(Channel &chan, Client &sender) {
+bool check::join_::chanHasRoom(const Channel &chan, Client &sender) {
 	if (chan.getCliInChan().size() < chan.getMaxCli())
 		return (true);
 	RPL::send_(sender.getFd(),
@@ -79,7 +79,7 @@ bool check::join_::chanHasRoom(Channel &chan, Client &sender) {
 	return (false);
 }
 
-bool check::join_::cliHasMaxChans(Channel &chan, Client &sender) {
+bool check::join_::cliHasMaxChans(const Channel &chan, Client &sender) {
 	if (sender.getJoinedChans().size() < MAX_CHAN_PER_CLI)
 		return (false);
 	RPL::send_(sender.getFd(),

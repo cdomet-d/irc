@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 15:19:08 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:55:16 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,25 +55,25 @@ class Server {
 	};
 
 	/*                               METHODS                                  */
-	void handleData(int fd);
 	bool servInit();
 	bool servRun();
+	Channel &findChan(const std::string &chanName);
+	Client &findCli(int fd);
 	void acceptClient();
 	void addChan(Channel &curChan);
 	void addNickToUsedNicks(const std::string &newNick, int fd);
-	void rmNickFromUsedNicks(const std::string &toRemove);
+	void checkChanInviteList(const Client &sender);
+	void handleData(int fd);
 	void removeChan(Channel &curChan);
 	void removeCli(Client &curCli);
-	void checkChanInviteList(const Client &sender);
-	Client &findCli(int fd);
-	Channel &findChan(const std::string &chanName);
+	void rmNickFromUsedNicks(const std::string &toRemove);
 
 	/*                               GETTERS                                  */
-	const nickMap &getUsedNick() const;
-	int getFdFromNick(const std::string &nick) const;
-	const std::string getPass() const;
-	const clientMap &getAllCli() const;
 	const channelMap &getAllChan() const;
+	const clientMap &getAllCli() const;
+	const nickMap &getUsedNick() const;
+	const std::string &getPass() const;
+	int getFdFromNick(const std::string &nick) const;
 
 	/*                               MEMBERS                                  */
 	std::ofstream logfile;
@@ -94,7 +94,9 @@ class Server {
 	nickMap usedNicks_;
 
 	// private constructor
+	Server operator=(const Server &rhs);
 	Server();
+	Server(const Server &rhs);
 	Server(int port, std::string password);
 };
 

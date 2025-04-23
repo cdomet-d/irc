@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 14:33:45 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:52:43 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,14 @@ void Channel::checkOnlyOperator(Client &oldOp) {
 
 	if (cliInChan_.size() >= 1) {
 		if (!cliIsOperator_.size()) {
-			Client *cli = cliInChan_.begin()->second;
+			Client &cli = *cliInChan_.begin()->second;
 			addCli(OPCLI, cli);
-			RPL::send_(cli->getFd(), RPL_MODE(oldOp.cliInfo.getPrefix(), name_,
-											  "+o", cli->cliInfo.getNick()));
+			RPL::send_(cli.getFd(), RPL_MODE(oldOp.cliInfo.getPrefix(), name_,
+											  "+o", cli.cliInfo.getNick()));
 		}
 	}
 	if (cliInChan_.empty() == true) {
-		server.removeChan(this);
+		server.removeChan(*this);
 		delete this;
 	}
 }
@@ -87,11 +87,11 @@ void Channel::checkOnlyOperator(Client &oldOp) {
 /*                               GETTERS                                      */
 /* ************************************************************************** */
 
-const std::string Channel::getName() const {
+const std::string &Channel::getName() const {
 	return (name_);
 }
 
-const std::string Channel::getTopic() const {
+const std::string &Channel::getTopic() const {
 	return (topic_);
 }
 
@@ -123,15 +123,15 @@ const clientMap &Channel::getInvitCli() const {
 	return (cliInvited_);
 }
 
-const std::string Channel::getPassword() const {
+const std::string &Channel::getPassword() const {
 	return (pass_);
 }
 
-const std::string Channel::getModes() const {
+const std::string &Channel::getModes() const {
 	return (modes_);
 }
 
-const Client &Channel::getCliFromNick(const std::string &targetNick) const {
+Client &Channel::getCliFromNick(const std::string &targetNick) const {
 	for (clientMapIt it = cliInChan_.begin(); it != cliInChan_.end(); ++it) {
 		if (it->second->cliInfo.getNick() == targetNick)
 			return *it->second;

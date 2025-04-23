@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/23 15:28:45 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:59:47 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ bool check::chans_::onChan(std::string arg, const stringVec &arr) {
 
 bool check::chans_::isOp(CmdSpec &cmd, size_t idx) {
 	channelMap::const_iterator itChan;
-	Channel chan = cmd.serv_.findChan(cmd[channel_][idx]);
+	Channel &chan = cmd.serv_.findChan(cmd[channel_][idx]);
 
 	if ((cmd.getName() == "TOPIC"
 		 && (cmd[topic_].empty()

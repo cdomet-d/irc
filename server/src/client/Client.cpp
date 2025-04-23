@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:53:52 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:02:52 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,6 @@
 /* ************************************************************************** */
 Client::Client() {}
 Client::~Client() {}
-
-Client::Client(const Client &rhs) {
-	static_cast< void >(rhs);
-}
-
-Client &Client::operator=(const Client &rhs) {
-	static_cast< void >(rhs);
-	return *this;
-}
 
 /* ************************************************************************** */
 /*                               GETTERS                                      */

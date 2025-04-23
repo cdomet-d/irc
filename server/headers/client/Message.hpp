@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/21 17:49:44 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:15:50 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ class Message {
 
 	/*                               GETTERS                                  */
 	size_t getSize() const;
-	const std::string getMess() const;
-	const std::string getLeft() const;
-	const std::string getCmd() const;
-	const stringVec &getCmdParam();
+	const std::string &getMess() const;
+	const std::string &getLeft() const;
+	const std::string &getCmd() const;
+	const stringVec &getCmdParam() const;
 
 	/*                               SETTERS                                  */
-	void setMess(std::string buffer);
+	void setMess(const std::string &buffer);
 	void setCmdParam(const stringVec &splitBuffer);
 
 	/*                               METHODS                                  */

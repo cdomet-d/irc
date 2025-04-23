@@ -28,8 +28,8 @@ class CmdManager {
 
 	/*                               METHODS                                  */
 
-	CmdSpec &findCmd(std::string cmName);
 	bool executeCm(CmdSpec &cm);
+	CmdSpec &findCmd(std::string cmName);
 	void generateCmds();
 	void log(CmdSpec *cm);
 
