@@ -32,7 +32,7 @@ namespace check {
 	const stringVec &getTargetChan(const std::string &target,
 								   const Server &serv);
 	template < typename MapType >
-	bool exists(std::string arg, const MapType &map) {
+	bool exists(const std::string &arg, const MapType &map) {
 		typename MapType::const_iterator toFind = map.find(arg);
 		return toFind != map.end();
 	}

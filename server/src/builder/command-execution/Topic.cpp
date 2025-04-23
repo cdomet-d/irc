@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 17:23:15 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:25:10 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "CmdSpec.hpp"
 #include "Server.hpp"
 
-static void checkTopic(Channel &curChan, Client &curCli) {
+static void checkTopic(const Channel &curChan, const Client &curCli) {
 	if (curChan.getTopic().empty() == true) {
 		RPL::send_(curCli.getFd(),
 				   RPL_NOTOPIC(curCli.cliInfo.getNick(), curChan.getName()));
@@ -26,7 +26,7 @@ static void checkTopic(Channel &curChan, Client &curCli) {
 	return;
 }
 
-static void changeTopic(Channel &curChan, Client &curCli, std::string topic) {
+static void changeTopic(Channel &curChan, const Client &curCli, const std::string &topic) {
 	curChan.setTopic(topic);
 	RPL::sendMessageChannel(curChan.getCliInChan(),
 							RPL_TOPICCHANGED(curCli.cliInfo.getPrefix(),

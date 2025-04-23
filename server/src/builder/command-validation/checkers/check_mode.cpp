@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_mode.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 10:58:28 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/23 15:55:52 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:28:33 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ bool check::mode_::formatArgs(CmdSpec &cmd) {
 	size_t size;
 	for (size_t i = 0; i < cmd[flag_].size();) {
 		size = cmd[flag_].size();
-		if (!check::mode_::validFlag(set, type, cmd[flag_][i], cmd.getSender())) {
+		if (!check::mode_::validFlag(set, type, cmd[flag_][i],
+									 cmd.getSender())) {
 			cmd[flag_].rmParam(i);
 			continue;
 		}
@@ -118,9 +119,8 @@ bool check::mode_::oTargetIsOnChan(const CmdSpec &cmd, size_t idx) {
 bool check::mode_::lArgIsDigit(const CmdSpec &cmd, size_t idx) {
 	for (size_t i = 0; cmd[flagArg_][idx][i]; ++i) {
 		if (!std::isdigit(cmd[flagArg_][idx][i])) {
-			RPL::send_(cmd.getSdFd(),
-							  ERR_BADINPUT(cmd.getSdNick(), "0 - 9",
-										   cmd[flagArg_][idx]));
+			RPL::send_(cmd.getSdFd(), ERR_BADINPUT(cmd.getSdNick(), "0 - 9",
+												   cmd[flagArg_][idx]));
 			return false;
 		}
 	}
