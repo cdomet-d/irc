@@ -68,6 +68,7 @@ echo "JOIN #chan" >&${client2_in_fd}
 sleep 0.5
 
 # ➤ client1 change de nick
+#TODO: ajouter test qui trim nick
 echo "NICK sweet" >&${client1_in_fd}
 
 sleep 0.5
