@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/23 16:23:38 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:08:26 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 /* ************************************************************************** */
 
 UserInfo::UserInfo()
-	: registration_(0), name_(""), nick_("*"), pass_(""), realName_("") {}
+	: registration_(0), nick_("*"), pass_(""), realName_("") {}
 UserInfo::~UserInfo() {}
 
 UserInfo::UserInfo(const UserInfo &rhs) {
@@ -32,10 +32,6 @@ UserInfo &UserInfo::operator=(const UserInfo &rhs) {
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
-
-const std::string &UserInfo::getName() const {
-	return name_;
-}
 
 const std::string &UserInfo::getNick() const {
 	return nick_;

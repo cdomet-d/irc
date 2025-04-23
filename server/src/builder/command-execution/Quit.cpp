@@ -41,7 +41,7 @@ void quit(CmdSpec &cmd) {
 	if (!cmd[message_].empty())
 		message = cmd[message_][0];
 	else
-		message = "You quitted the server, see you next time !";
+		message = "You quit the server, see you next time !";
 	sender->mess.clearMess();
 	partAllChans(cmd, message);
 	RPL::send_(sender->getFd(), RPL_QUIT(sender->cliInfo.getPrefix(), message));

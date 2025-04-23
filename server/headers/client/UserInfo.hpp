@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/23 16:23:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:03:54 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ class UserInfo {
 	int getRegistration() const;
 	const std::string &getHostname() const;
 	const std::string &getIP() const;
-	const std::string &getName() const;
 	const std::string &getNick() const;
 	const std::string &getPrefix() const;
 	const std::string &getRealName() const;
@@ -46,7 +45,6 @@ class UserInfo {
 	int registration_;
 	std::string hostname_;
 	std::string ip_;
-	std::string name_;
 	std::string nick_;
 	std::string pass_;
 	std::string prefix_;

@@ -44,12 +44,14 @@ namespace check {
 		e_mdeset whichSet(const char &c);
 		e_mdetype typeIsValid(const char &c);
 		bool oTargetIsOnChan(const CmdSpec &cmd, size_t idx);
+		bool lArgIsDigit(const CmdSpec &cmd, size_t idx);
 	} // namespace mode_
 
 	namespace nick_ {
 		bool isAllowed(const char &c);
 		bool isSpecial(const char &c);
-		bool syntaxIsValid(const std::string &nick, const Client &sender);
+		int syntaxIsValid(const std::string &nick);
+		std::string createErrorMess(const std::string &nick, int rv);
 	} // namespace nick_
 
 	namespace join_ {
@@ -58,8 +60,8 @@ namespace check {
 		bool validKey(const Channel &chan, CmdParam &keys, size_t i,
 					  Client &sender);
 		bool chanHasRoom(const Channel &chan, Client &sender);
-		bool cliHasMaxChans(const Channel &chan, Client &sender);
-		bool syntaxIsValid(CmdSpec &cmd, size_t idx);
+		bool cliHasMaxChans(const CmdSpec &cmd, size_t idx);
+		bool chanSyntaxIsValid(const CmdSpec &cmd, size_t idx);
 	} // namespace join_
 
 	namespace chans_ {

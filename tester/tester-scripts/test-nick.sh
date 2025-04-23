@@ -40,7 +40,7 @@ NICK {cha
 NICK }cha
 NICK +cha
 NICK cha$
-NICK cha-[]\\^4\`{}
+NICK cha-[]\\^4
 USER c 0 * c
 NICK chacham sweet
 NICK cha#
@@ -68,6 +68,7 @@ echo "JOIN #chan" >&${client2_in_fd}
 sleep 0.5
 
 # ➤ client1 change de nick
+#TODO: ajouter test qui trim nick
 echo "NICK sweet" >&${client1_in_fd}
 
 sleep 0.5

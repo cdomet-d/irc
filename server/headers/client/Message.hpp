@@ -67,7 +67,7 @@ class Message {
 
   private:
 	Message(const Message &rhs);
-	Message &operator=(const Message &rhs);
+	Message &operator=(const Message &rhs); //TODO: not in Message.cpp
 
 	// members
 	std::string message_;

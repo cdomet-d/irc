@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/23 16:16:07 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:08:16 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,11 @@ void Message::formatModeFlags(std::string &flagformat) {
 					break;
 				++i;
 			}
-		} else
+		} else {
 			flagformat += flags[i];
+			if (i < flags.size() && (flags[i + 1] == '+' || flags[i + 1] == '-'))
+				flagformat += ',';
+		}
 	}
 }
 

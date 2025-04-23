@@ -4,8 +4,8 @@
 :irc.bitchat.net 001 cha :Welcome to the Bitchat Internet Relay Chat Network cha!c@localhost
 :irc.bitchat.net 002 cha :Your host is Bitchat, running version 1.0
 :irc.bitchat.net 003 cha :This server was created 14-04-2025 13:24:26
-:irc.bitchat.net 004 cha Bitchat 1.0 | k,o,l,i,t | k,o,l
-:irc.bitchat.net 005 cha CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 004 cha Bitchat 1.0 kolit kol
+:irc.bitchat.net 005 cha CHANLIMIT=#:50 CHANMODES=,ko,l,it CHANTYPES=# CHANNELLEN=200 NICKLEN=9 USERLEN=18  TOPICLEN=307 KICKLEN=307 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ NETWORK=Bitchat :are supported by this server
 :irc.bitchat.net 375 cha :- Bitchat Message of the day - 
 :irc.bitchat.net 372 cha :Registration completed, you can join channels and start chatting !
 :irc.bitchat.net 376 cha :End of /MOTD command
@@ -19,15 +19,15 @@
 :irc.bitchat.net 352 cha #chan c localhost irc.bitchat.net cha @ :0 c
 :irc.bitchat.net 315 cha #chan :End of /WHO list
 :bobby!b@localhost JOIN #chan
-:cha!c@localhost QUIT :You quitted the server, see you next time !
+:cha!c@localhost QUIT :You quit the server, see you next time !
 ERROR :Closing Link: localhost (Client Quit)
 :irc.bitchat.net NOTICE * :Valid password ! You may register
 :irc.bitchat.net NOTICE bobby :The nickname is valid and saved !
 :irc.bitchat.net 001 bobby :Welcome to the Bitchat Internet Relay Chat Network bobby!b@localhost
 :irc.bitchat.net 002 bobby :Your host is Bitchat, running version 1.0
 :irc.bitchat.net 003 bobby :This server was created 14-04-2025 13:24:26
-:irc.bitchat.net 004 bobby Bitchat 1.0 | k,o,l,i,t | k,o,l
-:irc.bitchat.net 005 bobby CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 004 bobby Bitchat 1.0 kolit kol
+:irc.bitchat.net 005 bobby CHANLIMIT=#:50 CHANMODES=,ko,l,it CHANTYPES=# CHANNELLEN=200 NICKLEN=9 USERLEN=18  TOPICLEN=307 KICKLEN=307 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ NETWORK=Bitchat :are supported by this server
 :irc.bitchat.net 375 bobby :- Bitchat Message of the day - 
 :irc.bitchat.net 372 bobby :Registration completed, you can join channels and start chatting !
 :irc.bitchat.net 376 bobby :End of /MOTD command
@@ -39,7 +39,7 @@ ERROR :Closing Link: localhost (Client Quit)
 :irc.bitchat.net 315 bobby #chan :End of /WHO list
 :irc.bitchat.net 352 cha #chan c localhost irc.bitchat.net cha @ :0 c
 :irc.bitchat.net 315 bobby #chan :End of /WHO list
-:cha!c@localhost QUIT :You quitted the server, see you next time !
+:cha!c@localhost QUIT :You quit the server, see you next time !
 :cha!c@localhost MODE #chan +o bobby
-:bobby!b@localhost QUIT :You quitted the server, see you next time !
+:bobby!b@localhost QUIT :You quit the server, see you next time !
 ERROR :Closing Link: localhost (Client Quit)

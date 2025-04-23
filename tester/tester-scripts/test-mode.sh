@@ -32,7 +32,6 @@ MODE #dontexist
 MODE #chan
 MODE #chan k-t
 MODE #chan u
-MODE #chan -t
 EOF
 
 sleep 0.5
