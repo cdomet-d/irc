@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/22 16:47:58 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/23 12:45:40 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,42 +167,42 @@ void Server::handleData(int fd) {
 	}
 }
 
-void Server::addChan(Channel *curChan) {
+void Server::addChan(Channel &curChan) {
 	channels_.insert(
-		std::pair< std::string, Channel * >(curChan->getName(), curChan));
+		std::pair< std::string, Channel * >(curChan.getName(), curChan));
 }
 
-void Server::removeChan(Channel *curChan) {
-	channels_.erase(curChan->getName());
+void Server::removeChan(Channel &curChan) {
+	channels_.erase(curChan.getName());
 }
-void Server::removeCli(Client *curCli) {
-	removeNickFromUsedNicks(curCli->cliInfo.getNick());
-	clients_.erase(curCli->getFd());
+void Server::removeCli(Client &curCli) {
+	removeNickFromUsedNicks(curCli.cliInfo.getNick());
+	clients_.erase(curCli.getFd());
 }
 
-void Server::checkChanInviteList(Client *sender) {
+void Server::checkChanInviteList(const Client &sender) {
 	for (channelMapIt chan = channels_.begin(); chan != channels_.end();
 		 ++chan) {
-		if (chan->second->getInvitCli().find(sender->getFd()) !=
+		if (chan->second->getInvitCli().find(sender.getFd()) !=
 			chan->second->getInvitCli().end())
-			RPL::send_(sender->getFd(),
-					   RPL_INVITELIST(sender->cliInfo.getNick(), chan->first));
+			RPL::send_(sender.getFd(),
+					   RPL_INVITELIST(sender.cliInfo.getNick(), chan->first));
 	}
-	RPL::send_(sender->getFd(), RPL_ENDOFINVITELIST(sender->cliInfo.getNick()));
+	RPL::send_(sender.getFd(), RPL_ENDOFINVITELIST(sender.cliInfo.getNick()));
 }
 
-Client *Server::findCli(int fd) {
+Client &Server::findCli(int fd) {
 	clientMapIt currCliIt = clients_.find(fd);
 	if (currCliIt == clients_.end())
-		return (NULL);
-	return (currCliIt->second);
+		throw ObjectNotFound("No such client");
+	return (*currCliIt->second);
 }
 
-Channel *Server::findChan(std::string chanName) {
+Channel &Server::findChan(const std::string &chanName) {
 	channelMapIt currChanIt = channels_.find(chanName);
 	if (currChanIt == channels_.end())
-		return (NULL);
-	return (currChanIt->second);
+		throw Server::ObjectNotFound("No such channel");
+	return (*currChanIt->second);
 }
 
 void Server::addNickToUsedNicks(const std::string &newNick, int fd) {
@@ -219,13 +219,19 @@ void Server::removeNickFromUsedNicks(const std::string &toRemove) {
 /* ************************************************************************** */
 /*                               EXCEPTIONS                                   */
 /* ************************************************************************** */
+Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
 
 const char *Server::InitFailed::what() const throw() {
 	std::cerr << "irc: ";
 	return (errMessage);
 }
 
-Server::InitFailed::InitFailed(const char *err) : errMessage(err) {}
+
+Server::ObjectNotFound::ObjectNotFound(const char *err) : errMessage(err) {}
+const char *Server::ObjectNotFound::what() const throw() {
+	return (errMessage);
+}
+
 
 /* ************************************************************************** */
 /*                               GETTERS                                      */

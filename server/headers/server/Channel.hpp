@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/21 18:29:55 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 12:47:28 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class Channel {
 
 	/*                               METHODS                                  */
 	bool addClientToChan(Channel *curChan, Client *curCli);
-	void addCli(mapChan curMap, Client *curCli);
+	void addCli(mapChan curMap, Client &curCli);
 	void removeCli(mapChan curMap, int fdCli);
 	void checkOnlyOperator(Client &oldOp);
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/22 16:29:24 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:25:20 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,28 @@ class Server {
 		const char *errMessage;
 	};
 
+	class ObjectNotFound : public std::exception {
+	  public:
+		ObjectNotFound(const char *err);
+		const char *what() const throw();
+
+	  private:
+		const char *errMessage;
+	};
+
 	/*                               METHODS                                  */
 	void handleData(int fd);
 	bool servInit();
 	bool servRun();
 	void acceptClient();
-	void addChan(Channel *curChan);
+	void addChan(Channel &curChan);
 	void addNickToUsedNicks(const std::string &newNick, int fd);
 	void removeNickFromUsedNicks(const std::string &toRemove);
-	void removeChan(Channel *curChan);
-	void removeCli(Client *curCli);
-	void checkChanInviteList(Client *sender);
-	Client *findCli(int fd);
-	Channel *findChan(std::string chanName);
+	void removeChan(Channel &curChan);
+	void removeCli(Client &curCli);
+	void checkChanInviteList(const Client &sender);
+	Client &findCli(int fd);
+	Channel &findChan(const std::string &chanName);
 
 	/*                               GETTERS                                  */
 	const nickMap &getUsedNick() const;

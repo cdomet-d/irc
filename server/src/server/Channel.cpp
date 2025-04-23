@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/21 18:30:37 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 12:47:58 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,16 @@ bool Channel::addClientToChan(Channel *curChan, Client *sender) {
 	return (true);
 }
 
-void Channel::addCli(mapChan curMap, Client *sender) {
+void Channel::addCli(mapChan curMap, Client &sender) {
 	switch (curMap) {
 	case ALLCLI:
-		cliInChan_.insert(clientPair(sender->getFd(), sender));
+		cliInChan_.insert(clientPair(sender.getFd(), &sender));
 		break;
 	case OPCLI:
-		cliIsOperator_.insert(clientPair(sender->getFd(), sender));
+		cliIsOperator_.insert(clientPair(sender.getFd(), &sender));
 		break;
 	case INVITECLI:
-		cliInvited_.insert(clientPair(sender->getFd(), sender));
+		cliInvited_.insert(clientPair(sender.getFd(), &sender));
 	}
 }
 
