@@ -53,7 +53,7 @@ bool check::user(CmdSpec &cmd, size_t idx) {
 							" " + cmd[servername_][idx] + " " +
 							cmd[realname_][idx];
 		RPL::send_(cmd.getSdFd(),
-				   ERR_BADINPUT(cmd.getName(), USERFORMAT, reply));
+				   ERR_BADINPUT(cmd.getSdNick(), USERFORMAT, reply));
 		return false;
 	}
 	return true;

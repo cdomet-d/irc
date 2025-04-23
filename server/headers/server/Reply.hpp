@@ -199,11 +199,11 @@
 	("ERROR :Closing Link: " + host + " (" + reason + ")\r\n")
 
 //command_replies (uses prefix)
-#define ERR_BADKEYLEN(channel)                                                 \
-	(":irc.bitchat.net NOTICE " + channel +                                    \
+#define ERR_BADKEYLEN(nickname)                                                 \
+	(":irc.bitchat.net NOTICE " + nickname +                                    \
 	 " :Bad key (+k) - key len must be at least 8 and no more than 26\r\n")
-#define ERR_BADINPUT(cmd, expected, received)                                  \
-	(":irc.bitchat.net NOTICE " + cmd + " :format should be [" + expected +    \
+#define ERR_BADINPUT(nickname, expected, received)                                  \
+	(":irc.bitchat.net NOTICE " + nickname + " :format should be [" + expected +    \
 	 "], is [" + received + "]\r\n")
 #define RPL_INVITE(prefix, target, channel)                                    \
 	(":" + prefix + " INVITE " + target + " :" + channel + "\r\n")
