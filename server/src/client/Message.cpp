@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/22 11:14:19 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:34:45 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,11 @@ void Message::formatModeFlags(std::string &flagformat) {
 					break;
 				++i;
 			}
-		} else
+		} else {
 			flagformat += flags[i];
+			if (i < flags.size() && (flags[i + 1] == '+' || flags[i + 1] == '-'))
+				flagformat += ',';
+		}
 	}
 }
 

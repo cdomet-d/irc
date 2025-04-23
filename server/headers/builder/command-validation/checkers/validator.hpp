@@ -44,6 +44,7 @@ namespace check {
 		e_mdeset whichSet(const char &c);
 		e_mdetype typeIsValid(const char &c);
 		bool oTargetIsOnChan(const CmdSpec &cmd, size_t idx);
+		bool lArgIsDigit(const CmdSpec &cmd, size_t idx);
 	} // namespace mode_
 
 	namespace nick_ {
