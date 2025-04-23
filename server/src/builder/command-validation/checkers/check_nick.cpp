@@ -61,7 +61,7 @@ std::string check::nick_::createErrorMess(const std::string &nick, int rv) {
 
 
 bool check::nick_::isAllowed(const char &c) {
-	return std::isalpha(c) || isdigit(c) || check::nick_::isSpecial(c);
+	return std::isalpha(c) || std::isdigit(c) || check::nick_::isSpecial(c);
 }
 
 bool check::nick_::isSpecial(const char &c) {
