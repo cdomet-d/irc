@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_join.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/15 11:54:21 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/22 18:34:13 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ bool check::join(CmdSpec &cmd, size_t idx) {
 				cmd[channel_].rmParam(idx);
 				continue;
 			}
-		} else if (!check::join_::syntaxIsValid(cmd, idx)) {
+		} else if (!check::join_::chanSyntaxIsValid(cmd, idx)) {
 			cmd[channel_].rmParam(idx);
 			continue;
 		} else
@@ -89,7 +89,7 @@ bool check::join_::cliHasMaxChans(Channel &chan, Client &sender) {
 	return (true);
 }
 
-bool check::join_::syntaxIsValid(CmdSpec &cmd, size_t idx) {
+bool check::join_::chanSyntaxIsValid(CmdSpec &cmd, size_t idx) {
 	if (cmd[channel_][idx].size() == 1 && cmd[channel_][idx][0] == '0')
 		return (true);
 	if (cmd[channel_][idx][0] != '#'
