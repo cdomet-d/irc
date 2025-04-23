@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/22 11:14:19 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:36:30 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,9 +221,16 @@ void Message::removeNewlines() {
 	}
 	std::string::size_type newline =
 		(termSize == 2 ? message_.find("\r\n") : message_.find("\n"));
+	if (newline == std::string::npos) {
+		message_.clear();
+		return;
+	}
+	if (newline + termSize > message_.size()) {
+		message_.clear();
+		return;
+	}
 	leftover_ = message_.substr(newline + termSize);
-	message_.erase(message_.begin() + newline, message_.end());
-	return;
+	message_.erase(newline);
 }
 
 static bool isConsecutiveSpace(char left, char right) {

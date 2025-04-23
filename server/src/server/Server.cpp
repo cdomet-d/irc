@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/22 16:47:58 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/23 17:15:03 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,12 +157,17 @@ void Server::handleData(int fd) {
 	} else if (bytes == -1)
 		return;
 	else {
+		try {
 		std::string inputCli = curCli->mess.getMess();
 		inputCli.append(tmpBuf);
 		curCli->mess.setMess(inputCli);
 		if (curCli->mess.getMess().find('\n') != std::string::npos) {
 			RPL::log(RPL::GOT, curCli->mess.getMess());
 			buffer_manip::prepareCommand(*curCli);
+		}
+	} catch (std::length_error &e) {
+			curCli->mess.clear();
+			return ;
 		}
 	}
 }
