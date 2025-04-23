@@ -2,10 +2,10 @@
 :irc.bitchat.net NOTICE * :Valid password ! You may register
 :irc.bitchat.net NOTICE chacham :The nickname is valid and saved !
 :irc.bitchat.net 001 chacham :Welcome to the Bitchat Internet Relay Chat Network chacham!c@localhost
-:irc.bitchat.net 002 chacham :Your host is Bitchat, running version 1.0 
+:irc.bitchat.net 002 chacham :Your host is Bitchat, running version 1.0
 :irc.bitchat.net 003 chacham :This server was created 09-04-2025 15:40:01
-:irc.bitchat.net 004 chacham Bitchat 1.0 | k,o,l,i,t | k,o,l
-:irc.bitchat.net 005 chacham CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 004 chacham Bitchat 1.0 kolit kol
+:irc.bitchat.net 005 chacham CHANLIMIT=#:50 CHANMODES=,ko,l,it CHANTYPES=# CHANNELLEN=200 NICKLEN=9 USERLEN=18  TOPICLEN=307 KICKLEN=307 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ NETWORK=Bitchat :are supported by this server
 :irc.bitchat.net 375 chacham :- Bitchat Message of the day - 
 :irc.bitchat.net 372 chacham :Registration completed, you can join channels and start chatting !
 :irc.bitchat.net 376 chacham :End of /MOTD command
@@ -25,15 +25,15 @@
 :chacham!c@localhost KICK #chan juju 
 :bobby!b@localhost JOIN #chan
 :chacham!c@localhost KICK #chan bobby :baddly behaved
-:chacham!c@localhost QUIT :You quitted the server, see you next time !
+:chacham!c@localhost QUIT :You quit the server, see you next time !
 ERROR :Closing Link: localhost (Client Quit)
 :irc.bitchat.net NOTICE * :Valid password ! You may register
 :irc.bitchat.net NOTICE bobby :The nickname is valid and saved !
 :irc.bitchat.net 001 bobby :Welcome to the Bitchat Internet Relay Chat Network bobby!b@localhost
-:irc.bitchat.net 002 bobby :Your host is Bitchat, running version 1.0 
+:irc.bitchat.net 002 bobby :Your host is Bitchat, running version 1.0
 :irc.bitchat.net 003 bobby :This server was created 09-04-2025 15:40:01
-:irc.bitchat.net 004 bobby Bitchat 1.0 | k,o,l,i,t | k,o,l
-:irc.bitchat.net 005 bobby CHANLIMIT=#:50 CHANMODES=ko,l,it CHANNELLEN=200 CHANTYPES=# NICKLEN=9 USERLEN=18 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ TOPICLEN=307 KICKLEN=307 NETWORK=Bitchat :are supported by this server
+:irc.bitchat.net 004 bobby Bitchat 1.0 kolit kol
+:irc.bitchat.net 005 bobby CHANLIMIT=#:50 CHANMODES=,ko,l,it CHANTYPES=# CHANNELLEN=200 NICKLEN=9 USERLEN=18  TOPICLEN=307 KICKLEN=307 TARGMAX=JOIN:,KICK:,PART:,PRIVMSG: PREFIX=(o)@ NETWORK=Bitchat :are supported by this server
 :irc.bitchat.net 375 bobby :- Bitchat Message of the day - 
 :irc.bitchat.net 372 bobby :Registration completed, you can join channels and start chatting !
 :irc.bitchat.net 376 bobby :End of /MOTD command
@@ -48,5 +48,5 @@ ERROR :Closing Link: localhost (Client Quit)
 :irc.bitchat.net 353 bobby = #chan :bobby @chacham
 :irc.bitchat.net 366 bobby #chan :End of /NAMES list
 :chacham!c@localhost KICK #chan bobby :baddly behaved
-:bobby!b@localhost QUIT :You quitted the server, see you next time !
+:bobby!b@localhost QUIT :You quit the server, see you next time !
 ERROR :Closing Link: localhost (Client Quit)
