@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 12:47:58 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 14:33:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ Channel::~Channel() {
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
-bool Channel::addClientToChan(Channel *curChan, Client *sender) {
-	curChan->addCli(ALLCLI, sender);
-	sender->addOneChan(curChan->getName());
-	if (curChan->getOpCli().empty())
-		curChan->addCli(OPCLI, sender);
-	curChan->removeCli(INVITECLI, sender->getFd());
+bool Channel::addClientToChan(Channel &curChan, Client &sender) {
+	curChan.addCli(ALLCLI, sender);
+	sender.addOneChan(curChan.getName());
+	if (curChan.getOpCli().empty())
+		curChan.addCli(OPCLI, sender);
+	curChan.removeCli(INVITECLI, sender.getFd());
 	return (true);
 }
 
@@ -87,11 +87,11 @@ void Channel::checkOnlyOperator(Client &oldOp) {
 /*                               GETTERS                                      */
 /* ************************************************************************** */
 
-std::string Channel::getName() const {
+const std::string Channel::getName() const {
 	return (name_);
 }
 
-std::string Channel::getTopic() const {
+const std::string Channel::getTopic() const {
 	return (topic_);
 }
 
@@ -123,12 +123,20 @@ const clientMap &Channel::getInvitCli() const {
 	return (cliInvited_);
 }
 
-std::string Channel::getPassword() const {
+const std::string Channel::getPassword() const {
 	return (pass_);
 }
 
-std::string Channel::getModes() const {
+const std::string Channel::getModes() const {
 	return (modes_);
+}
+
+const Client &Channel::getCliFromNick(const std::string &targetNick) const {
+	for (clientMapIt it = cliInChan_.begin(); it != cliInChan_.end(); ++it) {
+		if (it->second->cliInfo.getNick() == targetNick)
+			return *it->second;
+	}
+	throw std::runtime_error("Client not found");
 }
 
 /* ************************************************************************** */

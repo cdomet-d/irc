@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/21 18:31:58 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 14:07:44 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,11 @@ void part(CmdSpec &cmd) {
 		message = cmd[message_][0];
 
 	for (size_t nbChan = 0; nbChan < cmd[channel_].size(); nbChan++) {
-		Channel &curChan = *cmd.serv_.findChan(cmd[channel_][nbChan]);
-		partMess(sender, curChan, message);
-		partOneChan(sender, curChan);
-		curChan.checkOnlyOperator(*sender);
+		try {
+			Channel &curChan = cmd.serv_.findChan(cmd[channel_][nbChan]);
+			partMess(sender, curChan, message);
+			partOneChan(sender, curChan);
+			curChan.checkOnlyOperator(*sender);
+		} catch (std::exception &e) { RPL::log(RPL::ERROR, e.what()); }
 	}
 }

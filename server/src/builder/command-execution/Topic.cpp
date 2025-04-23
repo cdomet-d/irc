@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/21 18:32:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 14:05:16 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,13 @@ void changeTopic(Channel &curChan, Client *curCli, std::string topic) {
 
 void topic(CmdSpec &cmd) {
 	Client *sender = &cmd.getSender();
-	Channel &curChan = *cmd.serv_.findChan(cmd[channel_][0]);
 
-	if (!cmd[topic_].size())
-		checkTopic(curChan, sender);
-	else
-		changeTopic(curChan, sender, cmd[topic_][0]);
+	try {
+		Channel &curChan = cmd.serv_.findChan(cmd[channel_][0]);
+
+		if (!cmd[topic_].size())
+			checkTopic(curChan, sender);
+		else
+			changeTopic(curChan, sender, cmd[topic_][0]);
+	} catch (std::exception &e) { RPL::log(RPL::ERROR, e.what()); }
 }
