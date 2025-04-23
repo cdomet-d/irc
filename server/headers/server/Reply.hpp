@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/22 16:49:12 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/22 18:31:16 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,10 @@
 	(":irc.bitchat.net 431 " + nickname + " :No nickname given\r\n")
 #define ERR_ERRONEUSNICKNAME(nickname, newNick)                               \
 	(":irc.bitchat.net 432 " + nickname + " " + newNick                       \
-	 + " :Erroneous nickname or username\r\n")
+	 + " :Erroneous nickname\r\n")
+#define ERR_ERRONEUSUSERNAME(nickname, username)                               \
+	(":irc.bitchat.net NOTICE " + nickname + " " + username                       \
+	 + " :Erroneous username\r\n")
 #define ERR_NEEDMOREPARAMS(nickname, command)                                 \
 	(":irc.bitchat.net 461 " + nickname + " " + command                       \
 	 + " :Not enough parameters\r\n")
@@ -220,8 +223,7 @@
 	(":" + prefix + " MODE " + channel + " " + Mode + " " + modeArgs + "\r\n")
 #define RPL_QUIT(prefix, message) (":" + prefix + " QUIT :" + message + "\r\n")
 #define RPL_NICK(prefix, newNick) (":" + prefix + " NICK :" + newNick + "\r\n")
-#define RPL_PONG(message)                                                     \
-	(":irc.bitchat.net PONG irc.bitchat.net :" + message + "\r\n")
+#define RPL_PONG(message) (":irc.bitchat.net PONG irc.bitchat.net :" + message + "\r\n")
 
 namespace RPL {
 	enum e_level { INFO, ERROR, DEBUG, REPLY, GOT };

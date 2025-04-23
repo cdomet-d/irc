@@ -32,13 +32,13 @@ $(NAME) : $(OBJS)
 
 $(BUILD_DIR)%.o: $(SRC_DIR)%.cpp
 	@mkdir -p $(dir $@)
+	@mkdir -p outputs
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 -include $(DEPS)
 
 clean :
 	rm -rf $(OBJS) $(DEPS)
-	rm outputs/output.txt
 
 fclean : clean
 	rm -rf $(NAME)

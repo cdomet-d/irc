@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Api.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 15:50:43 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/22 17:07:58 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/22 18:08:54 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ bool Api::requestToken() {
 		if (temp - time_ < 7200)
 			return (true);
 	}
+	curlCmd_.reserve(7);
 	curlCmd_.push_back("curl");
 	curlCmd_.push_back("-s");
 	curlCmd_.push_back("-X");
@@ -162,11 +163,8 @@ bool Api::executeCmd(void) {
 void Api::cleanChild(int exitCode) {
 	if (resFd_ != -1)
 		close(resFd_);
-	if (cmd_ != NULL) {
-		for (size_t i = 0; cmd_[i]; i++)
-			std::free(cmd_[i]);
-		std::free(cmd_);
-	}
+	if (cmd_ != NULL)
+		delete [] cmd_;
 	close(0);
 	close(1);
 	curlCmd_.clear();
@@ -201,19 +199,9 @@ bool Api::findCurlPath() {
 }
 
 bool Api::fillCmd(void) {
-	cmd_ = (char **)std::malloc(sizeof(char *) * (curlCmd_.size() + 1));
-	if (cmd_ == NULL)
-		return (false);
-	for (size_t i = 0; i < curlCmd_.size(); ++i) {
-		cmd_[i] = strdup(curlCmd_[i].c_str());
-		if (cmd_[i] == NULL) {
-			while ((int)i >= 0)
-				free(cmd_[i--]);
-			free(cmd_);
-			RPL::log(RPL::ERROR, "strdup failed\r\n");
-			return (false);
-		}
-	}
+	cmd_ = new char*[curlCmd_.size() + 1];
+	for (size_t i = 0; i < curlCmd_.size(); ++i)
+		cmd_[i] = const_cast<char *>(curlCmd_[i].c_str());
 	cmd_[curlCmd_.size()] = NULL;
 	return (true);
 }

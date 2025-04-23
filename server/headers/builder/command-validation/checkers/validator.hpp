@@ -49,7 +49,8 @@ namespace check {
 	namespace nick_ {
 		bool isAllowed(const char &c);
 		bool isSpecial(const char &c);
-		bool syntaxIsValid(const std::string &nick, const Client &sender);
+		int syntaxIsValid(const std::string &nick);
+		std::string createErrorMess(const std::string &nick, int rv);
 	} // namespace nick_
 
 	namespace join_ {
@@ -58,7 +59,7 @@ namespace check {
 		bool validKey(Channel &chan, CmdParam &keys, size_t i, Client &sender);
 		bool chanHasRoom(Channel &chan, Client &sender);
 		bool cliHasMaxChans(CmdSpec &cmd, size_t idx);
-		bool syntaxIsValid(CmdSpec &cmd, size_t idx);
+		bool chanSyntaxIsValid(CmdSpec &cmd, size_t idx);
 	} // namespace join_
 
 	namespace chans_ {
