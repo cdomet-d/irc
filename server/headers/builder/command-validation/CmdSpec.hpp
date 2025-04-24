@@ -50,13 +50,19 @@ class CmdSpec {
 	Server &serv_;
 
 	/*                               METHODS                                  */
+	
 	CmdParam &operator[](e_param type);
 	const CmdParam &operator[](e_param type) const;
 	CmdSpec &process(Client &sender);
 	void cleanAll();
 	bool checkRegistrationStage();
 
+	/*                               DISPLAY                                  */
+
+	void displayParams(const std::string &where);
+	
 	/*                               GETTERS                                  */
+	
 	bool getValid() const;
 	Client &getSender() const;
 	const paramMap &getParams() const;
