@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 15:04:05 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 16:51:12 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,33 +207,32 @@ bool Message::hasValidLen(const Client &sender) {
 
 /* Determine whether the received messages has \r\n, \n or \r as a termination;
 returns the size of the found termination to accurately trim it from the raw message */
-std::string::size_type Message::evaluateTermination() const {
-	if (message_.find("\r\n") != std::string::npos)
+std::string::size_type Message::evaluateTermination(std::string &term) const {
+	if (message_.find("\r\n") != std::string::npos) {
+		term = "\r\n";
 		return 2;
-	if (message_.find("\n") != std::string::npos ||
-		message_.find("\r") != std::string::npos)
+	}
+	if (message_.find("\n") != std::string::npos) {
+		term = "\n";
 		return 1;
+	}
+	if (message_.find("\r") != std::string::npos) {
+		term = "\r";
+		return 1;
+	}
 	return std::string::npos;
 }
 
 /* Trims termination from message */
 void Message::removeNewlines() {
-	std::string::size_type termSize = evaluateTermination();
-	if (termSize == std::string::npos) {
+	std::string term;
+
+	if (evaluateTermination(term) == std::string::npos) {
 		message_.clear();
 		return;
 	}
-	std::string::size_type newline =
-		(termSize == 2 ? message_.find("\r\n") : message_.find("\n"));
-	if (newline == std::string::npos) {
-		message_.clear();
-		return;
-	}
-	if (newline + termSize > message_.size()) {
-		message_.clear();
-		return;
-	}
-	leftover_ = message_.substr(newline + termSize);
+	std::string::size_type newline = message_.find(term);
+	leftover_ = message_.substr(newline + term.size());
 	message_.erase(newline);
 }
 
