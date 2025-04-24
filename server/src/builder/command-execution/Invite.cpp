@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 11:17:30 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:23:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,5 @@ void invite(CmdSpec &cmd) {
 							  targetCli.cliInfo.getNick(), cmd[channel_][0]));
 
 		curChan.addCli(INVITECLI, targetCli);
-	} catch (ObjectNotFound &e) {}
+	} catch (ObjectNotFound &e) { RPL::log(RPL::ERROR, e.what()); }
 }

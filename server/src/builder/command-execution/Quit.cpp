@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 11:24:53 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:13:11 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void partAllChans(CmdSpec &cmd, const std::string &message) {
 					curChan.getCliInChan(),
 					RPL_QUIT(sender.cliInfo.getPrefix(), message));
 			curChan.checkOnlyOperator(sender);
-		} catch (ObjectNotFound &e) {}
+		} catch (ObjectNotFound &e) { RPL::log(RPL::ERROR, e.what()); }
 	}
 }
 

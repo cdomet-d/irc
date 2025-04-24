@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 11:24:57 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:13:24 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,5 @@ void topic(CmdSpec &cmd) {
 			checkTopic(curChan, sender);
 		else
 			changeTopic(curChan, sender, cmd[topic_][0]);
-	} catch (ObjectNotFound &e) {}
+	} catch (ObjectNotFound &e) { RPL::log(RPL::ERROR, e.what()); }
 }

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 14:08:17 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 11:25:10 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:13:30 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,5 @@ void who(CmdSpec &cmd) {
 		}
 		RPL::send_(cmd.getSdFd(),
 				   RPL_ENDOFWHO(cmd.getSdNick(), cmd[channel_][0]));
-	} catch (ObjectNotFound &e) {}
+	} catch (ObjectNotFound &e) { RPL::log(RPL::ERROR, e.what()); }
 }

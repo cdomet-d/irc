@@ -6,21 +6,17 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 11:22:49 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:48:05 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "CmdExecution.hpp"
+#include "Exceptions.hpp"
 #include "Reply.hpp"
 #include "printers.hpp"
 #include <cerrno>
 #include <sstream>
-
-ObjectNotFound::ObjectNotFound(const char *err) : errMessage(err) {}
-const char *ObjectNotFound::what() const throw() {
-	return (errMessage);
-}
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
@@ -203,14 +199,14 @@ void Server::checkChanInviteList(const Client &sender) {
 Client &Server::findCli(int fd) {
 	clientMapIt currCliIt = clients_.find(fd);
 	if (currCliIt == clients_.end())
-		throw ObjectNotFound("No such client\r\n");
+		throw ObjectNotFound("No such client");
 	return (*currCliIt->second);
 }
 
 Channel &Server::findChan(const std::string &chanName) {
 	channelMapIt currChanIt = channels_.find(chanName);
 	if (currChanIt == channels_.end())
-		throw ObjectNotFound("No such channel\r\n");
+		throw ObjectNotFound("No such channel");
 	return (*currChanIt->second);
 }
 

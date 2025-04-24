@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:20:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 11:24:38 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:08:32 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void nick(CmdSpec &cmd) {
 				RPL::sendMessageChannel(
 					curChan.getCliInChan(),
 					RPL_NICK(sender.cliInfo.getPrefix(), cmd[nickname_][0]));
-			} catch (ObjectNotFound &e) {}
+			} catch (ObjectNotFound &e) { RPL::log(RPL::ERROR, e.what()); }
 		}
 	}
 	sender.cliInfo.setPrefix();

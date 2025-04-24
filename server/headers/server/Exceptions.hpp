@@ -2,7 +2,6 @@
 #define EXCEPTIONS_HPP
 
 #include <exception>
-	
 
 class ObjectNotFound : public std::exception {
   public:

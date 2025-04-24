@@ -29,6 +29,7 @@ SERV_DIR:= $(SERV_SRC_DIR)server/
 SERV_SRC:=			Channel.cpp \
 					Server.cpp \
 					Reply.cpp \
+					Exceptions.cpp \
 
 CLI_SRC:=			Client.cpp \
 					Message.cpp \

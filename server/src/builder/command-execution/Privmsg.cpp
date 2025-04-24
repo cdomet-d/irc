@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:52:37 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 11:25:43 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:11:35 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,6 @@ void privmsg(CmdSpec &cmd) {
 										   curChan.getName(),
 										   cmd[message_][0]));
 			}
-		} catch (ObjectNotFound &e) {}
+		} catch (ObjectNotFound &e) { RPL::log(RPL::ERROR, e.what()); }
 	}
 }

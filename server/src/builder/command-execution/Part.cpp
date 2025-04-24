@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 11:25:31 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:11:25 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,6 @@ void part(CmdSpec &cmd) {
 			partMess(sender, curChan, message);
 			partOneChan(sender, curChan);
 			curChan.checkOnlyOperator(sender);
-		} catch (ObjectNotFound &e) {}
+		} catch (ObjectNotFound &e) { RPL::log(RPL::ERROR, e.what()); }
 	}
 }
