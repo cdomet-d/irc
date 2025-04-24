@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+         #
+#    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/29 15:03:27 by csweetin          #+#    #+#              #
-#    Updated: 2025/04/15 11:53:44 by aljulien         ###   ########.fr        #
+#    Updated: 2025/04/24 19:39:53 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ $(BUILD_DIR)%.o: $(SRC_DIR)%.cpp
 -include $(DEPS)
 
 clean :
-	rm -rf $(OBJS) $(DEPS)
+	rm -rf $(BUILD_DIR)
 
 fclean : clean
 	rm -rf $(NAME)
