@@ -39,13 +39,13 @@ ERROR :Closing Link: localhost (Client Quit)
 :irc.bitchat.net 376 bobby :End of /MOTD command
 :irc.bitchat.net 442 bobby #chan :You're not on that channel
 :bobby!b@localhost JOIN #chan
-:irc.bitchat.net 353 bobby = #chan :bobby @chacham juju
+:irc.bitchat.net 353 bobby = #chan :@chacham bobby juju
 :irc.bitchat.net 366 bobby #chan :End of /NAMES list
 :irc.bitchat.net 461 bobby KICK :Not enough parameters
 :irc.bitchat.net 482 bobby #chan :You're not channel operator
 :chacham!c@localhost KICK #chan bobby 
 :bobby!b@localhost JOIN #chan
-:irc.bitchat.net 353 bobby = #chan :bobby @chacham
+:irc.bitchat.net 353 bobby = #chan :@chacham bobby
 :irc.bitchat.net 366 bobby #chan :End of /NAMES list
 :chacham!c@localhost KICK #chan bobby :baddly behaved
 :bobby!b@localhost QUIT :You quit the server, see you next time !

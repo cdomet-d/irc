@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/22 18:31:16 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/24 17:58:55 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,16 @@
 // channel_err_replies
 #define ERR_BADCHANNELKEY(nickname, channel)                                   \
 	(":irc.bitchat.net 475 " + nickname + " " + channel +                      \
-	 " :Cannot join channel (+k)" + "\r\n")
+	 " :Cannot join channel (+k) - bad key" + "\r\n")
 #define ERR_CHANNELISFULL(nickname, channel)                                   \
 	(":irc.bitchat.net 471 " + nickname + " " + channel +                      \
-	 " :Cannot join channel (+l)\r\n")
+	 " :Cannot join channel (+l) - channel is full, try again later\r\n")
 #define ERR_CHANOPRIVSNEEDED(nickname, channel)                                \
 	(":irc.bitchat.net 482 " + nickname + " " + channel +                      \
 	 " :You're not channel operator" + "\r\n")
 #define ERR_INVITEONLYCHAN(nickname, channel)                                  \
 	(":irc.bitchat.net 473 " + nickname + " " + channel +                      \
-	 " :Cannot join channel (+i)\r\n")
+	 " :Cannot join channel (+i) - you must be invited\r\n")
 #define ERR_TOOMANYCHANNELS(nickname, channel)                                 \
 	(":irc.bitchat.net 405 " + nickname + " " + channel +                      \
 	 " :You have joined too many channels\r\n")
@@ -48,9 +48,6 @@
 #define ERR_USERONCHANNEL(nickname, target, channel)                           \
 	(":irc.bitchat.net 443 " + nickname + " " + target + " " + channel +       \
 	 " :is already on channel\r\n")
-#define ERR_CANNOTSENDTOCHAN(nickname, channel)                                \
-	(":irc.bitchat.net 404 " + nickname + " " + channel +                      \
-	 " :Cannot send to channel\r\n") // TODO : not used
 
 // input_err_replies
 #define ERR_NORECIPIENT(nickname, command)                                     \
@@ -77,9 +74,6 @@
 #define ERR_UNKNOWNMODE(nickname, modechar)                                   \
 	(":irc.bitchat.net 472 " + nickname + " " + modechar                      \
 	 + " :is unknown mode char to me" + "\r\n")
-#define ERR_TOOMANYTARGETS(nickname, target)                                  \
-	(":irc.bitchat.net 407 " + nickname + " " + target                        \
-	 + " :Too many targets\r\n") // TODO : not used
 
 // registration_err_replies
 #define ERR_ALREADYREGISTERED(nickname)                                        \
@@ -153,12 +147,6 @@
 #define RPL_ENDOFNAMES(nickname, channel)                                      \
 	(":irc.bitchat.net 366 " + nickname + " " + channel +                      \
 	 " :End of /NAMES list\r\n")
-#define RPL_UMODEIS(nickname, modes)                                           \
-	(":irc.bitchat.net 221 " + nickname + " " + modes +                        \
-	 "\r\n") //TODO : not used
-#define RPL_AWAY(nickname, message)                                            \
-	(":irc.bitchat.net 301 " + nickname + " :" + message +                     \
-	 "\r\n") //TODO : not used
 #define RPL_INVITELIST(nickname, channel)                                      \
 	(":irc.bitchat.net 336 " + nickname + " " + channel + "\r\n")
 #define RPL_ENDOFINVITELIST(nickname)                                          \

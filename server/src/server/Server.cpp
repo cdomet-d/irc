@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 15:06:28 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 17:30:12 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ void Server::handleData(int fd) {
 				buffer_manip::prepareCommand(*curCli);
 			}
 		} catch (std::length_error &e) {
-			curCli->mess.clear();
+			curCli->mess.clear(true);
 			return;
 		}
 	}
@@ -204,14 +204,14 @@ void Server::checkChanInviteList(const Client &sender) {
 Client &Server::findCli(int fd) {
 	clientMapIt currCliIt = clients_.find(fd);
 	if (currCliIt == clients_.end())
-		throw ObjectNotFound("No such client");
+		throw ObjectNotFound("No such client\r\n");
 	return (*currCliIt->second);
 }
 
 Channel &Server::findChan(const std::string &chanName) {
 	channelMapIt currChanIt = channels_.find(chanName);
 	if (currChanIt == channels_.end())
-		throw ObjectNotFound("No such channel");
+		throw ObjectNotFound("No such channel\r\n");
 	return (*currChanIt->second);
 }
 

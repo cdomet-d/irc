@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:50 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 11:14:46 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 17:14:32 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ extern int gSign;
 
 class Client;
 
-// TODO : add queue in case maxevent is returned, for handling too many events
-// at once
 class Server {
 
   public:

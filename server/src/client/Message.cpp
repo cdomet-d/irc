@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 16:51:12 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 17:13:29 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,9 @@ void Message::clearMess() {
 }
 
 /* clears every buffer contained in Mess */
-void Message::clear() {
+void Message::clear(bool clearLeftover) {
+	if (clearLeftover)
+		leftover_.clear();
 	clearMess();
 	clearCmdParam();
 }

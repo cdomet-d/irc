@@ -38,7 +38,7 @@ ERROR :Closing Link: localhost (Client Quit)
 :irc.bitchat.net 442 bobby #chan :You're not on that channel
 :bobby!b@localhost JOIN #chan
 :irc.bitchat.net 332 bobby #chan :my sublime self
-:irc.bitchat.net 353 bobby = #chan :bobby @chacham
+:irc.bitchat.net 353 bobby = #chan :@chacham bobby
 :irc.bitchat.net 366 bobby #chan :End of /NAMES list
 :irc.bitchat.net 332 bobby #chan :my sublime self
 :irc.bitchat.net 482 bobby #chan :You're not channel operator

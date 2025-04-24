@@ -6,10 +6,11 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 13:03:05 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/23 17:05:29 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 17:31:09 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "Exceptions.hpp"
 #include "printers.hpp"
 #include "validator.hpp"
 #include <algorithm>
@@ -38,22 +39,27 @@ bool check::chans_::onChan(std::string arg, const stringVec &arr) {
 }
 
 bool check::chans_::isOp(CmdSpec &cmd, size_t idx) {
-	Channel &chan = cmd.serv_.findChan(cmd[channel_][idx]);
+	try {
+		Channel &chan = cmd.serv_.findChan(cmd[channel_][idx]);
 
-	if ((cmd.getName() == "TOPIC"
-		 && (cmd[topic_].empty()
-			 || chan.getModes().find('t') == std::string::npos))
-		|| (cmd.getName() == "MODE" && cmd[flag_].empty()
-			&& cmd[flagArg_].empty())) {
+		if ((cmd.getName() == "TOPIC" &&
+			 (cmd[topic_].empty() ||
+			  chan.getModes().find('t') == std::string::npos)) ||
+			(cmd.getName() == "MODE" && cmd[flag_].empty() &&
+			 cmd[flagArg_].empty())) {
+			return (true);
+		}
+
+		clientMap::const_iterator itCl;
+		itCl = chan.getOpCli().find(cmd.getSender().getFd());
+		if (itCl == chan.getOpCli().end()) {
+			RPL::send_(cmd.getSdFd(),
+					   ERR_CHANOPRIVSNEEDED(cmd.getSdNick(), chan.getName()));
+			return (false);
+		}
 		return (true);
+	} catch (ObjectNotFound &e) {
+		RPL::log(RPL::ERROR, e.what());
+		return false;
 	}
-
-	clientMap::const_iterator itCl;
-	itCl = chan.getOpCli().find(cmd.getSender().getFd());
-	if (itCl == chan.getOpCli().end()) {
-		RPL::send_(cmd.getSdFd(),
-				   ERR_CHANOPRIVSNEEDED(cmd.getSdNick(), chan.getName()));
-		return (false);
-	}
-	return (true);
 }
