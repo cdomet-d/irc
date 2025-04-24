@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/23 17:03:54 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 14:53:16 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include <string>
 
+class Client;
+
 class UserInfo {
   public:
 	/*                               ORTHODOX CLASS                           */
@@ -22,6 +24,7 @@ class UserInfo {
 	~UserInfo();
 
 	/*                               METHODS                                  */
+	void registrationCompleted(Client &sender);
 
 	/*                               GETTERS                                  */
 	int getRegistration() const;

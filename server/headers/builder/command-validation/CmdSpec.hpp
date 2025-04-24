@@ -21,6 +21,7 @@
 #include <vector>
 
 class Client;
+class Server;
 
 typedef enum {
 	channel_,

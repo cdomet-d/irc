@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:08:25 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 17:30:09 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 14:52:56 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,5 @@ void part(CmdSpec &cmd);
 void privmsg(CmdSpec &cmd);
 void quit(CmdSpec &cmd);
 void ping(CmdSpec &cmd);
-
-// UTILS
-//TODO: why aren't those in class Channel ? 
-Channel &createChan(const std::string &chanName); 
-void partOneChan(Client &sender, Channel &curChan);
-void partAllChans(CmdSpec &cmd, const std::string &message);
-void partMess(Client &sender, Channel &curChan, const std::string &message);
-
-void registrationComplete(Client &sender);
 
 #endif /// CMDEXECUTION_HPP

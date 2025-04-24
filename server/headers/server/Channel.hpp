@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 15:56:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 14:55:05 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 #define CHANNEL_HPP
 
 #include "Client.hpp"
+#include "CmdSpec.hpp"
 #include "Reply.hpp"
 #include "typedef.hpp"
 
 enum mapChan { ALLCLI, OPCLI, INVITECLI };
 
 class Client;
+class CmdSpec;
 
 class Channel {
   public:
@@ -33,6 +35,10 @@ class Channel {
 	void removeCli(mapChan curMap, int fdCli);
 	void checkOnlyOperator(Client &oldOp);
 	Client &getCliFromNick(const std::string &targetNick) const;
+	void partOneChan(Client *sender, Channel &curChan);
+	static void partAllChans(CmdSpec &cmd, const std::string &message);
+	void partMess(Client *sender, Channel &curChan, const std::string &message);
+	static Channel *createChan(const std::string &chanName);
 
 	/*                               GETTERS                                  */
 	bool getInviteOnly() const;
@@ -45,7 +51,7 @@ class Channel {
 	const std::string &getName() const;
 	const std::string &getPassword() const;
 	const std::string &getTopic() const;
-	size_t getMaxCli() const;
+	int getMaxCli() const;
 
 	/*                               SETTERS                                  */
 	void setInviteOnly(bool inviteOnly);
@@ -64,7 +70,7 @@ class Channel {
 	clientMap cliInChan_;
 	clientMap cliIsOperator_;
 	clientMap cliInvited_;
-	size_t maxCli_;
+	int maxCli_;
 	std::string modes_;
 	std::string name_;
 	std::string pass_;

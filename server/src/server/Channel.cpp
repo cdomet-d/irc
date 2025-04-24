@@ -6,11 +6,12 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 15:52:43 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 15:06:08 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
+#include "Exceptions.hpp"
 #include "Server.hpp"
 
 /* ************************************************************************** */
@@ -83,6 +84,54 @@ void Channel::checkOnlyOperator(Client &oldOp) {
 	}
 }
 
+void partOneChan(Client &sender, Channel &curChan) {
+    int targetFd = sender.getFd();
+    curChan.removeCli(ALLCLI, targetFd);
+    sender.removeOneChan(curChan.getName());
+    curChan.removeCli(OPCLI, targetFd);
+    curChan.removeCli(INVITECLI, targetFd);
+}
+
+void partAllChans(CmdSpec &cmd, const std::string &message) {
+    Client &sender = cmd.getSender();
+    stringVec joinedChans = sender.getJoinedChans();
+
+    for (size_t nbChan = 0; nbChan != joinedChans.size(); nbChan++) {
+        try {
+            Channel &curChan = cmd.serv_.findChan(joinedChans[nbChan]);
+            if (cmd.getName() == "JOIN")
+                partMess(sender, curChan, message);
+            partOneChan(sender, curChan);
+            if (cmd.getName() == "QUIT")
+                RPL::sendMessageChannel(
+                    curChan.getCliInChan(),
+                    RPL_QUIT(sender.cliInfo.getPrefix(), message));
+            curChan.checkOnlyOperator(sender);
+        } catch (ObjectNotFound &e) { RPL::log(RPL::ERROR, e.what()); }
+    }
+}
+
+void partMess(Client &sender, Channel &curChan, const std::string &message) {
+    std::string reason = (message.empty() ? "" : ":" + message);
+    RPL::sendMessageChannel(
+        curChan.getCliInChan(),
+        RPL_PARTREASON(sender.cliInfo.getPrefix(), curChan.getName(), reason));
+}
+
+Channel *Channel::createChan(const std::string &chanName) {
+	static Server &server = Server::GetServerInstance(0, "");
+
+	Channel *curChan = server.findChan(chanName);
+	if (curChan != NULL)
+		return (curChan);
+
+	Channel *newChan = new Channel(chanName);
+	newChan->setName(chanName);
+	newChan->setModes();
+	server.addChan(newChan);
+	return (newChan);
+}
+
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
@@ -95,7 +144,7 @@ const std::string &Channel::getTopic() const {
 	return (topic_);
 }
 
-size_t Channel::getMaxCli() const {
+int Channel::getMaxCli() const {
 	return (maxCli_);
 }
 

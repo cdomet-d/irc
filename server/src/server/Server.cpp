@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 13:48:05 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 15:06:28 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,12 +162,17 @@ void Server::handleData(int fd) {
 	} else if (bytes == -1)
 		return;
 	else {
-		std::string inputCli = curCli->mess.getMess();
-		inputCli.append(tmpBuf);
-		curCli->mess.setMess(inputCli);
-		if (curCli->mess.getMess().find('\n') != std::string::npos) {
-			RPL::log(RPL::GOT, curCli->mess.getMess());
-			buffer_manip::prepareCommand(*curCli);
+		try {
+			std::string inputCli = curCli->mess.getMess();
+			inputCli.append(tmpBuf);
+			curCli->mess.setMess(inputCli);
+			if (curCli->mess.getMess().find('\n') != std::string::npos) {
+				RPL::log(RPL::GOT, curCli->mess.getMess());
+				buffer_manip::prepareCommand(*curCli);
+			}
+		} catch (std::length_error &e) {
+			curCli->mess.clear();
+			return;
 		}
 	}
 }
