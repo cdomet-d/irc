@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   buffer_manip.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/21 18:05:29 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/23 19:01:03 by csweetin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ bool buffer_manip::prepareCommand(Client &sender) {
 			continue;
 		}
 		if (!sender.mess.hasValidLen(sender))
-			return false;
+			return sender.mess.clear(), false;
 		if (sender.mess.hasPrefix(sender.cliInfo.getPrefix()) == false)
-			return false;
+			return sender.mess.clear(), false;
 		sender.mess.hasTrailing();
 		std::string buffer = sender.mess.getMess();
 		sender.mess.setCmdParam(vectorSplit(buffer, ' '));
