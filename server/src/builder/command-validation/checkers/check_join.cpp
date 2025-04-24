@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 15:03:46 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 16:34:17 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ bool check::join_::assessRequest(const Channel &chan, CmdSpec &cmd,
 			return (false);
 	} else if (chan.getModes().find("k") != std::string::npos &&
 			   !check::join_::validKey(chan, cmd[key_], idx, cmd.getSender()))
-		return (false);
-	if (check::join_::cliHasMaxChans(cmd, idx))
 		return (false);
 	return (true);
 }
