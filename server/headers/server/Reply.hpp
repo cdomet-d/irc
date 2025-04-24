@@ -6,12 +6,12 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/24 17:58:55 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 19:26:38 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REPLY_H
-#define REPLY_H
+#ifndef REPLY_HPP
+# define REPLY_HPP
 
 #include "typedef.hpp"
 #include <cstring>
@@ -62,18 +62,18 @@
 	 " :Unknown command\r\n")
 #define ERR_NONICKNAMEGIVEN(nickname)                                          \
 	(":irc.bitchat.net 431 " + nickname + " :No nickname given\r\n")
-#define ERR_ERRONEUSNICKNAME(nickname, newNick)                               \
-	(":irc.bitchat.net 432 " + nickname + " " + newNick                       \
-	 + " :Erroneous nickname\r\n")
+#define ERR_ERRONEUSNICKNAME(nickname, newNick)                                \
+	(":irc.bitchat.net 432 " + nickname + " " + newNick +                      \
+	 " :Erroneous nickname\r\n")
 #define ERR_ERRONEUSUSERNAME(nickname, username)                               \
-	(":irc.bitchat.net NOTICE " + nickname + " " + username                       \
-	 + " :Erroneous username\r\n")
-#define ERR_NEEDMOREPARAMS(nickname, command)                                 \
-	(":irc.bitchat.net 461 " + nickname + " " + command                       \
-	 + " :Not enough parameters\r\n")
-#define ERR_UNKNOWNMODE(nickname, modechar)                                   \
-	(":irc.bitchat.net 472 " + nickname + " " + modechar                      \
-	 + " :is unknown mode char to me" + "\r\n")
+	(":irc.bitchat.net NOTICE " + nickname + " " + username +                  \
+	 " :Erroneous username\r\n")
+#define ERR_NEEDMOREPARAMS(nickname, command)                                  \
+	(":irc.bitchat.net 461 " + nickname + " " + command +                      \
+	 " :Not enough parameters\r\n")
+#define ERR_UNKNOWNMODE(nickname, modechar)                                    \
+	(":irc.bitchat.net 472 " + nickname + " " + modechar +                     \
+	 " :is unknown mode char to me" + "\r\n")
 
 // registration_err_replies
 #define ERR_ALREADYREGISTERED(nickname)                                        \
@@ -187,12 +187,12 @@
 	("ERROR :Closing Link: " + host + " (" + reason + ")\r\n")
 
 //command_replies (uses prefix)
-#define ERR_BADKEYLEN(nickname)                                                 \
-	(":irc.bitchat.net NOTICE " + nickname +                                    \
+#define ERR_BADKEYLEN(nickname)                                                \
+	(":irc.bitchat.net NOTICE " + nickname +                                   \
 	 " :Bad key (+k) - key len must be at least 8 and no more than 26\r\n")
-#define ERR_BADINPUT(nickname, expected, received)                                  \
-	(":irc.bitchat.net NOTICE " + nickname + " :format should be [" + expected +    \
-	 "], is [" + received + "]\r\n")
+#define ERR_BADINPUT(nickname, expected, received)                             \
+	(":irc.bitchat.net NOTICE " + nickname + " :format should be [" +          \
+	 expected + "], is [" + received + "]\r\n")
 #define RPL_INVITE(prefix, target, channel)                                    \
 	(":" + prefix + " INVITE " + target + " :" + channel + "\r\n")
 #define RPL_JOIN(prefix, channel) (":" + prefix + " JOIN " + channel + "\r\n")
@@ -222,3 +222,4 @@ namespace RPL {
 							const std::string &message);
 } // namespace RPL
 #endif // REPLY_HPP
+

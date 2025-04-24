@@ -6,12 +6,12 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 15:11:17 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 19:21:10 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "CmdExecution.hpp"
 #include "Channel.hpp"
+#include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
 #include "Exceptions.hpp"
 #include "Reply.hpp"

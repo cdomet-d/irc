@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 16:15:31 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 19:22:33 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void Channel::partOneChan(Client &sender, Channel &curChan) {
 }
 
 void Channel::partMess(const Client &sender, const Channel &curChan,
-			  const std::string &message) {
+					   const std::string &message) {
 	std::string reason = (message.empty() ? "" : ":" + message);
 	RPL::sendMessageChannel(
 		curChan.getCliInChan(),

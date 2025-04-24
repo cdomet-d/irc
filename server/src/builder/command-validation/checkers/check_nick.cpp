@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_nick.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:23:00 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/22 18:53:33 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/24 19:21:52 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ int check::nick_::syntaxIsValid(const std::string &nick) {
 
 std::string check::nick_::createErrorMess(const std::string &nick, int rv) {
 	std::string badFirst(": illegal first char: expected [AZ - az], is "),
-			illegal(": illegal char: expected [AZ - az], [0 - 9] or "
-					"[-[]\\`^{}], is ");
+		illegal(": illegal char: expected [AZ - az], [0 - 9] or "
+				"[-[]\\`^{}], is ");
 	std::string errorMess;
 	std::string::const_iterator start = nick.begin();
 	if (rv == 1)
@@ -58,7 +58,6 @@ std::string check::nick_::createErrorMess(const std::string &nick, int rv) {
 		errorMess = nick + illegal + *(start + rv);
 	return (errorMess);
 }
-
 
 bool check::nick_::isAllowed(const char &c) {
 	return std::isalpha(c) || std::isdigit(c) || check::nick_::isSpecial(c);
