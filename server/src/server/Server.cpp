@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 17:30:12 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 18:27:40 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,17 @@ void Server::rmNickFromUsedNicks(const std::string &toRemove) {
 	if (nickToRm == usedNicks_.end())
 		return;
 	usedNicks_.erase(nickToRm);
+}
+
+void Server::deleteCli(const int fd) {
+	clientMapIt itCli = clients_.find(fd);
+	if (itCli == clients_.end())
+		return;
+	Client *rmCli = itCli->second;
+	epoll_ctl(epollFd_, EPOLL_CTL_DEL, fd, itCli->second->getCliEpoll());
+	removeCli(*rmCli);
+	close(fd);
+	delete rmCli;
 }
 
 /* ************************************************************************** */

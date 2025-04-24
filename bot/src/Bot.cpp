@@ -51,6 +51,8 @@ bool Bot::executeCmd() {
 	else if (msg_.cmdParam_[cmd_] == "PRIVMSG") {
 		if (msg_.cmdParam_[content_] == ":bye")
 			return cmd::disconnect(*this), false;
+		if (msg_.cmdParam_[content_][1] != '!')
+			return false;
 		if (msg_.cmdParam_[content_] == ":!man")
 			return cmd::man(*this, target), false;
 		if (!cmd::parseLogin(msg_.cmdParam_[content_]))
@@ -106,11 +108,15 @@ bool Bot::requestConnection() {
 bool Bot::createChan() {
 	RPL::send_(sockFd, JOIN(myChan_));
 	RPL::send_(sockFd, TOPIC);
-	if (!receive())
-		return false;
-	if (msg_.rplIs(ERR_CHANOPRIVSNEEDED))
-		return RPL::log(RPL::ERROR, ERR_CANNOTCREATECHAN), false;
-	return true;
+	while (!msg_.rplIs(ERR_CHANOPRIVSNEEDED) || !msg_.rplIs("TOPIC")) {
+		if (!receive())
+			return false;
+		if (msg_.rplIs("TOPIC"))
+			return true;
+		if (msg_.rplIs(ERR_CHANOPRIVSNEEDED))
+			return RPL::log(RPL::ERROR, ERR_CANNOTCREATECHAN), false;
+	}
+	return false;
 }
 
 bool Bot::registration() {

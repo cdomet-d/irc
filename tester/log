@@ -886,11 +886,11 @@ JOIN:
 [31mGot:[0m :sweet!c@localhost MODE #chan +o bobby
 
 [31mTest 55:[0m
-[31mExpected:[0m :irc.bitchat.net 475 bobby #chan :Cannot join channel (+k) - bad key - bad key
+[31mExpected:[0m :irc.bitchat.net 475 bobby #chan :Cannot join channel (+k) - bad key
 [31mGot:[0m :bobby!b@localhost QUIT :You quit the server, see you next time !
 
 [31mTest 56:[0m
-[31mExpected:[0m :irc.bitchat.net 475 bobby #chan :Cannot join channel (+k) - bad key - bad key
+[31mExpected:[0m :irc.bitchat.net 475 bobby #chan :Cannot join channel (+k) - bad key
 [31mGot:[0m ERROR :Closing Link: localhost (Client Quit)
 
 === Finished: ./tester join ===

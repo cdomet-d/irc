@@ -52,8 +52,8 @@ ERROR :Closing Link: localhost (Client Quit)
 :irc.bitchat.net 375 bobby :- Bitchat Message of the day - 
 :irc.bitchat.net 372 bobby :Registration completed, you can join channels and start chatting !
 :irc.bitchat.net 376 bobby :End of /MOTD command
-:irc.bitchat.net 475 bobby #chan :Cannot join channel (+k) - bad key - bad key
-:irc.bitchat.net 475 bobby #chan :Cannot join channel (+k) - bad key - bad key
+:irc.bitchat.net 475 bobby #chan :Cannot join channel (+k) - bad key
+:irc.bitchat.net 475 bobby #chan :Cannot join channel (+k) - bad key
 :bobby!b@localhost JOIN #chan
 :irc.bitchat.net 353 bobby = #chan :@chacham bobby
 :irc.bitchat.net 366 bobby #chan :End of /NAMES list
