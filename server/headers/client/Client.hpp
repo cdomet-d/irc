@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 14:53:10 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 15:34:31 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ class Client {
 	void setFd(int fd);
 
 	/*                               MEMBERS                                  */
-	void removeOneChan(std::string chanName);
-	void addOneChan(std::string chanName);
+	void removeOneChan(const std::string &chanName);
+	void addOneChan(const std::string &chanName);
 
 	Message mess;
 	struct sockaddr_in cliAddr_;

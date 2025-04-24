@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 15:04:12 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 15:35:41 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,11 @@ void UserInfo::setUsername(const std::string &username) {
 	username_ = username;
 }
 
-void UserInfo::setIP(const std::string ip) {
+void UserInfo::setIP(const std::string &ip) {
 	ip_ = ip;
 }
 
-void UserInfo::setHostname(const std::string hostname) {
+void UserInfo::setHostname(const std::string &hostname) {
 	if (!hostname.empty())
 		hostname_ = hostname;
 	else

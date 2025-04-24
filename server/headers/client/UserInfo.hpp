@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 14:53:16 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 15:35:31 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ class UserInfo {
 	const std::string &getUsername() const;
 
 	/*                               SETTERS                                  */
-	void setHostname(std::string hostname);
-	void setIP(std::string ip);
+	void setHostname(const std::string &hostname);
+	void setIP(const std::string &ip);
 	void setNick(const std::string &newNick);
 	void setPrefix();
 	void setRealname(const std::string &realname);
