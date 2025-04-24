@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 09:45:19 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:24:58 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,21 @@ void Channel::partMess(Client *sender, Channel &curChan, const std::string &mess
 							RPL_PARTREASON(sender->cliInfo.getPrefix(),
 										   curChan.getName(), reason));
 }
+
+Channel *Channel::createChan(const std::string &chanName) {
+	static Server &server = Server::GetServerInstance(0, "");
+
+	Channel *curChan = server.findChan(chanName);
+	if (curChan != NULL)
+		return (curChan);
+
+	Channel *newChan = new Channel(chanName);
+	newChan->setName(chanName);
+	newChan->setModes();
+	server.addChan(newChan);
+	return (newChan);
+}
+
 
 /* ************************************************************************** */
 /*                               GETTERS                                      */
