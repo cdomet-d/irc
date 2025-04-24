@@ -32,7 +32,7 @@ namespace check {
 	const stringVec &getTargetChan(const std::string &target,
 								   const Server &serv);
 	template < typename MapType >
-	bool exists(std::string arg, const MapType &map) {
+	bool exists(const std::string &arg, const MapType &map) {
 		typename MapType::const_iterator toFind = map.find(arg);
 		return toFind != map.end();
 	}
@@ -55,12 +55,13 @@ namespace check {
 	} // namespace nick_
 
 	namespace join_ {
-		bool assessRequest(Channel chan, CmdSpec &cmd, size_t i);
-		bool hasInvite(Channel &chan, Client &sender);
-		bool validKey(Channel &chan, CmdParam &keys, size_t i, Client &sender);
-		bool chanHasRoom(Channel &chan, Client &sender);
-		bool cliHasMaxChans(CmdSpec &cmd, size_t idx);
-		bool chanSyntaxIsValid(CmdSpec &cmd, size_t idx);
+		bool assessRequest(const Channel &chan, CmdSpec &cmd, size_t i);
+		bool hasInvite(const Channel &chan, Client &sender);
+		bool validKey(const Channel &chan, CmdParam &keys, size_t i,
+					  Client &sender);
+		bool chanHasRoom(const Channel &chan, Client &sender);
+		bool cliHasMaxChans(const CmdSpec &cmd, size_t idx);
+		bool chanSyntaxIsValid(const CmdSpec &cmd, size_t idx);
 	} // namespace join_
 
 	namespace chans_ {

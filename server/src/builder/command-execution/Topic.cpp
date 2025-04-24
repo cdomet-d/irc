@@ -6,40 +6,45 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/21 18:32:01 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:13:24 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
+#include "Exceptions.hpp"
 #include "Server.hpp"
 
-void checkTopic(Channel &curChan, Client *curCli) {
+static void checkTopic(const Channel &curChan, const Client &curCli) {
 	if (curChan.getTopic().empty() == true) {
-		RPL::send_(curCli->getFd(),
-				   RPL_NOTOPIC(curCli->cliInfo.getNick(), curChan.getName()));
+		RPL::send_(curCli.getFd(),
+				   RPL_NOTOPIC(curCli.cliInfo.getNick(), curChan.getName()));
 		return;
 	}
-	RPL::send_(curCli->getFd(),
-			   RPL_TOPIC(curCli->cliInfo.getNick(), curChan.getName(),
+	RPL::send_(curCli.getFd(),
+			   RPL_TOPIC(curCli.cliInfo.getNick(), curChan.getName(),
 						 curChan.getTopic()));
 	return;
 }
 
-void changeTopic(Channel &curChan, Client *curCli, std::string topic) {
+static void changeTopic(Channel &curChan, const Client &curCli,
+						const std::string &topic) {
 	curChan.setTopic(topic);
 	RPL::sendMessageChannel(curChan.getCliInChan(),
-							RPL_TOPICCHANGED(curCli->cliInfo.getPrefix(),
+							RPL_TOPICCHANGED(curCli.cliInfo.getPrefix(),
 											 curChan.getName(),
 											 curChan.getTopic()));
 }
 
 void topic(CmdSpec &cmd) {
-	Client *sender = &cmd.getSender();
-	Channel &curChan = *cmd.serv_.findChan(cmd[channel_][0]);
+	Client &sender = cmd.getSender();
 
-	if (!cmd[topic_].size())
-		checkTopic(curChan, sender);
-	else
-		changeTopic(curChan, sender, cmd[topic_][0]);
+	try {
+		Channel &curChan = cmd.serv_.findChan(cmd[channel_][0]);
+
+		if (!cmd[topic_].size())
+			checkTopic(curChan, sender);
+		else
+			changeTopic(curChan, sender, cmd[topic_][0]);
+	} catch (ObjectNotFound &e) { RPL::log(RPL::ERROR, e.what()); }
 }

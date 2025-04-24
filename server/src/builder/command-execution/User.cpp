@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:48:49 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 10:32:46 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 15:02:12 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
+#include "Exceptions.hpp"
 #include "Reply.hpp"
 #include "Server.hpp"
 #include <ctime>

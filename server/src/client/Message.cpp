@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/24 10:49:35 by aljulien         ###   ########.fr       */
+/*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
+/*   Updated: 2025/04/24 15:04:05 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,23 +33,23 @@ std::string &Message::operator[](unsigned int i) {
 /*                               GETTERS                                      */
 /* ************************************************************************** */
 /* returns the string vector associated with the command being processed */
-const stringVec &Message::getCmdParam() {
+const stringVec &Message::getCmdParam() const {
 	return cmdParam_;
 }
 
 /* returns the command being processed */
-const std::string Message::getCmd() const {
+const std::string &Message::getCmd() const {
 	return cmdParam_.at(0);
 }
 
 /* the unprocessed message */
-const std::string Message::getMess() const {
+const std::string &Message::getMess() const {
 	return message_;
 }
 
 /* in the event where several messages separated by /r/n were sent, the leftover
  * part of the raw message */
-const std::string Message::getLeft() const {
+const std::string &Message::getLeft() const {
 	return leftover_;
 }
 
@@ -70,7 +70,7 @@ void Message::setCmdParam(const stringVec &splitBuffer) {
 }
 
 /* sets the buffer containing the raw message */
-void Message::setMess(std::string buffer) {
+void Message::setMess(const std::string &buffer) {
 	message_ = buffer;
 }
 
@@ -198,7 +198,7 @@ bool Message::hasTrailing() {
 bool Message::hasValidLen(const Client &sender) {
 	if (message_.empty())
 		return false;
-	if (message_.size() > 512) {
+	if (message_.size() > 510) {
 		RPL::send_(sender.getFd(), ERR_INPUTTOOLONG(sender.cliInfo.getNick()));
 		return false;
 	}

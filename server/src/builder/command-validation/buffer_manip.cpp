@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   buffer_manip.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/23 19:01:03 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/24 15:02:25 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ bool buffer_manip::prepareCommand(Client &sender) {
 	return true;
 }
 
-stringVec buffer_manip::vectorSplit(std::string &s, char del) {
+stringVec buffer_manip::vectorSplit(std::string &s, const char &del) {
 	stringVec result;
 	std::string token;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserInfo.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 10:49:51 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 15:35:41 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,27 +53,27 @@ void UserInfo::registrationCompleted(Client &sender) {
 /*                               GETTERS                                      */
 /* ************************************************************************** */
 
-std::string UserInfo::getNick() const {
+const std::string &UserInfo::getNick() const {
 	return nick_;
 }
 
-std::string UserInfo::getUsername() const {
+const std::string &UserInfo::getUsername() const {
 	return username_;
 }
 
-std::string UserInfo::getRealName() const {
+const std::string &UserInfo::getRealName() const {
 	return realName_;
 }
 
-std::string UserInfo::getIP() const {
+const std::string &UserInfo::getIP() const {
 	return (ip_);
 }
 
-std::string UserInfo::getHostname() const {
+const std::string &UserInfo::getHostname() const {
 	return (hostname_);
 }
 
-std::string UserInfo::getPrefix() const {
+const std::string &UserInfo::getPrefix() const {
 	return (prefix_);
 }
 
@@ -93,11 +93,11 @@ void UserInfo::setUsername(const std::string &username) {
 	username_ = username;
 }
 
-void UserInfo::setIP(std::string ip) {
+void UserInfo::setIP(const std::string &ip) {
 	ip_ = ip;
 }
 
-void UserInfo::setHostname(std::string hostname) {
+void UserInfo::setHostname(const std::string &hostname) {
 	if (!hostname.empty())
 		hostname_ = hostname;
 	else

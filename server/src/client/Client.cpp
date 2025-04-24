@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 16:28:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:53:52 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 15:34:22 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,6 @@
 /* ************************************************************************** */
 Client::Client() {}
 Client::~Client() {}
-
-Client::Client(const Client &rhs) {
-	static_cast< void >(rhs);
-}
-
-Client &Client::operator=(const Client &rhs) {
-	static_cast< void >(rhs);
-	return *this;
-}
 
 /* ************************************************************************** */
 /*                               GETTERS                                      */
@@ -58,7 +49,7 @@ void Client::setCliEpoll(struct epoll_event epoll) {
 	cliEpoll_.data.fd = epoll.data.fd;
 }
 
-void Client::removeOneChan(std::string chanName) {
+void Client::removeOneChan(const std::string &chanName) {
 	for (stringVecIt it = joinedChans_.begin(); it != joinedChans_.end(); ++it)
 		if (*it == chanName) {
 			joinedChans_.erase(it);
@@ -66,7 +57,7 @@ void Client::removeOneChan(std::string chanName) {
 		}
 }
 
-void Client::addOneChan(std::string chanName) {
+void Client::addOneChan(const std::string &chanName) {
 	stringVecItConst it;
 	for (it = joinedChans_.begin(); it != joinedChans_.end(); ++it) {
 		if (*it == chanName)

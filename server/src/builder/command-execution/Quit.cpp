@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 10:49:18 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 16:14:28 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
+#include "Exceptions.hpp"
 #include "Reply.hpp"
 #include "Server.hpp"
 #include <sstream>
@@ -31,7 +32,7 @@ void quit(CmdSpec &cmd) {
 	std::stringstream ss;
 	ss << "Client [" << sender->getFd() << "] disconnected\r\n";
 	RPL::log(RPL::INFO, ss.str());
-	cmd.serv_.removeCli(sender);
+	cmd.serv_.removeCli(*sender);
 	close(sender->getFd());
 	delete sender;
 }

@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 10:50:06 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 16:15:31 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
+#include "Exceptions.hpp"
 #include "Server.hpp"
 
 /* ************************************************************************** */
@@ -31,29 +32,29 @@ Channel::~Channel() {
 /*                               METHODS                                      */
 /* ************************************************************************** */
 
-bool Channel::addClientToChan(Channel *curChan, Client *sender) {
-	curChan->addCli(ALLCLI, sender);
-	sender->addOneChan(curChan->getName());
-	if (curChan->getOpCli().empty())
-		curChan->addCli(OPCLI, sender);
-	curChan->removeCli(INVITECLI, sender->getFd());
+bool Channel::addClientToChan(Channel &curChan, Client &sender) {
+	curChan.addCli(ALLCLI, sender);
+	sender.addOneChan(curChan.getName());
+	if (curChan.getOpCli().empty())
+		curChan.addCli(OPCLI, sender);
+	curChan.removeCli(INVITECLI, sender.getFd());
 	return (true);
 }
 
-void Channel::addCli(mapChan curMap, Client *sender) {
+void Channel::addCli(const mapChan &curMap, Client &sender) {
 	switch (curMap) {
 	case ALLCLI:
-		cliInChan_.insert(clientPair(sender->getFd(), sender));
+		cliInChan_.insert(clientPair(sender.getFd(), &sender));
 		break;
 	case OPCLI:
-		cliIsOperator_.insert(clientPair(sender->getFd(), sender));
+		cliIsOperator_.insert(clientPair(sender.getFd(), &sender));
 		break;
 	case INVITECLI:
-		cliInvited_.insert(clientPair(sender->getFd(), sender));
+		cliInvited_.insert(clientPair(sender.getFd(), &sender));
 	}
 }
 
-void Channel::removeCli(mapChan curMap, int fdCli) {
+void Channel::removeCli(const mapChan &curMap, int fdCli) {
 	switch (curMap) {
 	case ALLCLI:
 		cliInChan_.erase(fdCli);
@@ -71,74 +72,77 @@ void Channel::checkOnlyOperator(Client &oldOp) {
 
 	if (cliInChan_.size() >= 1) {
 		if (!cliIsOperator_.size()) {
-			Client *cli = cliInChan_.begin()->second;
+			Client &cli = *cliInChan_.begin()->second;
 			addCli(OPCLI, cli);
-			RPL::send_(cli->getFd(), RPL_MODE(oldOp.cliInfo.getPrefix(), name_,
-											  "+o", cli->cliInfo.getNick()));
+			RPL::send_(cli.getFd(), RPL_MODE(oldOp.cliInfo.getPrefix(), name_,
+											 "+o", cli.cliInfo.getNick()));
 		}
 	}
 	if (cliInChan_.empty() == true) {
-		server.removeChan(this);
+		server.removeChan(*this);
 		delete this;
 	}
 }
 
-void Channel::partOneChan(Client *sender, Channel &curChan) {
-	int targetFd = sender->getFd();
+void Channel::partOneChan(Client &sender, Channel &curChan) {
+	int targetFd = sender.getFd();
 	curChan.removeCli(ALLCLI, targetFd);
-	sender->removeOneChan(curChan.getName());
+	sender.removeOneChan(curChan.getName());
 	curChan.removeCli(OPCLI, targetFd);
 	curChan.removeCli(INVITECLI, targetFd);
 }
 
-void Channel::partAllChans(CmdSpec &cmd, const std::string &message) {
-	Client *sender = &cmd.getSender();
-	stringVec joinedChans = sender->getJoinedChans();
-
-	for (size_t nbChan = 0; nbChan != joinedChans.size(); nbChan++) {
-		Channel &curChan = *cmd.serv_.findChan(joinedChans[nbChan]);
-		if (cmd.getName() == "JOIN")
-			curChan.partMess(sender, curChan, message);
-		curChan.partOneChan(sender, curChan);
-		if (cmd.getName() == "QUIT")
-			RPL::sendMessageChannel(
-				curChan.getCliInChan(),
-				RPL_QUIT(sender->cliInfo.getPrefix(), message));
-		curChan.checkOnlyOperator(*sender);
-	}
-}
-
-void Channel::partMess(Client *sender, Channel &curChan,
-					   const std::string &message) {
+void Channel::partMess(const Client &sender, const Channel &curChan,
+			  const std::string &message) {
 	std::string reason = (message.empty() ? "" : ":" + message);
 	RPL::sendMessageChannel(
 		curChan.getCliInChan(),
-		RPL_PARTREASON(sender->cliInfo.getPrefix(), curChan.getName(), reason));
+		RPL_PARTREASON(sender.cliInfo.getPrefix(), curChan.getName(), reason));
 }
 
-Channel *Channel::createChan(const std::string &chanName) {
+void Channel::partAllChans(CmdSpec &cmd, const std::string &message) {
+	Client &sender = cmd.getSender();
+	stringVec joinedChans = sender.getJoinedChans();
+
+	for (size_t nbChan = 0; nbChan != joinedChans.size(); nbChan++) {
+		try {
+			Channel &curChan = cmd.serv_.findChan(joinedChans[nbChan]);
+			if (cmd.getName() == "JOIN")
+				curChan.partMess(sender, curChan, message);
+			curChan.partOneChan(sender, curChan);
+			if (cmd.getName() == "QUIT")
+				RPL::sendMessageChannel(
+					curChan.getCliInChan(),
+					RPL_QUIT(sender.cliInfo.getPrefix(), message));
+			curChan.checkOnlyOperator(sender);
+		} catch (ObjectNotFound &e) { RPL::log(RPL::ERROR, e.what()); }
+	}
+}
+
+Channel &Channel::createChan(const std::string &chanName) {
 	static Server &server = Server::GetServerInstance(0, "");
 
-	Channel *curChan = server.findChan(chanName);
-	if (curChan != NULL)
+	try {
+		Channel &curChan = server.findChan(chanName);
 		return (curChan);
-
-	Channel *newChan = new Channel(chanName);
-	newChan->setName(chanName);
-	newChan->setModes();
-	server.addChan(newChan);
-	return (newChan);
+	} catch (ObjectNotFound &e) {
+		Channel *newChan = new Channel(chanName);
+		newChan->setName(chanName);
+		newChan->setModes();
+		server.addChan(*newChan);
+		return (*newChan);
+	}
 }
 
 /* ************************************************************************** */
 /*                               GETTERS                                      */
 /* ************************************************************************** */
 
-std::string Channel::getName() const {
+const std::string &Channel::getName() const {
 	return (name_);
 }
 
-std::string Channel::getTopic() const {
+const std::string &Channel::getTopic() const {
 	return (topic_);
 }
 
@@ -170,12 +174,20 @@ const clientMap &Channel::getInvitCli() const {
 	return (cliInvited_);
 }
 
-std::string Channel::getPassword() const {
+const std::string &Channel::getPassword() const {
 	return (pass_);
 }
 
-std::string Channel::getModes() const {
+const std::string &Channel::getModes() const {
 	return (modes_);
+}
+
+Client &Channel::getCliFromNick(const std::string &targetNick) const {
+	for (clientMapIt it = cliInChan_.begin(); it != cliInChan_.end(); ++it) {
+		if (it->second->cliInfo.getNick() == targetNick)
+			return *it->second;
+	}
+	throw std::runtime_error("Client not found");
 }
 
 /* ************************************************************************** */
