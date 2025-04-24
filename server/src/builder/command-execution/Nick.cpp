@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:20:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/21 18:31:57 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:49:04 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void nick(CmdSpec &cmd) {
 	if (sender.cliInfo.getRegistration() == 3) {
 		const stringVec &sdChans = sender.getJoinedChans();
 		if (sdChans.empty())
-			RPL::send_(cmd.getSdFd(), RPL_NICK(sender.cliInfo.getPrefix(),
-											   cmd[nickname_][0]));
+			RPL::send_(cmd.getSdFd(),
+					   RPL_NICK(sender.cliInfo.getPrefix(), cmd[nickname_][0]));
 		for (size_t i = 0; i < sdChans.size(); i++) {
 			Channel &curChan = *cmd.serv_.findChan(sdChans[i]);
 			RPL::sendMessageChannel(
@@ -38,5 +38,5 @@ void nick(CmdSpec &cmd) {
 		sender.cliInfo.setRegistration(2);
 		RPL::send_(cmd.getSdFd(), RPL_VALIDNICK(sender.cliInfo.getNick()));
 	} else if (sender.cliInfo.getRegistration() == 2)
-		registrationCompleted(sender);
+		sender.cliInfo.registrationCompleted(sender);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserInfo.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/16 17:19:31 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:36:41 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include <string>
 
+class Client;
+
 class UserInfo {
   public:
 	/*                               ORTHODOX CLASS                           */
@@ -22,6 +24,7 @@ class UserInfo {
 	~UserInfo();
 
 	/*                               METHODS                                  */
+	void registrationCompleted(Client &sender);
 
 	/*                               GETTERS                                  */
 	int getRegistration() const;

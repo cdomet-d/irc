@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/21 18:29:55 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:48:43 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 #define CHANNEL_HPP
 
 #include "Client.hpp"
+#include "CmdSpec.hpp"
 #include "Reply.hpp"
 #include "typedef.hpp"
 
 enum mapChan { ALLCLI, OPCLI, INVITECLI };
 
 class Client;
+class CmdSpec;
 
 class Channel {
   public:
@@ -32,6 +34,10 @@ class Channel {
 	void addCli(mapChan curMap, Client *curCli);
 	void removeCli(mapChan curMap, int fdCli);
 	void checkOnlyOperator(Client &oldOp);
+	void partOneChan(Client *sender, Channel &curChan);
+	static void partAllChans(CmdSpec &cmd, const std::string &message);
+	void partMess(Client *sender, Channel &curChan, const std::string &message);
+	static Channel *createChan(const std::string &chanName);
 
 	/*                               GETTERS                                  */
 	bool getInviteOnly() const;
@@ -40,7 +46,7 @@ class Channel {
 	const clientMap &getCliInChan() const;
 	const clientMap &getOpCli() const;
 	const clientMap &getInvitCli() const;
-	size_t getMaxCli() const;
+	int getMaxCli() const;
 	std::string getName() const;
 	std::string getTopic() const;
 	std::string getModes() const;
@@ -63,7 +69,7 @@ class Channel {
 	clientMap cliInChan_;
 	clientMap cliIsOperator_;
 	clientMap cliInvited_;
-	size_t maxCli_;
+	int maxCli_;
 	std::string modes_;
 	std::string name_;
 	std::string pass_;

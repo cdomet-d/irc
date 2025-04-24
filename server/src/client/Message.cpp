@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Message.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/23 15:34:45 by csweetin         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/04/24 10:49:35 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,8 @@ void Message::formatModeFlags(std::string &flagformat) {
 			}
 		} else {
 			flagformat += flags[i];
-			if (i < flags.size() && (flags[i + 1] == '+' || flags[i + 1] == '-'))
+			if (i < flags.size() &&
+				(flags[i + 1] == '+' || flags[i + 1] == '-'))
 				flagformat += ',';
 		}
 	}
@@ -224,9 +225,16 @@ void Message::removeNewlines() {
 	}
 	std::string::size_type newline =
 		(termSize == 2 ? message_.find("\r\n") : message_.find("\n"));
+	if (newline == std::string::npos) {
+		message_.clear();
+		return;
+	}
+	if (newline + termSize > message_.size()) {
+		message_.clear();
+		return;
+	}
 	leftover_ = message_.substr(newline + termSize);
-	message_.erase(message_.begin() + newline, message_.end());
-	return;
+	message_.erase(newline);
 }
 
 static bool isConsecutiveSpace(char left, char right) {

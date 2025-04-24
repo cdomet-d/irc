@@ -7,8 +7,8 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 Bot::Bot(int port, std::string pw, std::string servIp, char *envp[])
-	: log_("bot.log", std::ios::out), myChan_("#where-friends"),
-	  api(Api(envp)), port_(port), gSign(false), pw_(pw) {
+	: log_("bot.log", std::ios::out), myChan_("#where-friends"), api(Api(envp)),
+	  port_(port), gSign(false), pw_(pw) {
 	sockFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockFd == -1)
 		throw std::runtime_error("Socket init failed");
