@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 11:11:34 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 16:50:09 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ class Message {
 
 	// sanitizing input
 
-	std::string::size_type evaluateTermination() const;
+	std::string::size_type evaluateTermination(std::string &term) const;
 	void cmdToUpper();
 	void removeNewlines();
 	void trimSpaces();
