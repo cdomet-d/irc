@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 14:55:05 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 15:12:23 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,15 @@ class Channel {
 
 	/*                               METHODS                                  */
 	bool addClientToChan(Channel &curChan, Client &curCli);
-	void addCli(mapChan curMap, Client &curCli);
-	void removeCli(mapChan curMap, int fdCli);
-	void checkOnlyOperator(Client &oldOp);
 	Client &getCliFromNick(const std::string &targetNick) const;
-	void partOneChan(Client *sender, Channel &curChan);
+	static Channel &createChan(const std::string &chanName);
 	static void partAllChans(CmdSpec &cmd, const std::string &message);
-	void partMess(Client *sender, Channel &curChan, const std::string &message);
-	static Channel *createChan(const std::string &chanName);
+	void addCli(mapChan curMap, Client &curCli);
+	void checkOnlyOperator(Client &oldOp);
+	void partMess(const Client &sender, const Channel &curChan,
+				  const std::string &message);
+	void partOneChan(Client &sender, Channel &curChan);
+	void removeCli(mapChan curMap, int fdCli);
 
 	/*                               GETTERS                                  */
 	bool getInviteOnly() const;

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 15:06:08 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 15:13:58 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void Channel::checkOnlyOperator(Client &oldOp) {
 			Client &cli = *cliInChan_.begin()->second;
 			addCli(OPCLI, cli);
 			RPL::send_(cli.getFd(), RPL_MODE(oldOp.cliInfo.getPrefix(), name_,
-											  "+o", cli.cliInfo.getNick()));
+											 "+o", cli.cliInfo.getNick()));
 		}
 	}
 	if (cliInChan_.empty() == true) {
@@ -84,52 +84,54 @@ void Channel::checkOnlyOperator(Client &oldOp) {
 	}
 }
 
-void partOneChan(Client &sender, Channel &curChan) {
-    int targetFd = sender.getFd();
-    curChan.removeCli(ALLCLI, targetFd);
-    sender.removeOneChan(curChan.getName());
-    curChan.removeCli(OPCLI, targetFd);
-    curChan.removeCli(INVITECLI, targetFd);
+void Channel::partOneChan(Client &sender, Channel &curChan) {
+	int targetFd = sender.getFd();
+	curChan.removeCli(ALLCLI, targetFd);
+	sender.removeOneChan(curChan.getName());
+	curChan.removeCli(OPCLI, targetFd);
+	curChan.removeCli(INVITECLI, targetFd);
 }
 
-void partAllChans(CmdSpec &cmd, const std::string &message) {
-    Client &sender = cmd.getSender();
-    stringVec joinedChans = sender.getJoinedChans();
-
-    for (size_t nbChan = 0; nbChan != joinedChans.size(); nbChan++) {
-        try {
-            Channel &curChan = cmd.serv_.findChan(joinedChans[nbChan]);
-            if (cmd.getName() == "JOIN")
-                partMess(sender, curChan, message);
-            partOneChan(sender, curChan);
-            if (cmd.getName() == "QUIT")
-                RPL::sendMessageChannel(
-                    curChan.getCliInChan(),
-                    RPL_QUIT(sender.cliInfo.getPrefix(), message));
-            curChan.checkOnlyOperator(sender);
-        } catch (ObjectNotFound &e) { RPL::log(RPL::ERROR, e.what()); }
-    }
+void Channel::partMess(const Client &sender, const Channel &curChan,
+			  const std::string &message) {
+	std::string reason = (message.empty() ? "" : ":" + message);
+	RPL::sendMessageChannel(
+		curChan.getCliInChan(),
+		RPL_PARTREASON(sender.cliInfo.getPrefix(), curChan.getName(), reason));
 }
 
-void partMess(Client &sender, Channel &curChan, const std::string &message) {
-    std::string reason = (message.empty() ? "" : ":" + message);
-    RPL::sendMessageChannel(
-        curChan.getCliInChan(),
-        RPL_PARTREASON(sender.cliInfo.getPrefix(), curChan.getName(), reason));
+void Channel::partAllChans(CmdSpec &cmd, const std::string &message) {
+	Client &sender = cmd.getSender();
+	stringVec joinedChans = sender.getJoinedChans();
+
+	for (size_t nbChan = 0; nbChan != joinedChans.size(); nbChan++) {
+		try {
+			Channel &curChan = cmd.serv_.findChan(joinedChans[nbChan]);
+			if (cmd.getName() == "JOIN")
+				curChan.partMess(sender, curChan, message);
+			curChan.partOneChan(sender, curChan);
+			if (cmd.getName() == "QUIT")
+				RPL::sendMessageChannel(
+					curChan.getCliInChan(),
+					RPL_QUIT(sender.cliInfo.getPrefix(), message));
+			curChan.checkOnlyOperator(sender);
+		} catch (ObjectNotFound &e) { RPL::log(RPL::ERROR, e.what()); }
+	}
 }
 
-Channel *Channel::createChan(const std::string &chanName) {
+Channel &Channel::createChan(const std::string &chanName) {
 	static Server &server = Server::GetServerInstance(0, "");
 
-	Channel *curChan = server.findChan(chanName);
-	if (curChan != NULL)
+	try {
+		Channel &curChan = server.findChan(chanName);
 		return (curChan);
-
-	Channel *newChan = new Channel(chanName);
-	newChan->setName(chanName);
-	newChan->setModes();
-	server.addChan(newChan);
-	return (newChan);
+	} catch (ObjectNotFound &e) {
+		Channel *newChan = new Channel(chanName);
+		newChan->setName(chanName);
+		newChan->setModes();
+		server.addChan(*newChan);
+		return (*newChan);
+	}
 }
 
 /* ************************************************************************** */
