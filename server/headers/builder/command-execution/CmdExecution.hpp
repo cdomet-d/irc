@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:08:25 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/15 11:54:03 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 09:33:29 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ void ping(CmdSpec &cmd);
 
 // UTILS
 Channel *createChan(const std::string &chanName);
-void partOneChan(Client *sender, Channel &curChan);
-void partAllChans(CmdSpec &cmd, const std::string &message);
 void registrationCompleted(Client &sender);
 void partMess(Client *sender, Channel &curChan, const std::string &message);
 
