@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:20:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 10:32:04 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:49:04 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void nick(CmdSpec &cmd) {
 	if (sender.cliInfo.getRegistration() == 3) {
 		const stringVec &sdChans = sender.getJoinedChans();
 		if (sdChans.empty())
-			RPL::send_(cmd.getSdFd(), RPL_NICK(sender.cliInfo.getPrefix(),
-											   cmd[nickname_][0]));
+			RPL::send_(cmd.getSdFd(),
+					   RPL_NICK(sender.cliInfo.getPrefix(), cmd[nickname_][0]));
 		for (size_t i = 0; i < sdChans.size(); i++) {
 			Channel &curChan = *cmd.serv_.findChan(sdChans[i]);
 			RPL::sendMessageChannel(

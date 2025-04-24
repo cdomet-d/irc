@@ -6,14 +6,14 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 10:25:57 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:48:57 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "Channel.hpp"
 #include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
 #include "Server.hpp"
-#include "Channel.hpp"
 #include <sstream>
 
 void sendNickList(clientMap curMap, Channel &curChan, const Client &sender) {

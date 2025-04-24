@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 09:44:31 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:49:18 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ void quit(CmdSpec &cmd) {
 		message = "You quit the server, see you next time !";
 	sender->mess.clearMess();
 	Channel::partAllChans(cmd, message);
-	RPL::send_(sender->getFd(),
-			   RPL_QUIT(sender->cliInfo.getPrefix(), message));
+	RPL::send_(sender->getFd(), RPL_QUIT(sender->cliInfo.getPrefix(), message));
 	RPL::send_(sender->getFd(),
 			   RPL_ERROR(sender->cliInfo.getHostname(), "Client Quit"));
 	std::stringstream ss;

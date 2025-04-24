@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:43 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 10:24:58 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:50:06 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,11 +108,12 @@ void Channel::partAllChans(CmdSpec &cmd, const std::string &message) {
 	}
 }
 
-void Channel::partMess(Client *sender, Channel &curChan, const std::string &message) {
+void Channel::partMess(Client *sender, Channel &curChan,
+					   const std::string &message) {
 	std::string reason = (message.empty() ? "" : ":" + message);
-	RPL::sendMessageChannel(curChan.getCliInChan(),
-							RPL_PARTREASON(sender->cliInfo.getPrefix(),
-										   curChan.getName(), reason));
+	RPL::sendMessageChannel(
+		curChan.getCliInChan(),
+		RPL_PARTREASON(sender->cliInfo.getPrefix(), curChan.getName(), reason));
 }
 
 Channel *Channel::createChan(const std::string &chanName) {
@@ -128,7 +129,6 @@ Channel *Channel::createChan(const std::string &chanName) {
 	server.addChan(newChan);
 	return (newChan);
 }
-
 
 /* ************************************************************************** */
 /*                               GETTERS                                      */

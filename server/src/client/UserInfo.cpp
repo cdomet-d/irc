@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 10:35:10 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:49:51 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@
 /*                               ORTHODOX CLASS                               */
 /* ************************************************************************** */
 
-UserInfo::UserInfo()
-	: registration_(0), nick_("*"), pass_(""), realName_("") {}
+UserInfo::UserInfo() : registration_(0), nick_("*"), pass_(""), realName_("") {}
 UserInfo::~UserInfo() {}
 
 UserInfo::UserInfo(const UserInfo &rhs) {

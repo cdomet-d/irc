@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 14:31:38 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 10:26:03 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:48:43 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #define CHANNEL_HPP
 
 #include "Client.hpp"
+#include "CmdSpec.hpp"
 #include "Reply.hpp"
 #include "typedef.hpp"
-#include "CmdSpec.hpp"
 
 enum mapChan { ALLCLI, OPCLI, INVITECLI };
 
@@ -38,7 +38,6 @@ class Channel {
 	static void partAllChans(CmdSpec &cmd, const std::string &message);
 	void partMess(Client *sender, Channel &curChan, const std::string &message);
 	static Channel *createChan(const std::string &chanName);
-
 
 	/*                               GETTERS                                  */
 	bool getInviteOnly() const;

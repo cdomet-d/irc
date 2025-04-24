@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 10:47:18 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:49:30 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ bool check::join_::validKey(Channel &chan, CmdParam &keys, size_t idx,
 }
 
 bool check::join_::chanHasRoom(Channel &chan, Client &sender) {
-	if (chan.getCliInChan().size() < static_cast<size_t>(chan.getMaxCli()))
+	if (chan.getCliInChan().size() < static_cast< size_t >(chan.getMaxCli()))
 		return (true);
 	RPL::send_(sender.getFd(),
 			   ERR_CHANNELISFULL(sender.cliInfo.getNick(), chan.getName()));

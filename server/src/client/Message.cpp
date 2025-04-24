@@ -6,10 +6,9 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/23 18:17:36 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:49:35 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "Message.hpp"
 #include "Server.hpp"
@@ -116,7 +115,8 @@ void Message::formatModeFlags(std::string &flagformat) {
 			}
 		} else {
 			flagformat += flags[i];
-			if (i < flags.size() && (flags[i + 1] == '+' || flags[i + 1] == '-'))
+			if (i < flags.size() &&
+				(flags[i + 1] == '+' || flags[i + 1] == '-'))
 				flagformat += ',';
 		}
 	}
