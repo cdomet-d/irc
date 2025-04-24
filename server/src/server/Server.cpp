@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:25:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 18:34:13 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:22:49 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,11 @@ void Server::acceptClient() {
 		std::stringstream ss;
 		ss << "Client [" << newCli->getFd() << "] connected\n";
 		RPL::log(RPL::INFO, ss.str());
-	} catch (std::exception &e) { std::cerr << e.what() << std::endl; }
+	} catch (std::exception &e) {
+		std::string err = e.what();
+		err.append("\r\n");
+		RPL::log(RPL::ERROR, err);
+	}
 }
 
 void Server::handleData(int fd) {

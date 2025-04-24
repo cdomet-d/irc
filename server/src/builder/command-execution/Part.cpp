@@ -6,12 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 09:12:52 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 17:18:23 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:25:31 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
+#include "Exceptions.hpp"
 #include "Reply.hpp"
 #include "Server.hpp"
 
@@ -25,9 +26,9 @@ void partOneChan(Client &sender, Channel &curChan) {
 
 void partMess(Client &sender, Channel &curChan, const std::string &message) {
 	std::string reason = (message.empty() ? "" : ":" + message);
-	RPL::sendMessageChannel(curChan.getCliInChan(),
-							RPL_PARTREASON(sender.cliInfo.getPrefix(),
-										   curChan.getName(), reason));
+	RPL::sendMessageChannel(
+		curChan.getCliInChan(),
+		RPL_PARTREASON(sender.cliInfo.getPrefix(), curChan.getName(), reason));
 }
 
 void part(CmdSpec &cmd) {
@@ -42,6 +43,6 @@ void part(CmdSpec &cmd) {
 			partMess(sender, curChan, message);
 			partOneChan(sender, curChan);
 			curChan.checkOnlyOperator(sender);
-		} catch (std::exception &e) { RPL::log(RPL::ERROR, e.what()); }
+		} catch (ObjectNotFound &e) {}
 	}
 }

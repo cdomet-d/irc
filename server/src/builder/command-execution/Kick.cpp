@@ -6,12 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 17:12:30 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:17:53 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
+#include "Exceptions.hpp"
 #include "Reply.hpp"
 #include "Server.hpp"
 
@@ -44,7 +45,7 @@ void kick(CmdSpec &cmd) {
 												 curChan.getName(),
 												 target.cliInfo.getNick(), ""));
 			kickFromAllMap(target, curChan);
-		} catch (std::exception &e) { RPL::log(RPL::ERROR, e.what()); }
+		} catch (ObjectNotFound &e) {}
 	}
 	curChan.checkOnlyOperator(sender);
 }

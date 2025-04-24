@@ -6,12 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:48:49 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 17:13:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:25:02 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
+#include "Exceptions.hpp"
 #include "Reply.hpp"
 #include "Server.hpp"
 #include <ctime>
@@ -19,7 +20,8 @@
 static std::string timeStamp() {
 	char time_buf[80];
 	time_t now = time(0);
-	std::strftime(time_buf, sizeof(time_buf), "%d-%m-%Y %H:%M:%S", std::localtime(&now));
+	std::strftime(time_buf, sizeof(time_buf), "%d-%m-%Y %H:%M:%S",
+				  std::localtime(&now));
 	return (time_buf);
 }
 

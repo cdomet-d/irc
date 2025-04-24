@@ -6,12 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 10:55:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 17:25:10 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:24:57 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
+#include "Exceptions.hpp"
 #include "Server.hpp"
 
 static void checkTopic(const Channel &curChan, const Client &curCli) {
@@ -26,7 +27,8 @@ static void checkTopic(const Channel &curChan, const Client &curCli) {
 	return;
 }
 
-static void changeTopic(Channel &curChan, const Client &curCli, const std::string &topic) {
+static void changeTopic(Channel &curChan, const Client &curCli,
+						const std::string &topic) {
 	curChan.setTopic(topic);
 	RPL::sendMessageChannel(curChan.getCliInChan(),
 							RPL_TOPICCHANGED(curCli.cliInfo.getPrefix(),
@@ -44,5 +46,5 @@ void topic(CmdSpec &cmd) {
 			checkTopic(curChan, sender);
 		else
 			changeTopic(curChan, sender, cmd[topic_][0]);
-	} catch (std::exception &e) { RPL::log(RPL::ERROR, e.what()); }
+	} catch (ObjectNotFound &e) {}
 }

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/23 16:15:50 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:11:34 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ class Message {
 
   private:
 	Message(const Message &rhs);
-	Message &operator=(const Message &rhs); //TODO: not in Message.cpp
+	Message &operator=(const Message &rhs);
 
 	// members
 	std::string message_;

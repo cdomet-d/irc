@@ -6,11 +6,12 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:43:39 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 15:12:35 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:24:35 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdExecution.hpp"
+#include "Exceptions.hpp"
 #include <cerrno>
 #include <cstdlib>
 #include <limits>
@@ -176,5 +177,5 @@ void mode(CmdSpec &cmd) {
 			executeFlag(cmd[flag_][nbFlag], cmd[flagArg_][nbFlag], curChan);
 		buildNewModeString(cmd, curChan, sender);
 		curChan.setModes();
-	} catch (std::exception &e) { RPL::log(RPL::ERROR, e.what()); }
+	} catch (ObjectNotFound &e) {}
 }

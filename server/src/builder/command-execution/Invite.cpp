@@ -6,12 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:03:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 17:30:13 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:17:30 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
+#include "Exceptions.hpp"
 #include "Reply.hpp"
 #include "Server.hpp"
 
@@ -34,5 +35,5 @@ void invite(CmdSpec &cmd) {
 							  targetCli.cliInfo.getNick(), cmd[channel_][0]));
 
 		curChan.addCli(INVITECLI, targetCli);
-	} catch (std::exception &e) { RPL::log(RPL::ERROR, e.what()); }
+	} catch (ObjectNotFound &e) {}
 }

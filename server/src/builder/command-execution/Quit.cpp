@@ -6,12 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 08:57:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 17:19:43 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:24:53 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
+#include "Exceptions.hpp"
 #include "Reply.hpp"
 #include "Server.hpp"
 #include <sstream>
@@ -31,7 +32,7 @@ void partAllChans(CmdSpec &cmd, const std::string &message) {
 					curChan.getCliInChan(),
 					RPL_QUIT(sender.cliInfo.getPrefix(), message));
 			curChan.checkOnlyOperator(sender);
-		} catch (std::exception &e) { RPL::log(RPL::ERROR, e.what()); }
+		} catch (ObjectNotFound &e) {}
 	}
 }
 

@@ -6,12 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:20:57 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 17:13:02 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:24:38 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
+#include "Exceptions.hpp"
 #include "Reply.hpp"
 #include "Server.hpp"
 
@@ -32,7 +33,7 @@ void nick(CmdSpec &cmd) {
 				RPL::sendMessageChannel(
 					curChan.getCliInChan(),
 					RPL_NICK(sender.cliInfo.getPrefix(), cmd[nickname_][0]));
-			} catch (std::exception &e) { RPL::log(RPL::ERROR, e.what()); }
+			} catch (ObjectNotFound &e) {}
 		}
 	}
 	sender.cliInfo.setPrefix();

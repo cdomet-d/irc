@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:16:46 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/23 17:08:16 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 12:01:09 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ bool Message::hasTrailing() {
 bool Message::hasValidLen(const Client &sender) {
 	if (message_.empty())
 		return false;
-	if (message_.size() > 512) {
+	if (message_.size() > 510) {
 		RPL::send_(sender.getFd(), ERR_INPUTTOOLONG(sender.cliInfo.getNick()));
 		return false;
 	}
@@ -224,7 +224,7 @@ void Message::removeNewlines() {
 	}
 	std::string::size_type newline =
 		(termSize == 2 ? message_.find("\r\n") : message_.find("\n"));
-	leftover_ = message_.substr(newline + termSize);
+	leftover_ = message_.substr((newline - 1) + termSize);
 	message_.erase(message_.begin() + newline, message_.end());
 	return;
 }

@@ -6,14 +6,13 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 16:49:32 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 18:34:00 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:25:18 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//TODO change all std::exceptions to ObjectNotFound
-//TODO find a safe spot to declare ObjectNotFound
 #include "CmdExecution.hpp"
 #include "CmdSpec.hpp"
+#include "Exceptions.hpp"
 #include "Server.hpp"
 #include <sstream>
 
@@ -32,7 +31,8 @@ Channel &createChan(const std::string &chanName) {
 	}
 }
 
-static void sendNickList(const clientMap &curMap, const Channel &curChan, const Client &sender) {
+static void sendNickList(const clientMap &curMap, const Channel &curChan,
+						 const Client &sender) {
 	std::string list;
 	for (clientMapIt it = curMap.begin(); it != curMap.end(); ++it) {
 		std::string prefix = "";
