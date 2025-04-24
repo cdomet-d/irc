@@ -6,12 +6,12 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 13:49:17 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 16:34:17 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 19:21:44 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "validator.hpp"
 #include "Exceptions.hpp"
+#include "validator.hpp"
 
 bool check::join(CmdSpec &cmd, size_t idx) {
 	while (idx < cmd[channel_].size()) {

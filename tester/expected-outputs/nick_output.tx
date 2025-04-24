@@ -1,6 +1,6 @@
 :irc.bitchat.net NOTICE * :Valid password ! You may register
 :irc.bitchat.net 431 * :No nickname given
-:irc.bitchat.net 432 * charlotte sweet: illegal char: expected [AZ - az], [0 - 9] or [-[]\`^{}], is   :Erroneous nickname
+:irc.bitchat.net 432 * charlotte sweeting: illegal char: expected [AZ - az], [0 - 9] or [-[]\`^{}], is   :Erroneous nickname
 :irc.bitchat.net 432 * #cha: illegal first char: expected [AZ - az], is # :Erroneous nickname
 :irc.bitchat.net 432 * :cha: illegal first char: expected [AZ - az], is : :Erroneous nickname
 :irc.bitchat.net 432 * 4cha: illegal first char: expected [AZ - az], is 4 :Erroneous nickname

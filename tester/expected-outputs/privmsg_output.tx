@@ -25,7 +25,7 @@
 :irc.bitchat.net 401 chacham dontexist :No such nick/channel
 :irc.bitchat.net 403 chacham #dontexist :No such channel
 :chacham!c@localhost PART #chan2 
-:irc.bitchat.net 404 chacham #chan2 :Cannot send to nick/channel
+:irc.bitchat.net 442 chacham #chan2 :You're not on that channel
 :chacham!c@localhost QUIT :You quit the server, see you next time !
 ERROR :Closing Link: localhost (Client Quit)
 :irc.bitchat.net NOTICE * :Valid password ! You may register
@@ -39,7 +39,7 @@ ERROR :Closing Link: localhost (Client Quit)
 :irc.bitchat.net 372 bobby :Registration completed, you can join channels and start chatting !
 :irc.bitchat.net 376 bobby :End of /MOTD command
 :bobby!b@localhost JOIN #chan
-:irc.bitchat.net 353 bobby = #chan :bobby @chacham
+:irc.bitchat.net 353 bobby = #chan :@chacham bobby
 :irc.bitchat.net 366 bobby #chan :End of /NAMES list
 :bobby!b@localhost JOIN #chan2
 :irc.bitchat.net 353 bobby = #chan2 :bobby @chacham

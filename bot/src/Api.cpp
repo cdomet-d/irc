@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Api.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: csweetin <csweetin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 15:50:43 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/22 18:08:54 by csweetin         ###   ########.fr       */
+/*   Updated: 2025/04/24 17:09:39 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ bool Api::requestToken() {
 
 	if (!executeCmd())
 		return (false);
-	time_ = std::time(0); //TODO: tester time
+	time_ = std::time(0);
 	token_ = findStr("\"access_token\":");
 	if (token_.empty()) {
 		RPL::log(RPL::ERROR, "failed to generate token\r\n");
@@ -164,7 +164,7 @@ void Api::cleanChild(int exitCode) {
 	if (resFd_ != -1)
 		close(resFd_);
 	if (cmd_ != NULL)
-		delete [] cmd_;
+		delete[] cmd_;
 	close(0);
 	close(1);
 	curlCmd_.clear();
@@ -199,9 +199,9 @@ bool Api::findCurlPath() {
 }
 
 bool Api::fillCmd(void) {
-	cmd_ = new char*[curlCmd_.size() + 1];
+	cmd_ = new char *[curlCmd_.size() + 1];
 	for (size_t i = 0; i < curlCmd_.size(); ++i)
-		cmd_[i] = const_cast<char *>(curlCmd_[i].c_str());
+		cmd_[i] = const_cast< char * >(curlCmd_[i].c_str());
 	cmd_[curlCmd_.size()] = NULL;
 	return (true);
 }
@@ -211,14 +211,11 @@ bool Api::curlStatus(int status) {
 		int exitCode = WEXITSTATUS(status);
 		if (exitCode != 0) {
 			std::string errorMess = std::strerror(exitCode);
-			RPL::log(RPL::ERROR,
-					 "Curl command failed: " + errorMess + "\r\n");
+			RPL::log(RPL::ERROR, "Curl command failed: " + errorMess + "\r\n");
 			return (false);
 		}
-		//TODO fix variable signal in log
 	} else if (WIFSIGNALED(status)) {
-	//	int signal = WTERMSIG(status);
-		RPL::log(RPL::ERROR, "Curl process terminated by signal: "); //here
+		RPL::log(RPL::ERROR, "Curl process terminated by signal\r\n");
 		return (false);
 	}
 	return (true);

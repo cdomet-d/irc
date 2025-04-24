@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Message.cpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/24 19:24:10 by cdomet-d          #+#    #+#             */
+/*   Updated: 2025/04/24 19:24:12 by cdomet-d         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Message.hpp"
 #include <algorithm>
 #include <cstring>
@@ -66,15 +78,15 @@ void Msg::removeNl() {
 		rcv_.clear();
 		return;
 	}
-	std::string::size_type newline
-		= (termSize == 2 ? rcv_.find("\r\n") : rcv_.find("\n"));
+	std::string::size_type newline =
+		(termSize == 2 ? rcv_.find("\r\n") : rcv_.find("\n"));
 	rcv_.erase(rcv_.begin() + newline, rcv_.end());
 	return;
 }
 
 void Msg::trimConsecutiveSpaces() {
-	std::string::iterator newEnd
-		= std::unique(rcv_.begin(), rcv_.end(), isConsecutiveSpace);
+	std::string::iterator newEnd =
+		std::unique(rcv_.begin(), rcv_.end(), isConsecutiveSpace);
 	if (newEnd != rcv_.end())
 		rcv_.erase(newEnd, rcv_.end());
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:08:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/22 17:07:50 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 19:19:53 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,9 @@ void sigHandler(int signum) {
 
 int main(int ac, char *av[], char *envp[]) {
 	if (ac != 4)
-		return std::cerr
-				   << "Usage: ./ircbot <server IP> <server port> <server "
-					  "password>"
-				   << std::endl,
+		return std::cerr << "Usage: ./ircbot <server IP> <server port> <server "
+							"password>"
+						 << std::endl,
 			   1;
 
 	struct sigaction sa;

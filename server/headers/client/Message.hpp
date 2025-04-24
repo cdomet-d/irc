@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 16:17:29 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 16:50:09 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 17:13:54 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ class Message {
 
 	// clearing and updating
 
-	void clear();
+	void clear(bool clearLeftover);
 	void clearCmdParam();
 	void clearMess();
 	void updateMess();

@@ -11,7 +11,7 @@
 :irc.bitchat.net 372 chacham :Registration completed, you can join channels and start chatting !
 :irc.bitchat.net 376 chacham :End of /MOTD command
 :irc.bitchat.net 461 chacham JOIN :Not enough parameters
-:irc.bitchat.net 403 chacham #chan with space :Illegal channel name
+:irc.bitchat.net 403 chacham #chan with space :No such channel
 :chacham!c@localhost JOIN #chan
 :irc.bitchat.net MODE #chan +t 
 :irc.bitchat.net 353 chacham = #chan :@chacham

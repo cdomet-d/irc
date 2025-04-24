@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Reply.cpp                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/24 19:24:16 by cdomet-d          #+#    #+#             */
+/*   Updated: 2025/04/24 19:24:18 by cdomet-d         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Reply.hpp"
 #include "Bot.hpp"
 #include <cstring>
@@ -6,16 +18,17 @@
 #include <sys/socket.h>
 
 static bool doNotLog(const std::string &message) {
-	return (message.find("PING") != std::string::npos
-			|| message.find("PONG") != std::string::npos
-			|| message.find("WHO") != std::string::npos);
+	return (message.find("PING") != std::string::npos ||
+			message.find("PONG") != std::string::npos ||
+			message.find("WHO") != std::string::npos);
 }
 
 /* get timestamp*/
 static std::string ts() {
 	char time_buf[80];
 	time_t now = time(0);
-	std::strftime(time_buf, sizeof(time_buf), "%d-%m-%Y %H:%M:%S", std::localtime(&now));
+	std::strftime(time_buf, sizeof(time_buf), "%d-%m-%Y %H:%M:%S",
+				  std::localtime(&now));
 	return (time_buf);
 }
 

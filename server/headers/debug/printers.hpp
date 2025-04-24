@@ -3,12 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   printers.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 13:43:23 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 10:48:32 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 19:26:12 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#ifndef PRINTERS_HPP
+#define PRINTERS_HPP
 
 #include "typedef.hpp"
 #include <ctime>
@@ -37,3 +40,5 @@ namespace print {
 		}
 	}
 } // namespace print
+
+#endif

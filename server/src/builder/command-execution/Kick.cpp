@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 16:52:14 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 13:07:48 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 17:26:14 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ static void kickFromAllMap(Client &target, Channel &curChan) {
 }
 
 void kick(CmdSpec &cmd) {
-	Channel &curChan = cmd.serv_.findChan(cmd[channel_][0]);
 	Client &sender = cmd.getSender();
+	try {
+		Channel &curChan = cmd.serv_.findChan(cmd[channel_][0]);
 
-	for (size_t nbTarget = 0; nbTarget < cmd[target_].size(); nbTarget++) {
-		int fdTarget = cmd.serv_.getFdFromNick(cmd[target_][nbTarget]);
-		try {
+		for (size_t nbTarget = 0; nbTarget < cmd[target_].size(); nbTarget++) {
+			int fdTarget = cmd.serv_.getFdFromNick(cmd[target_][nbTarget]);
 			Client &target = cmd.serv_.findCli(fdTarget);
 
 			if (cmd[message_].size())
@@ -45,7 +45,7 @@ void kick(CmdSpec &cmd) {
 												 curChan.getName(),
 												 target.cliInfo.getNick(), ""));
 			kickFromAllMap(target, curChan);
-		} catch (ObjectNotFound &e) { RPL::log(RPL::ERROR, e.what()); }
-	}
-	curChan.checkOnlyOperator(sender);
+		}
+		curChan.checkOnlyOperator(sender);
+	} catch (ObjectNotFound &e) { RPL::log(RPL::ERROR, e.what()); }
 }

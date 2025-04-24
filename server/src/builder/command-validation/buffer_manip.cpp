@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:45:07 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 15:02:25 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/24 17:15:17 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ bool buffer_manip::prepareCommand(Client &sender) {
 			continue;
 		}
 		if (!sender.mess.hasValidLen(sender))
-			return sender.mess.clear(), false;
+			return sender.mess.clear(true), false;
 		if (sender.mess.hasPrefix(sender.cliInfo.getPrefix()) == false)
-			return sender.mess.clear(), false;
+			return sender.mess.clear(true), false;
 		sender.mess.hasTrailing();
 		std::string buffer = sender.mess.getMess();
 		sender.mess.setCmdParam(vectorSplit(buffer, ' '));
@@ -44,7 +44,7 @@ bool buffer_manip::prepareCommand(Client &sender) {
 					   ERR_UNKNOWNCOMMAND(sender.cliInfo.getNick(),
 										  sender.mess.getCmd()));
 		}
-		sender.mess.clear();
+		sender.mess.clear(false);
 		sender.mess.updateMess();
 	}
 	return true;

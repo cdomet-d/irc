@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   extended_checkers.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
+/*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 15:50:22 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/15 11:54:22 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 19:22:01 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ bool check::part(CmdSpec &cmd, size_t idx) {
 
 bool check::kick(CmdSpec &cmd, size_t idx) {
 	while (idx < cmd[target_].size()) {
-		const stringVec &tChan
-			= check::getTargetChan(cmd[target_][idx], cmd.serv_);
+		const stringVec &tChan =
+			check::getTargetChan(cmd[target_][idx], cmd.serv_);
 		if (!check::target(cmd, idx)) {
 			cmd[target_].rmParam(idx);
 			continue;

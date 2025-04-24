@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/04/22 14:31:55 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/04/24 19:37:22 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -158,11 +158,11 @@ clean:
 
 fclean: clean
 	@printf '$(CYBOLD)%.50s\n$(R)' "-- Removing all executables... -------------"
+	make fclean -C tester/
 	$(RM) $(BOT_NAME)
 	$(RM) $(BOT_DEBUG_NAME)
 	$(RM) $(NAME)
 	$(RM) $(DEBUG_NAME)
-	@echo
 	@echo
 
 re: fclean all bot
@@ -212,4 +212,4 @@ format:
 	@printf '$(CYBOLD)%.50s\n$(R)' "-- Formatting... --------------------------"
 	bash .scripts/format-all.sh 
 
-.PHONY: all bot debug clean cleanserv cleandebug cleanbot fclean re redebug info run drun format -list
+.PHONY: all bot debug clean cleanserv cleanbot fclean re info run drun format -list
