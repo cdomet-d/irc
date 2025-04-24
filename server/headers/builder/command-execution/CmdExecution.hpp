@@ -6,7 +6,7 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:08:25 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/24 10:26:37 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:28:07 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,5 @@ void part(CmdSpec &cmd);
 void privmsg(CmdSpec &cmd);
 void quit(CmdSpec &cmd);
 void ping(CmdSpec &cmd);
-
-// UTILS
-void registrationCompleted(Client &sender);
 
 #endif /// CMDEXECUTION_HPP

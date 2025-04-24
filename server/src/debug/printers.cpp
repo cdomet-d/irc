@@ -6,11 +6,18 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 13:42:32 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/15 11:53:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:38:11 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "printers.hpp"
+
+std::string print::timeStamp() {
+	char time_buf[80];
+	time_t now = time(0);
+	std::strftime(time_buf, sizeof(time_buf), "%d-%m-%Y %H:%M:%S", std::localtime(&now));
+	return (time_buf);
+}
 
 void print::charByChar(const std::string &buf) {
 	for (std::string::size_type i = 0; i < buf.size(); ++i) {

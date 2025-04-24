@@ -6,11 +6,14 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 10:04:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/15 11:53:53 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:35:10 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "UserInfo.hpp"
+#include "Client.hpp"
+#include "Reply.hpp"
+#include "printers.hpp"
 
 /* ************************************************************************** */
 /*                               ORTHODOX CLASS                               */
@@ -27,6 +30,24 @@ UserInfo::UserInfo(const UserInfo &rhs) {
 UserInfo &UserInfo::operator=(const UserInfo &rhs) {
 	static_cast< void >(rhs);
 	return *this;
+}
+
+/* ************************************************************************** */
+/*                               METHODS                                      */
+/* ************************************************************************** */
+
+void UserInfo::registrationCompleted(Client &sender) {
+	sender.cliInfo.setRegistration(3);
+	RPL::send_(sender.getFd(), RPL_WELCOME(sender.cliInfo.getNick(),
+										   sender.cliInfo.getPrefix()));
+	RPL::send_(sender.getFd(), RPL_YOURHOST(sender.cliInfo.getNick()));
+	RPL::send_(sender.getFd(),
+			   RPL_CREATED(sender.cliInfo.getNick(), print::timeStamp()));
+	RPL::send_(sender.getFd(), RPL_MYINFO(sender.cliInfo.getNick()));
+	RPL::send_(sender.getFd(), RPL_ISUPPORT(sender.cliInfo.getNick()));
+	RPL::send_(sender.getFd(), RPL_MOTDSTART(sender.cliInfo.getNick()));
+	RPL::send_(sender.getFd(), RPL_MOTD(sender.cliInfo.getNick()));
+	RPL::send_(sender.getFd(), RPL_ENDOFMOTD(sender.cliInfo.getNick()));
 }
 
 /* ************************************************************************** */

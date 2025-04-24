@@ -6,15 +6,17 @@
 /*   By: aljulien < aljulien@student.42lyon.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 13:43:23 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/15 11:53:51 by aljulien         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:39:14 by aljulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "typedef.hpp"
 #include <iomanip>
 #include <iostream>
+#include <ctime>
 
 namespace print {
+	std::string timeStamp();
 	void charByChar(const std::string &buf);
 	void cmdParam(const stringVec &obj, std::string where);
 	void modeEnumToString(e_mdeset set_, e_mdetype type_);
