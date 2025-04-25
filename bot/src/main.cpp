@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:08:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/25 14:16:08 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/25 14:28:52 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,14 @@ void sigHandler(int signum) {
 static double getPort(char *sPort) {
 	char *endptr;
 	errno = 0;
-	double result = std::strtod(sPort, &endptr);
+	double res = std::strtod(sPort, &endptr);
 
-	if (errno == ERANGE || *endptr != '\0' || result < 0 ||
-		result > std::numeric_limits< int >::max())
+	if (errno == ERANGE || *endptr != '\0' || res < 0 ||
+		res > std::numeric_limits< int >::max())
 		return (-1);
-	return (result);
+	if (res <= 6664 || res >= 6670)
+		return (-1);
+	return (res);
 }
 
 int main(int ac, char *av[], char *envp[]) {
