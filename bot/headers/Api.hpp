@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 16:51:31 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/25 10:07:21 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/25 10:24:28 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ class Api {
 	bool findCurlPath();
 	bool findSecret();
 	bool openFile();
-	bool requestLocation(const int fd, const std::string &target, const std::string &login);
+	bool requestLocation(const int fd, const std::string &target,
+						 const std::string &login);
 	bool requestToken();
 	std::string findStr(const std::string &strToFind);
 	void cleanChild(int exitCode);

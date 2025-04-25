@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 19:23:50 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/25 10:05:23 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/25 10:26:38 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ bool Bot::executeCmd() {
 
 bool Bot::findLoginPos(const std::string &target, const std::string &login) {
 	if (!api.findSecret())
-		return (false);
+		return RPL::send_(sockFd, ERR_SOMETHINGWENTWRONT(target)), false;
 	if (!api.requestToken())
-		return (false);
+		return RPL::send_(sockFd, ERR_SOMETHINGWENTWRONT(target)), false;
 	if (!api.requestLocation(sockFd, target, login))
 		return (false);
 	return (true);

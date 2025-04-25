@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 19:23:57 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/25 09:32:19 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/25 10:24:11 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void cmd::disconnect(Bot &bot) {
 		 it != bot.getMembers().end(); ++it) {
 		if (*it != BOT) {
 			RPL::send_(bot.getFd(), KICK(*it));
-		sleep(0.5);
+			sleep(0.5);
 		}
 	}
 	bot.clearMembers();

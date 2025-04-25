@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 15:50:43 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/25 10:00:27 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/25 10:24:05 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ bool Api::requestToken() {
 	return (true);
 }
 
-bool Api::requestLocation(const int fd, const std::string &target, const std::string &login) {
+bool Api::requestLocation(const int fd, const std::string &target,
+						  const std::string &login) {
 	curlCmd_.clear();
 	curlCmd_.push_back("curl");
 	curlCmd_.push_back("-s");
