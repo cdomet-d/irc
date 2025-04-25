@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 19:23:26 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 19:23:29 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/25 09:46:45 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ class Msg {
 
 	/*                               METHODS                                  */
 	bool processBuf();
-	std::string::size_type evalTerm() const;
 	void clear();
 	void removeNl();
 	bool rplIs(const std::string &expected) const;
@@ -47,7 +46,6 @@ class Msg {
 	stringVec cmdParam_;
 
   private:
-	// param e_param;
 	void trimUsername();
 
 	Msg(const Msg &rhs);

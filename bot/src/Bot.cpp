@@ -6,13 +6,12 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 19:23:50 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 19:23:52 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/25 10:26:38 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Cmd.hpp"
 #include "Reply.hpp"
-#include <algorithm>
 #include <iostream>
 
 /* ************************************************************************** */
@@ -63,31 +62,26 @@ bool Bot::executeCmd() {
 	else if (msg_.cmdParam_[cmd_] == "PRIVMSG") {
 		if (msg_.cmdParam_[content_] == ":bye")
 			return cmd::disconnect(*this), false;
-		if (msg_.cmdParam_[content_][1] != '!')
-			return false;
 		if (msg_.cmdParam_[content_] == ":!man")
 			return cmd::man(*this, target), false;
-		if (!cmd::parseLogin(msg_.cmdParam_[content_]))
-			return RPL::send_(sockFd, ERR_INVALIDSYNTAX(
-										  target, msg_.cmdParam_[content_])),
-				   false;
-		RPL::send_(sockFd, RPL_SUCCESS(target, msg_.cmdParam_[content_]));
-		if (!findLoginPos(msg_.cmdParam_[content_])) {
-			RPL::send_(sockFd,
-					   ERR_NOLOCATION(target, msg_.cmdParam_[content_]));
-			return (false);
+		if (msg_.cmdParam_[content_].find('!') == 1) {
+			if (!cmd::parseLogin(msg_.cmdParam_[content_]))
+				return RPL::send_(sockFd, ERR_LOGINTOOLONG(target)), false;
+			RPL::send_(sockFd, RPL_SUCCESS(target));
+			if (!findLoginPos(getTarget(), msg_.cmdParam_[content_]))
+				return false;
+			RPL::send_(sockFd, RPL_LOCATION(target, api.getPos()));
 		}
-		RPL::send_(sockFd, RPL_LOCATION(target, api.getPos()));
 	}
 	return true;
 }
 
-bool Bot::findLoginPos(const std::string &login) {
+bool Bot::findLoginPos(const std::string &target, const std::string &login) {
 	if (!api.findSecret())
-		return (false);
+		return RPL::send_(sockFd, ERR_SOMETHINGWENTWRONT(target)), false;
 	if (!api.requestToken())
-		return (false);
-	if (!api.requestLocation(login))
+		return RPL::send_(sockFd, ERR_SOMETHINGWENTWRONT(target)), false;
+	if (!api.requestLocation(sockFd, target, login))
 		return (false);
 	return (true);
 }
