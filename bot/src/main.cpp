@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 15:08:27 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 19:19:53 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/25 14:16:08 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,24 @@
 #include "Reply.hpp"
 #include <csignal>
 #include <iostream>
+#include <limits>
 
 void sigHandler(int signum) {
 	(void)signum;
 	Bot &bot = Bot::getInstance(0, "", "", NULL);
 	cmd::disconnect(bot);
 	bot.setSignal(true);
+}
+
+static double getPort(char *sPort) {
+	char *endptr;
+	errno = 0;
+	double result = std::strtod(sPort, &endptr);
+
+	if (errno == ERANGE || *endptr != '\0' || result < 0 ||
+		result > std::numeric_limits< int >::max())
+		return (-1);
+	return (result);
 }
 
 int main(int ac, char *av[], char *envp[]) {
@@ -39,7 +51,10 @@ int main(int ac, char *av[], char *envp[]) {
 	sigaction(SIGQUIT, &sa, NULL);
 
 	try {
-		Bot &bot = Bot::getInstance(std::atoi(av[2]), av[3], av[1], envp);
+		double port = getPort(av[2]);
+		if (port == -1)
+			return std::cerr << "Invalid port" << std::endl, 1;
+		Bot &bot = Bot::getInstance(port, av[3], av[1], envp);
 		if (!bot.registrationSequence())
 			return 1;
 		while (bot.getSignal() == false) {

@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:11:56 by aljulien          #+#    #+#             */
-/*   Updated: 2025/04/23 17:40:13 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/25 14:16:28 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void SignalHandler(int signum) {
 	gSign = true;
 }
 
-double getPort(char *sPort) {
+static double getPort(char *sPort) {
 	char *endptr;
 	errno = 0;
 	double result = std::strtod(sPort, &endptr);
@@ -44,6 +44,8 @@ int main(int ac, char *av[]) {
 	signal(SIGTERM, SignalHandler);
 	
 	int port = getPort(av[1]);
+	if (port == -1)
+		return (std::cerr << "Invalid port" << std::endl, 1);
 	std::string password = av[2];
 
 	Server &server = Server::GetServerInstance(port, password);
