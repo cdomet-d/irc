@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 15:50:43 by csweetin          #+#    #+#             */
-/*   Updated: 2025/04/24 17:09:39 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/25 10:00:27 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ bool Api::requestToken() {
 	return (true);
 }
 
-bool Api::requestLocation(const std::string &login) {
+bool Api::requestLocation(const int fd, const std::string &target, const std::string &login) {
 	curlCmd_.clear();
 	curlCmd_.push_back("curl");
 	curlCmd_.push_back("-s");
@@ -91,8 +91,10 @@ bool Api::requestLocation(const std::string &login) {
 	if (!executeCmd())
 		return (false);
 	pos_ = findStr("\"location\":");
-	if (pos_.empty() || pos_ == "null")
-		return (false);
+	if (pos_.empty())
+		return RPL::send_(fd, ERR_NOSUCHLOGIN(target, login)), false;
+	if (pos_ == "null")
+		return RPL::send_(fd, ERR_NOLOCATION(target, login)), false;
 	pos_.erase(0, 1);
 	pos_.erase(pos_.size() - 1, 1);
 	return (true);

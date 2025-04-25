@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 19:23:33 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 19:23:35 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/25 09:55:08 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,18 @@ namespace RPL {
 #define ERR_INVALIDSYNTAX(target, login)                                       \
 	"PRIVMSG " + target + " :invalid syntax: should be !<[a - z]>, is " +      \
 		login + "\r\n"
+#define ERR_LOGINTOOLONG(target)                                               \
+	"PRIVMSG " + target + " :login too long; max is 9 characters.\r\n"
 #define ERR_TOOLONG(target) "PRIVSMG " + target + " :len should be < 9\r\n"
 #define ERR_CANNOTCREATECHAN                                                   \
-	"Someone stole my channel ! I can't work in these conditions >:(\r\n"
-#define ERR_CANNOTREGISTER "My nickname is already in use :(\r\n"
+	":Someone stole my channel ! I can't work in these conditions >:(\r\n"
+#define ERR_CANNOTREGISTER ":My nickname is already in use :(\r\n"
 
-#define RPL_SUCCESS(target, login)                                             \
-	"PRIVMSG " + target + " :" + login + " is a valid login, fetching...\r\n"
+#define RPL_SUCCESS(target) "PRIVMSG " + target + " :attempting to fetch...\r\n"
 #define ERR_NOLOCATION(target, login)                                          \
 	"PRIVMSG " + target + " :Location not found for " + login + "\r\n"
+#define ERR_NOSUCHLOGIN(target, login)                                          \
+	"PRIVMSG " + target + " :No such login: " + login + "\r\n"
 #define RPL_LOCATION(target, location)                                         \
 	"PRIVMSG " + target + " :" + location + "\r\n"
 

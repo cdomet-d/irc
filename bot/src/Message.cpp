@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 19:24:10 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 19:24:12 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/25 09:44:14 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,22 +64,8 @@ static bool isConsecutiveSpace(char left, char right) {
 	return (left == ' ' && right == ' ');
 }
 
-std::string::size_type Msg::evalTerm() const {
-	if (rcv_.find("\r\n") != std::string::npos)
-		return 2;
-	if (rcv_.find("\n") != std::string::npos)
-		return 1;
-	return std::string::npos;
-}
-
 void Msg::removeNl() {
-	std::string::size_type termSize = evalTerm();
-	if (termSize == std::string::npos) {
-		rcv_.clear();
-		return;
-	}
-	std::string::size_type newline =
-		(termSize == 2 ? rcv_.find("\r\n") : rcv_.find("\n"));
+	std::string::size_type newline = rcv_.find("\r\n");
 	rcv_.erase(rcv_.begin() + newline, rcv_.end());
 	return;
 }

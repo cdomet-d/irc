@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 19:23:10 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/24 19:23:12 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/25 09:58:17 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class Bot {
 							const std::string &servIp, char *envp[]);
 	bool createChan();
 	bool executeCmd();
-	bool findLoginPos(const std::string &login);
+	bool findLoginPos(const std::string &target, const std::string &login);
 	bool registration();
 	bool registrationSequence();
 	bool requestConnection();
