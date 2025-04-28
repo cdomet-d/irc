@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/04/24 19:37:22 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/04/25 13:58:40 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -93,6 +93,8 @@ $(BOT_BDIR)%.o: %.cpp
 	@mkdir -p $(dir $@)
 	@echo "$(CC) $(CFLAGS) $@"
 	@$(CC) $(CFLAGS) $(BOT_CXXFLAGS) -o $@ -c $<
+
+-include $(BDEPS)
 
 debugbot: $(BOT_DEBUG_NAME)
 
