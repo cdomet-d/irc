@@ -6,7 +6,7 @@
 /*   By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 19:23:50 by cdomet-d          #+#    #+#             */
-/*   Updated: 2025/04/25 10:26:38 by cdomet-d         ###   ########.fr       */
+/*   Updated: 2025/04/25 14:13:46 by cdomet-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ Bot::Bot(int port, std::string pw, std::string servIp, char *envp[])
 	serv_.sin_port = htons(port_);
 	serv_.sin_addr.s_addr = inet_addr(servIp.c_str());
 	if (serv_.sin_addr.s_addr == INADDR_NONE)
-		throw std::runtime_error("InvalidIpv4 address");
+		throw std::runtime_error("Invalid Ipv4 address");
 }
 
 Bot::Bot(void) {}
