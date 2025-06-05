@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SERVER="0.0.0.0"
-PORT="4444"  # Default IRC port
+PORT="6667"  # Default IRC port
 PASSWORD="0"
 CHANNEL="#test"
 NUM_CLIENTS=500

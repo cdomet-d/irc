@@ -6,7 +6,7 @@
 #    By: cdomet-d <cdomet-d@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/03 15:08:52 by cdomet-d          #+#    #+#              #
-#    Updated: 2025/04/25 13:58:40 by cdomet-d         ###   ########.fr        #
+#    Updated: 2025/05/15 12:52:00 by cdomet-d         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -173,28 +173,28 @@ run: all
 	@if echo $(MAKECMDGOALS) | grep -q "6667"; then \
 		./$(NAME) 6667 0; \
 	else \
-		./$(NAME) 4444 0; \
+		./$(NAME) 6667 0; \
 	fi
 
 drun: debug
 	@if echo $(MAKECMDGOALS) | grep -q "6667"; then \
 		valgrind $(VFLAGS) ./$(DEBUG_NAME) 6667 0; \
 	else \
-		valgrind $(VFLAGS) ./$(DEBUG_NAME) 4444 0; \
+		valgrind $(VFLAGS) ./$(DEBUG_NAME) 6667 0; \
 	fi
 
 dbrun: debugbot
 	@if echo $(MAKECMDGOALS) | grep -q "6667"; then \
 		valgrind $(VFLAGS) ./$(BOT_DEBUG_NAME) 0.0.0.0 6667 0; \
 	else \
-		valgrind $(VFLAGS) --trace-children=yes ./$(BOT_DEBUG_NAME) 0.0.0.0 4444 0; \
+		valgrind $(VFLAGS) --trace-children=yes ./$(BOT_DEBUG_NAME) 0.0.0.0 6667 0; \
 	fi
 
 brun: bot
 	@if echo $(MAKECMDGOALS) | grep -q "6667"; then \
 		./$(BOT_NAME) 0.0.0.0 6667 0; \
 	else \
-		./$(BOT_NAME) 0.0.0.0 4444 0; \
+		./$(BOT_NAME) 0.0.0.0 6667 0; \
 	fi
 
 info:

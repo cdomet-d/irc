@@ -13,7 +13,7 @@ PASS
 PASS 0
 EOF
 
-timeout 2s nc 0.0.0.0 4444 < test_input.txt > outputs/output.txt
+timeout 2s nc 0.0.0.0 6667 < test_input.txt > outputs/output.txt
 
 cat <<EOF > test_input.txt
 PASS 0
@@ -22,5 +22,5 @@ PASS 0
 NICK chacham
 EOF
 
-timeout 2s nc 0.0.0.0 4444 < test_input.txt >> outputs/output.txt
+timeout 2s nc 0.0.0.0 6667 < test_input.txt >> outputs/output.txt
 

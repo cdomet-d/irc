@@ -7,7 +7,7 @@ mkfifo outputs/client1_in.txt outputs/client1_out.txt
 exec {client1_in_fd}<>outputs/client1_in.txt
 exec {client1_out_fd}<>outputs/client1_out.txt
 
-nc 0.0.0.0 4444 0<&${client1_in_fd} 1>&${client1_out_fd} &
+nc 0.0.0.0 6667 0<&${client1_in_fd} 1>&${client1_out_fd} &
 PID1=$!
 
 sleep 0.2

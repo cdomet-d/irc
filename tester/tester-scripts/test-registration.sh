@@ -12,7 +12,7 @@ PASS 0
 NICK cha
 EOF
 
-timeout 2s nc 0.0.0.0 4444 < test_input.txt > outputs/output.txt
+timeout 2s nc 0.0.0.0 6667 < test_input.txt > outputs/output.txt
 
 cat <<EOF > test_input.txt
 pass 0
@@ -22,4 +22,4 @@ pass 0
 user c 0 * c
 EOF
 
-timeout 2s nc 0.0.0.0 4444 < test_input.txt >> outputs/output.txt
+timeout 2s nc 0.0.0.0 6667 < test_input.txt >> outputs/output.txt

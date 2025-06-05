@@ -2,7 +2,7 @@
 
 # Configuration
 SERVER="localhost"
-PORT=4444
+PORT=6667
 CHANNEL="#youpi"
 CLIENT_COUNT=200
 

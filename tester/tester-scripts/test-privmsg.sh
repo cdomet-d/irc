@@ -13,11 +13,11 @@ exec {client2_out_fd}<>outputs/client2_out.txt
 exec {client3_in_fd}<>outputs/client3_in.txt
 exec {client3_out_fd}<>outputs/client3_out.txt
      
-nc 0.0.0.0 4444 0<&${client1_in_fd} 1>&${client1_out_fd} &
+nc 0.0.0.0 6667 0<&${client1_in_fd} 1>&${client1_out_fd} &
 PID1=$!
-nc 0.0.0.0 4444 0<&${client2_in_fd} 1>&${client2_out_fd} &
+nc 0.0.0.0 6667 0<&${client2_in_fd} 1>&${client2_out_fd} &
 PID2=$!
-nc 0.0.0.0 4444 0<&${client3_in_fd} 1>&${client3_out_fd} &
+nc 0.0.0.0 6667 0<&${client3_in_fd} 1>&${client3_out_fd} &
 PID3=$!
 
 sleep 0.2

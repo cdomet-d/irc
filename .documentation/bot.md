@@ -49,4 +49,3 @@ The bot allows clients to send logins to a channel, requesting to know where tha
 - If the argument is validated, the bot will trim the `!` and run an API request with the provided argument.
 - If the API requests fails, the login doesn't exist and ERR_NOSUCHSTUDENT() is returned,
 - Otherwise, the bot sends the place where the student is logged back to the sender of the message (either the PRIVMSG client or the channel if it was sent to a channel).
-

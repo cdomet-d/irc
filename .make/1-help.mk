@@ -21,7 +21,7 @@
 	@echo "  $(MABOLD)reserver   $(R)     Full clean and rebuild server"
 	@echo "  $(MABOLD)rebot      $(R)     Full clean and rebuild bot"
 	@echo ""
-	@echo "Run targets: Default port is 4444, but you may specify 6667."
+	@echo "Run targets: Default port is 6667, but you may specify 6667."
 	@echo "  $(MABOLD)run        $(R)     Run the IRC server $(G)($(NAME))$(R)."
 	@echo "  $(MABOLD)drun       $(R)     Run the debug IRC server $(G)($(DEBUG_NAME))$(R) with valgrind"
 	@echo "  $(MABOLD)brun       $(R)     Run the IRC bot $(G)($(BOT_NAME))$(R)"
