@@ -71,7 +71,7 @@ bool Server::servInit() {
 	if (listen(servFd_, SOMAXCONN) == -1)
 		return (false);
 	servPoll_.data.fd = servFd_;
-	servPoll_.events = EPOLLIN | EPOLLOUT;
+	servPoll_.events = EPOLLIN;
 	if (epoll_ctl(epollFd_, EPOLL_CTL_ADD, servFd_, &servPoll_) == -1)
 		return (0);
 	return (true);
